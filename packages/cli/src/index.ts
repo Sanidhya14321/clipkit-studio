@@ -10,6 +10,7 @@ import {serveMcp} from '../../mcp/src/index.ts';
 import {startServer} from '../../server/src/index.ts';
 import {agentInstructions} from '../../server/src/runner.ts';
 import {MediaService} from '../../server/src/media.ts';
+import {buildAssets} from '../../assets/src/build.ts';
 
 const cliPath=fileURLToPath(import.meta.url);
 const packaged=cliPath.endsWith('.js');
@@ -51,7 +52,7 @@ async function studio(){
 }
 async function doctor(){
   const media=new MediaService({root,getProject:()=>({}) as any,getTranscripts:()=>({}),setTranscript:()=>{},commit:async()=>{},job:()=>({}) as any});
-  const result=await media.doctor();const clients:Record<string,string>={};for(const name of ['codex','claude']){clients[name]=await new Promise<string>(res=>{const child=spawn(name,['--version'],{stdio:['ignore','pipe','ignore']});let value='';child.stdout.on('data',d=>value+=d);child.on('error',()=>res('not installed'));child.on('close',code=>res(code===0?value.trim():'unavailable'));});}output({node:process.version,...result,clients,notes:['Fish Audio requires FISH_API_KEY in .env.','Use codex login / claude auth login for real agent turns.','Media never uploads to Fish until transcription or voice actions are requested.']});
+  const result=await media.doctor();const clients:Record<string,string>={};for(const name of ['codex','claude']){clients[name]=await new Promise<string>(res=>{const child=spawn(name,['--version'],{stdio:['ignore','pipe','ignore']});let value='';child.stdout.on('data',d=>value+=d);child.on('error',()=>res('not installed'));child.on('close',code=>res(code===0?value.trim():'unavailable'));});}output({node:process.version,...result,clients,notes:['Fish Audio requires FISH_API_KEY in .env.','Use codex login / claude auth login for real agent turns.','With a Fish key configured, media imports automatically schedule transcription uploads.']});
 }
 async function main(){
   const [command,sub,...rest]=args;
@@ -59,6 +60,7 @@ async function main(){
   if(command==='init')return initialize();
   if(command==='studio')return studio();
   if(command==='doctor')return doctor();
+  if(command==='assets'&&sub==='build')return output(await buildAssets(installRoot,join(root,'.clipkit','assets')));
   if(command==='mcp'){await serveMcp(invoke);return;}
   if(command==='search')return output(await invoke('assets_search',{query:[sub,...rest].filter(Boolean).join(' '),limit:flags.limit?Number(flags.limit):5}));
   if(command==='schema')return output(await invoke('asset_schema',{clipId:sub}));

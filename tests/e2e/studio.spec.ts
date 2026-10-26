@@ -8,7 +8,7 @@ test('human edits, anchored feedback, server lock and undo share a live project'
   await page.goto('/');
   await expect(page.getByText('Small details.',{exact:false})).toBeVisible();
   await page.getByRole('button',{name:/Kinetic title, /}).click();
-  const field=page.getByLabel('Text',{exact:true});await field.fill('One precise change.');await field.blur();
+  const field=page.getByRole('textbox',{name:'Text',exact:true});await field.fill('One precise change.');await field.blur();
   await expect.poll(async()=>{const s=await state();return s.project.tracks.flatMap((t:any)=>t.items).find((i:any)=>i.clipId==='kinetic-title').props.text;}).toBe('One precise change.');
   await page.getByRole('button',{name:'Comments',exact:true}).click();
   await page.getByLabel('New comment').fill('Make this title bigger');

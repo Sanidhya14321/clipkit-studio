@@ -12,6 +12,7 @@ describe('real HTTP/WebSocket shared editor',()=>{
  afterAll(async()=>{await backend?.close();await rm(root,{recursive:true,force:true});});
  const op=async(name:string,args:Record<string,unknown>={},extra:Record<string,string>={})=>{const response=await fetch(`${backend.url}/api/op/${name}`,{method:'POST',headers:{'Content-Type':'application/json','X-ClipKit-Token':backend.token,...extra},body:JSON.stringify(args)});return {status:response.status,body:await response.json() as any};};
  it('requires auth and rejects cross-origin writes',async()=>{expect((await fetch(`${backend.url}/api/state`)).status).toBe(401);expect((await fetch(`${backend.url}/api/bootstrap`,{headers:{Origin:'https://example.com'}})).status).toBe(403);expect((await fetch(`${backend.url}/api/bootstrap`,{headers:{Origin:'http://127.0.0.1:5173'}})).status).toBe(200);});
+ it('refuses a second writer for the same project',async()=>{await expect(startServer({root,port:24318})).rejects.toMatchObject({code:'ALREADY_RUNNING'});});
  it('broadcasts real edits, enforces ownership and rejects stale patches',async()=>{
    await op('assets_add',{clipId:'kinetic-title',at:0});const item=backend.store.project.tracks[1].items[0];
    const socket=new WebSocket(`${backend.url.replace('http','ws')}/events?token=${backend.token}`);await new Promise<void>(r=>socket.once('open',()=>r()));

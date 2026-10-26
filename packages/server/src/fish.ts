@@ -37,7 +37,7 @@ export class FishClient {
     body.append('voices',new Blob([new Uint8Array(await readFile(path))]),basename(path));
     const data=await (await this.request('/model',{method:'POST',body})).json() as {id?:string;_id?:string;state?:string;status?:string};
     const id=data.id??data._id;if(!id)throw new Error('Fish clone response did not contain a model ID');
-    return {id,status:data.state??data.status??'created'};
+    return {id,status:data.state??data.status??'unknown'};
   }
   async model(id:string){return await (await this.request(`/model/${encodeURIComponent(id)}`)).json() as Record<string,unknown>;}
 }

@@ -2,7 +2,7 @@ import {Hono} from 'hono';
 import {serve} from '@hono/node-server';
 import {WebSocketServer,WebSocket} from 'ws';
 import {createReadStream} from 'node:fs';
-import {mkdir,readFile,writeFile,stat,readdir,rm} from 'node:fs/promises';
+import {mkdir,readFile,writeFile,stat,readdir,rm,open} from 'node:fs/promises';
 import {resolve,join,extname,basename,sep} from 'node:path';
 import {randomBytes,timingSafeEqual} from 'node:crypto';
 import {Readable} from 'node:stream';
@@ -22,6 +22,18 @@ const number=(v:unknown,defaultValue=0)=>{if(v===undefined)return defaultValue;i
 const safeJoin=(root:string,relative:string)=>{const full=resolve(root,relative);if(full!==resolve(root)&&!full.startsWith(resolve(root)+sep))throw new ClipKitError('INVALID_PATH','Path must remain within its directory');return full;};
 export type ServerOptions={root:string;port?:number;cliPath?:string;publicDir?:string;studioDir?:string;renderEntry?:string};
 export async function startServer(options:ServerOptions){
+  const dir=join(resolve(options.root),'.clipkit');await mkdir(dir,{recursive:true});const lockPath=join(dir,'server.lock');
+  let lock;
+  try{lock=await open(lockPath,'wx',0o600);}catch(e){
+    if((e as NodeJS.ErrnoException).code!=='EEXIST')throw e;
+    let alive=false;try{const previous=JSON.parse(await readFile(lockPath,'utf8'));if(Number.isInteger(previous.pid)&&previous.pid>0){try{process.kill(previous.pid,0);alive=true;}catch(e){alive=(e as NodeJS.ErrnoException).code==='EPERM';}}}catch{}
+    if(alive)throw new ClipKitError('ALREADY_RUNNING','This project already has a running ClipKit server. Open it or stop it first.');
+    await rm(lockPath,{force:true});lock=await open(lockPath,'wx',0o600);
+  }
+  await lock.writeFile(JSON.stringify({pid:process.pid}));await lock.close();
+  try{const backend=await startServerUnlocked(options);return {...backend,close:async()=>{try{await backend.close();}finally{await rm(lockPath,{force:true});}}};}catch(e){await rm(lockPath,{force:true});throw e;}
+}
+async function startServerUnlocked(options:ServerOptions){
   const root=resolve(options.root);const port=options.port??4310;const url=`http://127.0.0.1:${port}`;
   const publicDir=options.publicDir??join(root,'public');const studioDir=options.studioDir??join(root,'dist','studio');
   const token=randomBytes(32).toString('hex');const app=new Hono();const jobs:Job[]=[];const activity:Activity[]=[];const transcripts:Record<string,Word[]>={};
@@ -41,7 +53,7 @@ export async function startServer(options:ServerOptions){
   const media=new MediaService({root,getProject:()=>store.project,getTranscripts:()=>transcripts,setTranscript:(sourceId,words)=>{transcripts[sourceId]=words;notify();},commit:(label,fn)=>{const actor=mutationContext.getStore();return store.mutate(label,fn,actor?.leaseToken?'agent':'system',actor);},job});
   const bundle=(ids:string[])=>{
     const comments=store.project.comments.filter(c=>ids.includes(c.id));const itemIds=[...new Set(comments.map(c=>c.anchor.layerId).filter(Boolean))] as string[];
-    return {rev:store.project.rev,comments:comments.map(c=>({id:c.id,text:c.text,anchor:c.anchor})),layers:itemIds.map(i=>findItem(store.project,i)).filter(Boolean)};
+    return {rev:store.project.rev,comments:comments.map(c=>({id:c.id,text:c.text,anchor:c.anchor})),layers:itemIds.map(i=>{const item=findItem(store.project,i);return item?{...item,pointer:itemPointer(store.project,i)}:undefined;}).filter(Boolean)};
   };
   const runner=new AgentRunner({root,url,token,cliPath:options.cliPath??fileURLToPath(new URL('../../cli/src/index.ts',import.meta.url)),store,bundle,activity:addActivity,telemetry:value=>{telemetry={...telemetry,...value};notify();},error:error=>{agentError=error;notify();},changed:()=>notify()});
   const state=():StudioState=>{const lease=store.currentLease();const {token:unused,...visible}=lease??{token:''};const clone=[...jobs].reverse().find(j=>j.kind==='clone'&&j.status==='done')?.result;return {project:store.project,lease:lease?visible as NonNullable<StudioState['lease']>:null,history:store.history.slice(-60),jobs:jobs.slice(-20),activity:activity.slice(-30),telemetry:{...telemetry,baselineTokens:tokenEstimate({project:store.project,transcripts,catalog})},transcripts,provider:{fish:Boolean(process.env.FISH_API_KEY),voiceId:process.env.FISH_VOICE_ID},agentClient,agentError,capabilities,clone:clone?{id:String(clone.id),status:String(clone.status)}:persistedClone};};
@@ -75,7 +87,7 @@ export async function startServer(options:ServerOptions){
       case 'history_revert_turn':return store.revertLatestTurn();
       case 'comments_add':{const commentId=id('comment');const result=await mutate('Pin comment',p=>{const anchor=a.anchor??{tStart:0};p.comments.push({id:commentId,author:a.author==='voice'?'voice':author==='agent'?'agent':'human',text:text(a.text),anchor,status:'open',createdRev:p.rev,replies:[]});});return {...result,commentId};}
       case 'comments_list':return {rev:store.project.rev,comments:store.project.comments.filter(c=>!a.open||c.status!=='resolved').slice(0,Math.min(20,number(a.limit,10))).map(({id,text,anchor,status})=>({id,text,anchor,status}))};
-      case 'comments_bundle':return bundle((a.commentIds??store.project.comments.filter(c=>c.status==='open').map(c=>c.id)).slice(0,10));
+      case 'comments_bundle':return bundle((a.commentIds??store.project.comments.filter(c=>c.status!=='resolved').map(c=>c.id)).slice(0,10));
       case 'comments_resolve':return mutate('Resolve comment',p=>{const comment=p.comments.find(c=>c.id===a.commentId);if(!comment)throw new ClipKitError('UNKNOWN_COMMENT','Comment no longer exists');comment.status='resolved';comment.resolvedRev=p.rev+1;if(a.reply)comment.replies.push({author:author==='agent'?'agent':'human',text:text(a.reply,1000)});comment.diff=store.history.filter(h=>h.rev>comment.createdRev&&h.changedItemIds.includes(comment.anchor.layerId??'')).flatMap(h=>h.ops).slice(-30);});
       case 'comments_reply':return mutate('Reply to comment',p=>{const comment=p.comments.find(c=>c.id===a.commentId);if(!comment)throw new ClipKitError('UNKNOWN_COMMENT','Comment no longer exists');comment.replies.push({author:author==='agent'?'agent':'human',text:text(a.text,1000)});});
       case 'agent_client':agentClient=a.client==='claude'?'claude':'codex';notify();return {client:agentClient};
@@ -120,12 +132,15 @@ export async function startServer(options:ServerOptions){
   app.get('/media/:id',async c=>{const source=store.project.sources[c.req.param('id')]??registeredSources.get(c.req.param('id'));if(!source)throw new ClipKitError('MISSING_MEDIA','Media is no longer registered');const variant=c.req.query('variant');return serveFile(c,resolve(root,variant==='proxy'?(source.proxyPath??source.path):variant==='audio'?(source.audioPath??source.path):source.path));});
   app.get('/exports/:file',c=>serveFile(c,safeJoin(join(root,'.clipkit','exports'),basename(c.req.param('file')))));
   app.get('/vendor/*',c=>serveFile(c,safeJoin(publicDir,c.req.path.slice(1))));
+  app.get('/previews/*',c=>serveFile(c,safeJoin(publicDir,c.req.path.slice(1))));
+  app.get('/packs/*',c=>serveFile(c,safeJoin(publicDir,c.req.path.slice(1))));
   app.get('*',async c=>{try{return await serveFile(c,safeJoin(studioDir,c.req.path==='/'?'index.html':c.req.path.slice(1)));}catch{try{return await serveFile(c,join(studioDir,'index.html'));}catch{return c.html('<h1>ClipKit server is ready</h1><p>Development studio: <a href="http://127.0.0.1:5173">open editor</a>. Run pnpm build for the packaged studio.</p>');}}});
   const server=serve({fetch:app.fetch,hostname:'127.0.0.1',port});
   await new Promise<void>((resolve,reject)=>{server.once('listening',resolve);server.once('error',reject);});
   const wss=new WebSocketServer({noServer:true});server.on('upgrade',(req,socket,head)=>{const requestUrl=new URL(req.url??'/',url);if(requestUrl.pathname!=='/events'||!equal(requestUrl.searchParams.get('token')??undefined)||req.headers.origin&&!allowedOrigin(req.headers.origin)){socket.destroy();return;}wss.handleUpgrade(req,socket,head,ws=>{wss.emit('connection',ws,req);ws.send(JSON.stringify({type:'state',state:state()}));});});
   let scheduled=false;notify=()=>{if(scheduled)return;scheduled=true;setTimeout(()=>{scheduled=false;const payload=JSON.stringify({type:'state',state:state()});for(const socket of wss.clients)if(socket.readyState===WebSocket.OPEN)socket.send(payload);},20);};
-  store.onChange=()=>{for(const source of Object.values(store.project.sources))registeredSources.set(source.id,source);const h=store.history.at(-1);if(h&&activity.at(-1)?.text!==h.label)addActivity({at:h.timestamp,text:h.label,itemIds:h.changedItemIds});notify();};
+  let publishedRev=store.project.rev;
+  store.onChange=()=>{for(const source of Object.values(store.project.sources))registeredSources.set(source.id,source);const h=store.history.at(-1);if(h&&h.rev>publishedRev){publishedRev=h.rev;addActivity({at:h.timestamp,text:h.label,itemIds:h.changedItemIds});}notify();};
   capabilities={...(await media.doctor()),codex:true,claude:true};
   await mkdir(store.dir,{recursive:true});await writeFile(join(store.dir,'server.json'),JSON.stringify({port,url,token,pid:process.pid,root}),{mode:0o600});
   const expiry=setInterval(()=>store.currentLease(),1000);
