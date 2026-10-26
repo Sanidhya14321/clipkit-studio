@@ -1,0 +1,24 @@
+import {z} from 'zod';
+import {id, type Item} from '../../core/src/index';
+export type Field = {key:string;label:string;type:'text'|'textarea'|'color'|'number'|'select';min?:number;max?:number;step?:number;options?:string[]};
+export type Asset = {id:string;name:string;category:string;durationSec:number;description:string;tags:string[];license:string;defaults:Record<string,unknown>;fields:Field[]};
+const common = z.object({text:z.string().max(1000).default('Make your next move.'),color:z.string().regex(/^#[0-9a-fA-F]{3,8}$/).default('#c7f36b'),size:z.number().min(12).max(180).default(72),x:z.number().min(-1500).max(1500).default(0),y:z.number().min(-2000).max(2000).default(0),opacity:z.number().min(0).max(1).default(1),revealDuration:z.number().min(.05).max(20).default(.65),scale:z.number().min(.1).max(4).default(1),width:z.number().min(100).max(2200).default(600),subtitle:z.string().max(1000).default('Small steps. Extraordinary stories.'),background:z.string().regex(/^#[0-9a-fA-F]{3,8}$/).default('#142b26')});
+const field = (key:string,label:string,type:Field['type'],extra:Partial<Field>={}):Field=>({key,label,type,...extra});
+const fields:Field[]=[field('text','Text','textarea'),field('subtitle','Supporting text','text'),field('color','Accent','color'),field('background','Background','color'),field('size','Type size','number',{min:12,max:180}),field('x','Horizontal position','number',{min:-1500,max:1500}),field('y','Vertical position','number',{min:-2000,max:2000}),field('opacity','Opacity','number',{min:0,max:1,step:.05}),field('revealDuration','Reveal seconds','number',{min:.05,max:20,step:.05}),field('scale','Scale','number',{min:.1,max:4,step:.05}),field('width','Width','number',{min:100,max:2200})];
+const specs:Array<[string,string,string,string,Record<string,unknown>?]>=[
+ ['kinetic-title','Kinetic title','Typography','Oversized editorial headline with staggered word reveals.',{text:'Ideas into\nimpact.',size:102}],
+ ['lower-third','Lower third','Identity','A crisp identity card with an animated accent rule.',{text:'Alex Morgan',subtitle:'Designer & storyteller',size:43,y:380}],
+ ['captions','Word captions','Typography','Timestamp-aware captions with active word highlighting.',{text:'Every frame tells a story.',size:58,y:330}],
+ ['icon-callout','Icon callout','Callout','A glowing native icon, label and supporting detail.',{text:'Built for your ideas',size:54}],
+ ['counter','Number counter','Data','An eased numerical highlight with editable units.',{text:'People reached',value:1200,suffix:'+',size:112}],
+ ['illustration-card','Illustration card','Illustration','An open-source illustration in a layered editorial card.',{text:'Room to imagine',size:58}],
+ ['screenshot-frame','Screenshot frame','Device','An editable native browser frame for product stories.',{text:'Your next big thing',subtitle:'app.yourstudio.com',size:60}],
+ ['gradient','Living gradient','Background','A deterministic soft light background with orbital forms.',{text:'',opacity:1}],
+ ['wipe','Color wipe','Transition','A sweeping color panel that enters and leaves the frame.',{text:'',revealDuration:.55}],
+ ['cta','Call to action','Action','A bold final invitation and an animated pill button.',{text:'Make something\nworth sharing.',subtitle:'Start your story →',size:79}],
+];
+export const clipSchemas:Record<string,z.ZodType<Record<string,unknown>>> = Object.fromEntries(specs.map(([key])=>[key,key==='counter'?common.extend({value:z.number().min(-1e12).max(1e12).default(1200),suffix:z.string().max(20).default('+')}):common]));
+export const catalog:Asset[]=specs.map(([key,name,category,description,overrides])=>({id:key,name,category,durationSec:key==='wipe'?1.2:5,description,tags:[category.toLowerCase(),key,...description.toLowerCase().split(/\W+/)],license:'MIT (native ClipKit component; embedded source assets retain their licenses)',defaults:clipSchemas[key].parse({...overrides}),fields:key==='counter'?[...fields,field('value','Value','number'),field('suffix','Suffix','text')]:fields}));
+export function validateClipProps(clipId:string,props:unknown){const schema=clipSchemas[clipId];if(!schema)throw new Error(`Unknown clip: ${clipId}`);return schema.parse({...catalog.find(a=>a.id===clipId)!.defaults,...(props as object)});}
+export function searchAssets(query:string,limit=5):Asset[]{const terms=query.toLowerCase().split(/\W+/).filter(Boolean);return catalog.map(a=>({a,score:terms.reduce((n,t)=>n+(a.id.includes(t)?4:0)+(a.name.toLowerCase().includes(t)?3:0)+(a.tags.join(' ').includes(t)?1:0),0)})).filter(r=>!terms.length||r.score>0).sort((a,b)=>b.score-a.score).slice(0,Math.max(0,limit)).map(r=>r.a);}
+export function makeClip(clipId:string,at=0):Item {const asset=catalog.find(a=>a.id===clipId);if(!asset)throw new Error(`Unknown clip: ${clipId}`);return {id:id('layer'),type:'clip',clipId,at,dur:asset.durationSec,srcIn:0,volume:1,props:{...asset.defaults}};}

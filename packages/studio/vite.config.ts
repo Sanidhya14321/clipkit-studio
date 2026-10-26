@@ -1,0 +1,4 @@
+import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+import {fileURLToPath} from 'node:url';
+export default defineConfig({root:fileURLToPath(new URL('.',import.meta.url)),plugins:[react()],resolve:{alias:{'@clipkit/core':fileURLToPath(new URL('../core/src/index.ts',import.meta.url)),'@clipkit/assets':fileURLToPath(new URL('../assets/src/index.ts',import.meta.url)),'@clipkit/render':fileURLToPath(new URL('../render/src',import.meta.url))}},server:{host:'127.0.0.1',port:5173,proxy:{'/api':`http://127.0.0.1:${process.env.CLIPKIT_SERVER_PORT??4310}`,'/media':`http://127.0.0.1:${process.env.CLIPKIT_SERVER_PORT??4310}`,'/vendor':`http://127.0.0.1:${process.env.CLIPKIT_SERVER_PORT??4310}`,'/exports':`http://127.0.0.1:${process.env.CLIPKIT_SERVER_PORT??4310}`,'/events':{target:`ws://127.0.0.1:${process.env.CLIPKIT_SERVER_PORT??4310}`,ws:true}}},build:{outDir:fileURLToPath(new URL('../../dist/studio',import.meta.url)),emptyOutDir:true}});

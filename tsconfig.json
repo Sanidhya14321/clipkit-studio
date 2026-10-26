@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": [
+      "node",
+      "vite/client"
+    ],
+    "paths": {
+      "@clipkit/core": [
+        "./packages/core/src/index.ts"
+      ],
+      "@clipkit/core/*": [
+        "./packages/core/src/*"
+      ],
+      "@clipkit/assets": [
+        "./packages/assets/src/index.ts"
+      ],
+      "@clipkit/assets/*": [
+        "./packages/assets/src/*"
+      ],
+      "@clipkit/render/*": [
+        "./packages/render/src/*"
+      ]
+    }
+  },
+  "include": [
+    "packages",
+    "scripts",
+    "tests",
+    "*.ts"
+  ]
+}

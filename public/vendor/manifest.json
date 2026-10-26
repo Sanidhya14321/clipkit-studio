@@ -1,0 +1,101 @@
+[
+  {
+    "repo": "rsms/inter",
+    "license": "OFL-1.1",
+    "commit": "353b61b9f4430d5f420d56605a6e7993e0941470",
+    "sourcePath": "docs/font-files/InterVariable.ttf",
+    "url": "https://raw.githubusercontent.com/rsms/inter/353b61b9f4430d5f420d56605a6e7993e0941470/docs/font-files/InterVariable.ttf",
+    "file": "inter.ttf",
+    "kind": "font",
+    "sha256": "4989b125924991b90d05b2d16e0e388c48f7d5bb8b30539bbf9c755278d0ccaf",
+    "bytes": 879708
+  },
+  {
+    "repo": "rsms/inter",
+    "license": "OFL-1.1",
+    "commit": "353b61b9f4430d5f420d56605a6e7993e0941470",
+    "sourcePath": "LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/rsms/inter/353b61b9f4430d5f420d56605a6e7993e0941470/LICENSE.txt",
+    "file": "inter-LICENSE.txt",
+    "kind": "license",
+    "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a",
+    "bytes": 4380
+  },
+  {
+    "repo": "floriankarsten/space-grotesk",
+    "license": "OFL-1.1",
+    "commit": "03507d024a01282884232081fc6011c09ff4e849",
+    "sourcePath": "fonts/ttf/SpaceGrotesk[wght].ttf",
+    "url": "https://raw.githubusercontent.com/floriankarsten/space-grotesk/03507d024a01282884232081fc6011c09ff4e849/fonts/ttf/SpaceGrotesk[wght].ttf",
+    "file": "space-grotesk.ttf",
+    "kind": "font",
+    "sha256": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+    "bytes": 136676
+  },
+  {
+    "repo": "floriankarsten/space-grotesk",
+    "license": "OFL-1.1",
+    "commit": "03507d024a01282884232081fc6011c09ff4e849",
+    "sourcePath": "OFL.txt",
+    "url": "https://raw.githubusercontent.com/floriankarsten/space-grotesk/03507d024a01282884232081fc6011c09ff4e849/OFL.txt",
+    "file": "space-grotesk-LICENSE.txt",
+    "kind": "license",
+    "sha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72",
+    "bytes": 4495
+  },
+  {
+    "repo": "realvjy/illlustrations",
+    "license": "MIT",
+    "commit": "b6d6f3286995e6efbbf397eff21b572245c336fd",
+    "sourcePath": "content/illlustrations/101/101-gym-guy.svg",
+    "url": "https://raw.githubusercontent.com/realvjy/illlustrations/b6d6f3286995e6efbbf397eff21b572245c336fd/content/illlustrations/101/101-gym-guy.svg",
+    "file": "illustration.svg",
+    "kind": "illustration",
+    "sha256": "1ed6d84a8e4aff43d280dcc95470c505c869c140f32220d65224b4e7c17f9caa",
+    "bytes": 18103
+  },
+  {
+    "repo": "realvjy/illlustrations",
+    "license": "MIT",
+    "commit": "b6d6f3286995e6efbbf397eff21b572245c336fd",
+    "sourcePath": "LICENSE",
+    "url": "https://raw.githubusercontent.com/realvjy/illlustrations/b6d6f3286995e6efbbf397eff21b572245c336fd/LICENSE",
+    "file": "illlustrations-LICENSE.txt",
+    "kind": "license",
+    "sha256": "b1418458e6ea8c65567ce82af3c724fb16eeaa1b29e39c7074bc4751a8d9194b",
+    "bytes": 1078
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "license": "CC0-1.0",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "sourcePath": "addons/kenney_ui_audio/click1.wav",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/addons/kenney_ui_audio/click1.wav",
+    "file": "ui-click.wav",
+    "kind": "audio",
+    "sha256": "dd90b97f38b0ec7d52161d7c3bf8d61a66655766fd0af06439963351b4853a83",
+    "bytes": 18254
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "license": "CC0-1.0",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "sourcePath": "LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/LICENSE.txt",
+    "file": "kenney-ui-audio-LICENSE.txt",
+    "kind": "license",
+    "sha256": "4f88ab3c885c87874834441a0d009cea8942f57461d7b870be65cf4e31362073",
+    "bytes": 479
+  },
+  {
+    "repo": "lucide-icons/lucide",
+    "commit": "1802f33f6c270395fcd981067f22719140e2ffbc",
+    "license": "ISC AND MIT (Feather-derived icons)",
+    "sourcePath": "LICENSE",
+    "url": "https://raw.githubusercontent.com/lucide-icons/lucide/1802f33f6c270395fcd981067f22719140e2ffbc/LICENSE",
+    "file": "lucide-LICENSE.txt",
+    "kind": "license",
+    "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+    "bytes": 3208
+  }
+]

@@ -1,0 +1,27 @@
+import {test,expect} from '@playwright/test';
+test('human edits, anchored feedback, server lock and undo share a live project',async({page,request})=>{
+  const {token}=await (await request.get('/api/bootstrap')).json();
+  const op=async(name:string,args:Record<string,unknown>={})=>request.post(`/api/op/${name}`,{headers:{'X-ClipKit-Token':token},data:args});
+  const state=async()=>await (await request.get('/api/state',{headers:{'X-ClipKit-Token':token}})).json();
+  await op('demo_reset');
+  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('/');
+  await expect(page.getByText('Small details.',{exact:false})).toBeVisible();
+  await page.getByRole('button',{name:/Kinetic title, /}).click();
+  const field=page.getByLabel('Text',{exact:true});await field.fill('One precise change.');await field.blur();
+  await expect.poll(async()=>{const s=await state();return s.project.tracks.flatMap((t:any)=>t.items).find((i:any)=>i.clipId==='kinetic-title').props.text;}).toBe('One precise change.');
+  await page.getByRole('button',{name:'Comments',exact:true}).click();
+  await page.getByLabel('New comment').fill('Make this title bigger');
+  await page.getByRole('button',{name:'Add comment',exact:true}).click();
+  await expect.poll(async()=>(await state()).project.comments.length).toBe(1);
+  const s=await state();expect(s.project.comments[0].anchor.layerId).toBeTruthy();
+  const lease=await (await op('status_working',{owner:'E2E agent',label:'Testing exclusive edits'})).json();
+  await expect(page.getByRole('button',{name:'Export video'})).toBeDisabled();
+  expect((await op('project_rename',{name:'Should fail'})).status()).toBe(409);
+  await op('status_idle',{leaseToken:lease.token});
+  await expect(page.getByRole('button',{name:'Export video'})).toBeEnabled();
+  await page.getByRole('button',{name:'Undo (Ctrl Z)'}).click();
+  await expect.poll(async()=>(await state()).project.comments.length).toBe(0);
+  await page.screenshot({path:'.clipkit/verification/studio-e2e.png',fullPage:true});
+  expect(errors).toEqual([]);
+});

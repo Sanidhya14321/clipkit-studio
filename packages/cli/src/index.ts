@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+import {readFile,writeFile,mkdir,access} from 'node:fs/promises';
+import {resolve,join,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {spawn} from 'node:child_process';
+import {createRequire} from 'node:module';
+import {ProjectStore} from '../../core/src/store.ts';
+import {id} from '../../core/src/index.ts';
+import {serveMcp} from '../../mcp/src/index.ts';
+import {startServer} from '../../server/src/index.ts';
+import {agentInstructions} from '../../server/src/runner.ts';
+import {MediaService} from '../../server/src/media.ts';
+
+const cliPath=fileURLToPath(import.meta.url);
+const packaged=cliPath.endsWith('.js');
+const installRoot=packaged?resolve(dirname(cliPath),'..'):resolve(dirname(cliPath),'../../..');
+let args=process.argv.slice(2);const rootIndex=args.indexOf('--root');const root=resolve(rootIndex>=0?args.splice(rootIndex,2)[1]:process.env.CLIPKIT_ROOT??process.cwd());
+const flags:Record<string,string|boolean>={};args=args.filter((a,i,all)=>{if(a.startsWith('--')){const key=a.slice(2);flags[key]=all[i+1]&&!all[i+1].startsWith('--')?all[i+1]:true;return false;}return i===0||!all[i-1].startsWith('--')||all[i-1]==='--summary'||all[i-1]==='--open'||all[i-1]==='--compact';});
+try{process.loadEnvFile(join(root,'.env'));}catch{/* Optional local provider credentials. */}
+async function connection(){
+  if(process.env.CLIPKIT_URL&&process.env.CLIPKIT_TOKEN)return {url:process.env.CLIPKIT_URL,token:process.env.CLIPKIT_TOKEN};
+  try{return JSON.parse(await readFile(join(root,'.clipkit','server.json'),'utf8')) as {url:string;token:string};}catch{throw new Error('Studio is not running. Start it with ck studio.');}
+}
+async function invoke(name:string,data:Record<string,unknown>={}){
+  const {url,token}=await connection();let response:Response;
+  try{response=await fetch(`${url}/api/op/${name}`,{method:'POST',headers:{'Content-Type':'application/json','X-ClipKit-Token':token,...(process.env.CLIPKIT_LEASE?{'X-ClipKit-Lease':process.env.CLIPKIT_LEASE,'X-ClipKit-Turn':process.env.CLIPKIT_TURN??''}:{})},body:JSON.stringify(data),signal:AbortSignal.timeout(600000)});}catch{throw new Error('Cannot reach the studio. Run ck studio and retry.');}
+  const body=await response.json() as Record<string,unknown>;if(!response.ok)throw new Error(JSON.stringify(body));return body;
+}
+const output=(value:unknown)=>{const serialized=JSON.stringify(value,null,2);process.stdout.write(serialized.length>20000?JSON.stringify({error:'CONTEXT_TOO_LARGE',message:'Use a smaller page, one layer, or a shorter range.'})+'\n':serialized+'\n');};
+async function managedText(path:string,start:string,end:string,content:string){let old='';try{old=await readFile(path,'utf8');}catch{}const block=`${start}\n${content.trim()}\n${end}`;const first=old.indexOf(start),last=old.indexOf(end);const next=first>=0&&last>=first?old.slice(0,first)+block+old.slice(last+end.length):`${old.trimEnd()}${old.trim()?'\n\n':''}${block}\n`;await mkdir(dirname(path),{recursive:true});await writeFile(path,next);}
+async function initialize(){
+  await mkdir(join(root,'.clipkit'),{recursive:true});try{await access(join(root,'.clipkit','project.json'));}catch{await new ProjectStore(root).load();}
+  await managedText(join(root,'AGENTS.md'),'<!-- clipkit:start -->','<!-- clipkit:end -->',agentInstructions);
+  const commandArgs=packaged?[cliPath,'mcp']:['--import',fileURLToPath(import.meta.resolve('tsx')),cliPath,'mcp'];
+  const mcpConfig={command:process.execPath,args:commandArgs,env:{CLIPKIT_ROOT:root}};
+  let mcp:Record<string,any>={};try{mcp=JSON.parse(await readFile(join(root,'.mcp.json'),'utf8'));}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw new Error('Existing .mcp.json is not valid JSON; repair it before init.');}mcp.mcpServers={...mcp.mcpServers,clipkit:mcpConfig};await writeFile(join(root,'.mcp.json'),JSON.stringify(mcp,null,2)+'\n');
+  const config=`[mcp_servers.clipkit]\ncommand = ${JSON.stringify(process.execPath)}\nargs = ${JSON.stringify(commandArgs)}\ndefault_tools_approval_mode = "approve"\n[mcp_servers.clipkit.env]\nCLIPKIT_ROOT = ${JSON.stringify(root)}`;
+  await managedText(join(root,'.codex','config.toml'),'# clipkit:start','# clipkit:end',config);
+  const skill=join(root,'.claude','skills','clipkit');await mkdir(skill,{recursive:true});await writeFile(join(skill,'SKILL.md'),`---\nname: clipkit\ndescription: Edit the local ClipKit video timeline with precise revisioned patches.\n---\n${agentInstructions}`);
+  output({initialized:true,root,adapters:['Codex','Claude Code','MCP'],next:'ck studio',note:'Agent CLIs must be installed and signed in. Fish Audio is optional until voice generation/transcription.'});
+}
+async function studio(){
+  const port=Number(flags.port??process.env.CLIPKIT_PORT??4310);
+  const publicDir=join(installRoot,'public');const studioDir=join(installRoot,'dist','studio');
+  const server=await startServer({root,port,cliPath,publicDir,studioDir,renderEntry:packaged?join(installRoot,'runtime','packages','render','src','entry.tsx'):undefined});
+  let vite:ReturnType<typeof spawn>|undefined;let browserUrl=server.url;
+  if(!packaged&&!flags['no-vite']){const require=createRequire(import.meta.url);const viteEntry=join(dirname(require.resolve('vite/package.json')),'bin','vite.js');vite=spawn(process.execPath,[viteEntry,'--config',join(installRoot,'packages/studio/vite.config.ts')],{cwd:installRoot,stdio:'inherit',env:{...process.env,CLIPKIT_SERVER_PORT:String(port)}});browserUrl='http://127.0.0.1:5173';}
+  console.log(`\n  ClipKit Studio\n  ${browserUrl}\n  Project: ${root}\n  Ctrl+C to stop.\n`);
+  if(flags.open)spawn(process.platform==='darwin'?'open':process.platform==='win32'?'explorer':'xdg-open',[browserUrl],{stdio:'ignore'}).on('error',()=>{});
+  let closing=false;const close=async()=>{if(closing)return;closing=true;vite?.kill('SIGTERM');await server.close();process.exit(0);};process.on('SIGINT',()=>void close());process.on('SIGTERM',()=>void close());
+}
+async function doctor(){
+  const media=new MediaService({root,getProject:()=>({}) as any,getTranscripts:()=>({}),setTranscript:()=>{},commit:async()=>{},job:()=>({}) as any});
+  const result=await media.doctor();const clients:Record<string,string>={};for(const name of ['codex','claude']){clients[name]=await new Promise<string>(res=>{const child=spawn(name,['--version'],{stdio:['ignore','pipe','ignore']});let value='';child.stdout.on('data',d=>value+=d);child.on('error',()=>res('not installed'));child.on('close',code=>res(code===0?value.trim():'unavailable'));});}output({node:process.version,...result,clients,notes:['Fish Audio requires FISH_API_KEY in .env.','Use codex login / claude auth login for real agent turns.','Media never uploads to Fish until transcription or voice actions are requested.']});
+}
+async function main(){
+  const [command,sub,...rest]=args;
+  if(!command){console.log('ClipKit Studio\n\n  ck init     Connect your coding agents\n  ck studio   Open the local video editor\n  ck doctor   Check media and voice dependencies\n\nOther commands: search, schema, project, status, footage, comments, voice, history, export, demo, mcp.');return;}
+  if(command==='init')return initialize();
+  if(command==='studio')return studio();
+  if(command==='doctor')return doctor();
+  if(command==='mcp'){await serveMcp(invoke);return;}
+  if(command==='search')return output(await invoke('assets_search',{query:[sub,...rest].filter(Boolean).join(' '),limit:flags.limit?Number(flags.limit):5}));
+  if(command==='schema')return output(await invoke('asset_schema',{clipId:sub}));
+  if(command==='project'&&sub==='get')return output(await invoke('project_get',{layerId:flags.layer,offset:flags.offset?Number(flags.offset):0,limit:flags.limit?Number(flags.limit):15}));
+  if(command==='project'&&sub==='patch'){const raw=rest[0]&&rest[0]!=='-'?await readFile(resolve(rest[0]),'utf8'):await new Promise<string>(resolve=>{let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>resolve(s));});return output(await invoke('project_patch',JSON.parse(raw)));}
+  if(command==='status'){if(sub==='working')return output(await invoke('status_working',{owner:'external-agent',label:rest.join(' ')||'Editing'}));if(sub==='idle')return output(await invoke('status_idle',{leaseToken:flags.lease}));return output(await invoke('project_get'));}
+  if(command==='footage'){if(sub==='add')return output(await invoke('footage_add',{path:resolve(rest[0])}));if(sub==='transcribe')return output(await invoke('footage_transcribe',{sourceId:rest[0]}));if(sub==='candidates')return output(await invoke('footage_candidates',{sourceId:rest[0]}));if(sub==='pack'){const rangeIndex=process.argv.indexOf('--range');return output(await invoke('footage_pack',{sourceId:rest[0],start:rangeIndex>=0?Number(process.argv[rangeIndex+1]):0,end:rangeIndex>=0?Number(process.argv[rangeIndex+2]):36000}));}}
+  if(command==='comments'){if(sub==='list')return output(await invoke('comments_list',{open:Boolean(flags.open),limit:flags.limit?Number(flags.limit):10}));if(sub==='resolve')return output(await invoke('comments_resolve',{commentId:rest[0],reply:rest.slice(1).join(' ')}));if(sub==='reply')return output(await invoke('comments_reply',{commentId:rest[0],text:rest.slice(1).join(' ')}));}
+  if(command==='voice'){if(sub==='script')return output(await invoke('voice_script',{text:rest.join(' ')}));if(sub==='speak')return output(await invoke('voice_generate',{slotId:rest[0],voiceRef:flags.voice}));if(sub==='mode')return output(await invoke('voice_mode',{slotId:rest[0],mode:rest[1]}));if(sub==='clone')return output(await invoke('voice_clone',{sampleSourceId:rest[0]}));}
+  if(command==='history'){if(sub==='list')return output(await invoke('history_list'));if(sub==='undo')return output(await invoke('history_undo'));if(sub==='redo')return output(await invoke('history_redo'));if(sub==='revert')return output(await invoke('history_revert_turn'));}
+  if(command==='export')return output(await invoke('export_start'));
+  if(command==='demo'&&sub==='reset')return output(await invoke('demo_reset'));
+  if(command==='agent')return output(await invoke('agent_run',{client:flags.client==='claude'?'claude':'codex',prompt:[sub,...rest].join(' ')}));
+  if(command==='op')return output(await invoke(sub,rest[0]?JSON.parse(rest[0]):{}));
+  throw new Error(`Unknown command: ${args.join(' ')}. Run ck for help.`);
+}
+main().catch(e=>{console.error((e as Error).message);process.exitCode=1;});
