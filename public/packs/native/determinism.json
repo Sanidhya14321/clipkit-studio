@@ -1,6 +1,6 @@
 {
   "format": "clipkit.asset-proof/v1",
-  "sourceDigest": "1a1a1b18c660fb2acc6c74c56b6d967dd44b26d9f366ce924b6630b3be3520b1",
+  "sourceDigest": "7e17665eee098c5f2406405ec23341b274334f024c17a8ce516e8740d89d95ea",
   "environment": {
     "platform": "linux",
     "arch": "x64",
@@ -227,15 +227,103 @@
         }
       ],
       "previewHash": "a986e76c4cbd0ca9dd663601dd01c70690c3a8c09169e757280ddff29393da9c"
+    },
+    {
+      "id": "starfield",
+      "defaultsHash": "67289059e6687d5cb317c0cf1c3dfccb446d5be9053bc7ba0662156233fe6790",
+      "frames": [
+        {
+          "frame": 0,
+          "first": "210a80b41c1f80c986a32c31739564e9dcce9933fcbac482c59865a86015ced2",
+          "second": "210a80b41c1f80c986a32c31739564e9dcce9933fcbac482c59865a86015ced2"
+        },
+        {
+          "frame": 75,
+          "first": "34378040854ac28d852cd0bb64e0b4bdb1ad3ee86a46c09be19f707b95ca10ea",
+          "second": "34378040854ac28d852cd0bb64e0b4bdb1ad3ee86a46c09be19f707b95ca10ea"
+        },
+        {
+          "frame": 149,
+          "first": "203f16a41950945d438f16e62c6b4df4773332c6c485dff8a2051118e11a872e",
+          "second": "203f16a41950945d438f16e62c6b4df4773332c6c485dff8a2051118e11a872e"
+        }
+      ],
+      "previewHash": "2cb5e05d507857b356665ad8f6e980f4832aa948b4bf191f10631dd9b145cdf0"
+    },
+    {
+      "id": "confetti-burst",
+      "defaultsHash": "f4bb8c79dd1cc9f04b866447c05dfec86c2d4d5171355d057089d6ac054f5078",
+      "frames": [
+        {
+          "frame": 0,
+          "first": "ecddfd78ed80cd72a49751300440f1c7b4edbe6a9262e01b9c677247a426eee6",
+          "second": "ecddfd78ed80cd72a49751300440f1c7b4edbe6a9262e01b9c677247a426eee6"
+        },
+        {
+          "frame": 60,
+          "first": "e8d9f66f3710a024078564ef770384d34f620e6fa81dad89a368e235e06247ed",
+          "second": "e8d9f66f3710a024078564ef770384d34f620e6fa81dad89a368e235e06247ed"
+        },
+        {
+          "frame": 119,
+          "first": "b6eba0f3c9f60e817c7b2bba5debc288cc4a55820168928f99b0ea8b6048a481",
+          "second": "b6eba0f3c9f60e817c7b2bba5debc288cc4a55820168928f99b0ea8b6048a481"
+        }
+      ],
+      "previewHash": "3156d8a8ecff40fa3ed012db9e87f3e7a32697d274e9304f952ac105ba975365"
+    },
+    {
+      "id": "terminal-typewriter",
+      "defaultsHash": "e102fed8dc0b8ebeb0c979fb8feb65c4fd9813bb4c74a0e3019d56d297329492",
+      "frames": [
+        {
+          "frame": 0,
+          "first": "ecddfd78ed80cd72a49751300440f1c7b4edbe6a9262e01b9c677247a426eee6",
+          "second": "ecddfd78ed80cd72a49751300440f1c7b4edbe6a9262e01b9c677247a426eee6"
+        },
+        {
+          "frame": 75,
+          "first": "91ba1310c888fc0b24d0594b7261d30a8643bc33d432299d7fc59f0eed7d9630",
+          "second": "91ba1310c888fc0b24d0594b7261d30a8643bc33d432299d7fc59f0eed7d9630"
+        },
+        {
+          "frame": 149,
+          "first": "4014941a1fc8187cc0a0ab48b6cd49916f41dc3d492b6e6ef14e42d3b9d45eb9",
+          "second": "4014941a1fc8187cc0a0ab48b6cd49916f41dc3d492b6e6ef14e42d3b9d45eb9"
+        }
+      ],
+      "previewHash": "eb98ce154a38de5cc43309513841e4b6db654d3b4e0a481b50a3765b1c4dbe94"
+    },
+    {
+      "id": "bar-chart",
+      "defaultsHash": "dad6d436940fb48ff98ea755676c0b9d20df7e522763475a8df56814be414e12",
+      "frames": [
+        {
+          "frame": 0,
+          "first": "ecddfd78ed80cd72a49751300440f1c7b4edbe6a9262e01b9c677247a426eee6",
+          "second": "ecddfd78ed80cd72a49751300440f1c7b4edbe6a9262e01b9c677247a426eee6"
+        },
+        {
+          "frame": 75,
+          "first": "57dfa76d4ad70e711cd14f7acbb4254b846993ad58799840f7220fdc0c8666b0",
+          "second": "57dfa76d4ad70e711cd14f7acbb4254b846993ad58799840f7220fdc0c8666b0"
+        },
+        {
+          "frame": 149,
+          "first": "57dfa76d4ad70e711cd14f7acbb4254b846993ad58799840f7220fdc0c8666b0",
+          "second": "57dfa76d4ad70e711cd14f7acbb4254b846993ad58799840f7220fdc0c8666b0"
+        }
+      ],
+      "previewHash": "1a352c238f1d6fb37dec98d36e228262f681edbdbeb6a6838ba66ce2651c7bdc"
     }
   ],
   "fullSmoke": {
     "status": "passed",
-    "durationSec": 30,
+    "durationSec": 42,
     "width": 360,
     "height": 640,
-    "videoDigest": "ead7fe97e29877137a2ff93a6a69a603d34036fea58ad3a562d21ca3c356a9ee",
-    "audioDigest": "a8bea9c4f471a013b724e70bca77b0e95ffc0d204a1669af3f945b09d66e4430",
+    "videoDigest": "fa068bdc68c396c31ee0f83f24e8e6ed2b44ac2ae54b70317460843f51956aa8",
+    "audioDigest": "c8aab7a71fe3d12a9213639f87db0737a3f56417b61e8f2a81bbead953f6b48f",
     "comparison": "Decoded frame/audio hashes; container metadata deliberately excluded"
   }
 }

@@ -40,3 +40,13 @@ The audit records unresolved defects in cut-audio restoration, trim bounds, patc
 - Preview images render at thumbnail resolution. A single checksum-bound legacy full Inter TTF exception is reported to preserve existing glyph coverage and projects; it does not relax the limits on new fonts.
 - The verifier performs start/middle/end twice per native clip and can render the complete 30-second smoke twice, comparing decoded video/audio instead of nondeterministic container metadata. These are single-machine proofs.
 - Orphan warnings use declared scene references and card age, never auto-delete files. Heavy visual-engine adoption, strict human-only replacement curation and automatic CC-BY credit scenes require separate work.
+
+## Additive native motion library (0.1.2)
+
+Added starfield, confetti burst, terminal typewriter and four-value bar chart through the existing Remotion runtime. Particle positions use seeded inputs and elapsed frames; there is no live physics state, external animation dependency or executable terminal. Charts accept nonnegative values with a shared zero baseline and explicitly label defaults as illustrative. Existing ten IDs and default props are preserved against the 1.0.0 manifest fixture. Native pack metadata advances to 1.1.0; compiled registry identity remains compatible.
+
+These are agent-authored native components, not imported human-made animations. Usage cards retain that distinction. Optional starfield/confetti titles add font credits only when text is actually used. Three-frame repetition evidence is supplemented by two complete 42-second exports with decoded video/audio comparison. This adds four useful effects; it does not complete the broader 3D, shader and simulation roadmap.
+
+Final regression caught a pack-watch shutdown race: closing the watcher stopped new events but did not drain an active registry write. Server shutdown now awaits that work and suppresses late state publication. A deferred-refresh test forces the race and verifies close waits before temporary-project cleanup.
+
+The same check also exposed simultaneous registry rebuilds colliding on generated files. Rebuilds now serialize per project, with installation waits outside the queue to avoid deadlocks. Eight concurrent rebuild requests are covered by a real-filesystem regression.

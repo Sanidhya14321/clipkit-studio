@@ -9,6 +9,7 @@ import {parseCard,normalizeAssetLicense} from './cards';
 import {catalog,type Field} from './index';
 import {validateRegisteredProps,type AssetRegistry,type RuntimeClipDefinition,type PropsSchema} from './runtime';
 const installations=new Map<string,{promise:Promise<void>}>();
+const refreshQueues=new Map<string,Promise<void>>();
 const EDITABLE=['text','color','size','x','y','opacity','revealDuration'];
 const slug=/^[a-z0-9][a-z0-9-]{0,79}$/;
 const hash=(value:string|Buffer)=>createHash('sha256').update(value).digest('hex');
@@ -65,6 +66,12 @@ export async function installPack({root,path:source,trust=false,entryPoint,asset
 }
 export async function refreshPacks(root:string,skipInstallWait=false):Promise<AssetRegistry & {errors:Array<{folder:string;error:string}>;generatedDir:string}>{
  if(!skipInstallWait)await installations.get(root)?.promise;
+ const key=path.resolve(root),previous=refreshQueues.get(key);let release!:()=>void;
+ const gate=new Promise<void>(resolve=>{release=resolve;});refreshQueues.set(key,gate);
+ await previous;
+ try{return await buildPackRegistry(root);}finally{if(refreshQueues.get(key)===gate)refreshQueues.delete(key);release();}
+}
+async function buildPackRegistry(root:string):Promise<AssetRegistry & {errors:Array<{folder:string;error:string}>;generatedDir:string}>{
  const discovery=await discoverPacks(root);const errors=[...discovery.errors];const clips:RuntimeClipDefinition[]=[];const imports:string[]=[];const mappings:string[]=[];const seen=new Set<string>();
  for(const pack of discovery.packs){if(pack.codeFiles.length&&!pack.trusted){errors.push({folder:pack.folder,error:'Executable files changed or lack explicit trust; reinstall with --trust'});continue;}for(const clip of pack.clips){if(seen.has(clip.id)){errors.push({folder:pack.folder,error:`Duplicate clip ${clip.id}`});continue;}seen.add(clip.id);clips.push(clip);if(clip.component){const alias=`Clip${imports.length}`;imports.push(`import ${alias} from ${JSON.stringify(safe(pack.folder,clip.component))};`);mappings.push(`${JSON.stringify(clip.id)}:${alias}`);}}}
  const generatedDir=path.join(root,'.clipkit/assets/generated');await mkdir(generatedDir,{recursive:true});
@@ -80,4 +87,14 @@ export async function refreshPacks(root:string,skipInstallWait=false):Promise<As
  const schemas=path.join(generatedDir,'schemas');await rm(schemas,{recursive:true,force:true});await mkdir(schemas);for(const c of clips)await writeFile(path.join(schemas,`${c.id}.json`),JSON.stringify({clipId:c.id,defaults:c.defaults,fields:c.fields,propsSchema:c.propsSchema},null,2));
  return {clips,version,moduleUrl:clips.some(c=>c.component)?`/asset-registry/registry.js?version=${version}`:undefined,errors,generatedDir};
 }
-export async function watchPacks(root:string,onChange:(registry:Awaited<ReturnType<typeof refreshPacks>>)=>void){const folder=path.join(root,'.clipkit/assets/packs');await mkdir(folder,{recursive:true});let pending:ReturnType<typeof setTimeout>|undefined;let running=false,dirty=false,closed=false;const refresh=async()=>{if(closed)return;if(running){dirty=true;return;}running=true;try{do{dirty=false;onChange(await refreshPacks(root));}while(dirty&&!closed);}finally{running=false;}};const watcher=watch(folder,{recursive:true},()=>{dirty=true;clearTimeout(pending);pending=setTimeout(()=>void refresh(),150);});return {close(){closed=true;clearTimeout(pending);watcher.close();}};}
+export async function watchPacks(root:string,onChange:(registry:Awaited<ReturnType<typeof refreshPacks>>)=>void,refreshRegistry:typeof refreshPacks=refreshPacks){
+ const folder=path.join(root,'.clipkit/assets/packs');await mkdir(folder,{recursive:true});
+ let pending:ReturnType<typeof setTimeout>|undefined,inFlight:Promise<void>|undefined;
+ let dirty=false,closed=false;
+ const refresh=async()=>{try{do{dirty=false;const registry=await refreshRegistry(root);if(!closed)onChange(registry);}while(dirty&&!closed);}finally{inFlight=undefined;}};
+ const watcher=watch(folder,{recursive:true},()=>{
+  if(closed)return;dirty=true;clearTimeout(pending);
+  pending=setTimeout(()=>{if(!closed&&!inFlight)inFlight=refresh();},150);
+ });
+ return {async close(){closed=true;clearTimeout(pending);watcher.close();await inFlight;}};
+}

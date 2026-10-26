@@ -21,7 +21,7 @@ Both source checks and pack installation enforce the asset license allowlist; su
 pnpm assets:check             # validate and refresh generated inventory
 pnpm assets:check --check     # CI: fail if generated files are stale
 pnpm assets:verify            # render native start/middle/end twice, regenerate previews/evidence
-pnpm assets:verify --full     # also export the complete 30-second smoke twice, compare decoded frames/audio
+pnpm assets:verify --full     # also export the complete 42-second smoke (three seconds per clip) twice, compare decoded frames/audio
 pnpm ck assets list --kind text
 pnpm ck assets card kinetic-title
 ```

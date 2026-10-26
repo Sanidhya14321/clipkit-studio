@@ -1,7 +1,8 @@
 {
   "Typography": [
     "kinetic-title",
-    "captions"
+    "captions",
+    "terminal-typewriter"
   ],
   "Identity": [
     "lower-third"
@@ -10,7 +11,8 @@
     "icon-callout"
   ],
   "Data": [
-    "counter"
+    "counter",
+    "bar-chart"
   ],
   "Illustration": [
     "illustration-card"
@@ -19,12 +21,16 @@
     "screenshot-frame"
   ],
   "Background": [
-    "gradient"
+    "gradient",
+    "starfield"
   ],
   "Transition": [
     "wipe"
   ],
   "Action": [
     "cta"
+  ],
+  "Effects": [
+    "confetti-burst"
   ]
 }

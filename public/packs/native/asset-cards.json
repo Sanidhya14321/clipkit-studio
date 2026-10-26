@@ -40,6 +40,44 @@
     "schemaPath": "packages/assets/cards/backgrounds/gradient/schema.ts"
   },
   {
+    "id": "starfield",
+    "name": "Seeded starfield",
+    "kind": "backgrounds",
+    "summary": "Sparse drifting stars with an optional centered title.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "starfield",
+      "backgrounds",
+      "calm-ambient"
+    ],
+    "mood": "calm-ambient",
+    "bestFor": "ambient backdrops with readable foreground content",
+    "avoid": "Claiming a physical space simulation or adding dense text.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/starfield.md",
+    "sha256": "a418c239eb7fd7ba6cd8777ee8611d0074a56abd62bfd0aba72a89fa314d2bc2",
+    "schemaPath": "packages/assets/cards/backgrounds/starfield/schema.ts"
+  },
+  {
+    "id": "bar-chart",
+    "name": "Animated bar chart",
+    "kind": "data",
+    "summary": "Four bars grow from a shared zero baseline with editable labels.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "bar-chart",
+      "data",
+      "editorial"
+    ],
+    "mood": "editorial",
+    "bestFor": "comparing four supplied nonnegative values",
+    "avoid": "Presenting the default illustrative numbers as measured analytics.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/bar-chart.md",
+    "sha256": "e46951a7ef8e1a8ec476d57d9aaa8b1462bf51210cfde1f68038a5f568bac3d0",
+    "schemaPath": "packages/assets/cards/data/bar-chart/schema.ts"
+  },
+  {
     "id": "counter",
     "name": "Number counter",
     "kind": "data",
@@ -96,6 +134,25 @@
     "sha256": "ce4048c6650426cc9b9f67409375d269cd4719175f5b15f918f7239fe8fd01fe"
   },
   {
+    "id": "confetti-burst",
+    "name": "Confetti burst",
+    "kind": "fx",
+    "summary": "Seeded paper pieces follow deterministic ballistic arcs.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "confetti-burst",
+      "fx",
+      "celebratory"
+    ],
+    "mood": "celebratory",
+    "bestFor": "brief celebrations over footage or a title",
+    "avoid": "Holding the effect over an entire spoken section.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/confetti-burst.md",
+    "sha256": "ddd951c1ba59f7260bae68c2eeef8a2625e60b7784278e9c180e6400433a2458",
+    "schemaPath": "packages/assets/cards/fx/confetti-burst/schema.ts"
+  },
+  {
     "id": "gym-illustration",
     "name": "Gym illustration",
     "kind": "image",
@@ -130,6 +187,23 @@
     "sha256": "562064e38b2f6b81b5d2dff3808299cb9cc341cd1f598e0679b43d9e2cf927e7"
   },
   {
+    "id": "preview-bar-chart",
+    "name": "Animated bar chart preview",
+    "kind": "image",
+    "summary": "Four bars grow from a shared zero baseline with editable labels.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "preview",
+      "bar-chart"
+    ],
+    "mood": "editorial",
+    "bestFor": "Studio library thumbnail.",
+    "avoid": "Flattening the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/bar-chart.png.md",
+    "sha256": "8704dca3860b775bd08dfb34f1acd31f3ba8d3c036c34ced24e0c7bc4a08118c"
+  },
+  {
     "id": "preview-captions",
     "name": "Word captions preview",
     "kind": "image",
@@ -144,6 +218,23 @@
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/captions.png.md",
     "sha256": "b37e8e11deeae02ce8aedef4cd7b6f0a9a6e63f6516ae5b0b45ffc736d4a7f7c"
+  },
+  {
+    "id": "preview-confetti-burst",
+    "name": "Confetti burst preview",
+    "kind": "image",
+    "summary": "Seeded paper pieces follow deterministic ballistic arcs.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "preview",
+      "confetti-burst"
+    ],
+    "mood": "celebratory",
+    "bestFor": "Studio library thumbnail.",
+    "avoid": "Flattening the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/confetti-burst.png.md",
+    "sha256": "5a9ebb209011af4dc60bbb361038b2fb73cf2506308a7a18925611ed3638e3c9"
   },
   {
     "id": "preview-counter",
@@ -272,6 +363,40 @@
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/screenshot-frame.png.md",
     "sha256": "8c87e94f29d6faa7bd8b264dbf3cdd5c5dbbee75c2e3c7906028417ec445d771"
+  },
+  {
+    "id": "preview-starfield",
+    "name": "Seeded starfield preview",
+    "kind": "image",
+    "summary": "Sparse drifting stars with an optional centered title.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "preview",
+      "starfield"
+    ],
+    "mood": "calm-ambient",
+    "bestFor": "Studio library thumbnail.",
+    "avoid": "Flattening the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/starfield.png.md",
+    "sha256": "32b0b61c23af2641df0a14c8d4294fd1ae23ecfc6ccda675b1b4408449713f3a"
+  },
+  {
+    "id": "preview-terminal-typewriter",
+    "name": "Terminal typewriter preview",
+    "kind": "image",
+    "summary": "A framed terminal-style panel reveals editable text.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "preview",
+      "terminal-typewriter"
+    ],
+    "mood": "technical",
+    "bestFor": "Studio library thumbnail.",
+    "avoid": "Flattening the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/terminal-typewriter.png.md",
+    "sha256": "31f8a35a4e2d94f3725abf1c6cb4ed320cd6e7e9029204fd1395c65204418b09"
   },
   {
     "id": "preview-wipe",
@@ -446,6 +571,25 @@
     "cardPath": "packs/native/cards/kinetic-title.md",
     "sha256": "679106ecdb2943008fa81a160f7388382e5302dc06e5f29fd5f5baf697fbc15a",
     "schemaPath": "packages/assets/cards/text/kinetic-title/schema.ts"
+  },
+  {
+    "id": "terminal-typewriter",
+    "name": "Terminal typewriter",
+    "kind": "text",
+    "summary": "A framed terminal-style panel reveals editable text.",
+    "duration": "Editable timeline duration; motion uses project frames.",
+    "tags": [
+      "terminal-typewriter",
+      "text",
+      "technical"
+    ],
+    "mood": "technical",
+    "bestFor": "short demonstrations and technical status sequences",
+    "avoid": "Executing commands: this is display-only text.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/terminal-typewriter.md",
+    "sha256": "c7b283c4e36ced00bc6c6cc66f629b43541b69aa09bc6b6621f4adee8f67bcf0",
+    "schemaPath": "packages/assets/cards/text/terminal-typewriter/schema.ts"
   },
   {
     "id": "wipe",

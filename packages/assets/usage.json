@@ -13,7 +13,11 @@
       "gradient",
       "wipe",
       "cta",
-      "kenney-ui-click"
+      "kenney-ui-click",
+      "starfield",
+      "confetti-burst",
+      "terminal-typewriter",
+      "bar-chart"
     ]
   }
 ]

@@ -58,5 +58,29 @@
     "frame": 45,
     "sha256": "a986e76c4cbd0ca9dd663601dd01c70690c3a8c09169e757280ddff29393da9c",
     "defaultsSha256": "187f21dadae48e5ffebc1f8b004292c4637f6985b37011ab58380101e424a09c"
+  },
+  {
+    "clipId": "starfield",
+    "frame": 45,
+    "sha256": "2cb5e05d507857b356665ad8f6e980f4832aa948b4bf191f10631dd9b145cdf0",
+    "defaultsSha256": "67289059e6687d5cb317c0cf1c3dfccb446d5be9053bc7ba0662156233fe6790"
+  },
+  {
+    "clipId": "confetti-burst",
+    "frame": 45,
+    "sha256": "3156d8a8ecff40fa3ed012db9e87f3e7a32697d274e9304f952ac105ba975365",
+    "defaultsSha256": "f4bb8c79dd1cc9f04b866447c05dfec86c2d4d5171355d057089d6ac054f5078"
+  },
+  {
+    "clipId": "terminal-typewriter",
+    "frame": 45,
+    "sha256": "eb98ce154a38de5cc43309513841e4b6db654d3b4e0a481b50a3765b1c4dbe94",
+    "defaultsSha256": "e102fed8dc0b8ebeb0c979fb8feb65c4fd9813bb4c74a0e3019d56d297329492"
+  },
+  {
+    "clipId": "bar-chart",
+    "frame": 45,
+    "sha256": "1a352c238f1d6fb37dec98d36e228262f681edbdbeb6a6838ba66ce2651c7bdc",
+    "defaultsSha256": "dad6d436940fb48ff98ea755676c0b9d20df7e522763475a8df56814be414e12"
   }
 ]

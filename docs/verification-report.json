@@ -3,14 +3,14 @@
   "automated": {
     "typecheck": "passed",
     "vitest": {
-      "defaultPassed": 96,
+      "defaultPassed": 105,
       "defaultSkipped": 2,
       "optInSuitePassed": 13,
-      "uniqueTestsExecutedAcrossRuns": 98,
+      "uniqueTestsExecutedAcrossRuns": 107,
       "note": "The opt-in suite overlaps eleven default tests and executes the two skipped real-render checks."
     },
     "playwright": {
-      "passed": 5,
+      "passed": 6,
       "backend": "real HTTP/WebSocket server",
       "viewportWidths": [
         1280,
@@ -18,7 +18,7 @@
       ]
     },
     "renderConsistency": {
-      "clips": 10,
+      "clips": 14,
       "allPreviewExportHashesMatch": true,
       "allColorEditsChangedPixels": true
     },
@@ -167,7 +167,7 @@
     "BLOCKED": 13
   },
   "artifacts": {
-    "package": "artifacts/clipkit-studio-local-0.1.1.tgz",
+    "package": "artifacts/clipkit-studio-local-0.1.2.tgz",
     "installedTestExport": "artifacts/verified-install-export.mp4",
     "mixedProof": ".clipkit/mixed-proof/report.json",
     "liveWorkflowRecording": ".clipkit/verification/live-codex-workflow.webm",
@@ -212,19 +212,19 @@
     "packaging": "The tarball bundles the patched Remotion dependency tree and includes a shrinkwrap. Installed-package audit reports zero vulnerabilities; every inspected installed Zod version is 4.6.7."
   },
   "buildAdvisories": [
-    "Main editor chunk is about 767kB uncompressed; build warns above 500kB. Local fonts are served at runtime."
+    "Main editor chunk is about 779kB uncompressed; build warns above 500kB. Local fonts are served at runtime."
   ],
   "assetCards": {
-    "report": "docs/asset-verification.json",
-    "cards": 25,
-    "sourceDigest": "1a1a1b18c660fb2acc6c74c56b6d967dd44b26d9f366ce924b6630b3be3520b1",
+    "report": "docs/asset-motion-verification.json",
+    "cards": 33,
+    "sourceDigest": "7e17665eee098c5f2406405ec23341b274334f024c17a8ce516e8740d89d95ea",
     "fullSmoke": {
       "status": "passed",
-      "durationSec": 30,
+      "durationSec": 42,
       "width": 360,
       "height": 640,
-      "videoDigest": "ead7fe97e29877137a2ff93a6a69a603d34036fea58ad3a562d21ca3c356a9ee",
-      "audioDigest": "a8bea9c4f471a013b724e70bca77b0e95ffc0d204a1669af3f945b09d66e4430",
+      "videoDigest": "fa068bdc68c396c31ee0f83f24e8e6ed2b44ac2ae54b70317460843f51956aa8",
+      "audioDigest": "c8aab7a71fe3d12a9213639f87db0737a3f56417b61e8f2a81bbead953f6b48f",
       "comparison": "Decoded frame/audio hashes; container metadata deliberately excluded"
     },
     "realAgent": {
@@ -232,21 +232,33 @@
       "client": "codex",
       "model": "gpt-6.1-sol",
       "effort": "medium",
-      "seconds": 29.144,
+      "seconds": 27.06,
       "cardToolObserved": true,
       "addedOnlyRequestedClip": true,
       "preservedExistingLayers": true,
       "resolvedComment": true,
       "telemetry": {
-        "contextTokens": 2237,
-        "baselineTokens": 4592,
+        "contextTokens": 2562,
+        "baselineTokens": 6590,
         "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
         "actualUsage": {
-          "input": 178641,
-          "output": 275,
-          "cached": 162688
+          "input": 179890,
+          "output": 272,
+          "cached": 163456
         }
       }
     }
+  },
+  "release": "0.1.2",
+  "motionLibrary": {
+    "nativeClips": 14,
+    "newClips": [
+      "starfield",
+      "confetti-burst",
+      "terminal-typewriter",
+      "bar-chart"
+    ],
+    "originalDefaultsPreserved": true,
+    "source": "docs/asset-motion-verification.json"
   }
 }

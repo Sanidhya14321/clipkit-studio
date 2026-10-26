@@ -190,5 +190,5 @@ async function startServerUnlocked(options:ServerOptions){
   await mkdir(store.dir,{recursive:true});await writeFile(join(store.dir,'server.json'),JSON.stringify({port,url,token,pid:process.pid,root}),{mode:0o600});
   const packWatcher=await watchPacks(root,value=>{registry=value;notify();});
   const expiry=setInterval(()=>store.currentLease(),1000);
-  return {app,server,store,media,runner,state,operate,url,token,close:async()=>{clearInterval(expiry);packWatcher.close();runner.cancel();for(const ws of wss.clients)ws.close();wss.close();await new Promise<void>((resolve,reject)=>server.close(e=>e?reject(e):resolve()));await rm(join(store.dir,'server.json'),{force:true});}};
+  return {app,server,store,media,runner,state,operate,url,token,close:async()=>{clearInterval(expiry);await packWatcher.close();runner.cancel();for(const ws of wss.clients)ws.close();wss.close();await new Promise<void>((resolve,reject)=>server.close(e=>e?reject(e):resolve()));await rm(join(store.dir,'server.json'),{force:true});}};
 }

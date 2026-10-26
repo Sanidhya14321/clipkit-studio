@@ -1,7 +1,7 @@
 {
   "format": "clipkit.asset-pack/v1",
   "id": "clipkit-native",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "runtime": {
     "kind": "compiled",
@@ -1079,6 +1079,532 @@
       ],
       "previewPath": "/previews/cta.png",
       "schemaPath": "schemas/cta.json"
+    },
+    {
+      "clipId": "starfield",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "easing": "ease-out",
+        "text": "",
+        "color": "#b8dcf3",
+        "size": 72,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "",
+        "background": "#101827",
+        "count": 120,
+        "seed": "clipkit-night",
+        "speed": 0.6,
+        "starRadius": 1.3
+      },
+      "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        },
+        {
+          "key": "count",
+          "label": "Star count",
+          "type": "number",
+          "min": 12,
+          "max": 240,
+          "step": 1
+        },
+        {
+          "key": "seed",
+          "label": "Seed",
+          "type": "text"
+        },
+        {
+          "key": "speed",
+          "label": "Drift speed",
+          "type": "number",
+          "min": 0,
+          "max": 2,
+          "step": 0.1
+        },
+        {
+          "key": "starRadius",
+          "label": "Star radius",
+          "type": "number",
+          "min": 0.5,
+          "max": 4,
+          "step": 0.1
+        }
+      ],
+      "previewPath": "/previews/starfield.png",
+      "schemaPath": "schemas/starfield.json"
+    },
+    {
+      "clipId": "confetti-burst",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "easing": "ease-out",
+        "text": "",
+        "color": "#c7f36b",
+        "size": 72,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.35,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "",
+        "background": "#142b26",
+        "count": 130,
+        "seed": "clipkit-celebrate",
+        "secondary": "#e5ac91"
+      },
+      "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        },
+        {
+          "key": "count",
+          "label": "Piece count",
+          "type": "number",
+          "min": 8,
+          "max": 240,
+          "step": 1
+        },
+        {
+          "key": "seed",
+          "label": "Seed",
+          "type": "text"
+        },
+        {
+          "key": "secondary",
+          "label": "Secondary color",
+          "type": "color"
+        }
+      ],
+      "previewPath": "/previews/confetti-burst.png",
+      "schemaPath": "schemas/confetti-burst.json"
+    },
+    {
+      "clipId": "terminal-typewriter",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "easing": "ease-out",
+        "text": "$ clipkit render\n✓ Captions aligned\n✓ Story ready",
+        "color": "#c7f36b",
+        "size": 30,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 2.4,
+        "scale": 1,
+        "width": 620,
+        "subtitle": "studio / output",
+        "background": "#101c1b"
+      },
+      "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/terminal-typewriter.png",
+      "schemaPath": "schemas/terminal-typewriter.json"
+    },
+    {
+      "clipId": "bar-chart",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "easing": "ease-out",
+        "text": "Small wins.\nBig momentum.",
+        "color": "#c7f36b",
+        "size": 54,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 1.1,
+        "scale": 1,
+        "width": 620,
+        "subtitle": "Illustrative data · not connected to analytics",
+        "background": "#142b26",
+        "value1": 32,
+        "label1": "Week 1",
+        "value2": 58,
+        "label2": "Week 2",
+        "value3": 44,
+        "label3": "Week 3",
+        "value4": 82,
+        "label4": "Week 4"
+      },
+      "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        },
+        {
+          "key": "value1",
+          "label": "Value 1",
+          "type": "number",
+          "min": 0,
+          "max": 1000000000
+        },
+        {
+          "key": "label1",
+          "label": "Label 1",
+          "type": "text"
+        },
+        {
+          "key": "value2",
+          "label": "Value 2",
+          "type": "number",
+          "min": 0,
+          "max": 1000000000
+        },
+        {
+          "key": "label2",
+          "label": "Label 2",
+          "type": "text"
+        },
+        {
+          "key": "value3",
+          "label": "Value 3",
+          "type": "number",
+          "min": 0,
+          "max": 1000000000
+        },
+        {
+          "key": "label3",
+          "label": "Label 3",
+          "type": "text"
+        },
+        {
+          "key": "value4",
+          "label": "Value 4",
+          "type": "number",
+          "min": 0,
+          "max": 1000000000
+        },
+        {
+          "key": "label4",
+          "label": "Label 4",
+          "type": "text"
+        }
+      ],
+      "previewPath": "/previews/bar-chart.png",
+      "schemaPath": "schemas/bar-chart.json"
     }
   ]
 }

@@ -9,7 +9,8 @@ export async function exportLicenses(project:Project,assetDirectory?:string,regi
  const assets:LicenseSummary['assets']=[];const clips:LicenseSummary['clips']=[];const vendorFiles=new Set<string>();
  const definitions=[...catalog,...(registry?.clips??[])];
  for(const id of ids){const clip=definitions.find(a=>a.id===id);if(!clip)continue;clips.push({id,name:clip.name,license:clip.license});const external=registry?.clips.find(c=>c.id===id);const nativeId=external?.basedOn??id;if(external?.basedOn){const base=catalog.find(c=>c.id===external.basedOn);if(base&&!clips.some(c=>c.id===base.id))clips.push({id:base.id,name:base.name,license:base.license});}
-  if(!['gradient','wipe'].includes(nativeId)&&catalog.some(a=>a.id===nativeId)){vendorFiles.add('space-grotesk.ttf');if(nativeId!=='captions')vendorFiles.add('inter.ttf');}
+  const optionalTextOnly=['starfield','confetti-burst'].includes(nativeId);const hasText=items.some(item=>item.clipId===id&&String(item.props.text??'').length>0);
+  if(!['gradient','wipe'].includes(nativeId)&&(!optionalTextOnly||hasText)&&catalog.some(a=>a.id===nativeId)){vendorFiles.add('space-grotesk.ttf');if(nativeId!=='captions')vendorFiles.add('inter.ttf');}
   if(nativeId==='illustration-card')vendorFiles.add('illustration.svg');
   if(['icon-callout','cta'].includes(nativeId))vendorFiles.add('lucide-LICENSE.txt');
   for(const asset of external?.assets??[])assets.push(asset);

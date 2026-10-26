@@ -25,3 +25,14 @@ test('human edits, anchored feedback, server lock and undo share a live project'
   await page.screenshot({path:'.clipkit/verification/studio-e2e.png',fullPage:true});
   expect(errors).toEqual([]);
 });
+
+test('new chart controls persist and render through the live editor',async({page,request})=>{
+ const {token}=await (await request.get('/api/bootstrap')).json();
+ const op=async(name:string,args:Record<string,unknown>={})=>request.post(`/api/op/${name}`,{headers:{'X-ClipKit-Token':token},data:args});
+ await op('demo_reset');await op('assets_add',{clipId:'bar-chart',at:0});
+ await page.goto('/');await page.getByRole('button',{name:/Animated bar chart, /}).click();
+ const value=page.getByRole('spinbutton',{name:'Value 4',exact:true});await value.fill('125');await value.blur();
+ await expect.poll(async()=>{const s=await(await request.get('/api/state',{headers:{'X-ClipKit-Token':token}})).json();return s.project.tracks.flatMap((t:any)=>t.items).find((i:any)=>i.clipId==='bar-chart').props.value4;}).toBe(125);
+ await page.getByRole('button',{name:'Undo (Ctrl Z)'}).click();
+ await expect(value).toHaveValue('82');
+});

@@ -5,14 +5,16 @@ import Sparkles from 'lucide-react/dist/esm/icons/sparkles.mjs';
 import {activeTake, type Item, type Project} from '../../core/src/index';
 import {validateClipProps,catalog} from '../../assets/src/index';
 import {itemAudioGain} from './audio-gain';
+import {MotionClip,isMotionClip} from './MotionClips';
 import {ExternalClip} from './external';
 import {validateRegisteredProps,type AssetRegistry} from '../../assets/src/runtime';
 export type CompositionProps={project:Project;mediaBaseUrl:string;assetBaseUrl:string;preview:boolean;accessToken?:string;assetRegistry?:AssetRegistry;designSize?:{width:number;height:number}};
 const clamp={extrapolateLeft:'clamp',extrapolateRight:'clamp'} as const;
 const tag=(item:Item,path:string,element=path)=>({'data-ck-layer':item.id,'data-ck-path':path,'data-ck-element':element});
-function Clip({item,assetBaseUrl,imageUrl}:{item:Item;assetBaseUrl:string;imageUrl?:string}){
- const frame=useCurrentFrame();const {fps}=useVideoConfig();
+function Clip({item,assetBaseUrl,imageUrl,canvas}:{item:Item;assetBaseUrl:string;imageUrl?:string;canvas?:{width:number;height:number}}){
+ const frame=useCurrentFrame();const {fps,width,height}=useVideoConfig();
  const p=validateClipProps(item.clipId!,item.props) as Record<string,any>;
+ if(isMotionClip(item.clipId!))return <MotionClip item={item} p={p} canvas={canvas??{width,height}}/>;
  const progress=interpolate(frame,[0,p.revealDuration*fps],[0,1],clamp);const ease=p.easing==='linear'?progress:p.easing==='ease-in-out'?(progress<.5?4*progress**3:1-(-2*progress+2)**3/2):1-Math.pow(1-progress,3);
  const style:React.CSSProperties={position:'absolute',left:'50%',top:'50%',width:p.width,transform:`translate(-50%, -50%) translate(${p.x}px,${p.y+(1-ease)*38}px) scale(${p.scale})`,opacity:p.opacity*ease,color:'#fff',fontSize:p.size,fontWeight:700,lineHeight:1.02,letterSpacing:'-.055em'};
  const text=<div {...tag(item,'text')} style={{whiteSpace:'pre-wrap'}}>{p.text}</div>;
@@ -40,6 +42,6 @@ function RenderClip({item,config}:{item:Item;config:CompositionProps}){
  if(definition?.component)return <ExternalClip item={{...item,props}} definition={definition} registry={config.assetRegistry!} assetBaseUrl={config.assetBaseUrl} context={{project:config.project,assetBaseUrl:config.assetBaseUrl,mediaBaseUrl:config.mediaBaseUrl}}/>;
  const sourceId=typeof props.imageSourceId==='string'?props.imageSourceId:'';const source=config.project.sources[sourceId];
  const imageUrl=source?.kind==='image'?`${config.mediaBaseUrl}/${encodeURIComponent(sourceId)}?${new URLSearchParams({...config.accessToken?{token:config.accessToken}:{},variant:'original'})}`:undefined;
- return <Clip item={{...item,clipId:definition?.basedOn??item.clipId,props}} assetBaseUrl={config.assetBaseUrl} imageUrl={imageUrl}/>;
+ return <Clip item={{...item,clipId:definition?.basedOn??item.clipId,props}} assetBaseUrl={config.assetBaseUrl} imageUrl={imageUrl} canvas={config.designSize??config.project.settings}/>;
 }
 export function Composition(config:CompositionProps){const {project,assetBaseUrl}=config;const output=useVideoConfig();const design=config.designSize??project.settings;const scale=Math.min(output.width/design.width,output.height/design.height);const tracks=[...project.tracks.filter(t=>t.kind==='video'),...project.tracks.filter(t=>t.kind!=='video')];return <AbsoluteFill style={{background:'#10251f',fontFamily:'Space Grotesk, Inter, sans-serif'}}><AbsoluteFill style={{width:design.width,height:design.height,left:(output.width-design.width*scale)/2,top:(output.height-design.height*scale)/2,transform:`scale(${scale})`,transformOrigin:'top left'}}><style>{`@font-face{font-family:'Inter';src:url('${assetBaseUrl}/vendor/inter.ttf')}@font-face{font-family:'Space Grotesk';src:url('${assetBaseUrl}/vendor/space-grotesk.ttf')}`}</style>{tracks.flatMap(track=>track.items.map(item=><Sequence key={item.id} from={Math.round(item.at*project.settings.fps)} durationInFrames={Math.max(1,Math.round(item.dur*project.settings.fps))} name={item.clipId??item.type}>{item.type==='clip'?<RenderClip item={item} config={config}/>:item.type==='caption'?<Clip item={{...item,clipId:'captions'}} assetBaseUrl={assetBaseUrl}/>:<Media item={item} config={config}/>}</Sequence>))}</AbsoluteFill></AbsoluteFill>;}

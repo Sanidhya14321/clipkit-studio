@@ -2,14 +2,14 @@ import {describe,it,expect} from 'vitest';
 import {catalog,makeClip,searchAssets,validateClipProps} from '../packages/assets/src/index';
 import {ItemSchema} from '../packages/core/src/index';
 describe('native clip catalog',()=>{
- it('provides ten valid clips and independent editable defaults',()=>{expect(catalog).toHaveLength(10);for(const asset of catalog){const a=makeClip(asset.id);expect(ItemSchema.safeParse(a).success).toBe(true);expect(validateClipProps(asset.id,a.props)).toEqual(asset.defaults);expect(a.props).not.toBe(asset.defaults);}});
+ it('provides fourteen valid clips and independent editable defaults',()=>{expect(catalog).toHaveLength(14);for(const asset of catalog){const a=makeClip(asset.id);expect(ItemSchema.safeParse(a).success).toBe(true);expect(validateClipProps(asset.id,a.props)).toEqual(asset.defaults);expect(a.props).not.toBe(asset.defaults);}});
  it('finds captions and rejects out of range controls',()=>{expect(searchAssets('caption')[0].id).toBe('captions');expect(()=>validateClipProps('counter',{value:Infinity})).toThrow();expect(()=>validateClipProps('cta',{opacity:2})).toThrow();expect(()=>makeClip('missing')).toThrow();});
 });
-// Opt-in real Chromium test: 30 PNG renders, with font/art serving and pixel hashes.
+// Opt-in real Chromium test: preview/export/edit renders for every native clip, with font/art serving and pixel hashes.
 it.runIf(process.env.CK_RENDER_TEST==='1')('matches native preview/export frames and visibly applies edits',async()=>{
  const {execFile}=await import('node:child_process');const {promisify}=await import('node:util');
  const result=await promisify(execFile)(process.execPath,['--import','tsx','scripts/render-consistency.ts'],{cwd:process.cwd(),timeout:300000,maxBuffer:1024*1024});
- expect(result.stdout.match(/PASS /g)).toHaveLength(10);
+ expect(result.stdout.match(/PASS /g)).toHaveLength(14);
 },310000);
 
 import {itemAudioGain,narrationDuckingGain} from '../packages/render/src/audio-gain';
@@ -39,10 +39,10 @@ it('builds native pack metadata, category index and full schemas from the truste
  const {mkdtemp,readFile,rm}=await import('node:fs/promises');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
  const output=await mkdtemp(join(tmpdir(),'ck-pack-'));
  try{
-  const result=await buildAssets(process.cwd(),output);expect(result.count).toBe(10);
+  const result=await buildAssets(process.cwd(),output);expect(result.count).toBe(14);
   const rows=(await readFile(join(output,'catalog.jsonl'),'utf8')).trim().split('\n').map(line=>JSON.parse(line));expect(rows.map(r=>r.id)).toEqual(catalog.map(a=>a.id));
   const schema=JSON.parse(await readFile(join(output,'schemas/kinetic-title.json'),'utf8'));expect(schema.propsSchema.properties.text.default).toBe(catalog[0].defaults.text);expect(schema.editableContract.requiredProps).toContain('opacity');
-  const pack=JSON.parse(await readFile(join(output,'pack.json'),'utf8'));expect(pack.runtime).toEqual({kind:'compiled',registry:'clipkit/native-v1'});expect(pack.clips).toHaveLength(10);
+  const pack=JSON.parse(await readFile(join(output,'pack.json'),'utf8'));expect(pack.runtime).toEqual({kind:'compiled',registry:'clipkit/native-v1'});expect(pack.clips).toHaveLength(14);
   const originalLicense=catalog[0].license;try{catalog[0].license='';await expect(buildAssets(process.cwd(),output)).rejects.toThrow('license is required');}finally{catalog[0].license=originalLicense;}
   const originalFields=catalog[0].fields;try{catalog[0].fields=originalFields.filter(field=>field.key!=='opacity');await expect(buildAssets(process.cwd(),output)).rejects.toThrow('missing editable property opacity');}finally{catalog[0].fields=originalFields;}
   const original=catalog[0].defaults.opacity;try{catalog[0].defaults.opacity=2;await expect(buildAssets(process.cwd(),output)).rejects.toThrow();}finally{catalog[0].defaults.opacity=original;}

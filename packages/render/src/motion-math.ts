@@ -1,0 +1,8 @@
+import {random} from 'remotion';
+export const unit=(value:number)=>Math.max(0,Math.min(1,value));
+export function motionEase(value:number,easing:string){const t=unit(value);return easing==='linear'?t:easing==='ease-in-out'?(t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2):1-Math.pow(1-t,3);}
+export function starPoints(count:number,seed:string){return Array.from({length:count},(_,i)=>({x:random(`${seed}:star:${i}:x`),y:random(`${seed}:star:${i}:y`),depth:.2+random(`${seed}:star:${i}:depth`)*.8,phase:random(`${seed}:star:${i}:phase`)*Math.PI*2}));}
+export function confettiPieces(count:number,seed:string){return Array.from({length:count},(_,i)=>({offset:(random(`${seed}:piece:${i}:offset`)-.5)*.36,angle:-Math.PI*.85+random(`${seed}:piece:${i}:angle`)*Math.PI*.7,speed:650+random(`${seed}:piece:${i}:speed`)*400,spin:(random(`${seed}:piece:${i}:spin`)-.5)*700,width:5+random(`${seed}:piece:${i}:width`)*8,delay:random(`${seed}:piece:${i}:delay`)*.12}));}
+export function confettiPosition(piece:ReturnType<typeof confettiPieces>[number],seconds:number,canvas:{width:number;height:number},spread:number){const t=Math.max(0,seconds-piece.delay);return {x:canvas.width*.5+piece.offset*spread+Math.cos(piece.angle)*piece.speed*t*(spread/600),y:canvas.height*.65+Math.sin(piece.angle)*piece.speed*t+240*t*t,rotation:piece.spin*t,visible:seconds>=piece.delay};}
+export function typedText(text:string,progress:number){const chars=Array.from(text);return chars.slice(0,Math.floor(unit(progress)*chars.length)).join('');}
+export function chartRatios(values:number[]){const maximum=Math.max(1,...values);return values.map(value=>value/maximum);}

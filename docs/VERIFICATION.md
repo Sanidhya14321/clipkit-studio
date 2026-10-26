@@ -1,4 +1,10 @@
-# Current verification (asset release 0.1.1)
+# Current verification (asset release 0.1.2)
+
+Four new native clips bring the library to fourteen, with 33 usage cards. All 105 default tests and 13 opt-in tests passed (107 unique Vitest tests); all six browser tests passed. Repeated frame checks, two matching complete 42-second exports, preview/export equality and editable-control checks passed. A real Codex turn inserted the requested chart after reading its card. See [motion verification](ASSET-MOTION.md) and [machine-readable results](asset-motion-verification.json).
+
+External voice/Claude acceptance limitations documented below still apply.
+
+# Previous asset verification (0.1.1)
 
 The latest asset update passed 96 standard Vitest tests and the separate 13-test opt-in asset/render suite (98 unique tests across runs), all five real-backend browser tests, typecheck, build and a clean installed-package rehearsal. The package exposes the new card tools, accepts a valid custom pack and exports portrait/landscape H.264/AAC. Installed dependency audit reports zero vulnerabilities.
 
