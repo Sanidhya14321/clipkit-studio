@@ -2,6 +2,8 @@
 
 A local video workspace where you and a coding agent edit the same non-destructive timeline. Agents make small, revisioned patches; you can inspect, change and undo them.
 
+**Status:** reduced hackathon MVP. See the [full Word PRD feature audit](docs/PRD-FEATURE-AUDIT.md) for verified behavior, missing features and known defects. Passing automated tests does not mean the full PRD is complete.
+
 ## Start
 
 Requires Node 22+ and pnpm. The development machine uses Node 24. FFmpeg falls back to the locally installed `ffmpeg-static` binary; ffprobe uses Remotion's bundled binary when absent from PATH.

@@ -1,0 +1,188 @@
+{
+  "emptyState": {
+    "demoVisible": true,
+    "commandVisible": true,
+    "libraryCards": 10
+  },
+  "hover": [
+    {
+      "clipId": "kinetic-title",
+      "visibleTaggedLeaves": 3,
+      "results": [
+        {
+          "path": "color",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "subtitle",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "lower-third",
+      "visibleTaggedLeaves": 2,
+      "results": [
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "subtitle",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "captions",
+      "visibleTaggedLeaves": 1,
+      "results": [
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "icon-callout",
+      "visibleTaggedLeaves": 2,
+      "results": [
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "subtitle",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "counter",
+      "visibleTaggedLeaves": 3,
+      "results": [
+        {
+          "path": "suffix",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "subtitle",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "illustration-card",
+      "visibleTaggedLeaves": 2,
+      "results": [
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "subtitle",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "screenshot-frame",
+      "visibleTaggedLeaves": 2,
+      "results": [
+        {
+          "path": "subtitle",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "gradient",
+      "visibleTaggedLeaves": 1,
+      "results": [
+        {
+          "path": "color",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "wipe",
+      "visibleTaggedLeaves": 1,
+      "results": [
+        {
+          "path": "color",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    },
+    {
+      "clipId": "cta",
+      "visibleTaggedLeaves": 2,
+      "results": [
+        {
+          "path": "text",
+          "highlighted": true,
+          "pathInSchema": true
+        },
+        {
+          "path": "subtitle",
+          "highlighted": true,
+          "pathInSchema": true
+        }
+      ]
+    }
+  ],
+  "askAgent": {
+    "explicitAskButton": false,
+    "correctLayer": true,
+    "propPath": "text",
+    "elementId": "text"
+  },
+  "selectionSync": {
+    "canvasSelectsTimeline": true,
+    "timelineSelected": true,
+    "canvasOutlineAfterTimelineSelection": false
+  },
+  "inspector": {
+    "liveBeforeBlur": false,
+    "committedTextAndColor": true,
+    "author": "human",
+    "floatingInspector": false
+  },
+  "baseline": {
+    "projectSources": 0,
+    "orphanTranscriptIncluded": true,
+    "before": 3725,
+    "after": 4848
+  },
+  "pageErrors": []
+}

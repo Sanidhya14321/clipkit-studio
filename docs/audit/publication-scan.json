@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "fad7010454d49e4b9e288c7f0770e21068df3656",
+  "textBlobsScanned": 108,
+  "credentialPatternFindings": [],
+  "excludedPathsIgnored": {
+    ".env": true,
+    ".clipkit/project.json": true,
+    "artifacts/example.tgz": true,
+    "node_modules/example": true,
+    "test-results/example": true,
+    "playwright-report/example": true
+  },
+  "unexpectedTrackedPrivateOrBuildFiles": [],
+  "passed": true
+}

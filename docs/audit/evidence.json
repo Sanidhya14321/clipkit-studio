@@ -1,0 +1,328 @@
+{
+  "schema": {
+    "valid": true,
+    "missingRejected": true,
+    "wrongTypeRejected": true
+  },
+  "persistence": {
+    "name": "Two",
+    "revision": 6,
+    "history": 6,
+    "expectedName": "Two"
+  },
+  "patchHeartbeat": {
+    "initialExpiry": 120100,
+    "afterPatchExpiry": 120100,
+    "expectedExpiry": 180100,
+    "patchExtendsLease": false
+  },
+  "expiry": {
+    "releases": true
+  },
+  "grammar": {
+    "deleteTrack": {
+      "kind": "comment",
+      "text": "delete the track"
+    },
+    "unclear": {
+      "kind": "comment",
+      "text": "mumbled unrelated speech"
+    },
+    "clearAll": {
+      "kind": "confirm",
+      "action": "clear"
+    },
+    "localCommands": [
+      {
+        "text": "play",
+        "intent": {
+          "kind": "local",
+          "action": "play"
+        }
+      },
+      {
+        "text": "pause",
+        "intent": {
+          "kind": "local",
+          "action": "pause"
+        }
+      },
+      {
+        "text": "undo",
+        "intent": {
+          "kind": "local",
+          "action": "undo"
+        }
+      },
+      {
+        "text": "redo",
+        "intent": {
+          "kind": "local",
+          "action": "redo"
+        }
+      },
+      {
+        "text": "go to 12 seconds",
+        "intent": {
+          "kind": "local",
+          "action": "seek",
+          "value": 12
+        }
+      },
+      {
+        "text": "split here",
+        "intent": {
+          "kind": "local",
+          "action": "split"
+        }
+      },
+      {
+        "text": "delete selected",
+        "intent": {
+          "kind": "local",
+          "action": "delete"
+        }
+      },
+      {
+        "text": "zoom in",
+        "intent": {
+          "kind": "local",
+          "action": "zoom-in"
+        }
+      },
+      {
+        "text": "loop this section",
+        "intent": {
+          "kind": "local",
+          "action": "loop"
+        }
+      }
+    ]
+  },
+  "mcp": {
+    "tools": [
+      "project_get",
+      "project_patch",
+      "assets_search",
+      "asset_schema",
+      "assets_add",
+      "item_update",
+      "item_split",
+      "item_delete",
+      "footage_add",
+      "footage_pack",
+      "footage_candidates",
+      "footage_delete_words",
+      "comments_list",
+      "comments_bundle",
+      "comments_add",
+      "comments_resolve",
+      "comments_reply",
+      "voice_script",
+      "voice_generate",
+      "voice_mode",
+      "history_list",
+      "job_status",
+      "export_start"
+    ],
+    "missingEditingOperations": [
+      "status_working",
+      "status_idle",
+      "footage_transcribe",
+      "voice_clone",
+      "history_undo",
+      "history_redo",
+      "history_revert_turn"
+    ],
+    "instructionLines": 15
+  },
+  "search": {
+    "query": "a title intro",
+    "ids": [
+      "kinetic-title",
+      "captions",
+      "icon-callout",
+      "illustration-card",
+      "screenshot-frame"
+    ]
+  },
+  "packMissingLicense": {
+    "rejected": false,
+    "nativeRegistryOnly": true
+  },
+  "import": {
+    "originalUnchanged": true,
+    "original": {
+      "durationSec": 5,
+      "video": true,
+      "audio": true,
+      "width": 360,
+      "height": 640
+    },
+    "proxy": {
+      "durationSec": 5,
+      "video": true,
+      "audio": false,
+      "width": 360,
+      "height": 640
+    },
+    "hasExtractedAudio": true
+  },
+  "restoreCut": {
+    "expectedAudioStart": 1,
+    "expectedAudioDuration": 4,
+    "actualVideoSrcIn": 1,
+    "actualVideoDuration": 4,
+    "bakedAudioDuration": 3,
+    "audioSrcIn": 0,
+    "staleBakedAudioSource": true
+  },
+  "sourceBounds": {
+    "acceptedOutsideSource": true,
+    "sourceDuration": 5
+  },
+  "packedTranscript": {
+    "fixtureDurationSec": 600,
+    "wordCount": 1200,
+    "utf8Bytes": 52545,
+    "phraseCount": 36,
+    "truncated": false,
+    "fillerCandidates": 1200
+  },
+  "commentBundle": {
+    "comments": 3,
+    "layers": 2,
+    "uniqueLayerIds": 2,
+    "utf8Bytes": 1032
+  },
+  "voiceSlots": {
+    "slots": 5,
+    "items": 5
+  },
+  "agentCrash": {
+    "faultInjection": true,
+    "leaseReleased": true,
+    "projectValid": true
+  },
+  "gesture": {
+    "revisionCount": 1,
+    "undoRestoredExactTracks": true
+  },
+  "shortcuts": {
+    "bareDDuplicates": false,
+    "ctrlDDuplicates": true,
+    "ctrlZUndo": true,
+    "ctrlShiftZRedo": true
+  },
+  "focus": {
+    "tag": "DIV",
+    "outlineStyle": "solid",
+    "outlineWidth": "1px"
+  },
+  "layout": {
+    "layouts": [
+      {
+        "width": 1280,
+        "scrollWidth": 1280,
+        "panels": [
+          {
+            "className": "library",
+            "left": 0,
+            "right": 282,
+            "width": 282
+          },
+          {
+            "className": "main",
+            "left": 282,
+            "right": 994,
+            "width": 712
+          },
+          {
+            "className": "inspector",
+            "left": 994,
+            "right": 1280,
+            "width": 286
+          }
+        ]
+      },
+      {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "panels": [
+          {
+            "className": "library",
+            "left": 0,
+            "right": 282,
+            "width": 282
+          },
+          {
+            "className": "main",
+            "left": 282,
+            "right": 1634,
+            "width": 1352
+          },
+          {
+            "className": "inspector",
+            "left": 1634,
+            "right": 1920,
+            "width": 286
+          }
+        ]
+      }
+    ],
+    "pageErrors": []
+  },
+  "realAgentCycles": [
+    {
+      "cycle": 1,
+      "seconds": 37.097,
+      "resolved": true,
+      "onlyTargetPropertyChanged": true,
+      "valueMatches": true,
+      "telemetry": {
+        "contextTokens": 946,
+        "baselineTokens": 15910,
+        "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+        "actualUsage": {
+          "input": 91271,
+          "output": 220,
+          "cached": 79360
+        }
+      }
+    },
+    {
+      "cycle": 2,
+      "seconds": 30.91,
+      "resolved": true,
+      "onlyTargetPropertyChanged": true,
+      "valueMatches": true,
+      "telemetry": {
+        "contextTokens": 947,
+        "baselineTokens": 16041,
+        "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+        "actualUsage": {
+          "input": 91281,
+          "output": 221,
+          "cached": 79360
+        }
+      }
+    },
+    {
+      "cycle": 3,
+      "seconds": 28.98,
+      "resolved": true,
+      "onlyTargetPropertyChanged": true,
+      "valueMatches": true,
+      "telemetry": {
+        "contextTokens": 940,
+        "baselineTokens": 16171,
+        "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+        "actualUsage": {
+          "input": 91255,
+          "output": 217,
+          "cached": 77824
+        }
+      }
+    }
+  ]
+}
