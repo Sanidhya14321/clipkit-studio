@@ -27,7 +27,7 @@ export const VoiceSlotSchema = z.object({id:z.string(), text:z.string().max(1000
 export type VoiceSlot = z.infer<typeof VoiceSlotSchema>;
 export const AnchorSchema = z.object({tStart:z.number().nonnegative(), tEnd:z.number().nonnegative().optional(),layerId:z.string().optional(),propPath:z.string().optional(),elementId:z.string().optional(),point:z.object({x:z.number(),y:z.number()}).optional()});
 export type Anchor = z.infer<typeof AnchorSchema>;
-export const CommentSchema = z.object({id:z.string(),author:z.enum(['human','agent','voice']),anchor:AnchorSchema,text:z.string().min(1).max(4000),status:z.enum(['open','working','resolved']),createdRev:z.number().int(),resolvedRev:z.number().int().optional(),replies:z.array(z.object({author:z.enum(['human','agent']),text:z.string()})),diff:z.array(z.unknown()).optional()});
+export const CommentSchema = z.object({id:z.string(),author:z.enum(['human','agent','voice']),anchor:AnchorSchema,text:z.string().min(1).max(4000),status:z.enum(['open','working','resolved']),createdRev:z.number().int(),resolvedRev:z.number().int().optional(),replies:z.array(z.object({author:z.enum(['human','agent']),text:z.string()})),diff:z.array(z.object({path:z.string(),op:z.string(),before:z.unknown().optional(),after:z.unknown().optional(),beforeExists:z.boolean().optional(),afterExists:z.boolean().optional()}).passthrough()).optional()});
 export type Comment = z.infer<typeof CommentSchema>;
 export const ProjectSchema = z.object({schemaVersion:z.literal(1),id:z.string(),name:z.string().min(1).max(200),rev:z.number().int().nonnegative(),settings:z.object({fps:z.number().int().min(1).max(60),width:z.number().int().positive().max(3840),height:z.number().int().positive().max(3840)}),sources:z.record(z.string(),SourceSchema),tracks:z.array(TrackSchema),voiceSlots:z.array(VoiceSlotSchema),comments:z.array(CommentSchema),brand:z.object({colors:z.array(z.string()),fonts:z.array(z.string())}).optional()}).superRefine((p,c)=>{
   const ids = new Set<string>();
@@ -35,6 +35,11 @@ export const ProjectSchema = z.object({schemaVersion:z.literal(1),id:z.string(),
     if (ids.has(item.id)) c.addIssue({code:'custom',message:`Duplicate item ${item.id}`});
     ids.add(item.id);
     if (item.src && !p.sources[item.src]) c.addIssue({code:'custom',message:`Unknown source ${item.src}`});
+    const source=item.src?p.sources[item.src]:undefined;
+    if(source&&['footage','audio'].includes(item.type)){
+      if(source.kind==='image'&&item.srcIn!==0)c.addIssue({code:'custom',path:['tracks',p.tracks.indexOf(track),'items',track.items.indexOf(item),'srcIn'],message:'A still image must start at source time zero'});
+      if(source.kind!=='image'&&item.srcIn+item.dur>source.durationSec+1/p.settings.fps)c.addIssue({code:'custom',path:['tracks',p.tracks.indexOf(track),'items',track.items.indexOf(item),'dur'],message:`Source range exceeds ${source.durationSec} seconds`});
+    }
     if (item.slotId && !p.voiceSlots.some(s=>s.id===item.slotId)) c.addIssue({code:'custom',message:`Unknown voice slot ${item.slotId}`});
   }
   for(const slot of p.voiceSlots) {
@@ -49,8 +54,10 @@ export type Lease = {owner:string;turnId:string;token:string;expiresAt:number;la
 export type HistoryEntry = {id:string;rev:number;baseRev:number;requestId:string;label:string;author:'human'|'agent'|'voice'|'system';turnId?:string;timestamp:string;ops:JsonPatchOperation[];inverse:JsonPatchOperation[];changedItemIds:string[];kind:'edit'|'undo'|'redo';target?:number};
 export type Job = {id:string;kind:string;status:'queued'|'running'|'done'|'failed';progress:number;label:string;error?:string;result?:Record<string,unknown>};
 export type Activity = {at:string;text:string;itemIds?:string[]};
+export type Suggestion = {id:string;baseRev:number;label:string;ops:JsonPatchOperation[];status:'pending'|'accepted'|'rejected';createdAt:string;turnId?:string;commentIds?:string[];previewProject?:Project};
+export type RuntimeClip = {id:string;name:string;category:string;durationSec:number;description:string;tags:string[];license:string;defaults:Record<string,unknown>;fields:Array<{key:string;label:string;type:string;min?:number;max?:number;step?:number;options?:any[]}>;[key:string]:unknown};
 export type Telemetry = {contextTokens:number;baselineTokens:number;actualUsage?:{input:number;output:number;cached?:number};estimator:string};
-export type StudioState = {project:Project;lease:Omit<Lease,'token'>|null;history:HistoryEntry[];jobs:Job[];activity:Activity[];telemetry:Telemetry;transcripts:Record<string,Word[]>;provider:{fish:boolean;voiceId?:string};agentClient:'codex'|'claude';agentError?:string;clone?:{id:string;status:string};capabilities?:Record<string,boolean>};
+export type StudioState = {project:Project;lease:Omit<Lease,'token'>|null;history:HistoryEntry[];jobs:Job[];activity:Activity[];telemetry:Telemetry;transcripts:Record<string,Word[]>;provider:{fish:boolean;voiceId?:string};agentClient:'codex'|'claude';agentError?:string;clone?:{id:string;status:string};capabilities?:Record<string,boolean>;suggestions?:Suggestion[];agentPosition?:number;assetRegistry?:{clips:RuntimeClip[];moduleUrl?:string;version?:string}};
 export const allItems = (p:Project) => p.tracks.flatMap(t=>t.items);
 export const duration = (p:Project) => Math.max(5,...allItems(p).map(i=>i.at+i.dur));
 export const findItem = (p:Project,itemId:string) => allItems(p).find(i=>i.id===itemId);
@@ -64,11 +71,15 @@ export const emptyProject = ():Project => ({schemaVersion:1,id:id('project'),nam
 export function timelineWords(p:Project,transcripts:Record<string,Word[]>):Array<Word & {itemId:string;sourceId:string;sourceStart:number;sourceEnd:number}> {
   return allItems(p).filter(i=>i.type==='footage').flatMap(i=>(transcripts[i.src!]??[]).filter(w=>w.start>=i.srcIn-0.001&&w.end<=i.srcIn+i.dur+0.001).map(w=>({...w,start:i.at+w.start-i.srcIn,end:i.at+w.end-i.srcIn,itemId:i.id,sourceId:i.src!,sourceStart:w.start,sourceEnd:w.end}))).sort((a,b)=>a.start-b.start);
 }
-export type VoiceIntent = {kind:'local';action:'play'|'pause'|'undo'|'redo'|'seek'|'split'|'delete'|'zoom-in'|'zoom-out'|'loop';value?:number}|{kind:'confirm';action:'clear'}|{kind:'comment';text:string};
-export function routeVoice(input:string):VoiceIntent {
+export type VoiceIntent = {kind:'local';action:'play'|'pause'|'undo'|'redo'|'seek'|'split'|'delete'|'zoom-in'|'zoom-out'|'loop';value?:number}|{kind:'confirm';action:'clear'|'delete-track'}|{kind:'comment';text:string}|{kind:'repeat';text:string};
+export function routeVoice(input:string,confidence=1):VoiceIntent {
   const t=input.toLowerCase().trim().replace(/[.!?]+$/,'');
+  if(confidence<.65||!t||!/[a-z0-9]/i.test(t))return {kind:'repeat',text:'I could not understand that. Please repeat or type the command.'};
   const rules:Record<string,VoiceIntent>={'play':{kind:'local',action:'play'},'pause':{kind:'local',action:'pause'},'stop':{kind:'local',action:'pause'},'undo':{kind:'local',action:'undo'},'redo':{kind:'local',action:'redo'},'split here':{kind:'local',action:'split'},'delete selected':{kind:'local',action:'delete'},'zoom in':{kind:'local',action:'zoom-in'},'zoom out':{kind:'local',action:'zoom-out'},'loop this section':{kind:'local',action:'loop'},'clear all':{kind:'confirm',action:'clear'},'delete all':{kind:'confirm',action:'clear'}};
   if(rules[t])return rules[t];
+  if(/\b(?:delete|remove|clear|erase)\b.*\btrack\b/.test(t))return {kind:'confirm',action:'delete-track'};
+  if(/\b(?:delete|remove|clear|erase)\b.*\b(?:all|entire|everything|whole)\b/.test(t))return {kind:'confirm',action:'clear'};
   const m=t.match(/^(?:go to|seek to|jump to)\s+(\d+(?:\.\d+)?)\s*(?:seconds?|s)?$/);if(m)return {kind:'local',action:'seek',value:Number(m[1])};
+  if(!/^(?:please\s+)?(?:make|change|set|increase|decrease|add|remove|move|trim|speed|slow|clean|create|generate|replace|restore|color|resize|highlight|caption|mute|unmute|adjust|animate|apply|convert|rewrite|edit|turn|fix|cut|shorten|extend|put|give|show|use|rearrange)\b/.test(t)||t.split(/\s+/).length<2)return {kind:'repeat',text:'That does not look like an editing request. Please repeat or type a specific edit.'};
   return {kind:'comment',text:input.trim()};
 }

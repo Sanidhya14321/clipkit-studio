@@ -1,5 +1,5 @@
 import {describe,it,expect,vi} from 'vitest';
-import {FishClient,parseTranscript} from '../packages/server/src/fish.ts';
+import {FishClient,parseTranscript,parseWhisperTranscript} from '../packages/server/src/fish.ts';
 
 describe('Fish provider contract',()=>{
  it('uses authentic word timing and refuses invented phrase subdivisions',()=>{
@@ -7,6 +7,7 @@ describe('Fish provider contract',()=>{
   expect(parseTranscript({text:'Hello world',segments:[{text:'Hello world',start:0,end:.8}]})).toMatchObject({words:[],wordTiming:false});
   expect(parseTranscript({text:'Hello',segments:[{text:'Hello',start:-1,end:0}]}).words).toEqual([]);
  });
+ it('reads actual Whisper millisecond offsets without subdividing phrase timestamps',()=>{expect(parseWhisperTranscript({transcription:[{text:' Hello',offsets:{from:100,to:300}},{text:' world',offsets:{from:350,to:700}}]})).toMatchObject({provider:'whisper.cpp',wordTiming:true,words:[{text:'Hello',start:.1,end:.3},{text:'world',start:.35,end:.7}]});expect(parseWhisperTranscript({transcription:[{text:'whole phrase',offsets:{from:0,to:1000}}]}).words).toEqual([]);expect(()=>parseWhisperTranscript({})).toThrow('invalid JSON');});
  it('sends TTS model, reference and speed in the documented fields',async()=>{
   const transport=vi.fn(async()=>new Response(new Uint8Array([82,73,70,70]),{status:200}));
   const client=new FishClient('server-test-key',transport as typeof fetch);

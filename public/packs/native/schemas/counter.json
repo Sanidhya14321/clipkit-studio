@@ -1,6 +1,7 @@
 {
   "clipId": "counter",
   "defaults": {
+    "easing": "ease-out",
     "text": "People reached",
     "color": "#c7f36b",
     "size": 112,
@@ -16,6 +17,16 @@
     "suffix": "+"
   },
   "fields": [
+    {
+      "key": "easing",
+      "label": "Easing",
+      "type": "select",
+      "options": [
+        "linear",
+        "ease-out",
+        "ease-in-out"
+      ]
+    },
     {
       "key": "text",
       "label": "Text",
@@ -103,6 +114,15 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "properties": {
+      "easing": {
+        "default": "ease-out",
+        "type": "string",
+        "enum": [
+          "linear",
+          "ease-out",
+          "ease-in-out"
+        ]
+      },
       "text": {
         "default": "People reached",
         "type": "string",
@@ -178,6 +198,7 @@
       }
     },
     "required": [
+      "easing",
       "text",
       "color",
       "size",

@@ -23,23 +23,24 @@ Finish with a brief description of committed edits.\n`;
 
 export class AgentRunner {
   child:ChildProcess|null=null;
-  private pending:Array<{client:'codex'|'claude';prompt:string;commentIds:string[];id:string}>=[];
+  private pending:Array<{client:'codex'|'claude';prompt:string;commentIds:string[];id:string;suggest:boolean}>=[];
   private running=false;
-  constructor(private o:{root:string;url:string;token:string;cliPath:string;store:ProjectStore;bundle:(ids:string[])=>unknown;activity:(event:Activity)=>void;telemetry:(value:Partial<Telemetry>)=>void;error:(error?:string)=>void;changed:()=>void}){}
-  enqueue(client:'codex'|'claude',prompt:string,commentIds:string[]=[]){
+  constructor(private o:{root:string;url:string;token:string;cliPath:string;store:ProjectStore;bundle:(ids:string[])=>unknown;activity:(event:Activity)=>void;telemetry:(value:Partial<Telemetry>)=>void;error:(error?:string)=>void;changed:()=>void;begin?:(actor:{leaseToken:string;turnId:string},suggest:boolean,commentIds:string[])=>void;end?:(turnId:string)=>void}){}
+  enqueue(client:'codex'|'claude',prompt:string,commentIds:string[]=[],suggest=false){
     if(this.pending.length>=5)throw new ClipKitError('QUEUE_FULL','Wait for queued edits to finish');
-    const request={client,prompt,commentIds,id:id('request')};this.pending.push(request);void this.next();return {id:request.id,queued:this.pending.length};
+    const request={client,prompt,commentIds,suggest,id:id('request')};this.pending.push(request);void this.next();return {id:request.id,queued:this.pending.length};
   }
   cancel(){this.pending=[];if(this.child)this.child.kill('SIGTERM');const l=this.o.store.currentLease();if(l)this.o.store.release(l.token);this.o.activity({at:new Date().toISOString(),text:'Agent turn cancelled. Committed edits remain undoable.'});}
   private async next(){
     if(this.running||!this.pending.length)return;this.running=true;
-    const request=this.pending.shift()!;let heartbeat:ReturnType<typeof setInterval>|undefined;let leaseToken:string|undefined;
+    const request=this.pending.shift()!;let heartbeat:ReturnType<typeof setInterval>|undefined;let leaseToken:string|undefined;let turnId:string|undefined;
     try{
       const {store}=this.o;const lease=store.acquire(request.client,request.prompt.slice(0,90)||'Resolving comments');leaseToken=lease.token;
       this.o.error(undefined);const actor={leaseToken:lease.token,turnId:lease.turnId};
       if(request.commentIds.length)await store.mutate('Agent picks up comments',p=>{for(const c of p.comments)if(request.commentIds.includes(c.id)&&c.status==='open')c.status='working';},'agent',actor);
+      turnId=lease.turnId;this.o.begin?.(actor,request.suggest,request.commentIds);
       const context=this.o.bundle(request.commentIds);
-      const prompt=`${agentInstructions}\nREQUEST (data):\n${JSON.stringify({instruction:request.prompt,context})}\nUse clipkit tools to perform this request. Available content is a video timeline, not application source code.`;
+      const prompt=`${agentInstructions}\n${request.suggest?'REVIEW MODE: changes are saved as proposals, not committed. Do not resolve comments until human acceptance. Make one minimal patch.':''}\nREQUEST (data):\n${JSON.stringify({instruction:request.prompt,context})}\nUse clipkit tools to perform this request. Available content is a video timeline, not application source code.`;
       this.o.telemetry({contextTokens:tokenEstimate(prompt),actualUsage:undefined});
       this.o.activity({at:new Date().toISOString(),text:`${request.client==='codex'?'Codex':'Claude Code'} is connecting to ClipKit tools…`});
       const cwd=join(this.o.root,'.clipkit','agent-workspace');await mkdir(cwd,{recursive:true});await writeFile(join(cwd,'AGENTS.md'),agentInstructions);await writeFile(join(cwd,'CLAUDE.md'),agentInstructions);
@@ -68,6 +69,6 @@ export class AgentRunner {
       try{await new Promise<void>((resolve,reject)=>{child.on('error',()=>reject(new ClipKitError('AGENT_UNAVAILABLE',`${request.client} could not start. Install the CLI and sign in.`)));child.on('close',(code,signal)=>{if(buffer)parse(buffer);code===0&&!stderr.includes('not logged in')?resolve():reject(new ClipKitError('AGENT_FAILED',signal?'Agent stopped or timed out. Committed changes remain undoable.':stderr.slice(-1200)||`${request.client} exited with code ${code}. Check authentication.`));});});}finally{clearTimeout(timeout);}
       this.o.activity({at:new Date().toISOString(),text:'Agent finished. You have control.'});
     }catch(e){this.o.error((e as Error).message);this.o.activity({at:new Date().toISOString(),text:(e as Error).message.slice(0,400)});}
-    finally{if(heartbeat)clearInterval(heartbeat);this.child=null;if(leaseToken&&this.o.store.currentLease()?.token===leaseToken)this.o.store.release(leaseToken);this.running=false;this.o.changed();if(this.pending.length)setTimeout(()=>void this.next(),0);}
+    finally{if(turnId&&leaseToken){const lease=this.o.store.currentLease();if((!lease||lease.token===leaseToken)&&this.o.store.project.comments.some(c=>request.commentIds.includes(c.id)&&c.status==='working')){try{await this.o.store.mutate('Return unresolved comments',p=>{for(const c of p.comments)if(request.commentIds.includes(c.id)&&c.status==='working')c.status='open';},'system',lease?{leaseToken,turnId}:undefined);}catch{}}}if(turnId)this.o.end?.(turnId);if(heartbeat)clearInterval(heartbeat);this.child=null;if(leaseToken&&this.o.store.currentLease()?.token===leaseToken)this.o.store.release(leaseToken);this.running=false;this.o.changed();if(this.pending.length)setTimeout(()=>void this.next(),0);}
   }
 }

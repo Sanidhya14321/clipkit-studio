@@ -1,6 +1,7 @@
 {
   "clipId": "lower-third",
   "defaults": {
+    "easing": "ease-out",
     "text": "Alex Morgan",
     "color": "#c7f36b",
     "size": 43,
@@ -14,6 +15,16 @@
     "background": "#142b26"
   },
   "fields": [
+    {
+      "key": "easing",
+      "label": "Easing",
+      "type": "select",
+      "options": [
+        "linear",
+        "ease-out",
+        "ease-in-out"
+      ]
+    },
     {
       "key": "text",
       "label": "Text",
@@ -91,6 +102,15 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "properties": {
+      "easing": {
+        "default": "ease-out",
+        "type": "string",
+        "enum": [
+          "linear",
+          "ease-out",
+          "ease-in-out"
+        ]
+      },
       "text": {
         "default": "Alex Morgan",
         "type": "string",
@@ -155,6 +175,7 @@
       }
     },
     "required": [
+      "easing",
       "text",
       "color",
       "size",

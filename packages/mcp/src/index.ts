@@ -1,6 +1,7 @@
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import {StdioServerTransport} from '@modelcontextprotocol/sdk/server/stdio.js';
 import {z} from 'zod';
+import {readFile} from 'node:fs/promises';
 
 export const toolDefinitions:Record<string,{description:string;shape:Record<string,z.ZodType>}>={
   project_get:{description:'Read compact summary (default) or exactly one layer with its JSON Patch pointer and current revision.',shape:{layerId:z.string().optional(),offset:z.number().optional(),limit:z.number().max(30).optional()}},
@@ -27,10 +28,41 @@ export const toolDefinitions:Record<string,{description:string;shape:Record<stri
   job_status:{description:'Wait up to 15 seconds for an asynchronous job; call again if still running. Check failure before claiming completion.',shape:{jobId:z.string()}},
   export_start:{description:'Start real export from an immutable revision snapshot; returns a job.',shape:{}},
 };
+const string=z.string(),num=z.number();
+Object.assign(toolDefinitions,{
+ project_suggest:{description:'Save a non-destructive proposal for human review; never accepts it automatically.',shape:{baseRev:num.optional(),label:string,ops:toolDefinitions.project_patch.shape.ops}},
+ project_rename:{description:'Rename the project.',shape:{name:string}},
+ item_duplicate:{description:'Duplicate one layer.',shape:{itemId:string}},
+ item_move:{description:'Move a layer to time and a compatible track.',shape:{itemId:string,at:num,trackId:string.optional()}},
+ footage_view:{description:'Inspect up to 15 seconds as actual filmstrip/waveform/transcript PNG.',shape:{sourceId:string,start:num,end:num}},
+ footage_full_transcript:{description:'Explicitly request the full source transcript. Prefer paged footage_pack for normal editing.',shape:{sourceId:string}},
+ footage_transcribe:{description:'Transcribe imported audio with configured provider; may incur cost.',shape:{sourceId:string}},
+ voice_clone:{description:'Create/retry a private clone from a human-consented recorded sample; paid usage. Cannot grant human consent.',shape:{sampleSourceId:string}},
+ voice_take:{description:'Choose a previously recorded/generated take.',shape:{slotId:string,takeId:string}},
+ voice_window:{description:'Change narration target window, preserving actual take duration.',shape:{slotId:string,start:num,end:num}},
+ voice_fit:{description:'Choose explicit narration fitting strategy.',shape:{slotId:string,strategy:z.enum(['stretch','extend','ripple','rerecord'])}},
+ voice_convert_all:{description:'Convert only AI narration to an existing consented private clone. Paid usage, request only.',shape:{voiceRef:string.optional()}},
+ voice_record_script:{description:'Align an imported app recording to existing script lines.',shape:{sourceId:string}},
+ assets_build:{description:'Refresh validated installed pack indexes.',shape:{}},
+ assets_install:{description:'Install a declarative pack. Executable pack trust is human CLI only.',shape:{path:string}},
+ export_licenses:{description:'Read used media and clip license inventory.',shape:{}},
+ history_revert:{description:'Selectively revert a revision; conflicts preserve later edits.',shape:{rev:num.int()}},
+ history_undo:{description:'Undo latest edit when human has control.',shape:{}},
+ history_redo:{description:'Redo latest undone edit when human has control.',shape:{}},
+ history_revert_turn:{description:'Undo latest completed agent turn when human has control.',shape:{}},
+ status_working:{description:'Acquire an editing lease for external agents.',shape:{owner:string,label:string}},
+ status_heartbeat:{description:'Renew active editing lease.',shape:{leaseToken:string.optional()}},
+ status_idle:{description:'Release active editing lease.',shape:{leaseToken:string.optional()}},
+ job_retry:{description:'Retry a failed asynchronous job. Reimport failed file uploads manually.',shape:{jobId:string}},
+ doctor:{description:'Inspect local media prerequisites without provider requests.',shape:{}},
+});
+toolDefinitions.footage_candidates.shape.offset=num.int().nonnegative().optional();toolDefinitions.footage_candidates.shape.limit=num.int().min(1).max(30).optional();toolDefinitions.comments_list.shape.offset=num.int().nonnegative().optional();
+toolDefinitions.footage_pack.shape.cursor=num.int().nonnegative().optional();
+toolDefinitions.export_start.shape={preset:z.enum(['vertical-720','vertical-1080','square','landscape']).optional(),quality:z.enum(['draft','standard','high']).optional()};
 export async function serveMcp(invoke:(name:string,args:Record<string,unknown>)=>Promise<unknown>){
   const server=new McpServer({name:'clipkit',version:'0.1.0'});
   for(const [name,def] of Object.entries(toolDefinitions))server.registerTool(name,{description:def.description,inputSchema:def.shape,annotations:{readOnlyHint:['project_get','assets_search','asset_schema','footage_pack','footage_candidates','comments_list','comments_bundle','history_list','job_status'].includes(name),destructiveHint:false,openWorldHint:['voice_generate'].includes(name)}},async(args:Record<string,unknown>)=>{
-    try{const value=await invoke(name,args);const json=JSON.stringify(value);if(json.length>16000)return {isError:true,content:[{type:'text',text:'CONTEXT_TOO_LARGE: request one layer, fewer comments, or a shorter transcript range.'}]};return {content:[{type:'text',text:json}]};}
+    try{const value=await invoke(name,args);if(name==='footage_view'){const view=value as {path:string;mime:string};return {content:[{type:'image' as const,mimeType:view.mime,data:(await readFile(view.path)).toString('base64')}]};}const json=JSON.stringify(value);if(Buffer.byteLength(json)>16000)return {isError:true,content:[{type:'text',text:'CONTEXT_TOO_LARGE: request one layer, fewer comments, or a shorter transcript range.'}]};return {content:[{type:'text',text:json}]};}
     catch(e){return {isError:true,content:[{type:'text',text:(e as Error).message.slice(0,1200)}]};}
   });
   await server.connect(new StdioServerTransport());return server;

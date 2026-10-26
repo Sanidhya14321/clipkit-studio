@@ -13,6 +13,7 @@ export async function buildAssets(root:string,outputDir=path.join(root,'public',
  const rows:Array<Record<string,unknown>>=[];const schemas:Array<{id:string;value:unknown}>=[];
  for(const asset of catalog){
   if(ids.has(asset.id)||!/^[a-z0-9-]+$/.test(asset.id))throw new Error(`Invalid or duplicate native clip ID: ${asset.id}`);ids.add(asset.id);
+  if(!asset.license?.trim())throw new Error(`${asset.id}: license is required`);
   const parsed=validateClipProps(asset.id,asset.defaults);
   for(const key of editableKeys)if(!(key in parsed)||!asset.fields.some(f=>f.key===key))throw new Error(`${asset.id}: missing editable property ${key}`);
   for(const field of asset.fields){
@@ -26,7 +27,7 @@ export async function buildAssets(root:string,outputDir=path.join(root,'public',
   if(!proof||proof.sha256!==createHash('sha256').update(preview).digest('hex')||proof.defaultsSha256!==createHash('sha256').update(JSON.stringify(asset.defaults)).digest('hex'))throw new Error(`${asset.id}: thumbnail proof does not match current default props`);
   categories[asset.category]??=[];categories[asset.category].push(asset.id);
   const schemaPath=`schemas/${asset.id}.json`;
-  rows.push({id:asset.id,name:asset.name,category:asset.category,description:asset.description,durationSec:asset.durationSec,tags:asset.tags,license:asset.license,previewPath:asset.previewPath,previewSha256:createHash('sha256').update(preview).digest('hex'),schemaPath});
+  rows.push({id:asset.id,name:asset.name,category:asset.category,description:asset.description,durationSec:asset.durationSec,tags:asset.tags,aspect:asset.aspect,whenToUse:asset.whenToUse,license:asset.license,previewPath:asset.previewPath,previewSha256:createHash('sha256').update(preview).digest('hex'),schemaPath});
   const propsSchema=z.toJSONSchema(clipSchemas[asset.id]);
   for(const [key,value] of Object.entries(parsed)){const property=propsSchema.properties?.[key];if(property&&typeof property==='object')property.default=value;}
   schemas.push({id:asset.id,value:{clipId:asset.id,defaults:parsed,fields:asset.fields,propsSchema,editableContract:nativePackManifest.editableContract}});

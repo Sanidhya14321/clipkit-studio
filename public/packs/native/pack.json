@@ -26,6 +26,7 @@
       "clipId": "kinetic-title",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "Ideas into\nimpact.",
         "color": "#c7f36b",
         "size": 102,
@@ -39,6 +40,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -119,6 +130,7 @@
       "clipId": "lower-third",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "Alex Morgan",
         "color": "#c7f36b",
         "size": 43,
@@ -132,6 +144,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -212,6 +234,7 @@
       "clipId": "captions",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "Every frame tells a story.",
         "color": "#c7f36b",
         "size": 58,
@@ -225,6 +248,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -305,6 +338,7 @@
       "clipId": "icon-callout",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "Built for your ideas",
         "color": "#c7f36b",
         "size": 54,
@@ -318,6 +352,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -398,6 +442,7 @@
       "clipId": "counter",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "People reached",
         "color": "#c7f36b",
         "size": 112,
@@ -413,6 +458,16 @@
         "suffix": "+"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -503,6 +558,7 @@
       "clipId": "illustration-card",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "Room to imagine",
         "color": "#c7f36b",
         "size": 58,
@@ -516,6 +572,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -596,6 +662,7 @@
       "clipId": "screenshot-frame",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "Your next big thing",
         "color": "#c7f36b",
         "size": 60,
@@ -606,9 +673,20 @@
         "scale": 1,
         "width": 600,
         "subtitle": "app.yourstudio.com",
-        "background": "#142b26"
+        "background": "#142b26",
+        "imageSourceId": ""
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -680,6 +758,11 @@
           "type": "number",
           "min": 100,
           "max": 2200
+        },
+        {
+          "key": "imageSourceId",
+          "label": "Screenshot image",
+          "type": "image"
         }
       ],
       "previewPath": "/previews/screenshot-frame.png",
@@ -689,6 +772,7 @@
       "clipId": "gradient",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "",
         "color": "#c7f36b",
         "size": 72,
@@ -702,6 +786,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -782,6 +876,7 @@
       "clipId": "wipe",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "",
         "color": "#c7f36b",
         "size": 72,
@@ -795,6 +890,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",
@@ -875,6 +980,7 @@
       "clipId": "cta",
       "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
       "defaults": {
+        "easing": "ease-out",
         "text": "Make something\nworth sharing.",
         "color": "#c7f36b",
         "size": 79,
@@ -888,6 +994,16 @@
         "background": "#142b26"
       },
       "fields": [
+        {
+          "key": "easing",
+          "label": "Easing",
+          "type": "select",
+          "options": [
+            "linear",
+            "ease-out",
+            "ease-in-out"
+          ]
+        },
         {
           "key": "text",
           "label": "Text",

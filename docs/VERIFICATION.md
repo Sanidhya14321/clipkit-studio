@@ -1,26 +1,15 @@
-# Verification status
+# Verification after audited gap fixes
 
-Verified on 26 October 2026: **51 automated tests passed**, one default opt-in render test skipped, TypeScript check passed, and the real-backend Playwright test passed. The opt-in renderer was independently run: all ten native clips matched preview/export frame hashes and every tested accent edit changed pixels.
+Verified 27 October 2026: TypeScript passed; **82 default tests passed**, with two opt-in tests skipped by default. The opt-in asset/render suite separately passed all 12 tests, covering those two real-render checks (84 unique Vitest tests across the runs). All **four real-backend browser tests passed**. The build and isolated packed-install check passed, including repeated init, Cursor rules, custom-pack installation and both portrait and landscape H.264/AAC export.
 
-A real Codex (`gpt-6.1-sol`, medium) turn changed only the anchored title, resolved the comment with a diff, and passed exact grouped revert/redo checks. Measured ClipKit request/tool payload was approximately 1,608 tokens; actual client input/output usage is recorded separately, not presented as the same measurement.
+All ten native clip preview/export frames matched and editable accent changes altered pixels. An explicitly trusted TSX pack ran with shared React/Remotion hooks, passed actual selection-tag/determinism checks, and lost trust after its code changed.
 
-The tarball was installed in an isolated directory. Repeated init preserved existing notes and MCP configuration. That installed package served the studio and fonts, imported actual audiovisual test footage, and exported H.264/AAC at 720×1280, 30fps, with exactly 151 expected video frames. Container duration is 5.035 seconds including audio padding. This fixture contains test patterns and tones, not user footage or cloned speech.
+Three fresh real Codex (`gpt-6.1-sol`, medium) turns each resolved the anchored comment and changed only the requested text. Their ClipKit payload estimates were 1,130 / 1,136 / 1,131 tokens, distinct from about 97k actual reported input tokens per turn.
 
-See [machine-readable report](verification-report.json) for checks and local artifact locations.
+The mixed audiovisual proof passed three cut-point comparisons and audible, unclipped audio checks. Its active takes are explicitly synthetic tones. The packed portrait export has exactly 151 expected frames at 30 fps, 720×1280 H.264/AAC, container duration 5.035s. Landscape export is 1280×720 with audio.
 
-The automated suite covers project transactions, lease ownership, journal recovery, transcript mapping, voice grammar, real FFmpeg media processing, tone mixing, voice-mode provenance, provider request contracts and context limits.
+Production/full dependency scans report zero advisories and peer checks pass. The public-history/index scan finds no credential patterns or tracked private/build media.
 
-Real Chromium renderer checks compare each of the ten native clips at identical preview/export props and verify that color edits change rendered pixels. Run with `CK_RENDER_TEST=1`.
+See [full checkup](GAP-FIX-CHECKUP.md), [criterion matrix](PRD-FEATURE-AUDIT.md) and [machine-readable results](verification-report.json). Detailed recordings, test exports and runtime evidence stay in ignored local folders.
 
-The browser integration uses the real HTTP/WebSocket backend, not a mocked API. The install rehearsal must run the produced tarball from a separate directory.
-
-The recorded cold Codex turn took about **28 seconds to commit the visual change and 36 seconds to finish**. Local editor commands are immediate after recognition; free-form agent edits are not instant. Budget this latency in the presentation and use the explicitly labeled backup recording if the provider is slow.
-
-External checks remain distinct:
-
-- Fish STT/TTS/cloning requires the owner's `FISH_API_KEY` and voice access.
-- Real microphone and voice quality require a human rehearsal.
-- The owner's actual talking-head footage has not been supplied.
-- Claude Code is installed but requires sign-in before the two-client claim is verified.
-
-No fixture tone is described as AI or cloned speech. No simulated event stream is described as a real agent turn. Detailed local verification artifacts are stored in `.clipkit/verification/` and exports in `.clipkit/exports/`.
+**External acceptance remains:** real Fish calls, consented narration/microphone listening and latency, actual local Whisper recognition if used, user talking-head footage, Claude authentication/real edit, Cursor runtime and three complete timed rehearsals. Passing fixture tests does not certify those steps. Public npm publishing is separate from the verified local tarball.

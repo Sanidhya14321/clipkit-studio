@@ -1,20 +1,36 @@
 {
-  "date": "2026-10-26",
+  "date": "2026-10-27",
   "automated": {
     "typecheck": "passed",
     "vitest": {
-      "passed": 51,
-      "skipped": 1,
-      "note": "The skipped default test is opt-in real Chromium rendering, independently executed successfully."
+      "defaultPassed": 82,
+      "defaultSkipped": 2,
+      "optInSuitePassed": 12,
+      "uniqueTestsExecutedAcrossRuns": 84,
+      "note": "The opt-in suite includes ten overlapping default tests and the two skipped real-render tests."
     },
     "playwright": {
-      "passed": 1,
-      "backend": "real HTTP/WebSocket server"
+      "passed": 4,
+      "backend": "real HTTP/WebSocket server",
+      "viewportWidths": [
+        1280,
+        1920
+      ]
     },
     "renderConsistency": {
       "clips": 10,
       "allPreviewExportHashesMatch": true,
       "allColorEditsChangedPixels": true
+    },
+    "trustedPackRendering": {
+      "passed": true,
+      "checks": [
+        "actual React/remotion hooks",
+        "selection tags",
+        "same-frame determinism",
+        "changed-code trust revocation",
+        "missing-tag rejection"
+      ]
     }
   },
   "realAgent": {
@@ -22,26 +38,82 @@
     "client": "codex",
     "model": "gpt-6.1-sol",
     "effort": "medium",
-    "observedLock": true,
-    "onlyTargetLayerChanged": true,
-    "resolvedWithDiff": true,
-    "revertRestoredExactTracks": true,
-    "telemetry": {
-      "contextTokens": 1608,
-      "baselineTokens": 3901,
-      "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
-      "actualUsage": {
-        "input": 140118,
-        "output": 317,
-        "cached": 115712
+    "cycles": [
+      {
+        "cycle": 1,
+        "seconds": 22.559,
+        "resolved": true,
+        "onlyTargetPropertyChanged": true,
+        "valueMatches": true,
+        "telemetry": {
+          "contextTokens": 1130,
+          "baselineTokens": 4730,
+          "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+          "actualUsage": {
+            "input": 96971,
+            "output": 219,
+            "cached": 74240
+          }
+        }
+      },
+      {
+        "cycle": 2,
+        "seconds": 25.373,
+        "resolved": true,
+        "onlyTargetPropertyChanged": true,
+        "valueMatches": true,
+        "telemetry": {
+          "contextTokens": 1136,
+          "baselineTokens": 5031,
+          "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+          "actualUsage": {
+            "input": 96953,
+            "output": 213,
+            "cached": 70656
+          }
+        }
+      },
+      {
+        "cycle": 3,
+        "seconds": 27.951,
+        "resolved": true,
+        "onlyTargetPropertyChanged": true,
+        "valueMatches": true,
+        "telemetry": {
+          "contextTokens": 1131,
+          "baselineTokens": 5334,
+          "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+          "actualUsage": {
+            "input": 96967,
+            "output": 219,
+            "cached": 74496
+          }
+        }
       }
-    },
-    "observedSecondsToPatch": 27.61,
-    "observedSecondsToFinish": 36.16
+    ],
+    "scope": "Three actual title/comment edits, not three complete voice-demo rehearsals."
   },
   "isolatedInstall": {
     "passed": true,
     "initPreserved": true,
+    "installedZodVersions": [
+      "4.6.7"
+    ],
+    "installedDependencyAudit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "cursorAdapter": true,
+    "installedCustomPack": true,
+    "landscapePreset": {
+      "width": 1280,
+      "height": 720,
+      "audio": true
+    },
     "packagedStudio": true,
     "packagedFont": true,
     "media": {
@@ -58,23 +130,87 @@
     },
     "externalVoiceRequests": false
   },
+  "mixedMedia": {
+    "fixture": "Synthetic four-color original+proxy, original tone audio, two overlapping active recorded-mode sine takes, ducked background tone, native clips and timestamp captions",
+    "speechVerified": false,
+    "comparisons": [
+      {
+        "frame": 36,
+        "seconds": 1.2,
+        "meanAbsoluteError": 5.584156539351852,
+        "maxAllowed": 12
+      },
+      {
+        "frame": 72,
+        "seconds": 2.4,
+        "meanAbsoluteError": 6.4858210358796295,
+        "maxAllowed": 12
+      },
+      {
+        "frame": 108,
+        "seconds": 3.6,
+        "meanAbsoluteError": 3.669938151041667,
+        "maxAllowed": 12
+      }
+    ],
+    "audio": {
+      "peak": 0.15691077709197998,
+      "rms": 0.05775514722818123,
+      "sampleRate": 48000
+    }
+  },
+  "prdCriteria": {
+    "PASS": 52,
+    "FAIL": 0,
+    "PARTIAL": 14,
+    "BLOCKED": 13
+  },
   "artifacts": {
     "package": "artifacts/clipkit-studio-local-0.1.0.tgz",
-    "testExport": "artifacts/verified-install-export.mp4",
+    "installedTestExport": "artifacts/verified-install-export.mp4",
+    "mixedProof": ".clipkit/mixed-proof/report.json",
     "liveWorkflowRecording": ".clipkit/verification/live-codex-workflow.webm",
-    "detailedAgentEvidence": ".clipkit/verification/live-codex-comment.json",
-    "renderEvidence": ".clipkit/render-consistency/report.json"
+    "agentEvidence": ".clipkit/verification/prd-audit/evidence.json",
+    "browserScreenshots": [
+      ".clipkit/verification/studio-audit-1280.png",
+      ".clipkit/verification/studio-audit-1920.png"
+    ]
   },
   "externalChecksRemaining": [
-    "Real Fish transcription, TTS and cloning with user credentials",
-    "Claude Code authentication and an actual Claude edit",
-    "User microphone and consented voice sample",
-    "User talking-head footage including five-minute transcription acceptance",
-    "Three complete rehearsals of the presentation with those real inputs"
+    "Real Fish transcription/TTS/private cloning with user credentials and consented natural speech",
+    "Physical microphone and end-of-speech latency/listening checks",
+    "Real whisper.cpp binary/model and recognition accuracy if choosing the local fallback",
+    "Claude authentication and actual edit; Cursor application runtime check",
+    "Five-minute talking-head transcription ground-truth acceptance",
+    "Three full timed rehearsals and real before/after backup recording",
+    "Broader accessibility and full adversarial-agent evaluation",
+    "Public npm publishing with an available package name"
   ],
   "scopeNotes": [
-    "Ten original deterministic native clips, curated third-party source assets and twelve audited source repositories",
-    "New executable packs require explicit trusted source registration and compilation",
-    "One vertical H264/AAC export preset; no arbitrary historical revert"
+    "Native ten-clip starter and validated folder packs; executable code requires explicit human trust",
+    "Aspect presets fit the original scene with gutters; automatic subject reframing is absent",
+    "Voice fixtures/tone measurements are not live speech-quality certification",
+    "Targeted publication/dependency scans are not an exhaustive security guarantee"
+  ],
+  "dependencyAudit": {
+    "production": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "includingDevelopment": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "peerDependencies": "No issues after webpack compatibility override",
+    "packaging": "The tarball bundles the patched Remotion dependency tree and includes a shrinkwrap. Installed-package audit reports zero vulnerabilities; every inspected installed Zod version is 4.6.7."
+  },
+  "buildAdvisories": [
+    "Main editor chunk is about 767kB uncompressed; build warns above 500kB. Local fonts are served at runtime."
   ]
 }

@@ -2,7 +2,7 @@
 
 ## Prepare before presenting
 
-1. Run `pnpm doctor`, `pnpm typecheck`, `pnpm test`; verify both agent clients are signed in.
+1. Run `pnpm ck doctor`, `pnpm typecheck`, `pnpm test`; verify both agent clients are signed in.
 2. Use a 20–40 second talking-head clip with pauses and a filler. Import once, finish proxy/transcription, check word timestamps and listen to proposed cuts.
 3. Prepare an in-app clean voice sample of at least ten seconds. Train the private Fish clone and generate the demo lines in advance. Keep at least one real recorded line and one real cloned line in the narration.
 4. Verify every active take, the mixed audio, captions and original-media export. Measure export time on the presentation machine.

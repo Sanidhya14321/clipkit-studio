@@ -2,7 +2,7 @@
 
 A local video workspace where you and a coding agent edit the same non-destructive timeline. Agents make small, revisioned patches; you can inspect, change and undo them.
 
-**Status:** reduced hackathon MVP. See the [full Word PRD feature audit](docs/PRD-FEATURE-AUDIT.md) for verified behavior, missing features and known defects. Passing automated tests does not mean the full PRD is complete.
+**Status:** local hackathon MVP with audited gap fixes. See the [current checkup](docs/GAP-FIX-CHECKUP.md) and [original Word PRD audit](docs/PRD-FEATURE-AUDIT.md). Live voice and two-client acceptance still require your credentials and rehearsal.
 
 ## Start
 
@@ -10,7 +10,7 @@ Requires Node 22+ and pnpm. The development machine uses Node 24. FFmpeg falls b
 
 ```sh
 pnpm install
-pnpm doctor
+pnpm ck doctor
 pnpm ck init
 pnpm dev
 ```
@@ -30,11 +30,11 @@ codex login
 claude auth login
 ```
 
-`ck init` preserves existing configuration while adding a managed Codex configuration block, project MCP registration, short AGENTS instructions and a Claude skill. It does not sign in to providers. App-initiated Codex turns use `gpt-6.1-sol`, medium effort, and only ClipKit's MCP editing workflow. Claude uses its configured model.
+`ck init` preserves existing configuration while adding a managed Codex configuration block, project MCP registration, short AGENTS instructions a Claude skill and Cursor rules. Init also checks media prerequisites. It does not sign in to providers. App-initiated Codex turns use `gpt-6.1-sol`, medium effort, and only ClipKit's MCP editing workflow. Claude uses its configured model.
 
-Create a comment on a selected layer and choose **Apply open**. You can also use the command field, or hold the voice button/backtick. Commands such as `undo`, `split here` and `go to 12 seconds` use the local deterministic router; free-form instructions become anchored comments. Recognition itself requires Fish access; typed commands always work.
+Create a comment on a selected layer and choose **Apply open**. You can also use the command field, or hold the voice button/backtick. Commands such as `undo`, `split here` and `go to 12 seconds` use the local deterministic router; free-form instructions become anchored comments. Recognition uses Fish or a supported browser speech-recognition fallback while held. Unclear speech asks for repetition; broad deletion requires confirmation. Typed commands remain available.
 
-For narration, create one slot per script line, then record or generate each line. A cloned voice requires your own in-app recording of at least ten seconds, confirmation that you have the right to clone it, and a trained private Fish model. Prepare the voice and cached takes before presenting. AI, recorded and cloned takes retain separate provenance and selection. Adjust a slot's time window when its recorded length does not fit.
+For narration, create one slot per script line, then record or generate each line. A cloned voice requires your own in-app recording of at least ten seconds, confirmation that you have the right to clone it, and a trained private Fish model. Prepare the voice and cached takes before presenting. AI, recorded and cloned takes retain separate provenance and selection. Choose stretch, extend, ripple or re-record when a take does not fit. Whole-script recording aligns verified word timestamps to lines; uncertain alignment preserves the recording and asks for line-by-line takes. Bulk clone conversion preserves recorded lines.
 
 ## CLI examples
 
@@ -48,7 +48,11 @@ pnpm ck project patch patch.json
 pnpm ck footage add /absolute/path/take.mp4
 pnpm ck footage pack SOURCE_ID --range 0 30
 pnpm ck comments list --open --compact
+pnpm ck footage view SOURCE_ID --range 0 5
+pnpm ck assets install /absolute/path/pack
+pnpm ck history revert REVISION
 pnpm ck history undo
+pnpm ck demo save
 pnpm ck export
 ```
 
@@ -68,7 +72,7 @@ npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.0.tgz -- ck ini
 npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.0.tgz -- ck studio
 ```
 
-The packed CLI serves the built studio on port 4310 and includes renderer source, public assets and license notices. It does not rely on unpublished workspace packages. The existing npm package named `clipkit` is unrelated; this project does not publish over it.
+The approximately 53MB local tarball bundles the patched Remotion dependency tree and a shrinkwrap; the isolated installer verifies its actual dependencies. The packed CLI serves the built studio on port 4310 and includes renderer source, public assets and license notices. It does not rely on unpublished workspace packages. The existing npm package named `clipkit` is unrelated; this project does not publish over it.
 
 ## Verify and rehearse
 
@@ -80,7 +84,7 @@ pnpm test:e2e
 pnpm exec tsx scripts/render-smoke.ts
 ```
 
-`pnpm demo:reset` loads the explicitly labeled graphics fixture and is undoable. Do not run it on an unsaved presentation project. See [demo checklist](docs/DEMO.md) and [verification status](docs/VERIFICATION.md).
+`pnpm ck demo save` saves a prepared local project; `pnpm demo:reset` restores it, or loads the graphics fixture if no snapshot exists. `pnpm ck demo reset --graphics` explicitly selects the graphics fixture. Reset is undoable. Do not run it on an unsaved presentation project. See [demo checklist](docs/DEMO.md) and [verification status](docs/VERIFICATION.md).
 
 ## Data and limitations
 
@@ -89,11 +93,20 @@ pnpm exec tsx scripts/render-smoke.ts
 - Coding-agent providers receive the request and retrieved text/project context. Local-first does not mean cloud-free AI.
 - Token counts labeled **context** are byte-based estimates, not billed model usage. Runner-reported usage is displayed separately when available. The comparison baseline is estimated from full current content, not an invented regeneration cost.
 - Word cutting is enabled only for reliable word timestamps. Phrase-only or invalid provider timings are not expanded into fake word timings.
+- Alternate presets scale and fit the original scene with gutters where needed; they do not automatically reframe the subject.
 - The first export can download Chromium. Preview uses proxies; export uses originals and an immutable revision snapshot. Rendering takes real time.
 - Cached/recorded audio can export without Fish. New uncached speech cannot. Browser speech playback is not an exportable fallback.
-- No subject segmentation, full-script recording alignment, arbitrary historical revert, cloud collaboration or mobile editor. Only the latest untouched agent turn supports grouped revert.
+- No subject segmentation, cloud collaboration or mobile editor. Historical reverts and proposal acceptance preserve unrelated changes and refuse conflicts. Grouped latest-agent-turn undo remains available.
 - Real Fish requests, your microphone and your footage must be rehearsed with your credentials. Claude must be signed in before claiming a two-client demo.
 
 Original application code and ten native clip components are MIT. Remotion and embedded assets have separate terms; see [third-party notices](THIRD_PARTY_NOTICES.md) and [asset inventory](docs/ASSET-SOURCES.md).
 
 The starter pack includes real rendered PNG previews and generated compact catalog/category indexes plus full per-clip schemas. `ck assets build` validates it and writes a local index. New React clip code must be explicitly registered and compiled; dropping untrusted executable code into a folder does not run it.
+
+## Packs and review
+
+Install declarative native-clip wrappers with `ck assets install PATH`. Executable TSX packs require deliberate `--trust`, rendered selection-tag/determinism checks, and a content-bound trust receipt. Changed code disables the pack until explicitly trusted again. Installed folders are watched; schemas and catalog indexes refresh on changes. Invalid packs report errors. Do not trust code you have not reviewed.
+
+Choose **Suggest changes for review** before an agent request to generate a real preview proposal without committing the timeline change. Accept/reject is human-controlled; later conflicting changes require review. See [architecture](docs/ARCHITECTURE.md) and [pitch](docs/PITCH.md).
+
+Optional local recognition uses `WHISPER_CPP_BIN` and `WHISPER_CPP_MODEL`. Install those yourself; doctor reports their availability. Cloud recognition quality and browser microphone permission still need a real rehearsal.

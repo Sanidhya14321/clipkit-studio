@@ -43,6 +43,7 @@ it('builds native pack metadata, category index and full schemas from the truste
   const rows=(await readFile(join(output,'catalog.jsonl'),'utf8')).trim().split('\n').map(line=>JSON.parse(line));expect(rows.map(r=>r.id)).toEqual(catalog.map(a=>a.id));
   const schema=JSON.parse(await readFile(join(output,'schemas/kinetic-title.json'),'utf8'));expect(schema.propsSchema.properties.text.default).toBe(catalog[0].defaults.text);expect(schema.editableContract.requiredProps).toContain('opacity');
   const pack=JSON.parse(await readFile(join(output,'pack.json'),'utf8'));expect(pack.runtime).toEqual({kind:'compiled',registry:'clipkit/native-v1'});expect(pack.clips).toHaveLength(10);
+  const originalLicense=catalog[0].license;try{catalog[0].license='';await expect(buildAssets(process.cwd(),output)).rejects.toThrow('license is required');}finally{catalog[0].license=originalLicense;}
   const originalFields=catalog[0].fields;try{catalog[0].fields=originalFields.filter(field=>field.key!=='opacity');await expect(buildAssets(process.cwd(),output)).rejects.toThrow('missing editable property opacity');}finally{catalog[0].fields=originalFields;}
   const original=catalog[0].defaults.opacity;try{catalog[0].defaults.opacity=2;await expect(buildAssets(process.cwd(),output)).rejects.toThrow();}finally{catalog[0].defaults.opacity=original;}
  }finally{await rm(output,{recursive:true,force:true});}

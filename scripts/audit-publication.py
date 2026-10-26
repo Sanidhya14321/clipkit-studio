@@ -18,6 +18,11 @@ paths = {}
 for entry in objects:
     sha, _, name = entry.partition(" ")
     paths.setdefault(sha, name)
+# Include the index so unpublished additions/edits are scanned before commit.
+for entry in git("ls-files", "-s").decode().splitlines():
+    metadata, name = entry.split("\t", 1)
+    sha = metadata.split()[1]
+    paths.setdefault(sha, name)
 types = git("cat-file", "--batch-check=%(objectname) %(objecttype)",
             data=("\n".join(paths) + "\n").encode()).decode().splitlines()
 patterns = {

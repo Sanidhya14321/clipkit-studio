@@ -1,7 +1,8 @@
 import {spawn} from 'node:child_process';
-import {mkdir,mkdtemp,readFile,writeFile,cp,rm} from 'node:fs/promises';
+import {mkdir,mkdtemp,readFile,writeFile,cp,rm,readdir} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {probe,ffprobeBinary,run as runBinary} from '../packages/server/src/media.ts';
+import {catalog} from '../packages/assets/src/index.ts';
 import {duration} from '../packages/core/src/index.ts';
 const root=resolve(import.meta.dirname,'..');
 const run=(binary:string,args:string[],cwd=root)=>new Promise<string>((resolve,reject)=>{const child=spawn(binary,args,{cwd,stdio:['ignore','pipe','pipe']});let output='';child.stdout.on('data',d=>output+=d);child.stderr.on('data',d=>output+=d);child.on('error',reject);child.on('close',code=>code===0?resolve(output):reject(new Error(`${binary} failed: ${output.slice(-3000)}`)));});
@@ -14,9 +15,12 @@ try{
  console.log('Installing the tarball in an isolated directory…');
  await run('npm',['install','--prefix',temp,'--no-audit','--no-fund',tarball]);
  const bin=join(temp,'node_modules','.bin','ck');
+ const installedZodVersions=new Set<string>();const inspectModules=async(directory:string):Promise<void>=>{let entries;try{entries=await readdir(directory,{withFileTypes:true})}catch{return}for(const entry of entries){if(!entry.isDirectory()||entry.name.startsWith('.'))continue;const folder=join(directory,entry.name);if(entry.name.startsWith('@')){await inspectModules(folder);continue;}if(entry.name==='zod'){const version=JSON.parse(await readFile(join(folder,'package.json'),'utf8')).version;installedZodVersions.add(version);const [major,minor,patch]=version.split('.').map(Number);if(major<4||major===4&&(minor<6||minor===6&&patch<6))throw new Error('Installed vulnerable Zod '+version);}await inspectModules(join(folder,'node_modules'));}};await inspectModules(join(temp,'node_modules'));if(!installedZodVersions.size)throw new Error('Installed Zod was not found');
+ const dependencyAudit=JSON.parse(await run('npm',['audit','--omit=dev','--json'],temp));if(dependencyAudit.metadata?.vulnerabilities?.high||dependencyAudit.metadata?.vulnerabilities?.critical)throw new Error('Installed tarball has high/critical dependency advisories');
  await writeFile(join(project,'AGENTS.md'),'# Existing notes\nPreserve these notes.\n');await writeFile(join(project,'.mcp.json'),JSON.stringify({mcpServers:{existing:{command:'example'}}}));
  await run(bin,['init','--root',project],project);await run(bin,['init','--root',project],project);
  const agents=await readFile(join(project,'AGENTS.md'),'utf8');const config=JSON.parse(await readFile(join(project,'.mcp.json'),'utf8'));
+ const cursor=await readFile(join(project,'.cursor/rules/clipkit.mdc'),'utf8');if(!cursor.includes('alwaysApply: true')||cursor.split('\n').length>=80)throw new Error('Packed Cursor adapter missing or too large');
  if(!agents.includes('Preserve these notes.')||agents.split('<!-- clipkit:start -->').length!==2||!config.mcpServers.existing)throw new Error('Idempotent init failed to preserve existing configuration');
  const port=4330;const url=`http://127.0.0.1:${port}`;let logs='';
  child=spawn(bin,['studio','--root',project,'--port',String(port)],{cwd:project,env:{...process.env,FISH_API_KEY:''},stdio:['ignore','pipe','pipe']});child.stdout!.on('data',d=>logs+=d);child.stderr!.on('data',d=>logs+=d);
@@ -25,6 +29,7 @@ try{
  const op=async(name:string,args:Record<string,unknown>={})=>{const r=await fetch(url+'/api/op/'+name,{method:'POST',headers:{'Content-Type':'application/json','X-ClipKit-Token':token},body:JSON.stringify(args)});const body=await r.json() as any;if(!r.ok)throw new Error(JSON.stringify(body));return body;};
  const html=await (await fetch(url)).text();if(!html.includes('root'))throw new Error('Packed studio HTML missing');
  const font=await fetch(url+'/vendor/inter.ttf');if(font.status!==200)throw new Error('Packed font is not served');
+ const packFolder=join(temp,'custom-pack');await mkdir(packFolder);const base=catalog.find(c=>c.id==='kinetic-title')!;await cp(join(root,'public/previews/kinetic-title.png'),join(packFolder,'preview.png'));await writeFile(join(packFolder,'pack.json'),JSON.stringify({format:'clipkit.asset-pack/v1',id:'installed-proof',version:'1.0.0',license:'MIT',clips:[{...base,id:'installed-title',basedOn:base.id,preview:'preview.png',deterministic:true,editable:true,propsSchema:{type:'object',additionalProperties:false,required:Object.keys(base.defaults),properties:Object.fromEntries(Object.entries(base.defaults).map(([key,value])=>[key,{type:typeof value}]))}}]}));await run(bin,['assets','install',packFolder,'--root',project],project);await op('assets_add',{clipId:'installed-title',at:0});
  await op('footage_add',{path:join(root,'.clipkit/verification/fixture-recorded-mix.mp4')});await op('assets_add',{clipId:'lower-third',at:0});
  const snapshot=await (await fetch(url+'/api/state',{headers:{'X-ClipKit-Token':token}})).json() as any;const expectedFrames=Math.ceil(duration(snapshot.project)*snapshot.project.settings.fps);
  const exportJob=await op('export_start');let job=exportJob;const deadline=Date.now()+180000;
@@ -32,6 +37,7 @@ try{
  if(job.status!=='done')throw new Error(job.error??'Packed export timed out');
  const meta=await probe(job.result.path);if(!meta.audio||!meta.video||meta.width!==720||meta.height!==1280||Math.abs(meta.durationSec-5)>.04)throw new Error('Packed export media validation failed: '+JSON.stringify(meta));
  const detailed=JSON.parse(await runBinary(await ffprobeBinary(),['-v','error','-show_streams','-of','json',job.result.path]));const video=detailed.streams.find((s:any)=>s.codec_type==='video'),audio=detailed.streams.find((s:any)=>s.codec_type==='audio');if(Number(video.nb_frames)!==expectedFrames||video.codec_name!=='h264'||audio.codec_name!=='aac')throw new Error('Packed export frame/codec mismatch');
+ const landscapeJob=await op('export_start',{preset:'landscape',quality:'high'});let alternate=landscapeJob;while(alternate.status!=='done'&&alternate.status!=='failed')alternate=await op('job_status',{jobId:landscapeJob.id});if(alternate.status!=='done')throw new Error(alternate.error);const landscape=await probe(alternate.result.path);if(landscape.width!==1280||landscape.height!==720||!landscape.audio)throw new Error('Alternate export preset failed');
  const verifiedPath=join(root,'artifacts','verified-install-export.mp4');await cp(job.result.path,verifiedPath);await cp(job.result.path.replace('.mp4','.credits.json'),join(root,'artifacts','verified-install-export.credits.json'));
- const result={passed:true,tarball,initPreserved:true,packagedStudio:true,packagedFont:true,export:verifiedPath,media:{...meta,videoFrames:Number(video.nb_frames),expectedFrames,videoCodec:video.codec_name,audioCodec:audio.codec_name,fps:video.avg_frame_rate},externalVoiceRequests:false};await writeFile(join(root,'.clipkit/verification/install-smoke.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
+ const result={passed:true,tarball,initPreserved:true,installedZodVersions:[...installedZodVersions],installedDependencyAudit:dependencyAudit.metadata.vulnerabilities,cursorAdapter:true,installedCustomPack:true,landscapePreset:{width:landscape.width,height:landscape.height,audio:landscape.audio},packagedStudio:true,packagedFont:true,export:verifiedPath,media:{...meta,videoFrames:Number(video.nb_frames),expectedFrames,videoCodec:video.codec_name,audioCodec:audio.codec_name,fps:video.avg_frame_rate},externalVoiceRequests:false};await writeFile(join(root,'.clipkit/verification/install-smoke.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
 }finally{if(child&&child.exitCode===null){child.kill('SIGTERM');await new Promise(r=>child!.once('close',r));}await rm(temp,{recursive:true,force:true});}

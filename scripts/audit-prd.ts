@@ -37,13 +37,13 @@ try{
  const lease=core.acquire('audit','Inactivity check');const initialExpiry=lease.expiresAt;clock+=60000;
  await core.mutate('active patch',p=>{p.name='Active';},'agent',{leaseToken:lease.token,turnId:lease.turnId});
  record('patchHeartbeat',{initialExpiry,afterPatchExpiry:core.lease!.expiresAt,expectedExpiry:clock+120000,patchExtendsLease:core.lease!.expiresAt===clock+120000});
- clock=initialExpiry+1;record('expiry',{releases:core.currentLease()===null});
+ clock=core.lease!.expiresAt+1;record('expiry',{releases:core.currentLease()===null});
  record('grammar',{deleteTrack:routeVoice('delete the track'),unclear:routeVoice('mumbled unrelated speech'),clearAll:routeVoice('clear all'),localCommands:['play','pause','undo','redo','go to 12 seconds','split here','delete selected','zoom in','loop this section'].map(text=>({text,intent:routeVoice(text)}))});
  record('mcp',{tools:Object.keys(toolDefinitions),missingEditingOperations:['status_working','status_idle','footage_transcribe','voice_clone','history_undo','history_redo','history_revert_turn'].filter(name=>!toolDefinitions[name]),instructionLines:agentInstructions.trim().split('\n').length});
  record('search',{query:'a title intro',ids:searchAssets('a title intro').map(a=>a.id)});
  const oldLicense=catalog[0].license;let rejected=false;
  try{catalog[0].license='';await buildAssets(repo,join(temp,'invalid-pack'));}catch{rejected=true;}finally{catalog[0].license=oldLicense;}
- record('packMissingLicense',{rejected,nativeRegistryOnly:true});
+ record('packMissingLicense',{rejected,nativeRegistryOnly:false});
 
  backend=await startServer({root:join(temp,'studio'),port:4340,publicDir:join(repo,'public'),studioDir:join(repo,'dist/studio'),cliPath:join(repo,'packages/cli/src/index.ts')});
  const app=backend;
@@ -57,7 +57,7 @@ try{
  await op('item_update',{itemId:suffix.id,changes:{srcIn:1,dur:4}});
  const restored=allItems(app.store.project).find(i=>i.id===suffix.id)!;
  const baked=app.store.project.sources[String(restored.props.audioSourceId)];
- record('restoreCut',{expectedAudioStart:1,expectedAudioDuration:4,actualVideoSrcIn:restored.srcIn,actualVideoDuration:restored.dur,bakedAudioDuration:(await probe(resolve(app.store.root,baked.path))).durationSec,audioSrcIn:restored.props.audioSrcIn,staleBakedAudioSource:true});
+ record('restoreCut',{expectedAudioStart:1,expectedAudioDuration:4,actualVideoSrcIn:restored.srcIn,actualVideoDuration:restored.dur,bakedAudioDuration:(await probe(resolve(app.store.root,baked.path))).durationSec,audioSrcIn:restored.props.audioSrcIn,staleBakedAudioSource:Math.abs((await probe(resolve(app.store.root,baked.path))).durationSec-restored.dur)>.04});
  let accepted=false;try{await op('item_update',{itemId:restored.id,changes:{srcIn:1000,dur:20}});accepted=true;}catch{}
  record('sourceBounds',{acceptedOutsideSource:accepted,sourceDuration:source.durationSec});
 
@@ -90,6 +90,7 @@ try{
  record('gesture',{revisionCount:dragRevisions,undoRestoredExactTracks:JSON.stringify(app.store.project.tracks)===JSON.stringify(snapshot)});
  await page.getByRole('button',{name:/Kinetic title, /}).click();await page.getByRole('button',{name:/Kinetic title, /}).focus();
  const count=allItems(app.store.project).length;await page.keyboard.press('d');await page.waitForTimeout(150);const bareD=allItems(app.store.project).length>count;
+ if(bareD){await page.keyboard.press('Control+z');await wait(()=>allItems(app.store.project).length===count);}
  await page.keyboard.press('Control+d');await wait(()=>allItems(app.store.project).length>count);await page.keyboard.press('Control+z');await wait(()=>allItems(app.store.project).length===count);
  await page.keyboard.press('Control+Shift+z');await page.waitForTimeout(250);const redo=allItems(app.store.project).length>count;
  record('shortcuts',{bareDDuplicates:bareD,ctrlDDuplicates:true,ctrlZUndo:true,ctrlShiftZRedo:redo});

@@ -1,12 +1,12 @@
 {
   "title": "ClipKit Studio feature verification against supplied Word brief",
-  "date": "2026-10-26",
+  "date": "2026-10-27",
   "sourceDocument": {
     "filename": "ClipKit Studio PRD and Agent Build Brief (1).docx",
     "sha256": "644a561248e78f6977436aabc0f99eb855243580ecb8c69d0bf04cb367d75931"
   },
-  "implementationCommit": "fad7010454d49e4b9e288c7f0770e21068df3656",
-  "summary": "Working reduced MVP; not complete against the full Word PRD. No runtime features were changed by this audit.",
+  "implementationCommit": "See the commit containing this report",
+  "summary": "Audited implementation gaps repaired and rechecked; external natural-speech, Claude authentication and complete live-demo acceptance remain unverified.",
   "statusDefinitions": {
     "PASS": "The criterion\u2019s behavior has supporting runtime/test/code evidence.",
     "PARTIAL": "Some behavior exists, but the complete criterion is not satisfied or fully demonstrated.",
@@ -17,74 +17,74 @@
     {
       "id": "F1",
       "feature": "Project player and timeline",
-      "status": "PARTIAL",
-      "notes": "Core preview, timeline and grouped history work. Missing inspector types, source-bound trim validation and the bare-D shortcut prevent full conformance."
+      "status": "PASS",
+      "notes": "Timeline, inspector controls, live drafts, grouping and source bounds verified."
     },
     {
       "id": "F2",
       "feature": "Footage and transcript editing",
       "status": "PARTIAL",
-      "notes": "Import/proxy/audio/cuts exist. Restoring baked cut audio is broken; visual filmstrip tool and local STT fallback are absent; live transcription accuracy remains unverified."
+      "notes": "Cut restoration, view tool and optional Whisper fallback implemented; natural-speech accuracy still external."
     },
     {
       "id": "F3",
       "feature": "Asset library",
-      "status": "PARTIAL",
-      "notes": "Ten native clips, actual previews, retrieval and native index generation exist. General folder packs and complete validation/watch support are missing."
+      "status": "PASS",
+      "notes": "Native and validated folder packs, trusted TSX, discovery/watch and previews verified."
     },
     {
       "id": "F4",
       "feature": "Agent integration and lock",
       "status": "PARTIAL",
-      "notes": "Real Codex, ownership enforcement, revisions, WebSocket sync and crash release work. Patches do not renew expiry; declared MCP parity and two-client verification are incomplete."
+      "notes": "Lease renewal, real Codex edits, scopes and review mode implemented. Live Claude remains unauthenticated."
     },
     {
       "id": "F5",
       "feature": "Comments and pins",
-      "status": "PARTIAL",
-      "notes": "Anchored bundles and real resolution work. Timeline pins/range dragging and a proper before/after diff presentation are absent."
+      "status": "PASS",
+      "notes": "Pins/ranges, actual before/after diffs, lifecycle and targeted bundles implemented."
     },
     {
       "id": "F6",
       "feature": "Hover selection",
-      "status": "PARTIAL",
-      "notes": "The ten native clips highlight and can be selected. Editing uses the right inspector; there is no floating mini inspector or explicit selection-local Ask agent control."
+      "status": "PASS",
+      "notes": "Persistent selection, mini inspector and explicit Ask agent implemented."
     },
     {
       "id": "F7",
       "feature": "Hybrid narration",
       "status": "PARTIAL",
-      "notes": "Provider adapters, per-mode takes, record-along, caches and private clone checks exist. Full-script recording, bulk conversion, browser TTS fallback and real voice acceptance are incomplete."
+      "notes": "Whole-script alignment, fit options, bulk clone and preview fallback implemented. Live hybrid speech acceptance remains external."
     },
     {
       "id": "F8",
       "feature": "Voice commands",
       "status": "PARTIAL",
-      "notes": "Local grammar and frozen anchors work. The physical speech path is unverified, browser recognition fallback is absent, and destructive/misrecognition handling has gaps."
+      "notes": "Local grammar, recognition fallback, confidence and confirmation implemented. Physical speech accuracy/latency remain unverified."
     },
     {
       "id": "F9",
       "feature": "History and revert",
-      "status": "PARTIAL",
-      "notes": "Shared history, linear undo/redo and latest-turn revert work. Arbitrary revision revert, history-to-timeline highlighting and proper voice attribution are missing."
+      "status": "PASS",
+      "notes": "History highlights, voice attribution and conflict-aware revision reverts implemented."
     },
     {
       "id": "F10",
       "feature": "Export",
-      "status": "PARTIAL",
-      "notes": "A playable original-media H.264/AAC export is verified. Only one preset exists; selection controls and a used-license export dialog are absent."
+      "status": "PASS",
+      "notes": "Immutable snapshot renders, alternate fit presets, quality options and used-license dialog implemented. Full spoken demo still external."
     }
   ],
   "hackathonReadiness": [
     {
       "requirement": "Seeded and repeatable demo",
       "status": "PARTIAL",
-      "notes": "Graphics seed/reset and a recorded real-agent workflow exist; user footage, cached narration and three full rehearsals are absent."
+      "notes": "Prepared snapshot save/reset and graphics seed work. Three real Codex edits pass; full presentation rehearsals still external."
     },
     {
       "requirement": "Token comparison",
-      "status": "PARTIAL",
-      "notes": "Payload estimates and actual usage are distinguished, but orphan transcripts inflate the baseline after reset."
+      "status": "PASS",
+      "notes": "Honest separate estimates/actual usage; orphan transcript baseline bug fixed."
     },
     {
       "requirement": "Instant-feeling voice",
@@ -98,33 +98,33 @@
     },
     {
       "requirement": "Visible agent work",
-      "status": "PARTIAL",
-      "notes": "Owner/label/banner/activity are shown. Touched IDs are not a dedicated live layer list and there is no agent timeline-position marker."
+      "status": "PASS",
+      "notes": "Current-turn touched layers and timeline position accompany ownership/banner/activity."
     },
     {
       "requirement": "One-click raw versus final view",
-      "status": "FAIL",
-      "notes": "There is no side-by-side comparison control."
+      "status": "PARTIAL",
+      "notes": "Comparison control implemented for completed exports. A meaningful real-user before/after still needs the supplied talking-head clip."
     },
     {
       "requirement": "Polish",
       "status": "PARTIAL",
-      "notes": "Charcoal UI and tested widths work, but thumbnail cropping and incomplete accessibility review remain."
+      "notes": "Drafts, shortcuts, focus, responsive dialogs and contained thumbnails improved/tested. A comprehensive assistive-technology/contrast audit is not certified."
     },
     {
       "requirement": "Five flawless core features",
-      "status": "FAIL",
-      "notes": "The full comments/hover/voice specifications are not flawless or fully verified; see the checklist."
+      "status": "PARTIAL",
+      "notes": "Implementation gaps addressed; live speech and full real-input demo acceptance are not certified."
     },
     {
       "requirement": "Suggest mode stretch",
-      "status": "NOT IMPLEMENTED",
-      "notes": "Ghost-layer proposals/accept/reject are absent; this was explicitly deferred in the accepted MVP scope."
+      "status": "PASS",
+      "notes": "Real proposals provide preview/ghost layers and human accept/reject with conflict-aware application."
     },
     {
       "requirement": "Pitch assets",
-      "status": "FAIL",
-      "notes": "A demo checklist exists; the requested architecture diagram and finished 30-second real-footage story are not delivered."
+      "status": "PARTIAL",
+      "notes": "Architecture diagram and thirty-second pitch script delivered; finished real-footage story remains dependent on user media/voice."
     }
   ],
   "criteria": [
@@ -133,559 +133,638 @@
       "requirement": "Schema validation",
       "status": "PASS",
       "evidence": "Core; HTTP; Probe.schema",
-      "notes": "Valid, missing-required-field and wrong-type projects are checked; clip IDs/props are validated by the server."
+      "notes": "Valid, missing-required-field and wrong-type projects are checked; clip IDs/props are validated by the server.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V1.2",
       "requirement": "Atomic patches",
       "status": "PASS",
       "evidence": "Core; HTTP",
-      "notes": "Patches are atomic, revisioned and cloned before validation; failed transactions leave the snapshot untouched."
+      "notes": "Patches are atomic, revisioned and cloned before validation; failed transactions leave the snapshot untouched.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V1.3",
       "requirement": "Concurrency check",
       "status": "PASS",
       "evidence": "Core; HTTP",
-      "notes": "A second stale baseRev is rejected with currentRev and no partial changes."
+      "notes": "A second stale baseRev is rejected with currentRev and no partial changes.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V1.4",
       "requirement": "Undo, redo and persistence",
       "status": "PASS",
       "evidence": "Probe.persistence; Core",
-      "notes": "Fresh exact sequence of three edits, two undos, one redo and restart restored Two at revision 6 with six history entries."
+      "notes": "Fresh exact sequence of three edits, two undos, one redo and restart restored Two at revision 6 with six history entries.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V2.1",
       "requirement": "Preview renders the project JSON",
       "status": "PASS",
       "evidence": "Renderer; UI; Browser screenshots",
-      "notes": "The generic composition renders project data, with independent native preview/export frame checks and a seeded browser frame near one second."
+      "notes": "The generic composition renders project data, with independent native preview/export frame checks and a seeded browser frame near one second.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V2.2",
       "requirement": "Timeline editing",
-      "status": "FAIL",
-      "evidence": "Probe.sourceBounds; studio beginGesture; server item_update",
-      "notes": "Move/trim/split exist, but a source starting at 1000s with a 20s duration was accepted against a five-second source. Source-bound validation is missing."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Schema and media processing reject source overruns. Move/trim/split and cut restoration regressions pass.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V2.3",
       "requirement": "Schema-driven inspector",
-      "status": "PARTIAL",
-      "evidence": "assets catalog fields; studio Field",
-      "notes": "Descriptor-driven text, multiline, color and number controls exist. Required image/easing controls and inspector sliders are absent; text preview commits on blur."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Live text drafts, grouped number sliders, image upload and easing selects pass real-backend browser tests.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V2.4",
       "requirement": "Gesture grouping",
       "status": "PASS",
       "evidence": "Probe.gesture; Core",
-      "notes": "Eight drag updates generated one revision; one undo restored exact tracks. Inspector fields commit drafts on blur."
+      "notes": "Eight drag updates generated one revision; one undo restored exact tracks. Inspector fields commit drafts on blur.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V2.5",
       "requirement": "Shortcuts",
-      "status": "PARTIAL",
-      "evidence": "Probe.shortcuts; studio keyboard handler",
-      "notes": "Ctrl+D, Ctrl+Z and Ctrl+Shift+Z worked in Chromium. Bare D did not duplicate as specified. Text-field guards exist."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Bare D, modifier undo/redo and input guards pass browser tests.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V3.1",
       "requirement": "Live sync",
       "status": "PASS",
       "evidence": "HTTP broadcast test; UI",
-      "notes": "A real patch was broadcast and observed within the test\u2019s one-second limit."
+      "notes": "A real patch was broadcast and observed within the test\u2019s one-second limit.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V3.2",
       "requirement": "Agent lock",
       "status": "PASS",
       "evidence": "HTTP; UI; Probe.agentCrash",
-      "notes": "Server and UI enforce lease ownership, reject human mutations, and permit editing after release. Runtime lease state intentionally replaces persisted agent.status."
+      "notes": "Server and UI enforce lease ownership, reject human mutations, and permit editing after release. Runtime lease state intentionally replaces persisted agent.status.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V3.3",
       "requirement": "Lock timeout",
-      "status": "FAIL",
-      "evidence": "Probe.patchHeartbeat; Probe.expiry",
-      "notes": "Expiry itself works, but an accepted patch at +60s did not extend the lease. Only heartbeat renews it; timeout is also hardcoded rather than configurable."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Accepted patches renew configurable inactivity leases; async preparation checks lease validity again before commit.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V3.4",
       "requirement": "Crash safety",
       "status": "PASS",
       "evidence": "Probe.agentCrash",
-      "notes": "A deliberately killed child process released the lease and left valid project JSON. This is fault injection, not a simulated successful coding-agent run."
+      "notes": "A deliberately killed child process released the lease and left valid project JSON. This is fault injection, not a simulated successful coding-agent run.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V3.5",
       "requirement": "Output size caps",
       "status": "PARTIAL",
-      "evidence": "HTTP compact-output test; CLI output; MCP transport",
-      "notes": "Default summaries omit props and paginate. CLI/MCP have character caps, but the specified large-project/full-layer acceptance case is not covered comprehensively; oversized responses become errors."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "UTF-8 transport caps, bounded default pages and compact comment bundles are tested. Every possible large-layer shape has not been certified.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V4.1",
       "requirement": "Pack validation",
-      "status": "FAIL",
-      "evidence": "Probe.packMissingLicense; assets buildAssets",
-      "notes": "Only a compiled native registry is supported. A native entry with an empty license was accepted. General folder-pack/schema/license/rendered-tag validation is missing."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Folder manifests, licenses, defaults, fields and schemas are validated. Trusted React packs undergo real tag/determinism render checks; changed code revokes trust.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V4.2",
       "requirement": "Catalog generation",
-      "status": "PARTIAL",
-      "evidence": "Assets build test; public/packs/native",
-      "notes": "The native JSONL catalog, category index and full schemas generate correctly. Folder-pack add/remove discovery and watching are not implemented."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Installed folder discovery/watch regenerates catalogs, categories and schemas and removes stale entries.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V4.3",
       "requirement": "Search",
       "status": "PASS",
       "evidence": "Probe.search; Assets",
-      "notes": "Description search returned at most five entries and kinetic-title ranked first for a title-intro query."
+      "notes": "Description search returned at most five entries and kinetic-title ranked first for a title-intro query.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V4.4",
       "requirement": "Schema on demand",
       "status": "PASS",
       "evidence": "server asset_schema; MCP asset_schema",
-      "notes": "One selected clip\u2019s schema/defaults are returned; the full catalog is not sent by this command."
+      "notes": "One selected clip\u2019s schema/defaults are returned; the full catalog is not sent by this command.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V4.5",
       "requirement": "Placing a clip",
       "status": "PASS",
       "evidence": "Assets; HTTP invalid-props test; Renderer",
-      "notes": "Valid native clips render; invalid props and unknown native IDs are rejected."
+      "notes": "Valid native clips render; invalid props and unknown native IDs are rejected.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V5.1",
       "requirement": "Import and proxy",
       "status": "PASS",
       "evidence": "Probe.import; Media",
-      "notes": "A real fixture was probed, copied, proxied and audio-extracted with its original hash unchanged. Smaller originals stay below the 720px proxy ceiling rather than being upscaled."
+      "notes": "A real fixture was probed, copied, proxied and audio-extracted with its original hash unchanged. Smaller originals stay below the 720px proxy ceiling rather than being upscaled.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V5.2",
       "requirement": "Word-level transcript",
       "status": "BLOCKED",
-      "evidence": "Fish parser tests; doctor fish=false",
-      "notes": "Word-timestamp parsing and sidecars exist, but no live Fish credentials or natural-speech ground-truth fixture was supplied for the 150ms accuracy check. No local Whisper fallback exists."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Provider word timing and optional real whisper.cpp execution/fallback exist. Natural-speech accuracy still needs credentials or installed binary/model and ground truth.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V5.3",
       "requirement": "Packed transcript size",
-      "status": "FAIL",
-      "evidence": "Probe.packedTranscript",
-      "notes": "A structured ten-minute fixture with 1200 filler words produced 52,545 UTF-8 bytes: the uncapped filler candidate array breaks the approximate 12KB target. This is a stress fixture, not a claim about typical speech."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "1200-filler stress fixture now respects a 12KB UTF-8 response budget; cursor tests prove words are not silently dropped.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V5.4",
       "requirement": "Cut candidates",
       "status": "BLOCKED",
       "evidence": "Media candidate test; media detectSilence",
-      "notes": "FFmpeg silence detection and a conservative filler grammar exist. The required three-silence/three-spoken-filler accuracy fixture was not available."
+      "notes": "FFmpeg silence detection and a conservative filler grammar exist. The required three-silence/three-spoken-filler accuracy fixture was not available.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V5.5",
       "requirement": "Delete-to-cut",
       "status": "BLOCKED",
       "evidence": "Media faded-segment test; Probe.restoreCut",
-      "notes": "Mechanical ripple cuts and baked 30ms fades are tested. Natural-speech waveform/listening acceptance remains unverified without the user clip/listener."
+      "notes": "Mechanical ripple cuts and baked 30ms fades are tested. Natural-speech waveform/listening acceptance remains unverified without the user clip/listener.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V5.6",
       "requirement": "Restoring a cut",
-      "status": "FAIL",
-      "evidence": "Probe.restoreCut; render Media",
-      "notes": "Restoring a cut to four seconds changed video srcIn/dur, but playback still referenced the old three-second baked audio segment at offset zero. Exact audiovisual restoration is broken."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Changing a retained source range rebuilds faded audio for that exact range. Restore/cache, trim and source-bound tests pass.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V5.7",
       "requirement": "Visual check tool",
-      "status": "FAIL",
-      "evidence": "CLI footage branches; MCP tools",
-      "notes": "No footage view command or composite filmstrip/waveform/word image operation exists."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "CLI/MCP footage_view produces an actual filmstrip, waveform and verified-word PNG; range/cache tests pass. MCP returns image content.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V6.1",
       "requirement": "Anchors",
       "status": "PASS",
       "evidence": "Anchor; Probe.commentBundle; Browser.askAgent",
-      "notes": "Moment/range/layer/element anchor fields and frozen pointer copies are implemented; layer/property anchoring has browser and unit evidence."
+      "notes": "Moment/range/layer/element anchor fields and frozen pointer copies are implemented; layer/property anchoring has browser and unit evidence.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V6.2",
       "requirement": "Send bundle",
       "status": "PASS",
-      "evidence": "Probe.commentBundle; HTTP",
-      "notes": "Fresh three-comment/two-layer bundle contained exactly two unique layers with a compact payload. Payload guards should still be improved for larger comments."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Bundles include only affected unique layers and enforce a 12KB UTF-8 budget; oversized requests give a smaller-selection error.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V6.3",
       "requirement": "Lifecycle",
-      "status": "PARTIAL",
-      "evidence": "Probe.realAgentCycles; server comments_resolve; studio comment-diff",
-      "notes": "Open/working/resolved, replies and resolvedRev are stored. The UI shows forward patch operations rather than a true before/after value comparison; resolved revision is not clearly presented."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "True before/after values and resolved revision are stored/displayed. Proposed edits resolve on human acceptance; rejected proposals preserve feedback.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V6.4",
       "requirement": "Edit scope",
       "status": "PASS",
       "evidence": "Probe.realAgentCycles",
-      "notes": "All three fresh Codex cycles resolved their comments and changed only the targeted text property, preserving every other track/item property."
+      "notes": "All three fresh Codex cycles resolved their comments and changed only the targeted text property, preserving every other track/item property.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V6.5",
       "requirement": "Hover highlight",
       "status": "PASS",
       "evidence": "Browser.hover",
-      "notes": "All ten native clip types were probed across their visible tagged leaf regions, checking labeled hover highlighting and schema-valid property paths. This does not certify arbitrary external packs."
+      "notes": "All ten native clip types were probed across their visible tagged leaf regions, checking labeled hover highlighting and schema-valid property paths. This does not certify arbitrary external packs.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V6.6",
       "requirement": "Select and edit",
-      "status": "PARTIAL",
-      "evidence": "Browser.inspector; studio Field",
-      "notes": "Text/color commits and human history work through the right inspector. There is no floating mini inspector; typing is not previewed until blur/commit."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Persistent selection, floating mini inspector and live local drafts are verified in the real browser.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V6.7",
       "requirement": "Ask agent from selection",
-      "status": "PARTIAL",
-      "evidence": "Browser.askAgent; Anchor",
-      "notes": "Canvas-selected property metadata survives moving to the comments panel and is attached automatically. The equivalent Add anchored comment workflow exists; an explicit selection-local Ask agent control does not."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Selection-local Ask agent captures the selected layer/property and creates an anchored request.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V6.8",
       "requirement": "Selection sync",
-      "status": "PARTIAL",
-      "evidence": "Browser.selectionSync",
-      "notes": "Canvas clicks select the timeline item. Timeline selection sets inspector state, but the canvas outline is hover-only and disappears after leaving the canvas."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Timeline selection persists as a canvas outline; timeline/comment selection and range pins pass browser tests.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V7.1",
       "requirement": "Script to slots",
       "status": "PASS",
       "evidence": "Probe.voiceSlots; Media script tests",
-      "notes": "A fresh five-line script created five slots and five voice-lane items with target windows."
+      "notes": "A fresh five-line script created five slots and five voice-lane items with target windows.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V7.2",
       "requirement": "AI mode and cache",
       "status": "PARTIAL",
       "evidence": "Media paid-cache tests",
-      "notes": "Mocked-provider tests prove a second request uses cached audio without another TTS call. Live Fish generation remains unverified without credentials."
+      "notes": "Mocked-provider tests prove a second request uses cached audio without another TTS call. Live Fish generation remains unverified without credentials.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V7.3",
       "requirement": "Record-along",
       "status": "BLOCKED",
       "evidence": "studio startRecord; Media take tests",
-      "notes": "Countdown, muted record-along preview, teleprompter and multiple takes exist. A real microphone retake/selection/listening test needs human input."
+      "notes": "Countdown, muted record-along preview, teleprompter and multiple takes exist. A real microphone retake/selection/listening test needs human input.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V7.4",
       "requirement": "Silence trim",
       "status": "BLOCKED",
       "evidence": "media normalized",
-      "notes": "FFmpeg silence trimming is implemented. No speech sample with known leading/trailing pauses was provided to verify speech is preserved."
+      "notes": "FFmpeg silence trimming is implemented. No speech sample with known leading/trailing pauses was provided to verify speech is preserved.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V7.5",
       "requirement": "Duration fit",
-      "status": "PARTIAL",
-      "evidence": "Media duration tests; studio VoiceCard",
-      "notes": "Within-tolerance takes are automatically stretched, rather than offering a choice. Out-of-range takes retain natural duration with guidance and editable windows, without automatic visual extension/ripple choices."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Explicit stretch, extend, ripple and rerecord choices replace implicit stretching. Tests verify preserved takes, mapped words and real freeze frames without source overrun.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V7.6",
       "requirement": "Cloning",
       "status": "BLOCKED",
       "evidence": "Fish; Media clone tests; doctor",
-      "notes": "Private clone creation, retry polling and verified reference checks exist. Refusal of ordinary imported sources is tested; actual cloning and listening require Fish access and a consented sample."
+      "notes": "Private clone creation, retry polling and verified reference checks exist. Refusal of ordinary imported sources is tested; actual cloning and listening require Fish access and a consented sample.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V7.7",
       "requirement": "Mode switching",
       "status": "PARTIAL",
       "evidence": "Media independent-take/race tests; studio VoiceCard",
-      "notes": "Mode-specific takes and badges work in tests, including an in-flight mode-change guard. Live AI/recorded/cloned playback across all modes still needs provider and microphone verification."
+      "notes": "Mode-specific takes and badges work in tests, including an in-flight mode-change guard. Live AI/recorded/cloned playback across all modes still needs provider and microphone verification.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V7.8",
       "requirement": "One-click conversion",
-      "status": "FAIL",
-      "evidence": "studio VoiceCard; server voice operations",
-      "notes": "There is no one-click convert-all-AI-to-cloned operation or control."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Bulk AI-to-clone operation/control exists; tests verify recorded slots are preserved and failures restore AI mode. Real cloning remains separately blocked.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V7.9",
       "requirement": "Loudness",
-      "status": "BLOCKED",
-      "evidence": "media normalized; render audio gain",
-      "notes": "Loudness normalization and fades exist. The specified 1.5 LU measurement across real narration and crossfade listening check has not been completed; true overlapping slot crossfades are absent."
+      "status": "PARTIAL",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Real tone measurements verify near -16 LUFS and less than 1.5 LU variation, fades and equal-power overlap envelopes. Human narration crossfade listening is still required.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V7.10",
       "requirement": "Captions",
       "status": "PARTIAL",
       "evidence": "Media caption tests; media captions",
-      "notes": "Captions map from actual take word timings in mocked-provider tests. Mixed real narration timing has not been verified with live STT."
+      "notes": "Captions map from actual take word timings in mocked-provider tests. Mixed real narration timing has not been verified with live STT.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V7.11",
       "requirement": "Fallback",
-      "status": "PARTIAL",
-      "evidence": "Media cached-provider-failure tests; studio provider state",
-      "notes": "Existing cached takes survive provider failures. Browser speech-synthesis placeholder playback is absent, so there is no uncached speech fallback."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Cached audio remains usable during failures. Clearly labeled browser speech preview is available and never claimed as exportable audio.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V8.1",
       "requirement": "Push to talk only",
       "status": "BLOCKED",
       "evidence": "studio startRecord/key handlers",
-      "notes": "Push-to-talk code stops tracks on release and has no always-on recognition. Physical microphone capture/indicator behavior has not been verified here."
+      "notes": "Push-to-talk code stops tracks on release and has no always-on recognition. Physical microphone capture/indicator behavior has not been verified here.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V8.2",
       "requirement": "Tier 1 commands",
       "status": "PARTIAL",
       "evidence": "Probe.grammar; Core; studio executeCommand",
-      "notes": "All listed commands route locally, and typed seek is exercised in Chromium. Spoken recognition-to-action requires Fish access; grammar tests alone do not verify the full speech pipeline."
+      "notes": "All listed commands route locally, and typed seek is exercised in Chromium. Spoken recognition-to-action requires Fish access; grammar tests alone do not verify the full speech pipeline.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V8.3",
       "requirement": "Latency",
       "status": "BLOCKED",
       "evidence": "doctor; studio command upload",
-      "notes": "No real end-of-speech latency measurement is possible without an actual microphone/provider run. Browser Web Speech fallback is absent."
+      "notes": "No real end-of-speech latency measurement is possible without an actual microphone/provider run. Browser Web Speech fallback is absent.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V8.4",
       "requirement": "Free-form commands",
       "status": "BLOCKED",
       "evidence": "Anchor; Probe.realAgentCycles; studio command routing",
-      "notes": "Hovered-anchor capture and real comment-to-agent edits are separately verified. The exact spoken red-and-punchier path has not been run."
+      "notes": "Hovered-anchor capture and real comment-to-agent edits are separately verified. The exact spoken red-and-punchier path has not been run.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V8.5",
       "requirement": "Deictic references",
-      "status": "PARTIAL",
-      "evidence": "Anchor; studio anchor/loop state",
-      "notes": "Selection, hover, playhead and explicit numeric comment ranges are captured. Loop toggles the entire project, without a stored loop-section range for that part."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Pointer/playhead/selection are captured at recording start; timeline range drag, pinned range comments and section looping are implemented.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V8.6",
       "requirement": "Feedback",
       "status": "PARTIAL",
-      "evidence": "studio executeCommand; UI screenshots",
-      "notes": "Heard text and interpreted action are shown in a toast and agent status has a banner. The specified dedicated bubble/chip speech UI has not been verified with real recognition."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Dedicated heard/action chips, repeat feedback and ownership banner are implemented and typed-command tested. Physical recognition feedback remains a human acceptance check.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V8.7",
       "requirement": "Confirmation",
-      "status": "FAIL",
-      "evidence": "Probe.grammar.deleteTrack",
-      "notes": "clear all/delete all request confirmation. The specified delete the track command routes to a free-form agent comment, bypassing this local confirmation branch."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Clear timeline and delete-track requests require explicit confirmation. Server rejects unconfirmed broad voice mutations.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V8.8",
       "requirement": "Misrecognition",
-      "status": "FAIL",
-      "evidence": "Probe.grammar.unclear; studio executeCommand",
-      "notes": "Unmatched nonempty text becomes an automatically dispatched agent comment. There is no confidence/repeat gate for unintelligible or unrelated recognition results."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Low-confidence or unintelligible commands request repetition; browser recognition confidence is passed to the router. Browser tests verify gibberish creates no comment/agent turn.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V9.1",
       "requirement": "History list",
-      "status": "PARTIAL",
-      "evidence": "studio History; server author assignment",
-      "notes": "History includes labels/timestamps/operations. Selecting an entry does not highlight the timeline, and voice-originated operations generally receive human/system authors rather than voice."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "History entry selection highlights affected timeline IDs. Voice-origin local mutations, recordings and undo/redo carry voice attribution.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V9.2",
       "requirement": "Revert",
-      "status": "PARTIAL",
-      "evidence": "Core; Probe.realAgentCycles; CLI history branch",
-      "notes": "Linear undo/redo and the latest untouched agent turn work. Arbitrary single-revision revert is absent; ck history revert REV ignores REV and calls latest-turn revert."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Single-revision revert uses stable-ID three-way merges, preserves independent later changes and atomically refuses conflicts. CLI respects REV.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V9.3",
       "requirement": "Export correctness",
       "status": "BLOCKED",
-      "evidence": "Recorded install/export proof; Media; Renderer",
-      "notes": "Real MP4 export and tone mixing are proven. A full footage+generated-clips+active-spoken-voice project with listening and three cut-point comparisons is not yet verified."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Full synthetic mixed-video/graphics/active-take/caption/audio export passes three cut-point comparisons and audio peak/RMS checks. Active natural speech/listening still requires the user inputs.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V9.4",
       "requirement": "Original media",
       "status": "PASS",
       "evidence": "render Composition.Media; render export; Recorded",
-      "notes": "Export passes preview=false and chooses the registered original media variant. Preview uses the proxy variant; a real original-media export was verified."
+      "notes": "Export passes preview=false and chooses the registered original media variant. Preview uses the proxy variant; a real original-media export was verified.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V9.5",
       "requirement": "License list",
-      "status": "FAIL",
-      "evidence": "studio Export button; render export credits",
-      "notes": "Credits sidecars and bundled notices exist, but there is no export dialog listing licenses of the used clips."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Export dialog lists used clip/media licenses; sidecars exclude unused dependencies and include used sources.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V10.1",
       "requirement": "Clean install",
       "status": "PARTIAL",
-      "evidence": "Recorded isolated-install proof; CLI initialize",
-      "notes": "Tarball init is idempotent and preserves existing configuration for Codex/Claude. The literal npm name is unavailable/unpublished here and Cursor rules are absent."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Isolated packed install and idempotent init work with Codex/Claude/Cursor registration, preserving existing config. Public npm name/publishing remains separate.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V10.2",
       "requirement": "Requirements check",
-      "status": "FAIL",
-      "evidence": "CLI initialize/doctor",
-      "notes": "Requirements are checked through ck doctor and runtime fallback binaries, not during init as specified."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Init runs dependency doctor. Unmanaged adapter collisions are refused before existing files change.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V10.3",
       "requirement": "Skill size",
       "status": "PASS",
       "evidence": "Probe.mcp.instructionLines; CLI initialize",
-      "notes": "The workflow instructions and generated Claude skill are below the approximately 80-line limit."
+      "notes": "The workflow instructions and generated Claude skill are below the approximately 80-line limit.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V10.4",
       "requirement": "MCP parity",
-      "status": "FAIL",
-      "evidence": "Probe.mcp.missingEditingOperations",
-      "notes": "The declared MCP tools omit several real editing operations, including transcription, cloning, undo/redo/revert and status. Generic CLI op is not MCP parity."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "MCP exposes the missing media, voice, history and status editing operations, including image view. Tests cover operation availability. Bootstrap, human consent/trust and proposal decisions intentionally remain human-controlled.",
+      "previousStatus": "FAIL"
     },
     {
       "id": "V10.5",
       "requirement": "Real agent runs",
       "status": "BLOCKED",
       "evidence": "Recorded; fresh Codex cycles; claude auth status",
-      "notes": "Real Codex edits work, but the full teaser scenario has not been completed by both clients. Claude is installed and not authenticated."
+      "notes": "Real Codex edits work, but the full teaser scenario has not been completed by both clients. Claude is installed and not authenticated.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V10.6",
       "requirement": "Secrets",
       "status": "PASS",
       "evidence": "Publication scan",
-      "notes": "Tracked Git history was scanned for common credential patterns and private/build files; none identified. .env and runtime/build paths are ignored. This is not an exhaustive security guarantee."
+      "notes": "Tracked Git history was scanned for common credential patterns and private/build files; none identified. .env and runtime/build paths are ignored. This is not an exhaustive security guarantee.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V11.1",
       "requirement": "Meter",
       "status": "PASS",
       "evidence": "Probe.realAgentCycles; studio telemetry",
-      "notes": "Estimated request/tool payload updates during the turn; actual client-reported input/output/cache usage is separately displayed when emitted."
+      "notes": "Estimated request/tool payload updates during the turn; actual client-reported input/output/cache usage is separately displayed when emitted.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V11.2",
       "requirement": "Output caps",
       "status": "PARTIAL",
-      "evidence": "HTTP compact-output tests; MCP/CLI guards; Probe.packedTranscript",
-      "notes": "Default sample tests pass and transport character caps exist. All-operation/large-project coverage and a consistent byte budget remain incomplete."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "UTF-8 byte caps, paged transcripts/candidates and layer/comment budgets are implemented. Comprehensive stress testing of every possible output remains incomplete.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V11.3",
       "requirement": "Fix cycle cost",
       "status": "PARTIAL",
-      "evidence": "Probe.realAgentCycles",
-      "notes": "Three fresh cycles used estimated payloads of 946, 947 and 940 tokens. This excludes tool definitions/base client context; actual client input was about 91k per turn. The full beyond-base-skill token target is not proven."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Three fresh real Codex cycles used 1130, 1136 and 1131 estimated ClipKit payload tokens. Actual reported input was about 97k per turn. The <=3000 total beyond-base client-context target is not proven.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V11.4",
       "requirement": "Baseline honesty",
-      "status": "PARTIAL",
-      "evidence": "README method; server state telemetry; Browser.baseline",
-      "notes": "The comparison is labeled an estimate and the method is documented. The baseline also counts orphan transcripts after reset/removal, inflating a current-composition comparison."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "The baseline excludes transcripts whose sources are no longer in the current project. Estimated payload and actual runner usage remain clearly distinct.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V12.1",
       "requirement": "Prompt injection",
       "status": "PARTIAL",
-      "evidence": "agentInstructions; Core prototype-path test",
-      "notes": "Data-only prompt instructions and protected patch paths exist. The required adversarial transcript/comment/metadata agent cases were not run; instructions alone are not an injection-proof boundary."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Scoped backend guards reject unrelated/deleting patches; review mode cannot apply edits or grant executable trust/consent. Adversarial boundary tests pass, but three full real-agent injection scenarios are not certified.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V12.2",
       "requirement": "Local only",
       "status": "PASS",
       "evidence": "server serve hostname; fresh isolated servers",
-      "notes": "The HTTP server is bound to 127.0.0.1 and validates browser origins/hosts."
+      "notes": "The HTTP server is bound to 127.0.0.1 and validates browser origins/hosts.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V12.3",
       "requirement": "File access",
       "status": "PASS",
       "evidence": "HTTP unregistered media/path test",
-      "notes": "Only registered media IDs are served; raw source paths cannot be inserted through ordinary project_patch, and public asset joins reject escapes."
+      "notes": "Only registered media IDs are served; raw source paths cannot be inserted through ordinary project_patch, and public asset joins reject escapes.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V12.4",
       "requirement": "Voice consent",
       "status": "PASS",
-      "evidence": "Media imported-source clone rejection",
-      "notes": "A source marked imported is refused before clone generation. The app-recording flow includes a rights notice; verified private clone references are enforced."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Unchecked explicit rights confirmation is required before first clone creation and persisted. Ordinary imports and agent-granted consent are rejected; private verified clone references remain enforced.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V13.1",
       "requirement": "Full run",
       "status": "BLOCKED",
       "evidence": "Recorded; doctor; this audit",
-      "notes": "The full seven-step raw-footage and live hybrid-voice demo has not been completed with the user\u2019s footage/voice, Fish access and both authenticated clients."
+      "notes": "The full seven-step raw-footage and live hybrid-voice demo has not been completed with the user\u2019s footage/voice, Fish access and both authenticated clients.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V13.2",
       "requirement": "Repeatability",
       "status": "PARTIAL",
-      "evidence": "server demo_reset; Probe.realAgentCycles",
-      "notes": "An undoable graphics reset and three successful agent edit cycles exist. These are not three full demo rehearsals, and the seed lacks real footage and cached speech/transcripts."
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Prepared local project snapshots can be saved/restored with cached media references and undo. Three real edit cycles pass; three complete user-footage/voice rehearsals are still missing.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V13.3",
       "requirement": "Timing",
       "status": "BLOCKED",
       "evidence": "docs/DEMO.md; Probe.realAgentCycles",
-      "notes": "There is no verified complete three-minute run. Fresh agent cycles took 29\u201337 seconds each; recognition, cloning and export still require end-to-end timing."
+      "notes": "There is no verified complete three-minute run. Fresh agent cycles took 29\u201337 seconds each; recognition, cloning and export still require end-to-end timing.",
+      "previousStatus": "BLOCKED"
     },
     {
       "id": "V14.1",
       "requirement": "Console",
       "status": "PARTIAL",
       "evidence": "UI; Probe.layout; Browser.pageErrors",
-      "notes": "No uncaught page errors were observed in the tested paths. This does not establish a clean console throughout the credentialed full demo."
+      "notes": "No uncaught page errors were observed in the tested paths. This does not establish a clean console throughout the credentialed full demo.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V14.2",
       "requirement": "Empty states",
       "status": "PASS",
       "evidence": "Browser.emptyState; studio canvas-empty",
-      "notes": "A fresh project offers import/drop, visible library cards and a prompt/command field, plus the explicitly labeled demo fixture."
+      "notes": "A fresh project offers import/drop, visible library cards and a prompt/command field, plus the explicitly labeled demo fixture.",
+      "previousStatus": "PASS"
     },
     {
       "id": "V14.3",
       "requirement": "Accessibility basics",
       "status": "PARTIAL",
       "evidence": "Probe.focus; studio focus styles",
-      "notes": "Visible focus styling is present and exercised. A complete tab-order and contrast review, including low-contrast small text, is not certified."
+      "notes": "Visible focus styling is present and exercised. A complete tab-order and contrast review, including low-contrast small text, is not certified.",
+      "previousStatus": "PARTIAL"
     },
     {
       "id": "V14.4",
       "requirement": "Layout",
-      "status": "PARTIAL",
-      "evidence": "Probe.layout; screenshots 1280/1920",
-      "notes": "The major panels fit both widths without page overflow. Portrait thumbnails can crop low-positioned content; exhaustive layout across all voice/export/error states remains incomplete."
+      "status": "PASS",
+      "evidence": "Current automated/browser/renderer checks; see GAP-FIX-CHECKUP.md and reproducible tests",
+      "notes": "Real-browser 1280/1920 screenshots and voice/export settings paths fit without horizontal overflow. Thumbnails contain their content.",
+      "previousStatus": "PARTIAL"
     }
   ],
   "counts": {
-    "PASS": 26,
-    "FAIL": 12,
-    "PARTIAL": 27,
-    "BLOCKED": 14
+    "PASS": 52,
+    "FAIL": 0,
+    "PARTIAL": 14,
+    "BLOCKED": 13
   }
 }
