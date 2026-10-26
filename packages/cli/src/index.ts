@@ -68,13 +68,15 @@ async function doctor(){
 }
 async function main(){
   const [command,sub,...rest]=args;
-  if(!command){console.log('ClipKit Studio\n\n  ck init     Connect your coding agents\n  ck studio   Open the local video editor\n  ck doctor   Check media and voice dependencies\n\nOther commands: search, schema, project, status, footage, comments, voice, history, export, demo, mcp.');return;}
+  if(!command){console.log('ClipKit Studio\n\n  ck init     Connect your coding agents\n  ck studio   Open the local video editor\n  ck doctor   Check media and voice dependencies\n\nOther commands: assets, search, schema, project, status, footage, comments, voice, history, export, demo, mcp.');return;}
   if(command==='init')return initialize();
   if(command==='studio')return studio();
   if(command==='doctor')return doctor();
   if(command==='assets'&&sub==='build'){await buildAssets(installRoot,join(root,'.clipkit','assets'));const {refreshPacks}=await import('../../assets/src/packs.ts');return output(await refreshPacks(root));}
   if(command==='assets'&&sub==='install')return output(await invoke('assets_install',{path:resolve(rest[0]),trust:flags.trust===true}));
   if(command==='mcp'){await serveMcp(invoke);return;}
+  if(command==='assets'&&sub==='list')return output(await invoke('assets_list',{kind:typeof flags.kind==='string'?flags.kind:undefined,tags:typeof flags.tags==='string'?flags.tags.split(','):undefined,mood:typeof flags.mood==='string'?flags.mood:undefined,q:typeof flags.q==='string'?flags.q:undefined,offset:flags.offset?Number(flags.offset):0,limit:flags.limit?Number(flags.limit):5}));
+  if(command==='assets'&&sub==='card')return output(await invoke('asset_card',{id:rest[0]}));
   if(command==='search')return output(await invoke('assets_search',{query:[sub,...rest].filter(Boolean).join(' '),limit:flags.limit?Number(flags.limit):5}));
   if(command==='schema')return output(await invoke('asset_schema',{clipId:sub}));
   if(command==='project'&&sub==='get')return output(await invoke('project_get',{layerId:flags.layer,offset:flags.offset?Number(flags.offset):0,limit:flags.limit?Number(flags.limit):15}));

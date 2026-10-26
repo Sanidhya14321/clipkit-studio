@@ -5,6 +5,7 @@ import {createHash,randomUUID} from 'node:crypto';
 import {build} from 'esbuild';
 import * as React from 'react';
 import * as Remotion from 'remotion';
+import {parseCard,normalizeAssetLicense} from './cards';
 import {catalog,type Field} from './index';
 import {validateRegisteredProps,type AssetRegistry,type RuntimeClipDefinition,type PropsSchema} from './runtime';
 const installations=new Map<string,{promise:Promise<void>}>();
@@ -13,17 +14,18 @@ const slug=/^[a-z0-9][a-z0-9-]{0,79}$/;
 const hash=(value:string|Buffer)=>createHash('sha256').update(value).digest('hex');
 const safe=(folder:string,file:string)=>{const result=path.resolve(folder,file);if(!result.startsWith(path.resolve(folder)+path.sep))throw new Error('Pack path escapes its folder');return result;};
 const nonempty=(value:unknown,label:string)=>{if(typeof value!=='string'||!value.trim())throw new Error(`${label} is required`);return value;};
-export type PackManifest={format:'clipkit.asset-pack/v1';id:string;version:string;license:string;clips:Array<{assets?:Array<{name:string;license:string;sourceUrl?:string}>;id:string;name:string;category:string;description:string;license:string;durationSec:number;tags?:string[];aspect?:string;whenToUse?:string;defaults:Record<string,unknown>;fields:Field[];propsSchema:PropsSchema;basedOn?:string;component?:string;preview:string;deterministic:true;editable:true}>};
+export type PackManifest={format:'clipkit.asset-pack/v1';id:string;version:string;license:string;clips:Array<{assets?:Array<{name:string;license:string;sourceUrl?:string}>;id:string;name:string;category:string;description:string;license:string;durationSec:number;tags?:string[];aspect?:string;whenToUse?:string;defaults:Record<string,unknown>;fields:Field[];propsSchema:PropsSchema;basedOn?:string;component?:string;card?:string;preview:string;deterministic:true;editable:true}>};
 export type DiscoveredPack={folder:string;manifest:PackManifest;clips:RuntimeClipDefinition[];codeFiles:string[];contentHash:string;trusted:boolean;errors?:string[]};
 export async function validatePack(folder:string):Promise<DiscoveredPack>{
  folder=await realpath(folder);if((await stat(safe(folder,'pack.json'))).size>256*1024)throw new Error('Pack manifest exceeds256KB');const manifest=JSON.parse(await readFile(safe(folder,'pack.json'),'utf8')) as PackManifest;
- if(manifest.format!=='clipkit.asset-pack/v1'||!slug.test(manifest.id))throw new Error('Invalid pack format/id');nonempty(manifest.version,'Pack version');nonempty(manifest.license,'Pack license');
+ if(manifest.format!=='clipkit.asset-pack/v1'||!slug.test(manifest.id))throw new Error('Invalid pack format/id');nonempty(manifest.version,'Pack version');nonempty(manifest.license,'Pack license');normalizeAssetLicense(manifest.license);
  if(!Array.isArray(manifest.clips)||manifest.clips.length===0||manifest.clips.length>100)throw new Error('Pack needs 1–100 clips');
  const ids=new Set<string>();const codeFiles:string[]=[];const clips:RuntimeClipDefinition[]=[];const content=[JSON.stringify(manifest)];
  for(const clip of manifest.clips){
   if(!slug.test(clip.id)||ids.has(clip.id)||catalog.some(c=>c.id===clip.id))throw new Error(`Invalid/duplicate/native clip ID ${clip.id}`);ids.add(clip.id);
   for(const key of ['name','category','description','license'] as const)nonempty(clip[key],`${clip.id} ${key}`);
-  for(const asset of clip.assets??[]){nonempty(asset.name,'Asset name');nonempty(asset.license,'Asset license');}
+  for(const asset of clip.assets??[]){nonempty(asset.name,'Asset name');nonempty(asset.license,'Asset license');normalizeAssetLicense(asset.license);}
+  const clipLicense=normalizeAssetLicense(clip.license,Boolean(clip.basedOn));
   if(!Number.isFinite(clip.durationSec)||clip.durationSec<=0||clip.durationSec>3600)throw new Error('Invalid clip duration');
   if(clip.deterministic!==true||clip.editable!==true)throw new Error(`${clip.id}: deterministic and editable contract required`);
   if(Boolean(clip.basedOn)===Boolean(clip.component))throw new Error(`${clip.id}: choose basedOn or component`);
@@ -38,6 +40,7 @@ export async function validatePack(folder:string):Promise<DiscoveredPack>{
   for(const key of EDITABLE)if(!(key in clip.defaults)||!clip.fields.some(f=>f.key===key)||!(schema.required??[]).includes(key))throw new Error(`${clip.id}: missing editable ${key}`);
   const fieldKeys=new Set<string>();for(const field of clip.fields){const rule=schema.properties[field.key];if(!rule||fieldKeys.has(field.key)||!['text','textarea','color','number','select','image'].includes(field.type))throw new Error('Field does not match props schema');fieldKeys.add(field.key);if(field.type==='number'?!['number','integer'].includes(rule.type):rule.type!=='string')throw new Error('Field type conflicts with schema');if(field.type==='select'&&(!field.options?.length||!field.options.includes(String(clip.defaults[field.key]))))throw new Error('Select field needs options containing its default');}
   const preview=await readFile(safe(folder,nonempty(clip.preview,'PNG preview')));if(!preview.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))throw new Error('Preview must be a real PNG');content.push(hash(preview));
+  if(clip.card){const card=parseCard(await readFile(safe(folder,clip.card),'utf8')).card;if(card.id!==clip.id)throw new Error('Pack card ID mismatch');if(normalizeAssetLicense(card.license)!==clipLicense)throw new Error('Pack card and clip license conflict');}
   if(clip.component){if(!/\.tsx$/.test(clip.component))throw new Error('Trusted component must be .tsx');const file=safe(folder,clip.component);const source=await readFile(file,'utf8');if(/\b(?:Math\.random|Date\.now|performance\.now|setInterval|setTimeout)\s*\(|new\s+Date\s*\(/.test(source))throw new Error('Component uses a non-frame deterministic clock/random source');codeFiles.push(file);}
   const runtime:RuntimeClipDefinition={...clip,id:clip.id,packId:manifest.id,previewPath:`/asset-packs/${manifest.id}/${clip.preview}`,propsSchema:schema,tags:clip.tags??[],aspect:clip.aspect??'any',whenToUse:clip.whenToUse??clip.description};
   validateRegisteredProps(clip.id,clip.defaults,{clips:[runtime]});clips.push(runtime);

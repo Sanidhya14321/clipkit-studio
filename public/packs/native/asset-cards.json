@@ -1,0 +1,473 @@
+[
+  {
+    "id": "kenney-ui-click",
+    "name": "Kenney UI click",
+    "kind": "audio",
+    "summary": "Kenney UI click, fetched unchanged from the pinned upstream revision.",
+    "tags": [
+      "sfx",
+      "click",
+      "interface"
+    ],
+    "mood": "neutral",
+    "bestFor": "A subtle interface interaction in a product demonstration.",
+    "avoid": "Voice imitation, music beds, or adding a click to every cut.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "vendor/ui-click.wav.md",
+    "sha256": "b6d11dc88e2c1cab47e81d2da0fa423698f1fc31d7cccd699550b486ddad8e6d"
+  },
+  {
+    "id": "gradient",
+    "name": "Living gradient",
+    "kind": "backgrounds",
+    "summary": "A deterministic soft light background with orbital forms.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "backgrounds",
+      "background",
+      "gradient",
+      "a",
+      "deterministic",
+      "soft",
+      "light"
+    ],
+    "mood": "calm-ambient",
+    "bestFor": "ambient title backdrops and low-detail section intros",
+    "avoid": "Claiming this CSS light-field is a 3D or fluid simulation.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/gradient.md",
+    "sha256": "b1e9e59f7dceb0f5b4622eeea69833f3a741a4d157198a8788d2c9619b0bb07b",
+    "schemaPath": "packages/assets/cards/backgrounds/gradient/schema.ts"
+  },
+  {
+    "id": "counter",
+    "name": "Number counter",
+    "kind": "data",
+    "summary": "An eased numerical highlight with editable units.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "data",
+      "counter",
+      "an",
+      "eased",
+      "numerical",
+      "highlight"
+    ],
+    "mood": "confident-editorial",
+    "bestFor": "a numeric milestone with a readable label and unit",
+    "avoid": "Unsupported statistics or more than one competing number.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/counter.md",
+    "sha256": "a744a04ba1f8f93cebe303a6e418aa4974294fe2069deada3f849217433b39ee",
+    "schemaPath": "packages/assets/cards/data/counter/schema.ts"
+  },
+  {
+    "id": "inter-font",
+    "name": "Inter variable font",
+    "kind": "font",
+    "summary": "Inter variable font, fetched unchanged from the pinned upstream revision.",
+    "tags": [
+      "font",
+      "editorial",
+      "native-dependency"
+    ],
+    "mood": "neutral",
+    "bestFor": "Clear captions, supporting labels and the editor UI.",
+    "avoid": "Preserve the full glyph coverage; subsetting must be an explicit product choice.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "vendor/inter.ttf.md",
+    "sha256": "fc682cb0a2feae0217d06778ff911043d27c456b2c54cb3686fa890f30a059f2"
+  },
+  {
+    "id": "space-grotesk-font",
+    "name": "Space Grotesk variable font",
+    "kind": "font",
+    "summary": "Space Grotesk variable font, fetched unchanged from the pinned upstream revision.",
+    "tags": [
+      "font",
+      "editorial",
+      "native-dependency"
+    ],
+    "mood": "neutral",
+    "bestFor": "Editorial titles, counters and call-to-action typography.",
+    "avoid": "Dense long-form paragraphs; use Inter for small supporting copy.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "vendor/space-grotesk.ttf.md",
+    "sha256": "ce4048c6650426cc9b9f67409375d269cd4719175f5b15f918f7239fe8fd01fe"
+  },
+  {
+    "id": "gym-illustration",
+    "name": "Gym illustration",
+    "kind": "image",
+    "summary": "Gym illustration, fetched unchanged from the pinned upstream revision.",
+    "tags": [
+      "image",
+      "editorial",
+      "native-dependency"
+    ],
+    "mood": "neutral",
+    "bestFor": "Friendly fitness and activity explainer cards.",
+    "avoid": "Claiming this single illustration is a broad character pack.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "vendor/illustration.svg.md",
+    "sha256": "06746d6bc28a60cec8a9151de8bc51b212b4934065315f2f95049ec3d0a067b0"
+  },
+  {
+    "id": "lucide-icons",
+    "name": "Lucide callout icons",
+    "kind": "image",
+    "summary": "Sparkles and directional arrow SVGs used by native callouts.",
+    "tags": [
+      "icons",
+      "callout",
+      "cta"
+    ],
+    "mood": "clean-positive",
+    "bestFor": "Small scalable callout and direction accents.",
+    "avoid": "Implying an icon is an approved brand mark or replacing meaningful labels with symbols alone.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "packs/native/cards/lucide-icons.md",
+    "sha256": "562064e38b2f6b81b5d2dff3808299cb9cc341cd1f598e0679b43d9e2cf927e7"
+  },
+  {
+    "id": "preview-captions",
+    "name": "Word captions preview",
+    "kind": "image",
+    "summary": "A static preview of the editable word captions.",
+    "tags": [
+      "preview",
+      "captions"
+    ],
+    "mood": "clear-accessible",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/captions.png.md",
+    "sha256": "b37e8e11deeae02ce8aedef4cd7b6f0a9a6e63f6516ae5b0b45ffc736d4a7f7c"
+  },
+  {
+    "id": "preview-counter",
+    "name": "Number counter preview",
+    "kind": "image",
+    "summary": "A static preview of the editable number counter.",
+    "tags": [
+      "preview",
+      "counter"
+    ],
+    "mood": "confident-editorial",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/counter.png.md",
+    "sha256": "6cb1dd5711b68693b958bf01757d15074235c8c35c4547a9df27c3031906ed2f"
+  },
+  {
+    "id": "preview-cta",
+    "name": "Call to action preview",
+    "kind": "image",
+    "summary": "A static preview of the editable call to action.",
+    "tags": [
+      "preview",
+      "cta"
+    ],
+    "mood": "confident-positive",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/cta.png.md",
+    "sha256": "7c4503d41fb741e2baa429ad722af820a3f9a5f76d638586e478cab987e44e1c"
+  },
+  {
+    "id": "preview-gradient",
+    "name": "Living gradient preview",
+    "kind": "image",
+    "summary": "A static preview of the editable living gradient.",
+    "tags": [
+      "preview",
+      "gradient"
+    ],
+    "mood": "calm-ambient",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/gradient.png.md",
+    "sha256": "80b0bfd99c1f8f3e2df2e76fa8b90feb262352b1b81b4f2e0ea8ae8641280b78"
+  },
+  {
+    "id": "preview-icon-callout",
+    "name": "Icon callout preview",
+    "kind": "image",
+    "summary": "A static preview of the editable icon callout.",
+    "tags": [
+      "preview",
+      "icon-callout"
+    ],
+    "mood": "clean-positive",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/icon-callout.png.md",
+    "sha256": "80063ad10bbb936e3dffe7d7d1b32dc0047ad4196c62a6d6a5783c78f774b703"
+  },
+  {
+    "id": "preview-illustration-card",
+    "name": "Illustration card preview",
+    "kind": "image",
+    "summary": "A static preview of the editable illustration card.",
+    "tags": [
+      "preview",
+      "illustration-card"
+    ],
+    "mood": "friendly-editorial",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/illustration-card.png.md",
+    "sha256": "92eab22384e4ad462cadf09d7c074783f0fc70985c64301651ea3bd2c7eedd35"
+  },
+  {
+    "id": "preview-kinetic-title",
+    "name": "Kinetic title preview",
+    "kind": "image",
+    "summary": "A static preview of the editable kinetic title.",
+    "tags": [
+      "preview",
+      "kinetic-title"
+    ],
+    "mood": "confident-editorial",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/kinetic-title.png.md",
+    "sha256": "c02797d0b195e6b59d75756669ad0120f054a0a163e21cd0f78ca57647cd75ce"
+  },
+  {
+    "id": "preview-lower-third",
+    "name": "Lower third preview",
+    "kind": "image",
+    "summary": "A static preview of the editable lower third.",
+    "tags": [
+      "preview",
+      "lower-third"
+    ],
+    "mood": "restrained-professional",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lower-third.png.md",
+    "sha256": "94fe638a5b9609848fe7b0c18bbb0e327e960c54911e37d442e6a7b962b93261"
+  },
+  {
+    "id": "preview-screenshot-frame",
+    "name": "Screenshot frame preview",
+    "kind": "image",
+    "summary": "A static preview of the editable screenshot frame.",
+    "tags": [
+      "preview",
+      "screenshot-frame"
+    ],
+    "mood": "clean-product",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/screenshot-frame.png.md",
+    "sha256": "8c87e94f29d6faa7bd8b264dbf3cdd5c5dbbee75c2e3c7906028417ec445d771"
+  },
+  {
+    "id": "preview-wipe",
+    "name": "Color wipe preview",
+    "kind": "image",
+    "summary": "A static preview of the editable color wipe.",
+    "tags": [
+      "preview",
+      "wipe"
+    ],
+    "mood": "energetic-clean",
+    "bestFor": "Studio library thumbnails only.",
+    "avoid": "Using as flattened footage instead of the editable native clip.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/wipe.png.md",
+    "sha256": "5e8ea5ae3fbc6b3c76959d33b883453b043155f0c732e5d76bc2019ab822c7c1"
+  },
+  {
+    "id": "illustration-card",
+    "name": "Illustration card",
+    "kind": "media",
+    "summary": "An open-source illustration in a layered editorial card.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "media",
+      "illustration",
+      "illustration-card",
+      "an",
+      "open",
+      "source"
+    ],
+    "mood": "friendly-editorial",
+    "bestFor": "fitness, activity or general explainer cutaways",
+    "avoid": "Treating the bundled gym illustration as a different person, product or logo.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/illustration-card.md",
+    "sha256": "537ff55efc9875d1433ac25a0fae6c904209a0b9f603226f21e2fef70edbe26d",
+    "schemaPath": "packages/assets/cards/media/illustration-card/schema.ts"
+  },
+  {
+    "id": "icon-callout",
+    "name": "Icon callout",
+    "kind": "overlays",
+    "summary": "A glowing native icon, label and supporting detail.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "overlays",
+      "callout",
+      "icon-callout",
+      "a",
+      "glowing",
+      "native",
+      "icon"
+    ],
+    "mood": "clean-positive",
+    "bestFor": "one feature benefit or an important detail",
+    "avoid": "Stacks of callouts or unsupported third-party brand logos.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/icon-callout.md",
+    "sha256": "724d52b1263a259c73bdd973cb0d797f4544c48f33dcbcc9a74c963f0d5e9241",
+    "schemaPath": "packages/assets/cards/overlays/icon-callout/schema.ts"
+  },
+  {
+    "id": "lower-third",
+    "name": "Lower third",
+    "kind": "overlays",
+    "summary": "A crisp identity card with an animated accent rule.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "overlays",
+      "identity",
+      "lower-third",
+      "a",
+      "crisp",
+      "card"
+    ],
+    "mood": "restrained-professional",
+    "bestFor": "speaker introductions and interview identifiers",
+    "avoid": "Covering captions or important details near the bottom of footage.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lower-third.md",
+    "sha256": "2f07ac3da856aef7c3322f333e38e2c75a5d89c48a09eba4af0ce8108d157464",
+    "schemaPath": "packages/assets/cards/overlays/lower-third/schema.ts"
+  },
+  {
+    "id": "screenshot-frame",
+    "name": "Screenshot frame",
+    "kind": "overlays",
+    "summary": "An editable native browser frame for product stories.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "overlays",
+      "device",
+      "screenshot-frame",
+      "an",
+      "editable",
+      "native",
+      "browser"
+    ],
+    "mood": "clean-product",
+    "bestFor": "product demonstrations and browser screenshots",
+    "avoid": "Pretending the placeholder chart is actual product data; upload a real screenshot.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/screenshot-frame.md",
+    "sha256": "96c4d84f5f4349434f0c3814f56a8cf67f3fed598136d214515a939c4b2638c3",
+    "schemaPath": "packages/assets/cards/overlays/screenshot-frame/schema.ts"
+  },
+  {
+    "id": "captions",
+    "name": "Word captions",
+    "kind": "text",
+    "summary": "Timestamp-aware captions with active word highlighting.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "text",
+      "typography",
+      "captions",
+      "timestamp",
+      "aware",
+      "with"
+    ],
+    "mood": "clear-accessible",
+    "bestFor": "short-form dialogue and word-highlight narration",
+    "avoid": "Inventing word times; use actual take or source transcript timing.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/captions.md",
+    "sha256": "25e7358a139079cfc203322cfed2262a0e9aaca0de413317ec04d0d19e4be231",
+    "schemaPath": "packages/assets/cards/text/captions/schema.ts"
+  },
+  {
+    "id": "cta",
+    "name": "Call to action",
+    "kind": "text",
+    "summary": "A bold final invitation and an animated pill button.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "text",
+      "action",
+      "cta",
+      "a",
+      "bold",
+      "final",
+      "invitation"
+    ],
+    "mood": "confident-positive",
+    "bestFor": "a closing invitation with one clear next step",
+    "avoid": "Multiple competing actions or claiming the rendered pill is interactive.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/cta.md",
+    "sha256": "20398ea0504a8cdb70a1af01a721719972f165cd1a22e98e7b188c35aad9b380",
+    "schemaPath": "packages/assets/cards/text/cta/schema.ts"
+  },
+  {
+    "id": "kinetic-title",
+    "name": "Kinetic title",
+    "kind": "text",
+    "summary": "Oversized editorial headline with staggered word reveals.",
+    "duration": "150 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "text",
+      "typography",
+      "kinetic-title",
+      "oversized",
+      "editorial",
+      "headline",
+      "with"
+    ],
+    "mood": "confident-editorial",
+    "bestFor": "opening hooks and short section headlines",
+    "avoid": "Long paragraphs; keep the title to two short lines.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/kinetic-title.md",
+    "sha256": "679106ecdb2943008fa81a160f7388382e5302dc06e5f29fd5f5baf697fbc15a",
+    "schemaPath": "packages/assets/cards/text/kinetic-title/schema.ts"
+  },
+  {
+    "id": "wipe",
+    "name": "Color wipe",
+    "kind": "transitions",
+    "summary": "A sweeping color panel that enters and leaves the frame.",
+    "duration": "36 frames at 30fps; timeline duration is editable",
+    "tags": [
+      "transitions",
+      "transition",
+      "wipe",
+      "a",
+      "sweeping",
+      "color",
+      "panel"
+    ],
+    "mood": "energetic-clean",
+    "bestFor": "short scene punctuation and color-matched transitions",
+    "avoid": "Leaving it across readable dialogue; it is a color overlay, not a two-video blend.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/wipe.md",
+    "sha256": "a8c67f45a7325a652fef80818c6b1c225e401a83aa27e00ff763ef1d750f2092",
+    "schemaPath": "packages/assets/cards/transitions/wipe/schema.ts"
+  }
+]

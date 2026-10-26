@@ -1,0 +1,19 @@
+[
+  {
+    "scene": "asset-smoke",
+    "file": "scripts/verify-assets.ts",
+    "assets": [
+      "kinetic-title",
+      "lower-third",
+      "captions",
+      "icon-callout",
+      "counter",
+      "illustration-card",
+      "screenshot-frame",
+      "gradient",
+      "wipe",
+      "cta",
+      "kenney-ui-click"
+    ]
+  }
+]

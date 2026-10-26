@@ -1,6 +1,6 @@
 import {validateClipProps,catalog,type Asset,type Field} from './index';
 export type PropsSchema={type:'object';properties:Record<string,{type:'string'|'number'|'integer'|'boolean';enum?:Array<string|number|boolean>;minimum?:number;maximum?:number;pattern?:string;minLength?:number;maxLength?:number;default?:unknown}>;required?:string[];additionalProperties?:false};
-export type RuntimeClipDefinition=Asset & {assets?:Array<{name:string;license:string;sourceUrl?:string}>;packId:string;basedOn?:string;component?:string;propsSchema:PropsSchema;deterministic:true;editable:true};
+export type RuntimeClipDefinition=Asset & {assets?:Array<{name:string;license:string;sourceUrl?:string}>;packId:string;card?:string;basedOn?:string;component?:string;propsSchema:PropsSchema;deterministic:true;editable:true};
 export type AssetRegistry={clips:RuntimeClipDefinition[];moduleUrl?:string;version?:string};
 export function validateRegisteredProps(clipId:string,props:unknown,registry?:AssetRegistry):Record<string,unknown>{
  const clip=registry?.clips.find(c=>c.id===clipId);if(!clip)return validateClipProps(clipId,props);

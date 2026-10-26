@@ -28,3 +28,17 @@ Do not describe reference-only repositories as bundled assets. In particular, Me
 Each export writes a separate immutable `.credits.json` containing project revision/hash, user media provenance, and the bundled manifest next to its MP4. A unique suffix prevents exports from overwriting earlier output. The actual source license texts ship in `public/vendor/` and should accompany redistributed source packs.
 
 The packaged distribution retains `public/vendor/manifest.json`, `public/vendor/source-audit.json`, all bundled asset license notices, and the reference license evidence. Dependencies installed from npm retain their own package licenses; Remotion licensing is separate from these asset permissions.
+
+## Asset-card metadata additions (verified 27 October 2026)
+
+The native motion implementations and generated previews are agent-authored original code, not certified human-made artwork. The cards preserve this distinction. External fonts/art/sound are attributed to their upstream authors using pinned source/license records; these records cannot prove that no AI was involved in a creation process. The card inventory records the exact scope of each check.
+
+### YAML parser — ISC
+
+`yaml` 2.9.1, by Eemeli Aro, parses bounded descriptive card metadata. npm metadata and [the versioned license](https://github.com/eemeli/yaml/blob/v2.9.1/LICENSE) were checked. Its original notice remains in the installed package. It is infrastructure, not a visual asset.
+
+### Remotion framework — separate Remotion License
+
+The [current license](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md) provides a free tier for eligible individuals, small organizations with up to three employees, non-profits and evaluation use. The [official pricing page](https://www.remotion.dev/docs/license/pricing), checked 27 October 2026, lists video-automation/editor products under the company automation offering when a company license is required, currently $0.01/render with a $100/month minimum. The owner must check eligibility and current terms before commercial deployment; ClipKit asset MIT notices do not relicense the engine.
+
+No additional third-party animation library, shader, 3D model or Lottie file was adopted solely on the attachment's claims. Candidate repositories require file-specific review before use. No CC-BY artwork is newly bundled by this change; a credits-scene implementation is therefore not represented as completed or tested here.

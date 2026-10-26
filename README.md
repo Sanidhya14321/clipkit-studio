@@ -68,8 +68,8 @@ npm pack ./artifacts/package --pack-destination ./artifacts
 In a separate project directory, use the **absolute path** to the generated tarball:
 
 ```sh
-npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.0.tgz -- ck init
-npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.0.tgz -- ck studio
+npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.1.tgz -- ck init
+npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.1.tgz -- ck studio
 ```
 
 The approximately 53MB local tarball bundles the patched Remotion dependency tree and a shrinkwrap; the isolated installer verifies its actual dependencies. The packed CLI serves the built studio on port 4310 and includes renderer source, public assets and license notices. It does not rely on unpublished workspace packages. The existing npm package named `clipkit` is unrelated; this project does not publish over it.
@@ -110,3 +110,9 @@ Install declarative native-clip wrappers with `ck assets install PATH`. Executab
 Choose **Suggest changes for review** before an agent request to generate a real preview proposal without committing the timeline change. Accept/reject is human-controlled; later conflicting changes require review. See [architecture](docs/ARCHITECTURE.md) and [pitch](docs/PITCH.md).
 
 Optional local recognition uses `WHISPER_CPP_BIN` and `WHISPER_CPP_MODEL`. Install those yourself; doctor reports their availability. Cloud recognition quality and browser microphone permission still need a real rehearsal.
+
+## Asset usage cards
+
+Read [the asset menu](packages/assets/cards/_INDEX.md) or open **Usage & provenance** in the editor library. Cards describe good uses, avoid rules, source/license and actual test status. Native clips remain explicitly agent-authored; third-party sources have separate attribution. `ck assets list` and `ck assets card ID` expose the same information to CLI/MCP clients, and app-run agents must read a current card before placing a clip.
+
+Run `pnpm assets:check --check` to validate the inventory, or `pnpm assets:verify --full` to regenerate previews and execute the repeated-frame and full-smoke gates. See [asset-system scope and limits](docs/ASSET-SYSTEM.md), including the checksum-bound full Inter font exception and the orphan-age heuristic.

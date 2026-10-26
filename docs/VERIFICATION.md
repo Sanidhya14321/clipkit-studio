@@ -1,4 +1,14 @@
-# Verification after audited gap fixes
+# Current verification (asset release 0.1.1)
+
+The latest asset update passed 96 standard Vitest tests and the separate 13-test opt-in asset/render suite (98 unique tests across runs), all five real-backend browser tests, typecheck, build and a clean installed-package rehearsal. The package exposes the new card tools, accepts a valid custom pack and exports portrait/landscape H.264/AAC. Installed dependency audit reports zero vulnerabilities.
+
+Ten native clips passed start/middle/end PNG comparisons twice. A complete 30-second smoke reel with the pinned Kenney click was exported twice at 360×640; decoded video frames and audio match. A real Codex turn read the required card before inserting exactly one requested callout and preserved existing content.
+
+See [asset implementation](ASSET-IMPLEMENTATION.md), [machine-readable asset evidence](asset-verification.json), and [overall results](verification-report.json). Native code/previews are explicitly agent-authored. One pinned original Inter font-size exception is retained, and no second-machine rendering certification is claimed.
+
+The previous gap-fix verification below is historical context, not a substitute for these newer results.
+
+# Previous gap-fix verification
 
 Verified 27 October 2026: TypeScript passed; **82 default tests passed**, with two opt-in tests skipped by default. The opt-in asset/render suite separately passed all 12 tests, covering those two real-render checks (84 unique Vitest tests across the runs). All **four real-backend browser tests passed**. The build and isolated packed-install check passed, including repeated init, Cursor rules, custom-pack installation and both portrait and landscape H.264/AAC export.
 
