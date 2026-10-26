@@ -1,0 +1,968 @@
+{
+  "format": "clipkit.asset-pack/v1",
+  "id": "clipkit-native",
+  "version": "1.0.0",
+  "license": "MIT",
+  "runtime": {
+    "kind": "compiled",
+    "registry": "clipkit/native-v1"
+  },
+  "editableContract": {
+    "layerAttribute": "data-ck-layer",
+    "propertyAttribute": "data-ck-path",
+    "elementAttribute": "data-ck-element",
+    "requiredProps": [
+      "text",
+      "color",
+      "size",
+      "x",
+      "y",
+      "opacity",
+      "revealDuration"
+    ]
+  },
+  "clips": [
+    {
+      "clipId": "kinetic-title",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "Ideas into\nimpact.",
+        "color": "#c7f36b",
+        "size": 102,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Small steps. Extraordinary stories.",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/kinetic-title.png",
+      "schemaPath": "schemas/kinetic-title.json"
+    },
+    {
+      "clipId": "lower-third",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "Alex Morgan",
+        "color": "#c7f36b",
+        "size": 43,
+        "x": 0,
+        "y": 380,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Designer & storyteller",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/lower-third.png",
+      "schemaPath": "schemas/lower-third.json"
+    },
+    {
+      "clipId": "captions",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "Every frame tells a story.",
+        "color": "#c7f36b",
+        "size": 58,
+        "x": 0,
+        "y": 330,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Small steps. Extraordinary stories.",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/captions.png",
+      "schemaPath": "schemas/captions.json"
+    },
+    {
+      "clipId": "icon-callout",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "Built for your ideas",
+        "color": "#c7f36b",
+        "size": 54,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Small steps. Extraordinary stories.",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/icon-callout.png",
+      "schemaPath": "schemas/icon-callout.json"
+    },
+    {
+      "clipId": "counter",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "People reached",
+        "color": "#c7f36b",
+        "size": 112,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Small steps. Extraordinary stories.",
+        "background": "#142b26",
+        "value": 1200,
+        "suffix": "+"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        },
+        {
+          "key": "value",
+          "label": "Value",
+          "type": "number"
+        },
+        {
+          "key": "suffix",
+          "label": "Suffix",
+          "type": "text"
+        }
+      ],
+      "previewPath": "/previews/counter.png",
+      "schemaPath": "schemas/counter.json"
+    },
+    {
+      "clipId": "illustration-card",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "Room to imagine",
+        "color": "#c7f36b",
+        "size": 58,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Small steps. Extraordinary stories.",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/illustration-card.png",
+      "schemaPath": "schemas/illustration-card.json"
+    },
+    {
+      "clipId": "screenshot-frame",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "Your next big thing",
+        "color": "#c7f36b",
+        "size": 60,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "app.yourstudio.com",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/screenshot-frame.png",
+      "schemaPath": "schemas/screenshot-frame.json"
+    },
+    {
+      "clipId": "gradient",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "",
+        "color": "#c7f36b",
+        "size": 72,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Small steps. Extraordinary stories.",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/gradient.png",
+      "schemaPath": "schemas/gradient.json"
+    },
+    {
+      "clipId": "wipe",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "",
+        "color": "#c7f36b",
+        "size": 72,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.55,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Small steps. Extraordinary stories.",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/wipe.png",
+      "schemaPath": "schemas/wipe.json"
+    },
+    {
+      "clipId": "cta",
+      "license": "MIT (native ClipKit component; embedded source assets retain their licenses)",
+      "defaults": {
+        "text": "Make something\nworth sharing.",
+        "color": "#c7f36b",
+        "size": 79,
+        "x": 0,
+        "y": 0,
+        "opacity": 1,
+        "revealDuration": 0.65,
+        "scale": 1,
+        "width": 600,
+        "subtitle": "Start your story →",
+        "background": "#142b26"
+      },
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea"
+        },
+        {
+          "key": "subtitle",
+          "label": "Supporting text",
+          "type": "text"
+        },
+        {
+          "key": "color",
+          "label": "Accent",
+          "type": "color"
+        },
+        {
+          "key": "background",
+          "label": "Background",
+          "type": "color"
+        },
+        {
+          "key": "size",
+          "label": "Type size",
+          "type": "number",
+          "min": 12,
+          "max": 180
+        },
+        {
+          "key": "x",
+          "label": "Horizontal position",
+          "type": "number",
+          "min": -1500,
+          "max": 1500
+        },
+        {
+          "key": "y",
+          "label": "Vertical position",
+          "type": "number",
+          "min": -2000,
+          "max": 2000
+        },
+        {
+          "key": "opacity",
+          "label": "Opacity",
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "step": 0.05
+        },
+        {
+          "key": "revealDuration",
+          "label": "Reveal seconds",
+          "type": "number",
+          "min": 0.05,
+          "max": 20,
+          "step": 0.05
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "number",
+          "min": 0.1,
+          "max": 4,
+          "step": 0.05
+        },
+        {
+          "key": "width",
+          "label": "Width",
+          "type": "number",
+          "min": 100,
+          "max": 2200
+        }
+      ],
+      "previewPath": "/previews/cta.png",
+      "schemaPath": "schemas/cta.json"
+    }
+  ]
+}

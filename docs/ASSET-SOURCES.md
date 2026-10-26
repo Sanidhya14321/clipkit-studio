@@ -28,3 +28,13 @@ Do not describe reference-only repositories as bundled assets. In particular, Me
 Each export writes a separate immutable `.credits.json` containing project revision/hash, user media provenance, and the bundled manifest next to its MP4. A unique suffix prevents exports from overwriting earlier output. The actual source license texts ship in `public/vendor/` and should accompany redistributed source packs.
 
 Verification: `CK_RENDER_TEST=1 pnpm test -- tests/assets.test.ts` renders a selected PNG from every native clip twice, once with preview props and once with export props, and compares SHA256 values. A second pass changes the accent color and requires a different PNG hash, guarding against a blank or ignored-props false pass. Frames and machine-readable evidence are saved under `.clipkit/render-consistency/`. To verify installed runtime sources and assets after building, run `CK_DISTRIBUTION=artifacts/package pnpm exec tsx scripts/render-consistency.ts`.
+
+## Native pack build and actual previews
+
+`packages/assets/native.pack.json` is the starter pack manifest. It references the ten trusted native clip IDs, their licenses, default props, editable field descriptors and full schema locations. `buildAssets(root, outputDir?)` in `packages/assets/src/build.ts` builds metadata from the compiled registry. `root` is the installation directory containing `public/previews`; output defaults to `public/packs/native`. The builder validates unique clip IDs, Zod defaults, the required editable properties and field types, and each PNG's signature, hash and matching default-prop hash before writing any metadata.
+
+The output includes a compact `catalog.jsonl`, `categories.json`, `pack.json` and one full props schema per clip under `schemas/`. Run `pnpm exec tsx scripts/build-assets.ts [output-directory]` from this repository. The CLI exposes the same builder through `ck assets build`.
+
+Catalog `previewPath` values point to actual 240 × 427 PNG thumbnails under `public/previews/`. These are scaled from the native composition's verified default-prop frames, preserving the real font, illustration and layout. `public/previews/manifest.json` records original render hashes, preview hashes, sampled frames and default-prop hashes. `scripts/generate-previews.ts` regenerates them from matching render-consistency fixtures and refuses stale defaults; it does not invent pattern cards or use image generation.
+
+External pack manifests are metadata only. Installing executable clip components requires explicit trusted compilation and registration in the native registry; there is no untrusted hot-loading, arbitrary pack script execution or sandbox claim. A JSON manifest alone cannot provide a new runnable component.

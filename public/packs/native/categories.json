@@ -1,0 +1,30 @@
+{
+  "Typography": [
+    "kinetic-title",
+    "captions"
+  ],
+  "Identity": [
+    "lower-third"
+  ],
+  "Callout": [
+    "icon-callout"
+  ],
+  "Data": [
+    "counter"
+  ],
+  "Illustration": [
+    "illustration-card"
+  ],
+  "Device": [
+    "screenshot-frame"
+  ],
+  "Background": [
+    "gradient"
+  ],
+  "Transition": [
+    "wipe"
+  ],
+  "Action": [
+    "cta"
+  ]
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "clipId": "kinetic-title",
+    "previewPath": "/previews/kinetic-title.png",
+    "frame": 45,
+    "sourcePngSha256": "7be9adf398d201ab2602bc43e0babc80ffcb75cd23058596db57452fecaa91c6",
+    "sha256": "bb6c406d69e5ba724f48324af67ee62b3932513f1d8740d21d90a9277e4302c1",
+    "defaultsSha256": "62c8695186ff73d894a3fa16ed16db358753186e9476324462d59dbc423d28e6",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "lower-third",
+    "previewPath": "/previews/lower-third.png",
+    "frame": 45,
+    "sourcePngSha256": "676c163d272b634cae2d1c92941f46dfbc55e64e34ac39f6b4f77ea77d8b646d",
+    "sha256": "1eea9b333b67f1e28101183ac6072a483b1bcd33a0f0f5bd98153773bdcff837",
+    "defaultsSha256": "41c1fdc6eedfd50b9059706e1635257db8cfbacccb0816836c4fd0d8688ffb6f",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "captions",
+    "previewPath": "/previews/captions.png",
+    "frame": 45,
+    "sourcePngSha256": "5fa0637430dc77eac73178b3e9ebc2f45fa68c3ecfda825dcad1f1eddc6e5918",
+    "sha256": "4bf87f215d73f1a354c46b900a43979606e5dd5fe4e784ff36385d6c992b923f",
+    "defaultsSha256": "4d9d880160c0c1c3adee8913c8670303b5a4432833664e03435e64ff8b2e7980",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "icon-callout",
+    "previewPath": "/previews/icon-callout.png",
+    "frame": 45,
+    "sourcePngSha256": "5e71c65cb22af222a225f97b79f0f1c3e4469cdfb79ab61c0195c3fdeb41e47b",
+    "sha256": "c38c925ee258936d4e1167dcc2c6b408a3737a826b0054b000164d90faafa55f",
+    "defaultsSha256": "58eb44ecef853b79c13097fc0d789309b26a02ef7504c3fed8313a14ead0076d",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "counter",
+    "previewPath": "/previews/counter.png",
+    "frame": 45,
+    "sourcePngSha256": "07b5be98317d024ed93203403b5663c8d62e865d06bc31e45900cfc057b7760b",
+    "sha256": "eb924b05ae7793f3ed57a93c7c0a40edff90ac43d68e5ec059cb2af8f3320543",
+    "defaultsSha256": "1c289b5d3c8858be5dae793a676cb92bdc72d324332330cdc404a9a015e8e9e0",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "illustration-card",
+    "previewPath": "/previews/illustration-card.png",
+    "frame": 45,
+    "sourcePngSha256": "f8caafd874cd85be813a8d0027d113a8d93b54ffd29ec943608e30567f91b3e6",
+    "sha256": "1b2a689646bdcf4b8ac23ab16635b59e7f62697b55620d2c65bdfa8191c0a6d4",
+    "defaultsSha256": "663eb93d67964b582442b55194774b3b7a80bb27de57f2e0a7f2f6e00ee718c8",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "screenshot-frame",
+    "previewPath": "/previews/screenshot-frame.png",
+    "frame": 45,
+    "sourcePngSha256": "42b5e50d72b1a2fa753f405c5667c930f07746dc850f18320df91db12d9de570",
+    "sha256": "a6e35f819b3e6606c389e0de99f296e51a64d31b7a3a3a47bdbcaae6fd9de1b4",
+    "defaultsSha256": "ef99e3a4afc1a3390a1e46fda1da62955088300b76eeffb58276e93ab5354703",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "gradient",
+    "previewPath": "/previews/gradient.png",
+    "frame": 45,
+    "sourcePngSha256": "7f14f25029e82ace26de94f146fdbdf24aefd33fc45d2e7e04b58337dff91230",
+    "sha256": "8133cbaad93f39e722dcd704f8e57fbaaee24df56a3a51a1e89ae2b823c5b894",
+    "defaultsSha256": "706e091559d02dce70431cb7287e3d3f8e8bdeb8475dd8a6b5bc8427c03daf81",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "wipe",
+    "previewPath": "/previews/wipe.png",
+    "frame": 18,
+    "sourcePngSha256": "e7d5dbd09a448d6980eedab1a9137e7e0dd007e273a8a396a6393aa02bbc76ff",
+    "sha256": "8adce2f9cfd3d85ca44ddd1fcce1a7c3b951b0a502b66aad3ade27648b421ca6",
+    "defaultsSha256": "0d50d178be891ce775885fd3543dad8b25df94da1702fc40445ce135da68f29c",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  },
+  {
+    "clipId": "cta",
+    "previewPath": "/previews/cta.png",
+    "frame": 45,
+    "sourcePngSha256": "dfb810848beff511827e61bca878d9f47d3cf817f8980f9571fe2d45fd9533c6",
+    "sha256": "e67931d608e9e2083d3230112d6271094c4f3a0fcc0fd71abcc5bbae616572b7",
+    "defaultsSha256": "93dc97350fc580d16fbc9a537dddd81b29de34e544bf21348f33da3743ca86cf",
+    "width": 240,
+    "height": 427,
+    "source": "Real Remotion render from the native composition; scaled without design changes"
+  }
+]

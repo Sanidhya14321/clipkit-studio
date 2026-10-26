@@ -19,7 +19,7 @@ const server=createServer(async(req,res)=>{try{const name=new URL(req.url!,'http
 server.listen(0,'127.0.0.1');await new Promise<void>(resolve=>server.once('listening',resolve));
 const base=`http://127.0.0.1:${(server.address() as {port:number}).port}`;
 let browser:Awaited<ReturnType<typeof openBrowser>>|undefined;
-const results:Array<{clipId:string;frame:number;previewHash:string;exportHash:string;editedHash:string}>=[];
+const results:Array<{clipId:string;frame:number;previewHash:string;exportHash:string;editedHash:string;defaultsSha256:string}>=[];
 try{
  const serveUrl=await bundle({entryPoint});browser=await openBrowser('chrome');
  for(const asset of catalog){
@@ -33,7 +33,7 @@ try{
   const editedProject=structuredClone(project);editedProject.tracks[1].items[0].props.color='#ff007f';
   const editedHash=await capture('edited',{...inputProps,project:editedProject});
   assert.notEqual(previewHash,editedHash,`${asset.id}: editable color made no visible change`);
-  results.push({clipId:asset.id,frame,previewHash,exportHash,editedHash});console.log(`PASS ${asset.id}: preview/export pixels match; color edit changes frame`);
+  results.push({clipId:asset.id,frame,previewHash,exportHash,editedHash,defaultsSha256:createHash('sha256').update(JSON.stringify(asset.defaults)).digest('hex')});console.log(`PASS ${asset.id}: preview/export pixels match; color edit changes frame`);
  }
  await writeFile(path.join(outDirectory,'report.json'),JSON.stringify({distribution:distribution??null,entryPoint,assetDirectory,results},null,2));
 }finally{await browser?.close({silent:true});server.close();}
