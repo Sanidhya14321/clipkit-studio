@@ -1,0 +1,37 @@
+import {spawn} from 'node:child_process';
+import {mkdir,mkdtemp,readFile,writeFile,cp,rm} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {probe,ffprobeBinary,run as runBinary} from '../packages/server/src/media.ts';
+import {duration} from '../packages/core/src/index.ts';
+const root=resolve(import.meta.dirname,'..');
+const run=(binary:string,args:string[],cwd=root)=>new Promise<string>((resolve,reject)=>{const child=spawn(binary,args,{cwd,stdio:['ignore','pipe','pipe']});let output='';child.stdout.on('data',d=>output+=d);child.stderr.on('data',d=>output+=d);child.on('error',reject);child.on('close',code=>code===0?resolve(output):reject(new Error(`${binary} failed: ${output.slice(-3000)}`)));});
+await mkdir(join(root,'artifacts'),{recursive:true});
+const packed=JSON.parse(await run('npm',['pack','./artifacts/package','--pack-destination','./artifacts','--json']));
+const tarball=join(root,'artifacts',packed[0].filename);
+const temp=await mkdtemp(join(root,'.clipkit','install-smoke-'));const project=join(temp,'project');await mkdir(project,{recursive:true});
+let child:ReturnType<typeof spawn>|undefined;
+try{
+ console.log('Installing the tarball in an isolated directory…');
+ await run('npm',['install','--prefix',temp,'--no-audit','--no-fund',tarball]);
+ const bin=join(temp,'node_modules','.bin','ck');
+ await writeFile(join(project,'AGENTS.md'),'# Existing notes\nPreserve these notes.\n');await writeFile(join(project,'.mcp.json'),JSON.stringify({mcpServers:{existing:{command:'example'}}}));
+ await run(bin,['init','--root',project],project);await run(bin,['init','--root',project],project);
+ const agents=await readFile(join(project,'AGENTS.md'),'utf8');const config=JSON.parse(await readFile(join(project,'.mcp.json'),'utf8'));
+ if(!agents.includes('Preserve these notes.')||agents.split('<!-- clipkit:start -->').length!==2||!config.mcpServers.existing)throw new Error('Idempotent init failed to preserve existing configuration');
+ const port=4330;const url=`http://127.0.0.1:${port}`;let logs='';
+ child=spawn(bin,['studio','--root',project,'--port',String(port)],{cwd:project,env:{...process.env,FISH_API_KEY:''},stdio:['ignore','pipe','pipe']});child.stdout!.on('data',d=>logs+=d);child.stderr!.on('data',d=>logs+=d);
+ let token='';for(let n=0;n<100;n++){try{token=(await (await fetch(url+'/api/bootstrap')).json() as {token:string}).token;break;}catch{if(child.exitCode!==null)throw new Error(logs);await new Promise(r=>setTimeout(r,200));}}
+ if(!token)throw new Error('Packed server did not start: '+logs);
+ const op=async(name:string,args:Record<string,unknown>={})=>{const r=await fetch(url+'/api/op/'+name,{method:'POST',headers:{'Content-Type':'application/json','X-ClipKit-Token':token},body:JSON.stringify(args)});const body=await r.json() as any;if(!r.ok)throw new Error(JSON.stringify(body));return body;};
+ const html=await (await fetch(url)).text();if(!html.includes('root'))throw new Error('Packed studio HTML missing');
+ const font=await fetch(url+'/vendor/inter.ttf');if(font.status!==200)throw new Error('Packed font is not served');
+ await op('footage_add',{path:join(root,'.clipkit/verification/fixture-recorded-mix.mp4')});await op('assets_add',{clipId:'lower-third',at:0});
+ const snapshot=await (await fetch(url+'/api/state',{headers:{'X-ClipKit-Token':token}})).json() as any;const expectedFrames=Math.ceil(duration(snapshot.project)*snapshot.project.settings.fps);
+ const exportJob=await op('export_start');let job=exportJob;const deadline=Date.now()+180000;
+ while(job.status!=='done'&&job.status!=='failed'&&Date.now()<deadline)job=await op('job_status',{jobId:exportJob.id});
+ if(job.status!=='done')throw new Error(job.error??'Packed export timed out');
+ const meta=await probe(job.result.path);if(!meta.audio||!meta.video||meta.width!==720||meta.height!==1280||Math.abs(meta.durationSec-5)>.04)throw new Error('Packed export media validation failed: '+JSON.stringify(meta));
+ const detailed=JSON.parse(await runBinary(await ffprobeBinary(),['-v','error','-show_streams','-of','json',job.result.path]));const video=detailed.streams.find((s:any)=>s.codec_type==='video'),audio=detailed.streams.find((s:any)=>s.codec_type==='audio');if(Number(video.nb_frames)!==expectedFrames||video.codec_name!=='h264'||audio.codec_name!=='aac')throw new Error('Packed export frame/codec mismatch');
+ const verifiedPath=join(root,'artifacts','verified-install-export.mp4');await cp(job.result.path,verifiedPath);await cp(job.result.path.replace('.mp4','.credits.json'),join(root,'artifacts','verified-install-export.credits.json'));
+ const result={passed:true,tarball,initPreserved:true,packagedStudio:true,packagedFont:true,export:verifiedPath,media:{...meta,videoFrames:Number(video.nb_frames),expectedFrames,videoCodec:video.codec_name,audioCodec:audio.codec_name,fps:video.avg_frame_rate},externalVoiceRequests:false};await writeFile(join(root,'.clipkit/verification/install-smoke.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
+}finally{if(child&&child.exitCode===null){child.kill('SIGTERM');await new Promise(r=>child!.once('close',r));}await rm(temp,{recursive:true,force:true});}

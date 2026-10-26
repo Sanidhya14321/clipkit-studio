@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-26",
+  "automated": {
+    "typecheck": "passed",
+    "vitest": {
+      "passed": 51,
+      "skipped": 1,
+      "note": "The skipped default test is opt-in real Chromium rendering, independently executed successfully."
+    },
+    "playwright": {
+      "passed": 1,
+      "backend": "real HTTP/WebSocket server"
+    },
+    "renderConsistency": {
+      "clips": 10,
+      "allPreviewExportHashesMatch": true,
+      "allColorEditsChangedPixels": true
+    }
+  },
+  "realAgent": {
+    "passed": true,
+    "client": "codex",
+    "model": "gpt-6.1-sol",
+    "effort": "medium",
+    "observedLock": true,
+    "onlyTargetLayerChanged": true,
+    "resolvedWithDiff": true,
+    "revertRestoredExactTracks": true,
+    "telemetry": {
+      "contextTokens": 1608,
+      "baselineTokens": 3901,
+      "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+      "actualUsage": {
+        "input": 140118,
+        "output": 317,
+        "cached": 115712
+      }
+    },
+    "observedSecondsToPatch": 27.61,
+    "observedSecondsToFinish": 36.16
+  },
+  "isolatedInstall": {
+    "passed": true,
+    "initPreserved": true,
+    "packagedStudio": true,
+    "packagedFont": true,
+    "media": {
+      "durationSec": 5.035,
+      "video": true,
+      "audio": true,
+      "width": 720,
+      "height": 1280,
+      "videoFrames": 151,
+      "expectedFrames": 151,
+      "videoCodec": "h264",
+      "audioCodec": "aac",
+      "fps": "30/1"
+    },
+    "externalVoiceRequests": false
+  },
+  "artifacts": {
+    "package": "artifacts/clipkit-studio-local-0.1.0.tgz",
+    "testExport": "artifacts/verified-install-export.mp4",
+    "liveWorkflowRecording": ".clipkit/verification/live-codex-workflow.webm",
+    "detailedAgentEvidence": ".clipkit/verification/live-codex-comment.json",
+    "renderEvidence": ".clipkit/render-consistency/report.json"
+  },
+  "externalChecksRemaining": [
+    "Real Fish transcription, TTS and cloning with user credentials",
+    "Claude Code authentication and an actual Claude edit",
+    "User microphone and consented voice sample",
+    "User talking-head footage including five-minute transcription acceptance",
+    "Three complete rehearsals of the presentation with those real inputs"
+  ],
+  "scopeNotes": [
+    "Ten original deterministic native clips, curated third-party source assets and twelve audited source repositories",
+    "New executable packs require explicit trusted source registration and compilation",
+    "One vertical H264/AAC export preset; no arbitrary historical revert"
+  ]
+}

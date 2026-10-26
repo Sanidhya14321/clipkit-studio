@@ -39,6 +39,7 @@ For narration, create one slot per script line, then record or generate each lin
 ```sh
 pnpm ck search lower third
 pnpm ck schema kinetic-title
+pnpm ck assets build
 pnpm ck project get --summary
 pnpm ck project get --layer LAYER_ID
 pnpm ck project patch patch.json
@@ -92,3 +93,5 @@ pnpm exec tsx scripts/render-smoke.ts
 - Real Fish requests, your microphone and your footage must be rehearsed with your credentials. Claude must be signed in before claiming a two-client demo.
 
 Original application code and ten native clip components are MIT. Remotion and embedded assets have separate terms; see [third-party notices](THIRD_PARTY_NOTICES.md) and [asset inventory](docs/ASSET-SOURCES.md).
+
+The starter pack includes real rendered PNG previews and generated compact catalog/category indexes plus full per-clip schemas. `ck assets build` validates it and writes a local index. New React clip code must be explicitly registered and compiled; dropping untrusted executable code into a folder does not run it.

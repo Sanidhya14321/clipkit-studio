@@ -10,6 +10,8 @@
 
 ## Present
 
+Measured cold Codex latency was about 28 seconds to the patch and 36 seconds to completion. Explain the patch/context/ownership story while waiting, and adjust the schedule after rehearsing your actual machine and providers. Do not promise instant free-form edits.
+
 | Time | Action |
 |---|---|
 | 0:00–0:20 | Play raw footage; explain the shared non-destructive timeline. |
