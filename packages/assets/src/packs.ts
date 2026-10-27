@@ -38,7 +38,7 @@ export async function validatePack(folder:string):Promise<DiscoveredPack>{
   for(const rule of Object.values(schema.properties))if(!['string','number','integer','boolean'].includes(rule.type)||Object.keys(rule).some(k=>!['type','enum','minimum','maximum','minLength','maxLength','default','description','title','pattern'].includes(k)))throw new Error('Unsupported JSON schema keyword/type');
   for(const rule of Object.values(schema.properties))if(rule.pattern&&rule.pattern!=='^#[0-9a-fA-F]{3,8}$')throw new Error('Only the bounded native color pattern is supported; use enum for other string constraints');
   if(!Array.isArray(clip.fields))throw new Error('Editable fields required');
-  for(const key of EDITABLE)if(!(key in clip.defaults)||!clip.fields.some(f=>f.key===key)||!(schema.required??[]).includes(key))throw new Error(`${clip.id}: missing editable ${key}`);
+  if(!clip.fields.length)throw Error('Declare at least one meaningful editable field');
   const fieldKeys=new Set<string>();for(const field of clip.fields){const rule=schema.properties[field.key];if(!rule||fieldKeys.has(field.key)||!['text','textarea','color','number','select','image'].includes(field.type))throw new Error('Field does not match props schema');fieldKeys.add(field.key);if(field.type==='number'?!['number','integer'].includes(rule.type):rule.type!=='string')throw new Error('Field type conflicts with schema');if(field.type==='select'&&(!field.options?.length||!field.options.includes(String(clip.defaults[field.key]))))throw new Error('Select field needs options containing its default');}
   const preview=await readFile(safe(folder,nonempty(clip.preview,'PNG preview')));if(!preview.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))throw new Error('Preview must be a real PNG');content.push(hash(preview));
   if(clip.card){const card=parseCard(await readFile(safe(folder,clip.card),'utf8')).card;if(card.id!==clip.id)throw new Error('Pack card ID mismatch');if(normalizeAssetLicense(card.license)!==clipLicense)throw new Error('Pack card and clip license conflict');}
@@ -88,13 +88,10 @@ async function buildPackRegistry(root:string):Promise<AssetRegistry & {errors:Ar
  return {clips,version,moduleUrl:clips.some(c=>c.component)?`/asset-registry/registry.js?version=${version}`:undefined,errors,generatedDir};
 }
 export async function watchPacks(root:string,onChange:(registry:Awaited<ReturnType<typeof refreshPacks>>)=>void,refreshRegistry:typeof refreshPacks=refreshPacks){
- const folder=path.join(root,'.clipkit/assets/packs');await mkdir(folder,{recursive:true});
- let pending:ReturnType<typeof setTimeout>|undefined,inFlight:Promise<void>|undefined;
- let dirty=false,closed=false;
- const refresh=async()=>{try{do{dirty=false;const registry=await refreshRegistry(root);if(!closed)onChange(registry);}while(dirty&&!closed);}finally{inFlight=undefined;}};
- const watcher=watch(folder,{recursive:true},()=>{
-  if(closed)return;dirty=true;clearTimeout(pending);
-  pending=setTimeout(()=>{if(!closed&&!inFlight)inFlight=refresh();},150);
- });
- return {async close(){closed=true;clearTimeout(pending);watcher.close();await inFlight;}};
+ const folder=path.join(root,'.clipkit/assets/packs');await mkdir(folder,{recursive:true});let pending:ReturnType<typeof setTimeout>|undefined,inFlight:Promise<void>|undefined;let dirty=false,closed=false,checking=false;
+ async function signature(){const result:string[]=[];async function walk(dir:string){for(const e of await readdir(dir,{withFileTypes:true})){const file=path.join(dir,e.name);if(e.isDirectory())await walk(file);else if(e.isFile()){const s=await stat(file);result.push(`${file}:${s.mtimeMs}:${s.size}`)}}}try{await walk(folder)}catch{}return result.sort().join('|')}
+ let previous=await signature();const refresh=async()=>{try{do{dirty=false;const registry=await refreshRegistry(root);if(!closed)onChange(registry);}while(dirty&&!closed)}finally{inFlight=undefined}};
+ const queue=()=>{if(closed)return;dirty=true;clearTimeout(pending);pending=setTimeout(()=>{if(!closed&&!inFlight)inFlight=refresh().catch(()=>{})},150)};
+ const watcher=watch(folder,{recursive:true},queue);const poll=setInterval(()=>{if(closed||checking)return;checking=true;void signature().then(value=>{if(value!==previous){previous=value;queue()}}).finally(()=>{checking=false})},500);
+ return {async close(){closed=true;clearInterval(poll);clearTimeout(pending);watcher.close();await inFlight;}};
 }

@@ -1,0 +1,78 @@
+[
+  {
+    "source": "Video Forge 0.7.1",
+    "original": "skills/video-forge/references/taste.md",
+    "file": "guides/direction.md",
+    "sha256": "62d2cdfd59fac43a3f12f7291367220a3883a1f810ad3eabe0dd24c6fd420063",
+    "license": "MIT",
+    "modifications": "Prepended ClipKit execution boundary; original creative guidance retained.",
+    "originalSha256": "740612a025d9c46da8d1d4a028f92cbe4c9239dcd018f57bb19cf54909000df8"
+  },
+  {
+    "source": "Video Forge 0.7.1",
+    "original": "skills/video-forge/references/reels.md",
+    "file": "guides/rhythm.md",
+    "sha256": "f0e86f240fedc94530c98d563b1341422926b31e2e22806de1709d22f7bb7613",
+    "license": "MIT",
+    "modifications": "Prepended ClipKit execution boundary; original creative guidance retained.",
+    "originalSha256": "a6ccb2105c90ded7f71a87fb708234ad378ba396d59009cfde1a9fbdba54a2ae"
+  },
+  {
+    "source": "Video Forge 0.7.1",
+    "original": "skills/video-motion/references/code-motion.md",
+    "file": "guides/choreography.md",
+    "sha256": "01d9f58459fdbb4f4cac229ade3d4ccce30f4dc7a0b0dfb724c0323f5a6cb407",
+    "license": "MIT",
+    "modifications": "Prepended ClipKit execution boundary; original creative guidance retained.",
+    "originalSha256": "cedfd0a4e6bb0a2f2f7a590c7b6184dd87b4264591db595f6ecaf4823d837a7c"
+  },
+  {
+    "source": "Video Forge 0.7.1",
+    "original": "skills/video-forge/assets/shot-recipes.json",
+    "file": "recipes.json",
+    "sha256": "eee5fe1076912e2705119a02b1e8e2b350c8cf574b7ae55744eb5783f0699e10",
+    "license": "MIT",
+    "modifications": "Original source retained; ClipKit tool execution is defined in agent-guide.md."
+  },
+  {
+    "source": "Video Forge 0.7.1",
+    "original": "LICENSE",
+    "file": "LICENSE",
+    "sha256": "9d522f14a6e45e72d9fdf37f700cb4f369f7ac54d45778f9e40adc179ab5ef85",
+    "license": "MIT",
+    "modifications": "Original source retained; ClipKit tool execution is defined in agent-guide.md."
+  },
+  {
+    "source": "Video Forge 0.7.1",
+    "original": "NOTICE.md",
+    "file": "NOTICE.md",
+    "sha256": "67f17740802b914b18b153f0de065db0e6cc405395868c997405fc55ba5a11f2",
+    "license": "MIT",
+    "modifications": "Original source retained; ClipKit tool execution is defined in agent-guide.md."
+  },
+  {
+    "source": "paper-design/shaders @paper-design/shaders 0.0.82",
+    "file": "vendor-notices/paper-LICENSE",
+    "original": "LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "license": "Apache-2.0",
+    "modifications": "Unmodified package notice"
+  },
+  {
+    "source": "paper-design/shaders @paper-design/shaders 0.0.82",
+    "file": "vendor-notices/paper-NOTICE",
+    "original": "NOTICE",
+    "sha256": "06cf1515dc4628ae4a10f04f394ce746c6edba1ad0ed5d3f7df7ab1781dfe868",
+    "license": "Apache-2.0",
+    "modifications": "Unmodified package notice"
+  },
+  {
+    "source": "Video Forge 0.7.1 motion helpers + original ClipKit frame-driven Paper adapter",
+    "original": "motion/index.tsx",
+    "file": "src/index.tsx",
+    "originalSha256": "a9aad0e92c439cfc4af038ab9fad27dfe5b51ae57d8a38c53563cba8d9fc180f",
+    "sha256": "6cbdb21134824733f300943a627d1ef165bb4ae15aff52fd8ce34ad16f043ff4",
+    "license": "MIT; Paper runtime separately Apache-2.0",
+    "modifications": "Selected frame math, split type, perspective planes and wipe; omitted experimental optics/blur, standalone renderer and GSAP. Added frame-seeked material adapter."
+  }
+]

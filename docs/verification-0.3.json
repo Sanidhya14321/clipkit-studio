@@ -1,0 +1,429 @@
+{
+  "version": "0.3.0",
+  "date": "2026-10-27",
+  "reports": {
+    "agent": {
+      "passed": true,
+      "client": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "newSceneSourceAuthored": true,
+      "version": "76cf68f825d2e48e2bc5c7342138913fa1bc295a363bebdce9cb82230ea6c3bf",
+      "sceneId": "live-editorial-proof",
+      "itemId": "layer_9b0c29f6",
+      "telemetry": {
+        "contextTokens": 6048,
+        "baselineTokens": 20695,
+        "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+        "actualUsage": {
+          "input": 344280,
+          "output": 2670,
+          "cached": 306432
+        }
+      }
+    },
+    "profile": {
+      "passed": true,
+      "profile": "Tool profile: scene-edit \u00b7 18 focused tools",
+      "sourceVersionUnchanged": true,
+      "telemetry": {
+        "contextTokens": 2214,
+        "baselineTokens": 978,
+        "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate.",
+        "actualUsage": {
+          "input": 120056,
+          "output": 583,
+          "cached": 94080
+        }
+      }
+    },
+    "workflow": {
+      "generationPassed": true,
+      "feedbackPassed": true,
+      "root": "/home/sanidhya/Desktop/Hackcbs-Project/.clipkit/v3-demo-project",
+      "events": [
+        {
+          "name": "Start actual agent generation",
+          "seconds": 0.651
+        },
+        {
+          "name": "Real scene published",
+          "seconds": 147.429
+        },
+        {
+          "name": "Exact 150\u2013300 frame feedback",
+          "seconds": 148.07
+        },
+        {
+          "name": "Range agent completed",
+          "seconds": 178.334
+        },
+        {
+          "name": "Export dialog with real scene",
+          "seconds": 178.855
+        }
+      ],
+      "proofStart": 148.398,
+      "proofDuration": 2.5,
+      "comments": [
+        {
+          "text": "Keep the phrase readable; increase surrounding motion only from 5 seconds to 10 seconds. Do not change any content outside frames 150\u2013300.",
+          "anchor": {
+            "tStart": 5,
+            "tEnd": 10
+          },
+          "status": "resolved"
+        }
+      ]
+    },
+    "human-edit": {
+      "passed": true,
+      "events": [
+        {
+          "name": "Human headline edit",
+          "seconds": 1.708
+        },
+        {
+          "name": "Properties undo and redo",
+          "seconds": 4.893
+        },
+        {
+          "name": "Human TSX save",
+          "seconds": 5.052
+        },
+        {
+          "name": "Source version undo",
+          "seconds": 12.248
+        }
+      ],
+      "originalHeadline": "MAKE IT MOVE"
+    },
+    "browser-export": {
+      "passed": true,
+      "revision": 23,
+      "output": "/home/sanidhya/Desktop/Hackcbs-Project/.clipkit/v3-demo-project/.clipkit/exports/project_496c53d3-r23-04660eb8.mp4"
+    },
+    "film": {
+      "passed": true,
+      "frames": 750,
+      "fps": "30/1",
+      "media": {
+        "durationSec": 25.003,
+        "video": true,
+        "audio": true,
+        "width": 1080,
+        "height": 1920
+      },
+      "videoCodec": "h264",
+      "audioCodec": "aac",
+      "realEditorEvidence": true,
+      "originalSound": true,
+      "editableProject": "artifacts/clipkit-demo-project-0.3.0",
+      "output": "artifacts/clipkit-reel-0.3.0.mp4"
+    },
+    "frames": {
+      "passed": true,
+      "outsideFramesExact": [
+        0,
+        149,
+        300,
+        749
+      ],
+      "insideFrameChanged": 225,
+      "previewExportMatch": true,
+      "shader": {
+        "seekOrder": [
+          20,
+          65,
+          20
+        ],
+        "sameFrameMatch": true,
+        "differentFrameChanges": true,
+        "previewExportMatch": true
+      }
+    },
+    "pacing": {
+      "passed": true,
+      "fastSlowDifferentAtFrame": 225,
+      "durationRecomposition": {
+        "fromFrames": 750,
+        "toFrames": 900,
+        "differentAtFrame": 600,
+        "protectedReadingFrameExact": 400
+      },
+      "note": "Explicit score recomposition, not playback-speed multiplication; no long-form render benchmark."
+    },
+    "compat": {
+      "passed": true,
+      "count": 46,
+      "results": [
+        {
+          "id": "kinetic-title",
+          "hash": "c4838764d519da7f7b01b10c4795e91da0d53d5578c71ecb77fc30526a71f812"
+        },
+        {
+          "id": "lower-third",
+          "hash": "676c163d272b634cae2d1c92941f46dfbc55e64e34ac39f6b4f77ea77d8b646d"
+        },
+        {
+          "id": "captions",
+          "hash": "cf2cb472a727f7def07be39a3647b30c0265b029febbd63c8d91d26b48c60c9e"
+        },
+        {
+          "id": "icon-callout",
+          "hash": "5e71c65cb22af222a225f97b79f0f1c3e4469cdfb79ab61c0195c3fdeb41e47b"
+        },
+        {
+          "id": "counter",
+          "hash": "07b5be98317d024ed93203403b5663c8d62e865d06bc31e45900cfc057b7760b"
+        },
+        {
+          "id": "illustration-card",
+          "hash": "f8caafd874cd85be813a8d0027d113a8d93b54ffd29ec943608e30567f91b3e6"
+        },
+        {
+          "id": "screenshot-frame",
+          "hash": "42b5e50d72b1a2fa753f405c5667c930f07746dc850f18320df91db12d9de570"
+        },
+        {
+          "id": "gradient",
+          "hash": "8de989514c1d771d4f7813ffcff74fb2a14e60fa674d4a057d1e48d091f6ab3d"
+        },
+        {
+          "id": "wipe",
+          "hash": "b91db18ab372eaacc8283d554b1974a7eebbc91876a6bf2478cb369770db2d7f"
+        },
+        {
+          "id": "cta",
+          "hash": "dfb810848beff511827e61bca878d9f47d3cf817f8980f9571fe2d45fd9533c6"
+        },
+        {
+          "id": "starfield",
+          "hash": "7c2602580eecbbc8c107f5498246342b5b679d603b286d1758a1efbc29dcb0b3"
+        },
+        {
+          "id": "confetti-burst",
+          "hash": "4b1ba2765482f5d35c1d8f691d16732e83f33f8d88e89565167c6449c2478626"
+        },
+        {
+          "id": "terminal-typewriter",
+          "hash": "7da4b9d6e4b7cc262451b5fc7bd73623a9165756f21db2def3825bce2d779fca"
+        },
+        {
+          "id": "bar-chart",
+          "hash": "3d32664729c015a94a7cdd687b87bc12db61999f553d054e60b42e951d388514"
+        },
+        {
+          "id": "adapted-bokeh-circles",
+          "hash": "8537ea5c95ee59e13bd8ab9bf83c133c57ff01cb875e01c0f3a8fa7801facd66"
+        },
+        {
+          "id": "adapted-brush-stroke-reveal",
+          "hash": "188c95b8d8abd96001e3ef86d9a1763110dbba35dd47e66ffaf8bff5fdb2e198"
+        },
+        {
+          "id": "adapted-chapter-title",
+          "hash": "c48a91da02f1a1b1a0b931255319f9775f0c18012487a1d0e0cde6f2fc134b69"
+        },
+        {
+          "id": "adapted-community-chat",
+          "hash": "7f53ab43111d007671f864383a273f3dace3eb06f0cc4de19c420ef266d5db16"
+        },
+        {
+          "id": "adapted-eye-reveal",
+          "hash": "5f631a8ebddfba2c1234d8eea8d885cdbfc5afd053aadc5a647d9a5723c9fcda"
+        },
+        {
+          "id": "adapted-glitch-text",
+          "hash": "c62ccf9262e875448cc30972c592e47ee78bd4b46c446d64002fd83a7d3bd69f"
+        },
+        {
+          "id": "adapted-gradient-text-sweep",
+          "hash": "71d5948c53634b112d2578c18a11267bca864007f8b18df70e1cd8ba9e2266a5"
+        },
+        {
+          "id": "adapted-kinetic-word-stack",
+          "hash": "da58edcabbbfbf3b04736688d64f1b98be365470affbe41a6099e8dabdf15d56"
+        },
+        {
+          "id": "adapted-line-chart-anim",
+          "hash": "e72ec111978590e62af97b14f8deb386f786fdbd9b21f1c3c8295ab68d398ca5"
+        },
+        {
+          "id": "adapted-logo-stroke-draw",
+          "hash": "3d3d738bb07488cfa3ba963ca4fc9c617c6ef8378968b307453d8df7aea9d6f9"
+        },
+        {
+          "id": "adapted-loop-grid-wave",
+          "hash": "dbababc7598b170c53c44bbae98bdb65db8c959c59438707f3ed64107fe77792"
+        },
+        {
+          "id": "adapted-lower-third-glass-card",
+          "hash": "9d7ce2f1fc684788cf6250c411025167ed56d587c39f2c4ab82831f7482cc049"
+        },
+        {
+          "id": "adapted-neon-sign",
+          "hash": "7c497f4d861ff4b616242a2d044f97dae042d3246851531abd25d662a205e8c0"
+        },
+        {
+          "id": "adapted-pencil-draw",
+          "hash": "07654a7eba12235b5ee84d7660a2b54cebcea32ba6c7e09bc11eaaf9d836cec6"
+        },
+        {
+          "id": "adapted-scramble-text",
+          "hash": "66cf55230dde1264b5d7c0660008becb2c5a6f2eadf8017aca04036f0a0773c0"
+        },
+        {
+          "id": "adapted-social-reel",
+          "hash": "274c822ccdc3ab898f3605d2b6826d365119147d6cdc16d74706e6a969c139ed"
+        },
+        {
+          "id": "adapted-text-mask-reveal",
+          "hash": "c424a5401e45c50c557079e1709d4f8b6b89910ed109312edcd7f7d9830e720c"
+        },
+        {
+          "id": "adapted-wave-text",
+          "hash": "33a8321c80233f1578fc56529e84a19a01f641e12e829b7536cdebf1a0b8ab1d"
+        },
+        {
+          "id": "adapted-morph-text",
+          "hash": "74f02c308d689c36c2238497546470ee6dc68998863455dee92db712add62276"
+        },
+        {
+          "id": "adapted-scramble-title",
+          "hash": "1571050b0e558c2e8f14ad13647582885d037d49e61251b89f26a09fedd95dff"
+        },
+        {
+          "id": "adapted-svg-draw",
+          "hash": "fc4d7e300412c4725bba890cb03a3ebd28de3348dec3aa785acb9f53bc3773db"
+        },
+        {
+          "id": "adapted-grid-stagger",
+          "hash": "58c4b545786919584f3609d8580be63915e4409b7e792145fb94d07d40d35fbe"
+        },
+        {
+          "id": "adapted-speaker-avatar",
+          "hash": "7e9b00a42c0d2c814a50ad907c3425afc4134acc6d86d4152f4c5a907b3d3e1a"
+        },
+        {
+          "id": "adapted-team-avatars",
+          "hash": "cc40ea656ba78744655eb56e683103f9d70f1a5c6966819b1f107e014b2d6025"
+        },
+        {
+          "id": "lottie-checkmark",
+          "hash": "6ba46054cbec4edcf68e60463293abc39c8c5649b2e881602d0c11c6b2388671"
+        },
+        {
+          "id": "lottie-download",
+          "hash": "ca2e6dcc32bdfb7fe97a5dde06d24afb965b77103780b05c349966ada549c649"
+        },
+        {
+          "id": "lottie-heart",
+          "hash": "717609ef0ef5b7ceba9d982f586138f4e599c59a50f9c0d301defa32f8f537b2"
+        },
+        {
+          "id": "lottie-loading",
+          "hash": "91b4a3c686752c1e9aa253878cbdd8022e06c2473f51eabb6edcc0cd4a0835fc"
+        },
+        {
+          "id": "lottie-microphone",
+          "hash": "586a039ec1e9d83149cfe23a17b9ba4b6e6209c75e10cf1fd81c6d2548d256f4"
+        },
+        {
+          "id": "lottie-notification",
+          "hash": "d3aed7116a05ee5f6ac20d74289198e2bd4c6eeba7a48094b35900fe97b96561"
+        },
+        {
+          "id": "lottie-playpause",
+          "hash": "0b99001659cbae00ccbb5fffbeaa76646c6775178e26adb9eec06a1085420de7"
+        },
+        {
+          "id": "lottie-upload",
+          "hash": "20c4ecbe2f0deecb1a247ad51648fddccc640727e2b5972b9b62fa2669905bd4"
+        }
+      ]
+    },
+    "install": {
+      "passed": true,
+      "version": "0.3.0",
+      "outsideRepository": true,
+      "initPreserved": true,
+      "motionTechniques": 8,
+      "defaultStockItems": 0,
+      "sourceCompileAndPublish": true,
+      "sourceRead": true,
+      "ensureStartedLocalhost": true,
+      "export": {
+        "durationSec": 5.013,
+        "video": true,
+        "audio": true,
+        "width": 1080,
+        "height": 1920,
+        "frames": 150
+      },
+      "legacyArchiveRestored": true,
+      "legacyStableId": true,
+      "legacyExport": true,
+      "installedDependencyAudit": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    "user-project-preservation": {
+      "beforeRev": 50,
+      "beforeSha256": "dd5b4e1597d22c3305478fdc4ed0ffb7e0c74dbecb79368343f6bd5d2fad940a",
+      "afterSha256": "dd5b4e1597d22c3305478fdc4ed0ffb7e0c74dbecb79368343f6bd5d2fad940a",
+      "passed": true
+    }
+  },
+  "liveAcceptance": {
+    "codexNewSource": true,
+    "claude": false,
+    "fish": false,
+    "longFormHourBenchmark": false
+  },
+  "browser": {
+    "passed": 5,
+    "sizes": [
+      [
+        1920,
+        1080
+      ],
+      [
+        1440,
+        900
+      ],
+      [
+        1366,
+        768
+      ],
+      [
+        1280,
+        720
+      ],
+      [
+        1024,
+        600
+      ],
+      [
+        900,
+        700
+      ]
+    ]
+  },
+  "regression": {
+    "passed": 107,
+    "files": 15,
+    "typecheck": true,
+    "assetInventory": {
+      "passed": true,
+      "verifiedSources": 14,
+      "stockCards": 0
+    },
+    "build": true
+  }
+}

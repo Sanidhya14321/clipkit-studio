@@ -2,6 +2,9 @@
 import {readFile,writeFile,mkdir,access} from 'node:fs/promises';
 import {resolve,join,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {createServer as createProbe} from 'node:net';
 import {spawn} from 'node:child_process';
 import {createRequire} from 'node:module';
 import {ProjectStore} from '../../core/src/store.ts';
@@ -40,7 +43,7 @@ async function initialize(){
   const existing=mcp.mcpServers?.clipkit;const owned=existing&&(JSON.stringify(existing)===JSON.stringify(mcpConfig)||JSON.stringify(existing)===JSON.stringify(receipt?.mcpConfig));
   if(existing&&!owned)throw new Error('An unmanaged clipkit entry exists in .mcp.json; merge or rename it before ck init. Existing files were preserved.');
   const cursorPath=join(root,'.cursor/rules/clipkit.mdc');const priorCursor=await optional(cursorPath);if(priorCursor&&!priorCursor.includes('<!-- clipkit:start -->'))throw new Error('An unmanaged .cursor/rules/clipkit.mdc exists; rename it before ck init. Existing files were preserved.');
-  await mkdir(join(root,'.clipkit'),{recursive:true});try{await access(join(root,'.clipkit','project.json'));}catch{await new ProjectStore(root).load();}
+  await mkdir(join(root,'scenes'),{recursive:true});await mkdir(join(root,'.clipkit'),{recursive:true});try{await access(join(root,'.clipkit','project.json'));}catch{await new ProjectStore(root).load();}
   await managedText(join(root,'AGENTS.md'),'<!-- clipkit:start -->','<!-- clipkit:end -->',agentInstructions);
   mcp.mcpServers={...mcp.mcpServers,clipkit:mcpConfig};await writeFile(join(root,'.mcp.json'),JSON.stringify(mcp,null,2)+'\n');
   const config=`[mcp_servers.clipkit]\ncommand = ${JSON.stringify(process.execPath)}\nargs = ${JSON.stringify(commandArgs)}\ndefault_tools_approval_mode = "approve"\n[mcp_servers.clipkit.env]\nCLIPKIT_ROOT = ${JSON.stringify(root)}`;
@@ -73,6 +76,13 @@ async function main(){
   if(command==='init')return initialize();
   if(command==='studio')return studio();
   if(command==='doctor')return doctor();
+  if(command==='ensure'){try{const c=await connection();const r=await fetch(c.url+'/api/bootstrap',{signal:AbortSignal.timeout(1000)});if(r.ok)return output({url:c.url,running:true});}catch{}const port=flags.port?Number(flags.port):await new Promise<number>(done=>{const probe=createProbe();probe.listen(0,'127.0.0.1',()=>{const p=(probe.address() as any).port;probe.close(()=>done(p))})});const commandArgs=packaged?[cliPath,'studio','--no-vite','--port',String(port),'--root',root]:['--import',fileURLToPath(import.meta.resolve('tsx')),cliPath,'studio','--no-vite','--port',String(port),'--root',root];const child=spawn(process.execPath,commandArgs,{cwd:root,detached:true,stdio:'ignore',env:{...process.env}});child.unref();for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,150));try{const c=await connection();if((await fetch(c.url+'/api/bootstrap')).ok)return output({url:c.url,running:true,started:true})}catch{}}throw Error('Studio did not start. Run ck studio to see diagnostics.');}
+  if(command==='motion')return output(await invoke(sub==='read'?'motion_read':'motion_search',sub==='read'?{id:rest[0]}:{query:rest.join(' ')}));
+  if(command==='scene'){if(sub==='read')return output(await invoke('scene_read',{itemId:rest[0]}));if(sub==='status')return output(await invoke('scene_status'));if(sub==='draft')return output(await invoke('scene_draft',JSON.parse(await readFile(resolve(rest[0]),'utf8'))));}
+  if(command==='reel'&&sub==='read')return output(await invoke('reel_read',rest[0]?{chapterId:rest[0]}:{}));
+  if(command==='reel'&&sub==='score')return output(await invoke('reel_chapter_score_set',{chapterId:rest[0],score:JSON.parse(await readFile(resolve(rest[1]),'utf8'))}));
+  if(command==='reel'&&sub==='plan')return output(await invoke('reel_plan_set',{plan:JSON.parse(await readFile(resolve(rest[0]),'utf8'))}));
+  if(command==='compat'&&sub==='install'){const file=resolve(rest[0]);const expected=JSON.parse(await readFile(join(installRoot,packaged?'runtime/packages/scenes/compatibility.json':'packages/scenes/compatibility.json'),'utf8'));if(createHash('sha256').update(await readFile(file)).digest('hex')!==expected.sha256)throw Error('Compatibility archive checksum does not match the pinned release');const entries=execFileSync('tar',['-tzf',file],{encoding:'utf8'}).trim().split('\n');if(entries.some(e=>!e.startsWith('0.2.0/')&&e!=='0.2.0'||e.split('/').includes('..')))throw Error('Invalid compatibility archive paths');const destination=join(root,'.clipkit/compat');await mkdir(destination,{recursive:true});execFileSync('tar',['-xzf',file,'-C',destination]);return output({installed:'0.2.0',restart:true});}
   if(command==='library'){if(sub==='list')return output(await invoke('library_list',{q:flags.q,kind:flags.kind,origin:flags.origin,offset:Number(flags.offset??0),limit:Number(flags.limit??20)}));if(sub==='inspect')return output(await invoke('library_inspect',{assetId:rest[0]}));if(sub==='rescan')return output(await invoke('library_rescan'));if(sub==='import')return output(await invoke('library_import',{path:resolve(rest[0])}));if(sub==='place')return output(await invoke('library_place',{assetId:rest[0],at:Number(flags.at??0),trackId:flags.track}));}
   if(command==='assets'&&sub==='build'){await buildAssets(installRoot,join(root,'.clipkit','assets'));const {refreshPacks}=await import('../../assets/src/packs.ts');return output(await refreshPacks(root));}
   if(command==='assets'&&sub==='install')return output(await invoke('assets_install',{path:resolve(rest[0]),trust:flags.trust===true}));

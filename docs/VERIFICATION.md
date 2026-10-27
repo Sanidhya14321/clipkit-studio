@@ -1,49 +1,32 @@
-# Current verification: workspace and assets 0.2.0
+# ClipKit Studio 0.3.0 verification
 
-Verified on 27 October 2026. **116 default tests passed**, with two real-render tests skipped by default; the separate 12-test opt-in suite passed, bringing coverage to **118 unique Vitest tests**. A final nine-test library check covers the cache-copy count fix. **All ten real-backend browser tests passed**, including six viewport sizes, 125% equivalent desktop zoom emulation, keyboard resizing/persistence/reset, final-card/control hit testing, drawer focus, drag-to-track and exact undo. Typecheck, build and production dependency audit passed; the audit found zero advisories.
+Verified locally on 27 October 2026. This release verifies agent-authored video editing and generation, not the removed stock library. Earlier 0.2 reports are historical.
 
-The initial catalog has **72 ready timeline items**, with two fonts counted separately. All 72 were inserted and exported in a 101.717-second 720×1280 video; both local fonts loaded and no resource requests failed. Each of 46 native templates/animations passed repeated start/middle/end still checks. All 46 passed preview/export equality and meaningful visible text/color edit checks, sampled during the corresponding animation scenes.
+## Real end-to-end evidence
 
-Two complete 138-second native reels were exported at 360×640. Decoded audio matches exactly. Video is visually equivalent within the recorded strict sparse-raster tolerance: one frame differs in 163 color channels, maximum channel error 8/255 and mean error 0.0005324/255. This is **not** a claim of identical video hashes or cross-machine determinism.
+- Codex gpt-6.1-sol at medium effort authored a new TSX scene through `scene_draft`, recovered from a validation error, and published a real immutable artifact to localhost. This was not a property-only substitution.
+- A separate real turn authored the 25-second editorial product film. A second turn handled the exact `[150,300)` range comment and changed only that passage. Actual generation and feedback waits are retained in the workflow recording.
+- Human controls changed the headline; undo/redo restored it. A human source save compiled and published, and undo restored the prior code version. No fabricated editor screenshots or agent session are used as proof.
+- A final real property-edit turn used **18 focused scene-edit tools**, changed the headline, resolved feedback and preserved the source version. Incremental request/tool payload was **2,214 estimated tokens**. Actual reported provider usage was 120,056 input, 583 output, 94,080 cached. These numbers measure different things; there is no claim of 2,214 total model tokens or universal savings. The initial source-generation check used 6,048 incremental tokens and did not meet the old 3,000 target.
+- The finished film is **1080×1920, 30 fps, 750 frames**, H.264/AAC, approximately 25 seconds, with original rhythmic sound and cropped genuine editor recordings. The editable project retains scene versions and transaction history.
+- The browser Export action completed and its Download export link saved a real MP4. The workflow recording includes generation, range feedback, human editing, export progress and download across separate genuine sessions.
 
-A real Codex gpt-6.1-sol medium turn read the adapted Glitch Text card, changed only the requested text, resolved its comment and released ownership. Estimated incremental context was 1,618 tokens against a 20,509-token constructed baseline; actual runner usage is separately reported and includes much more than this incremental payload. A second combined agent rehearsal hit the account usage limit. The local footage/photo/title/Lottie/sound/crop/undo/export rehearsal succeeded without substituting a simulated agent turn.
+## Local regression and rendering
 
-The tarball was installed in a fresh directory under `/tmp`, outside the repository. Idempotent init preserved existing instructions/configuration; all 72 items, adapted TSX, Lottie, a custom pack and portrait/landscape H.264/AAC exports worked. The portrait output has exactly 301 expected video frames at 30 fps; duration differs by less than one frame. Installed dependency audit reports zero advisories. Final documentation and the UI-only drop-error/contrast updates were repacked after that runtime check and separately browser-tested.
+**107 default tests pass across 15 files.** Typecheck, built application and five real-backend browser tests cover ownership, stale revisions, atomic patches, undo, source errors, late canceled publication, independent instances, frame ranges and protected timing. Browser checks exercise 1920×1080, 1440×900, 1366×768, 1280×720, 1024×600 and 900×700, equivalent 125% zoom, reachable final controls, keyboard boundaries, saved comments, resizing/reset and source-save focus.
 
-Your existing live project stayed at revision 36 with identical saved bytes through restart. Fish and Claude live acceptance remain outstanding. No human listening or second-machine certification is claimed.
+Rendered outside frames 0,149,300,749 match the original exactly after the scoped edit; frame 225 changes visibly. Preview/export frame 225 matches. The real Paper shader returns identical pixels for seek order 20→65→20, changes over time, and matches preview/export. These are representative local frame checks, not exhaustive cross-machine or every-frame equivalence.
 
-Evidence: [machine-readable report](verification-0.2.json), [72-item inventory](library-inventory-0.2.json), [workspace and format boundaries](WORKSPACE-ASSETS-0.2.md), [laptop screenshots](audit/workspace-0.2/), and the committed frame proof at `public/packs/native/determinism.json`. Exported MP4s and the installable tarball are release artifacts.
+The separate frozen compatibility archive renders all 46 legacy components twice. It is absent from new-project installation/discovery. Adopted Video Forge/Paper/font records retain licenses and hashes. Source inventory check reports zero errors/warnings. A cache variation regression protects fonts across concurrent loopback renderer origins.
 
----
+## Longer videos and optimized invocation
 
-# Previous verification (asset release 0.1.2)
+Plans support stable nonoverlapping chapters, compact paginated summaries, chapter-only score replacement, protected reading windows, and a Generate selected chapter action. Server tests prove chapter scenes stay inside their budget and unrelated content survives. Source can be read in bounded line windows, footage in timestamp windows, and simple edits can reuse supplied props without re-reading skills/source. Tool profiles omit irrelevant voice/media/authoring operations.
 
-Four new native clips bring the library to fourteen, with 33 usage cards. All 105 default tests and 13 opt-in tests passed (107 unique Vitest tests); all six browser tests passed. Repeated frame checks, two matching complete 42-second exports, preview/export equality and editable-control checks passed. A real Codex turn inserted the requested chart after reading its card. See [motion verification](ASSET-MOTION.md) and [machine-readable results](asset-motion-verification.json).
+The schema allows 108,000 frames (one hour at 30 fps). **An hour-long film has not been generated or rendered as an acceptance benchmark.** Chapter generation is explicitly initiated one chapter at a time; no whole-film autonomous batch scheduler is claimed. Pacing/duration verification uses explicit choreography and score changes, not a global playback-speed multiplier.
 
-External voice/Claude acceptance limitations documented below still apply.
+## Remaining live acceptance
 
-# Previous asset verification (0.1.1)
+Claude Code is installed but unauthenticated; its new-scene live acceptance is unverified. Fish transcription/TTS/private cloning require supplied credentials and remain unverified live provider gates. Cached/local media and original sound work without those providers. Full 3D authoring, a visual object/keyframe editor and unrestricted third-party executable packs are outside this release.
 
-The latest asset update passed 96 standard Vitest tests and the separate 13-test opt-in asset/render suite (98 unique tests across runs), all five real-backend browser tests, typecheck, build and a clean installed-package rehearsal. The package exposes the new card tools, accepts a valid custom pack and exports portrait/landscape H.264/AAC. Installed dependency audit reports zero vulnerabilities.
-
-Ten native clips passed start/middle/end PNG comparisons twice. A complete 30-second smoke reel with the pinned Kenney click was exported twice at 360×640; decoded video frames and audio match. A real Codex turn read the required card before inserting exactly one requested callout and preserved existing content.
-
-See [asset implementation](ASSET-IMPLEMENTATION.md), [machine-readable asset evidence](asset-verification.json), and [overall results](verification-report.json). Native code/previews are explicitly agent-authored. One pinned original Inter font-size exception is retained, and no second-machine rendering certification is claimed.
-
-The previous gap-fix verification below is historical context, not a substitute for these newer results.
-
-# Previous gap-fix verification
-
-Verified 27 October 2026: TypeScript passed; **82 default tests passed**, with two opt-in tests skipped by default. The opt-in asset/render suite separately passed all 12 tests, covering those two real-render checks (84 unique Vitest tests across the runs). All **four real-backend browser tests passed**. The build and isolated packed-install check passed, including repeated init, Cursor rules, custom-pack installation and both portrait and landscape H.264/AAC export.
-
-All ten native clip preview/export frames matched and editable accent changes altered pixels. An explicitly trusted TSX pack ran with shared React/Remotion hooks, passed actual selection-tag/determinism checks, and lost trust after its code changed.
-
-Three fresh real Codex (`gpt-6.1-sol`, medium) turns each resolved the anchored comment and changed only the requested text. Their ClipKit payload estimates were 1,130 / 1,136 / 1,131 tokens, distinct from about 97k actual reported input tokens per turn.
-
-The mixed audiovisual proof passed three cut-point comparisons and audible, unclipped audio checks. Its active takes are explicitly synthetic tones. The packed portrait export has exactly 151 expected frames at 30 fps, 720×1280 H.264/AAC, container duration 5.035s. Landscape export is 1280×720 with audio.
-
-Production/full dependency scans report zero advisories and peer checks pass. The public-history/index scan finds no credential patterns or tracked private/build media.
-
-See [full checkup](GAP-FIX-CHECKUP.md), [criterion matrix](PRD-FEATURE-AUDIT.md) and [machine-readable results](verification-report.json). Detailed recordings, test exports and runtime evidence stay in ignored local folders.
-
-**External acceptance remains:** real Fish calls, consented narration/microphone listening and latency, actual local Whisper recognition if used, user talking-head footage, Claude authentication/real edit, Cursor runtime and three complete timed rehearsals. Passing fixture tests does not certify those steps. Public npm publishing is separate from the verified local tarball.
+See `verification-0.3.json`, the release artifacts, and the committed verification scripts for exact evidence. The packed-install report records outside-repository compilation/export, idempotent initialization, separate legacy restoration and dependency audit results.

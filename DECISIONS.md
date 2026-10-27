@@ -63,3 +63,14 @@ The same check also exposed simultaneous registry rebuilds colliding on generate
 - Preserve two-frame SFX audibility with bounded fades; property/volume edits must never quantize or retime unchanged source duration.
 - Bundle the exact lottie-web peer explicitly so exports work outside the development checkout. Verify packed export duration against the project frame count, including legacy footage append behavior, rather than a fixed demo duration.
 - Exclude cached copies of bundled/local resources from the ready catalog count while retaining recovery visibility when the original resource disappears.
+
+## 0.3.0 agent-authored video editing and generation
+
+- Remove stock packs from defaults/main source; preserve the fixed 0.2 renderer and notices in a separately checksummed compatibility archive. Existing project content/history is not migrated.
+- Author managed TSX scenes, validate and publish immutable artifacts, and pin references per instance/export. Reuse one renderer rather than embedding Video Forge's standalone engine.
+- Treat end-exclusive frame scopes as server-enforced edit boundaries. Preserve animation phase across splits; do not treat comments as advisory prompts alone.
+- Keep Motion mechanisms and focused Video Forge guidance distinct from Media. New content should form connected editorial choreography, not a stock-card sequence.
+- Route app turns to focused MCP tool families and load source/transcripts only as needed. Report incremental payload estimates separately from actual provider usage; no hardcoded savings figures.
+- Extend planning to nonoverlapping chapters and chapter-scoped generation/score changes. Maximum duration is a schema limit; long-form performance remains unbenchmarked. No second agent/provider/project system.
+- Source-file watches require an external authoring lease; app turns submit drafts directly. Compilation/static import validation is not an untrusted-code sandbox.
+- File responses explicitly vary by Origin to prevent cross-renderer font-cache CORS mismatches during parallel export/verification.

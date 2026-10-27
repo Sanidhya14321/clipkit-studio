@@ -9,7 +9,7 @@ export const ItemSchema = z.object({
   id: z.string(), type: z.enum(['footage','clip','audio','voice','caption']),
   at: z.number().nonnegative(), dur: z.number().positive().max(36000),
   props: z.record(z.string(), z.unknown()).default({}),
-  clipId: z.string().optional(), src: z.string().optional(), srcIn: z.number().nonnegative().default(0), srcOut: z.number().nonnegative().optional(),
+  clipId: z.string().optional(),sceneId:z.string().optional(),scopeOf:z.string().optional(),sceneVersion:z.string().optional(),phaseOffset:z.number().nonnegative().optional(),phaseDuration:z.number().positive().optional(), src: z.string().optional(), srcIn: z.number().nonnegative().default(0), srcOut: z.number().nonnegative().optional(),
   volume: z.number().min(0).max(2).default(1), slotId: z.string().optional(), linkedTo: z.string().optional(), words: z.array(WordSchema).optional(),
 }).superRefine((v,c) => {
   if (v.type === 'clip' && !v.clipId) c.addIssue({code:'custom',message:'Clip needs clipId'});
@@ -29,7 +29,11 @@ export const AnchorSchema = z.object({tStart:z.number().nonnegative(), tEnd:z.nu
 export type Anchor = z.infer<typeof AnchorSchema>;
 export const CommentSchema = z.object({id:z.string(),author:z.enum(['human','agent','voice']),anchor:AnchorSchema,text:z.string().min(1).max(4000),status:z.enum(['open','working','resolved']),createdRev:z.number().int(),resolvedRev:z.number().int().optional(),replies:z.array(z.object({author:z.enum(['human','agent']),text:z.string()})),diff:z.array(z.object({path:z.string(),op:z.string(),before:z.unknown().optional(),after:z.unknown().optional(),beforeExists:z.boolean().optional(),afterExists:z.boolean().optional()}).passthrough()).optional()});
 export type Comment = z.infer<typeof CommentSchema>;
-export const ProjectSchema = z.object({schemaVersion:z.literal(1),id:z.string(),name:z.string().min(1).max(200),rev:z.number().int().nonnegative(),settings:z.object({fps:z.number().int().min(1).max(60),width:z.number().int().positive().max(3840),height:z.number().int().positive().max(3840)}),sources:z.record(z.string(),SourceSchema),tracks:z.array(TrackSchema),voiceSlots:z.array(VoiceSlotSchema),comments:z.array(CommentSchema),brand:z.object({colors:z.array(z.string()),fonts:z.array(z.string())}).optional()}).superRefine((p,c)=>{
+export const ScoreEventSchema=z.object({id:z.string(),kind:z.enum(['shot','reading','transition','accent','audio']),label:z.string(),startFrame:z.number().int().nonnegative(),endFrame:z.number().int().positive(),mechanism:z.string().optional(),protected:z.boolean().optional()}).refine(e=>e.endFrame>e.startFrame,'Event must have a positive frame range');
+export const ChapterSchema=z.object({id:z.string(),title:z.string(),summary:z.string().max(1500).optional(),startFrame:z.number().int().nonnegative(),endFrame:z.number().int().positive()}).refine(c=>c.endFrame>c.startFrame,'Chapter must have a positive range');
+export const ReelPlanSchema=z.object({chapters:z.array(ChapterSchema).max(120).optional(),durationFrames:z.number().int().min(1).max(108000),pacing:z.enum(['fast','balanced','slow']),direction:z.string().max(4000),score:z.array(ScoreEventSchema).max(2000)}).refine(p=>p.score.every(e=>e.endFrame<=p.durationFrames)&&(p.chapters??[]).every(c=>c.endFrame<=p.durationFrames),'Score or chapter exceeds reel duration').refine(p=>new Set(p.chapters?.map(c=>c.id)).size===(p.chapters?.length??0)&&(p.chapters??[]).every((c,i,all)=>!all.some((other,j)=>j!==i&&c.startFrame<other.endFrame&&c.endFrame>other.startFrame)),'Chapters need unique IDs and nonoverlapping ranges');
+export const ProjectSchema = z.object({reel:ReelPlanSchema.optional(),schemaVersion:z.literal(1),id:z.string(),name:z.string().min(1).max(200),rev:z.number().int().nonnegative(),settings:z.object({fps:z.number().int().min(1).max(60),width:z.number().int().positive().max(3840),height:z.number().int().positive().max(3840)}),sources:z.record(z.string(),SourceSchema),tracks:z.array(TrackSchema),voiceSlots:z.array(VoiceSlotSchema),comments:z.array(CommentSchema),brand:z.object({colors:z.array(z.string()),fonts:z.array(z.string())}).optional()}).superRefine((p,c)=>{
+  if(p.reel&&p.tracks.some(t=>t.items.some(i=>Math.round((i.at+i.dur)*p.settings.fps)>p.reel!.durationFrames)))c.addIssue({code:'custom',message:'Timeline content exceeds the reel frame budget'});
   const ids = new Set<string>();
   for (const track of p.tracks) for (const item of track.items) {
     if (ids.has(item.id)) c.addIssue({code:'custom',message:`Duplicate item ${item.id}`});
@@ -59,14 +63,14 @@ export type RuntimeClip = {id:string;name:string;category:string;durationSec:num
 export type Telemetry = {contextTokens:number;baselineTokens:number;actualUsage?:{input:number;output:number;cached?:number};estimator:string};
 export type StudioState = {project:Project;lease:Omit<Lease,'token'>|null;history:HistoryEntry[];jobs:Job[];activity:Activity[];telemetry:Telemetry;transcripts:Record<string,Word[]>;provider:{fish:boolean;voiceId?:string};agentClient:'codex'|'claude';agentError?:string;clone?:{id:string;status:string};capabilities?:Record<string,boolean>;suggestions?:Suggestion[];agentPosition?:number;assetRegistry?:{clips:RuntimeClip[];moduleUrl?:string;version?:string}};
 export const allItems = (p:Project) => p.tracks.flatMap(t=>t.items);
-export const duration = (p:Project) => Math.max(5,...allItems(p).map(i=>i.at+i.dur));
+export const duration = (p:Project) => p.reel?p.reel.durationFrames/p.settings.fps:Math.max(5,...allItems(p).map(i=>i.at+i.dur));
 export const findItem = (p:Project,itemId:string) => allItems(p).find(i=>i.id===itemId);
 export const itemPointer = (p:Project,itemId:string) => {for(let t=0;t<p.tracks.length;t++){const i=p.tracks[t].items.findIndex(x=>x.id===itemId);if(i>=0)return `/tracks/${t}/items/${i}`;}throw new Error(`Unknown item ${itemId}`);};
 export const quantize = (t:number,fps=30) => Math.round(t*fps)/fps;
 export const formatTime = (t:number) => `${Math.floor(t/60).toString().padStart(2,'0')}:${(t%60).toFixed(1).padStart(4,'0')}`;
 export const tokenEstimate = (data:unknown) => Math.ceil(new TextEncoder().encode(typeof data==='string'?data:JSON.stringify(data)).length/4);
 export const activeTake = (slot:VoiceSlot) => slot.takes.find(t=>t.id===slot.activeTakeByMode[slot.mode]);
-export const emptyProject = ():Project => ({schemaVersion:1,id:id('project'),name:'Untitled story',rev:0,settings:{fps:30,width:720,height:1280},sources:{},tracks:[{id:'video',name:'Footage',kind:'video',items:[]},{id:'overlay',name:'Graphics',kind:'overlay',items:[]},{id:'captions',name:'Captions',kind:'caption',items:[]},{id:'voice',name:'Narration',kind:'voice',items:[]},{id:'audio',name:'Music & sound',kind:'audio',items:[]}],voiceSlots:[],comments:[]});
+export const emptyProject = ():Project => ({schemaVersion:1,id:id('project'),name:'Untitled story',rev:0,settings:{fps:30,width:1080,height:1920},sources:{},tracks:[{id:'video',name:'Footage',kind:'video',items:[]},{id:'overlay',name:'Graphics',kind:'overlay',items:[]},{id:'captions',name:'Captions',kind:'caption',items:[]},{id:'voice',name:'Narration',kind:'voice',items:[]},{id:'audio',name:'Music & sound',kind:'audio',items:[]}],voiceSlots:[],comments:[]});
 
 export function timelineWords(p:Project,transcripts:Record<string,Word[]>):Array<Word & {itemId:string;sourceId:string;sourceStart:number;sourceEnd:number}> {
   return allItems(p).filter(i=>i.type==='footage').flatMap(i=>(transcripts[i.src!]??[]).filter(w=>w.start>=i.srcIn-0.001&&w.end<=i.srcIn+i.dur+0.001).map(w=>({...w,start:i.at+w.start-i.srcIn,end:i.at+w.end-i.srcIn,itemId:i.id,sourceId:i.src!,sourceStart:w.start,sourceEnd:w.end}))).sort((a,b)=>a.start-b.start);

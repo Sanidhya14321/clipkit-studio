@@ -1,0 +1,1 @@
+Original source authored by a real Codex turn through ClipKit scene_draft. This is an editable authoring contract example, not a stock asset pack. Source and field bindings can be inspected before use. Run ck scene draft scene.json against a running studio.

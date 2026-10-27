@@ -1,0 +1,12 @@
+# ClipKit reel direction
+
+Use ClipKit as the sole timeline, preview, and export engine. Video Forge guidance is creative reference; its standalone init/run/provider commands are not used here.
+
+1. Establish the promise, evidence, visual thesis, target frames and pacing. Search motion_search; load only the selected mechanism and relevant guide with motion_read.
+2. Write a frame score with shot, reading, transition, accent and audio events using reel_plan_set. Mark essential reading windows protected. Avoid a sequence of headline cards; connect objects, type, masks and camera movement across beats.
+3. Use scene_draft to author original React TSX. A draft has sceneId, name, files (Scene.tsx entry), defaults, fields, propsSchema, durationFrames and optional targetItemIds/baseVersion/range. Every visible editing control must affect the result. Tag elements with data-ck-layer={item.id}, data-ck-path="property" and data-ck-element="stable-name".
+4. Imports are React, Remotion, @clipkit/motion and local CSS/SVG files only. Import CSS as a string and apply it in a scoped style element. All motion uses frame time and seeded randomness. @clipkit/motion supplies phase, key, SplitType, DepthStage, Plane, Wipe and MaterialReveal. Do not use wall clocks, autonomous browser animation, network requests, or private files.
+5. Poll scene_status/job_status until checking and publication finish. A valid draft automatically commits its immutable version and updates localhost. On failure repair the source; the last working version remains available. Read scene_read for the selected instance before changing code. baseVersion prevents overwriting a newer version.
+6. Range comments are end-exclusive frame intervals. Read comments_bundle and edit only the intersecting content. Use range-scoped item_update or scene_draft; do not change content outside the interval. Source clocks must remain continuous through scoped segments.
+7. Human controls and code saves use the same transaction history. Reuse the shared frame score rather than blindly stretching speech or captions. Recompose pacing and protected reading holds to fit the requested duration.
+8. Review moving playback at phone size with sound and muted. Inspect boundary frames, readable evidence, transitions and ending. Export through export_start. Report actual results and limitations; activity logs are not evidence of a visible change.

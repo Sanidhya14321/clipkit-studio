@@ -1,132 +1,64 @@
-# ClipKit Studio
+# ClipKit Studio 0.3.0
 
-A local video workspace where you and a coding agent edit the same non-destructive timeline. Agents make small, revisioned patches; you can inspect, change and undo them.
+A local studio for agent-authored reels: **brief → frame score → live animation code → human controls/source edits → frame-range feedback → MP4**.
 
-**Version 0.2.0:** a Premiere-style local workstation with 72 usable timeline assets: 38 editable motion templates, 8 Lottie animations, 8 SVG illustrations/stickers, 8 photos, 6 footage clips and 4 sounds. Two bundled fonts appear in text controls and do not inflate the asset count. See [workspace and library](docs/WORKSPACE-ASSETS-0.2.md) and [verification](docs/VERIFICATION.md). Live Fish and Claude acceptance still require credentials and rehearsal.
+The old stock/template collection has been removed. Motion is a kit of composable mechanisms and Video Forge direction skills, not a JPG/video catalog or a sequence of generic presentation slides. User media remains available separately.
 
-## Start
+## Run
 
-Requires Node 22+ and pnpm. The development machine uses Node 24. FFmpeg falls back to the locally installed `ffmpeg-static` binary; ffprobe uses Remotion's bundled binary when absent from PATH.
+Requires Node 22+ and pnpm. Development uses Node 24 and the matching Remotion 4.0.538 family.
 
 ```sh
 pnpm install
-pnpm ck doctor
 pnpm ck init
 pnpm dev
 ```
 
-Open **http://127.0.0.1:5173**. The API listens on **127.0.0.1:4310**. `pnpm dev --open` also opens the browser. `pnpm ck studio --no-vite` starts just the backend. Stop with Ctrl+C.
+Development editor: http://127.0.0.1:5173, API: http://127.0.0.1:4310. Use `pnpm ck studio --no-vite` for the built editor. A packed installation runs `ck init` followed by `ck studio`; `ck ensure` starts/reconnects localhost for external coding agents.
 
-The first screen can open a **graphics demo fixture**. It is not presented as real footage. Import your own talking-head clip for the before/after demonstration.
+## Direct and edit
 
-## Voice and agent setup
+In Motion, enter a creative brief, duration and Fast/Balanced/Slow pacing. Create with agent uses the installed Codex or Claude CLI. Codex uses gpt-6.1-sol at medium effort; clients require their own authentication and available quota. ClipKit does not fabricate agent progress or replace failed turns with predetermined patches.
 
-Copy `.env.example` to `.env`, then set `FISH_API_KEY` and `FISH_VOICE_ID` for transcription and AI narration. Secrets stay on the server. Restart after changing the environment. Fish TTS model is explicitly configurable with `FISH_TTS_MODEL` (default `s2-pro`). Provider calls consume your credits.
+A valid `scene_draft` compiles in a worker, checks representative rendered frames, publishes an immutable version and updates the open Player. Invalid code keeps the last working scene. Properties exposes declared bindings; Scene source supports syntax highlighting, diagnostics and Save/Ctrl+S. Undo restores both code versions and props. Instances and running exports pin their versions.
 
-Sign in to the agent(s) you want to use:
+Use the visible Range tool or I/O. Enter HH:MM:SS:FF or integer frames, drag the boundaries, and add a comment. At 30 fps, 5–10 seconds means **[150,300)**. Comments freeze their anchor while you compose. Clicking a saved band restores it. Agent edits preserve content outside that range, including animation phase. Narration timing is protected.
 
-```sh
-codex login
-claude auth login
-```
+## Skills and authoring
 
-`ck init` preserves existing configuration while adding a managed Codex configuration block, project MCP registration, short AGENTS instructions a Claude skill and Cursor rules. Init also checks media prerequisites. It does not sign in to providers. App-initiated Codex turns use `gpt-6.1-sol`, medium effort, and only ClipKit's MCP editing workflow. Claude uses its configured model.
-
-Create a comment on a selected layer and choose **Apply open**. You can also use the command field, or hold the voice button/backtick. Commands such as `undo`, `split here` and `go to 12 seconds` use the local deterministic router; free-form instructions become anchored comments. Recognition uses Fish or a supported browser speech-recognition fallback while held. Unclear speech asks for repetition; broad deletion requires confirmation. Typed commands remain available.
-
-For narration, create one slot per script line, then record or generate each line. A cloned voice requires your own in-app recording of at least ten seconds, confirmation that you have the right to clone it, and a trained private Fish model. Prepare the voice and cached takes before presenting. AI, recorded and cloned takes retain separate provenance and selection. Choose stretch, extend, ripple or re-record when a take does not fit. Whole-script recording aligns verified word timestamps to lines; uncertain alignment preserves the recording and asks for line-by-line takes. Bulk clone conversion preserves recorded lines.
-
-## Workspace and assets
-
-Library → Preview → Add at playhead places an independent instance. Edit text and declared bindings in Properties; image/video controls include transform, crop, fit and opacity. Audio supports volume and fades. Undo/redo uses the same revision journal as agent edits. Resize or collapse panels, choose compact grid/list, and use Reset Workspace to recover the default layout.
-
-Put future media or source examples in the project's `assets/` folder and choose Rescan. Importing registers a file; Add places it. Source HTML/JSX/TSX and arbitrary JSON remain visible with an adaptation reason until reviewed. Executable packs require explicit content-bound trust. Text baked into photos or videos remains baked; add an overlay to edit a caption.
+Video Forge 0.7.1 contributes selected MIT direction/rhythm guidance, twelve shot recipes and frame-based helpers. ClipKit retains one project, renderer, history and provider system. Eight mechanism examples teach type, masks, match movement, depth, proof, collage, captions and material reveals. Paper Shaders 0.0.82 is explicitly frame-seeked. Reference sources and actual adopted files are distinguished in [the inventory](packages/motion/sources.json).
 
 ```sh
-pnpm ck library list
-pnpm ck library inspect adapted-glitch-text
-pnpm ck library rescan
+ck ensure
+ck motion search typography
+ck motion read agent-guide
+ck scene draft scene.json
+ck scene read ITEM_ID
+ck scene status
+ck reel plan score-plan.json
 ```
 
-## CLI examples
+A draft contains sceneId, name, files with Scene.tsx, defaults, fields, an explicit scalar propsSchema and durationFrames. Updates supply targetItemIds and baseVersion; range updates can specify startFrame/endFrame. Source uses React, Remotion, local CSS/SVG and @clipkit/motion. Tags map rendered elements to declared controls. Local file edits under scenes/ require an active authoring lease; imported third-party code still needs explicit trust. Static checks are quality gates, not a security sandbox.
+
+## Existing projects
+
+0.2 projects use a **separate compatibility archive**, absent from new installations. Before this checkout was cleaned, its old renderer/resources were frozen and verified. To open an older project elsewhere, obtain clipkit-compat-0.2.0.tgz from the release and run:
 
 ```sh
-pnpm ck search lower third
-pnpm ck schema kinetic-title
-pnpm ck assets build
-pnpm ck project get --summary
-pnpm ck project get --layer LAYER_ID
-pnpm ck project patch patch.json
-pnpm ck footage add /absolute/path/take.mp4
-pnpm ck footage pack SOURCE_ID --range 0 30
-pnpm ck comments list --open --compact
-pnpm ck footage view SOURCE_ID --range 0 5
-pnpm ck assets install /absolute/path/pack
-pnpm ck history revert REVISION
-pnpm ck history undo
-pnpm ck demo save
-pnpm ck export
+ck compat install /absolute/path/clipkit-compat-0.2.0.tgz --root /absolute/project
+ck studio --root /absolute/project
 ```
 
-Patch requests contain `requestId`, `baseRev`, `label` and RFC6902 `ops`. Fetch a layer first to obtain its current pointer. Root/project ID/revision/source paths cannot be patched. The active runner's MCP connection carries its lease automatically. An external manual agent that acquires a lease with `ck status working LABEL` must pass the returned token and turn ID via `CLIPKIT_LEASE` and `CLIPKIT_TURN` for subsequent mutations, then release it with `ck status idle --lease TOKEN`.
+The archive is checksum-pinned. It preserves clip IDs and history; it does not restore the rejected catalog to new-project discovery.
 
-## Build and install the tarball
+## Verification and limits
 
-```sh
-pnpm build
-npm pack ./artifacts/package --pack-destination ./artifacts
-```
+See [verification](docs/VERIFICATION.md), [architecture](docs/SCENE-AUTHORING.md) and [release notes](docs/RELEASE-0.3.0.md). The release includes a 25-second vertical editorial reel, actual workflow recording, editable project, compatibility archive and installable tarball.
 
-In a separate project directory, use the **absolute path** to the generated tarball:
+Video source, transcripts and selected context are sent to the chosen coding-agent provider when requested. Fish is optional for speech/transcription/cloning and uses a server-side user key; registration does not transcribe automatically. Keys and server credentials are excluded from demo deliveries. Fish and Claude live acceptance are reported separately. Remotion framework licensing is separate from the motion-source licenses.
 
-```sh
-npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.2.tgz -- ck init
-npm exec --yes --package /absolute/path/clipkit-studio-local-0.1.2.tgz -- ck studio
-```
+## Editing and longer productions
 
-The approximately 53MB local tarball bundles the patched Remotion dependency tree and a shrinkwrap; the isolated installer verifies its actual dependencies. The packed CLI serves the built studio on port 4310 and includes renderer source, public assets and license notices. It does not rely on unpublished workspace packages. The existing npm package named `clipkit` is unrelated; this project does not publish over it.
+Agent calls use focused tool profiles for source authoring, targeted scene edits, footage, or voice. Long-form plans support chapter summaries and per-chapter frame scores. Generate selected chapter constrains a turn to that chapter; unrelated scenes and score events remain protected. Large source files can be read in line windows. See [the authoring contract](docs/SCENE-AUTHORING.md). The one-hour planning limit is not a measured one-hour export or generation guarantee.
 
-## Verify and rehearse
-
-```sh
-pnpm typecheck
-pnpm test
-CK_RENDER_TEST=1 pnpm exec vitest run tests/assets.test.ts
-pnpm test:e2e
-pnpm exec tsx scripts/render-smoke.ts
-```
-
-`pnpm ck demo save` saves a prepared local project; `pnpm demo:reset` restores it, or loads the graphics fixture if no snapshot exists. `pnpm ck demo reset --graphics` explicitly selects the graphics fixture. Reset is undoable. Do not run it on an unsaved presentation project. See [demo checklist](docs/DEMO.md) and [verification status](docs/VERIFICATION.md).
-
-## Data and limitations
-
-- Originals, proxies, history, recordings and exports live under the project's gitignored `.clipkit/` directory. Source files are copied, never overwritten.
-- When a Fish key is configured, importing audio/video automatically schedules transcription. Transcription uploads audio to Fish. TTS sends script text and voice references. Cloning uploads your recorded sample.
-- Coding-agent providers receive the request and retrieved text/project context. Local-first does not mean cloud-free AI.
-- Token counts labeled **context** are byte-based estimates, not billed model usage. Runner-reported usage is displayed separately when available. The comparison baseline is estimated from full current content, not an invented regeneration cost.
-- Word cutting is enabled only for reliable word timestamps. Phrase-only or invalid provider timings are not expanded into fake word timings.
-- Alternate presets scale and fit the original scene with gutters where needed; they do not automatically reframe the subject.
-- The first export can download Chromium. Preview uses proxies; export uses originals and an immutable revision snapshot. Rendering takes real time.
-- Cached/recorded audio can export without Fish. New uncached speech cannot. Browser speech playback is not an exportable fallback.
-- No subject segmentation, cloud collaboration or mobile editor. Historical reverts and proposal acceptance preserve unrelated changes and refuse conflicts. Grouped latest-agent-turn undo remains available.
-- Real Fish requests, your microphone and your footage must be rehearsed with your credentials. Claude must be signed in before claiming a two-client demo.
-
-Original application code and fourteen native clip components are MIT. Remotion and embedded assets have separate terms; see [third-party notices](THIRD_PARTY_NOTICES.md) and [asset inventory](docs/ASSET-SOURCES.md).
-
-The starter pack includes real rendered PNG previews and generated compact catalog/category indexes plus full per-clip schemas. `ck assets build` validates it and writes a local index. New React clip code must be explicitly registered and compiled; dropping untrusted executable code into a folder does not run it.
-
-## Packs and review
-
-Install declarative native-clip wrappers with `ck assets install PATH`. Executable TSX packs require deliberate `--trust`, rendered selection-tag/determinism checks, and a content-bound trust receipt. Changed code disables the pack until explicitly trusted again. Installed folders are watched; schemas and catalog indexes refresh on changes. Invalid packs report errors. Do not trust code you have not reviewed.
-
-Choose **Suggest changes for review** before an agent request to generate a real preview proposal without committing the timeline change. Accept/reject is human-controlled; later conflicting changes require review. See [architecture](docs/ARCHITECTURE.md) and [pitch](docs/PITCH.md).
-
-Optional local recognition uses `WHISPER_CPP_BIN` and `WHISPER_CPP_MODEL`. Install those yourself; doctor reports their availability. Cloud recognition quality and browser microphone permission still need a real rehearsal.
-
-## Asset usage cards
-
-Read [the asset menu](packages/assets/cards/_INDEX.md) or open **Usage & provenance** in the editor library. Cards describe good uses, avoid rules, source/license and actual test status. Native clips remain explicitly agent-authored; third-party sources have separate attribution. `ck assets list` and `ck assets card ID` expose the same information to CLI/MCP clients, and app-run agents must read a current card before placing a clip.
-
-Run `pnpm assets:check --check` to validate the inventory, or `pnpm assets:verify --full` to regenerate previews and execute the repeated-frame and full-smoke gates. See [asset-system scope and limits](docs/ASSET-SYSTEM.md), including the checksum-bound full Inter font exception and the orphan-age heuristic.
-
-The native library now includes seeded starfields, confetti, terminal text reveals and editable bar charts. See [motion additions and verification](docs/ASSET-MOTION.md).
+The delivered reel and workflow recording demonstrate real source generation, a frame-range revision, human property/source edits and export. Live Claude and Fish acceptance remain separate from verified Codex/local functionality. Current evidence is in [verification](docs/VERIFICATION.md); earlier 0.2 reports describe the removed library and are historical.

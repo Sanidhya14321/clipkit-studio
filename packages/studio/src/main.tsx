@@ -1,3 +1,7 @@
+import {MotionPanel} from './MotionPanel';
+import {SceneSourcePanel} from './SceneSourcePanel';
+import {FrameSelection,FrameHandles} from './FrameSelection';
+import {formatTimecode,affectedItems} from '../../core/src/frames';
 import {editableFields,defaultFontFamily,supportsFont} from '../../assets/src/controls';
 import {TokenUsage} from './TokenUsage';
 import {LibraryPanel} from './LibraryPanel';
@@ -234,6 +238,7 @@ function App() {
     [zoom, setZoom] = useState(55),
     [comment, setComment] = useState(""),
     [rangeEnd, setRangeEnd] = useState(""),
+    [rangeTool,setRangeTool]=useState(false),
     [script, setScript] = useState(""),
     [command, setCommand] = useState(""),
     [recording, setRecording] = useState(""),
@@ -255,7 +260,7 @@ function App() {
     [heard, setHeard] = useState<{ text: string; action: string } | null>(null),
     [exportDialog, setExportDialog] = useState(false),
     [dismissedJobs, setDismissedJobs] = useState<string[]>([]),
-    [exportPreset, setExportPreset] = useState("vertical-720"),
+    [exportPreset, setExportPreset] = useState("vertical-1080"),
     [exportQuality, setExportQuality] = useState("standard"),
     [licenses, setLicenses] = useState<any>(null),
     [compare, setCompare] = useState(false),
@@ -445,6 +450,8 @@ function App() {
         e.preventDefault();
         toggle();
       }
+      if(e.key.toLowerCase()==='i'){const start=Math.round(timeRef.current*stateRef.current!.project.settings.fps)/stateRef.current!.project.settings.fps;setRange(r=>({start,end:Math.max(start+1/stateRef.current!.project.settings.fps,r?.end??start+1/stateRef.current!.project.settings.fps)}))}
+      if(e.key.toLowerCase()==='o'){const end=Math.round(timeRef.current*stateRef.current!.project.settings.fps)/stateRef.current!.project.settings.fps;setRange(r=>({start:Math.min(r?.start??0,Math.max(0,end-1/stateRef.current!.project.settings.fps)),end:Math.max(1/stateRef.current!.project.settings.fps,end)}))}
       if (e.key === "Escape") {
         setSelected(undefined);
         setHover(undefined);
@@ -973,9 +980,9 @@ function App() {
     if (e.button !== 0) return;
     const rect = e.currentTarget.getBoundingClientRect(),
       toTime = (x: number) =>
-        Math.max(0, Math.min(total, (x - rect.left) / zoom)),
+        Math.round(Math.max(0, Math.min(total, (x - rect.left) / zoom))*project!.settings.fps)/project!.settings.fps,
       start = toTime(e.clientX),
-      selectRange = e.shiftKey;
+      selectRange = e.shiftKey||rangeTool;
     seek(start);
     if (selectRange)
       setRange({ start, end: start + 1 / project!.settings.fps });
@@ -985,7 +992,7 @@ function App() {
       if (selectRange) {
         setRange({
           start: Math.min(start, value),
-          end: Math.max(start, value) + 1 / project!.settings.fps,
+          end: Math.max(Math.min(start,value)+1/project!.settings.fps,Math.max(start,value)),
         });
         setRangeEnd(String(Math.max(start, value)));
       }
@@ -1333,12 +1340,13 @@ function App() {
       <div className="workspace">
         <aside className="library">
           <div className="panel-heading">
-            <h2>Library</h2>
+            <h2>Motion & direction</h2>
             <button aria-label="Toggle library list view" onClick={()=>workspace.setView(workspace.layout.view==='grid'?'list':'grid')}>{workspace.layout.view==='grid'?'List':'Grid'}</button>
           </div>
           <div className="tabbar">
             {[
-              ["assets", "Elements"],
+              ["assets", "Motion"],
+              ["skills", "Skills"],
               ["footage", "Media"],
               ["transcript", "Transcript"],
             ].map(([id, title]) => (
@@ -1351,7 +1359,7 @@ function App() {
               </button>
             ))}
           </div>
-          {left === "assets" ? (<LibraryPanel op={op} state={state} token={token} time={time} onApplyData={item?.props.dataJson!==undefined?(value)=>updateProps({dataJson:value}):undefined} onSelect={id=>{setSelected(id);if(workspace.effective==='none')workspace.toggle('inspector')}}/>
+          {left === "assets" || left === "skills" ? (<MotionPanel op={op} state={state} skills={left==='skills'} selectedId={selected} range={range}/>
           ) : left === "footage" ? (
             <div className="panel-scroll">
               <button
@@ -1632,13 +1640,13 @@ function App() {
                   <p>
                     Add an element, import footage,
                     <br />
-                    or explore a ready-to-edit example.
+                    or describe an original reel in Motion.
                   </p>
-                  <button disabled={locked} onClick={() => run("demo_reset")}>
+                  <button disabled={locked} onClick={()=>{setLeft("assets");workspace.show("library");requestAnimationFrame(()=>document.querySelector<HTMLTextAreaElement>('[aria-label="Creative brief"]')?.focus())}}>
                     <Sparkles size={15} />
-                    Explore demo
+                    Create a reel
                   </button>
-                  <small>Demo graphics fixture · fully editable</small>
+                  <small>Original scenes · shared frame score</small>
                 </div>
               )}
               {selectionBox && selected && (
@@ -1874,7 +1882,7 @@ function App() {
             ))}
           </div>
           <div className="panel-scroll">
-            {right === "activity" ? <ActivityPanel jobs={state.jobs} token={token} retry={id=>run("job_retry",{jobId:id})}/> : right === "inspector" ? (
+            {right === "activity" ? <><div className="scene-phases">{Object.entries((state as any).sceneActivity??{}).map(([id,value]:[string,any])=><p key={id}><b>{id}</b> · {value.phase}{value.error&&<span role="alert"> · {value.error}</span>}</p>)}</div><ActivityPanel jobs={state.jobs} token={token} retry={id=>run("job_retry",{jobId:id})}/></> : right === "inspector" ? (
               item ? (
                 <>
                   <div className="selected-heading">
@@ -1894,6 +1902,7 @@ function App() {
                     </div>
                   </div>
                   <fieldset disabled={locked}>
+                    {item.sceneVersion&&<SceneSourcePanel item={item} op={op} locked={locked}/>}
                     <div className="section-label">TIMING</div>
                     <div className="field-row">
                       <Field
@@ -2120,26 +2129,16 @@ function App() {
                 </p>
                 <div className="comment-compose">
                   <div>
-                    <span className="anchor-chip">◷ {formatTime(time)}</span>
+                    <span className="anchor-chip">{(()=>{const a=comment?frozenAnchor.current:anchor();return `${formatTimecode(Math.round(a.tStart*project.settings.fps),project.settings.fps)}${a.tEnd!==undefined?` → ${formatTimecode(Math.round(a.tEnd*project.settings.fps),project.settings.fps)}`:""}`})()}</span>
                     {selected && (
                       <span className="anchor-chip">{selected.slice(-12)}</span>
                     )}
                   </div>
-                  <label className="field comment-range">
-                    <span>Optional range end (seconds)</span>
-                    <input
-                      type="number"
-                      min={time}
-                      max={total}
-                      step={0.1}
-                      placeholder="Single moment"
-                      value={rangeEnd}
-                      onChange={(e) => setRangeEnd(e.target.value)}
-                    />
-                  </label>
+
                   <textarea
                     placeholder="Make the headline a little bolder…"
                     aria-label="New comment"
+                    onFocus={()=>{if(!comment)frozenAnchor.current=anchor()}}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                   />
@@ -2147,7 +2146,7 @@ function App() {
                     className="primary"
                     disabled={locked || !comment.trim()}
                     onClick={() => {
-                      const captured = anchor();
+                      const captured = frozenAnchor.current;
                       if (askMode) {
                         void op("comments_add", {
                           text: comment,
@@ -2237,10 +2236,11 @@ function App() {
                         className="anchor-chip"
                         onClick={() => {
                           seek(c.anchor.tStart);
-                          setSelected(c.anchor.layerId);
+                          setSelected(affectedItems(project,[c.anchor])[0]?.id??c.anchor.layerId);
+                          setRange(c.anchor.tEnd!==undefined?{start:c.anchor.tStart,end:c.anchor.tEnd}:null);
                         }}
                       >
-                        {formatTime(c.anchor.tStart)}
+                        {c.anchor.tEnd!==undefined?`${formatTime(c.anchor.tStart)}–${formatTime(c.anchor.tEnd)}`:formatTime(c.anchor.tStart)}
                       </button>
                       <span className="comment-status">
                         {c.status}
@@ -2631,7 +2631,7 @@ function App() {
             <span>{items.length} elements</span>
           </div>
           <div className="timeline-tools">
-            <IconButton title="Select tool" active onClick={() => {}}>
+            <IconButton title="Select tool" active={!rangeTool} onClick={() => setRangeTool(false)}>
               <MousePointer2 size={15} />
             </IconButton>
             <IconButton
@@ -2657,6 +2657,7 @@ function App() {
             >
               <Trash2 size={15} />
             </IconButton>
+            <IconButton title="Range tool (I / O)" active={rangeTool} onClick={()=>setRangeTool(v=>!v)}><span>↔</span></IconButton>
             <span className="tool-divider" />
             <span className="snap-status">⌁ Snap · Shift-drag range</span>
             {range && (
@@ -2707,6 +2708,7 @@ function App() {
             </IconButton>
           </div>
         </div>
+        <FrameSelection range={range} time={time} fps={project.settings.fps} total={total} onChange={setRange} onComment={(selectedRange)=>{frozenAnchor.current={...anchor(),...selectedRange?{tStart:selectedRange.start,tEnd:selectedRange.end}:{}};setRight("comments");workspace.show("inspector");requestAnimationFrame(()=>document.querySelector<HTMLTextAreaElement>('[aria-label="New comment"]')?.focus())}}/>
         <div className="timeline-scroll">
           <div
             className="timeline-content"
@@ -2851,16 +2853,17 @@ function App() {
                 }}
               />
             )}
+            {range&&<FrameHandles range={range} fps={project.settings.fps} zoom={zoom} total={total} onChange={setRange}/>}
             {project.comments.map((c) => (
               <button
-                className={`timeline-comment ${c.status}`}
+                className={`timeline-comment ${c.status} ${c.anchor.tEnd!==undefined?"range-band":""}`}
                 key={c.id}
                 title={`${c.text}${c.anchor.tEnd ? ` · to ${formatTime(c.anchor.tEnd)}` : ""}`}
                 aria-label={`Comment: ${c.text}`}
-                style={{ left: 140 + c.anchor.tStart * zoom }}
+                style={{ left: 140 + c.anchor.tStart * zoom,...c.anchor.tEnd!==undefined?{width:Math.max(18,(c.anchor.tEnd-c.anchor.tStart)*zoom)}:{} }}
                 onClick={() => {
                   seek(c.anchor.tStart);
-                  setSelected(c.anchor.layerId);
+                  setSelected(affectedItems(project,[c.anchor])[0]?.id??c.anchor.layerId);
                   setRight("comments");
                   if (c.anchor.tEnd)
                     setRange({ start: c.anchor.tStart, end: c.anchor.tEnd });

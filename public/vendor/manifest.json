@@ -44,50 +44,6 @@
     "bytes": 4495
   },
   {
-    "repo": "realvjy/illlustrations",
-    "license": "MIT",
-    "commit": "b6d6f3286995e6efbbf397eff21b572245c336fd",
-    "sourcePath": "content/illlustrations/101/101-gym-guy.svg",
-    "url": "https://raw.githubusercontent.com/realvjy/illlustrations/b6d6f3286995e6efbbf397eff21b572245c336fd/content/illlustrations/101/101-gym-guy.svg",
-    "file": "illustration.svg",
-    "kind": "illustration",
-    "sha256": "1ed6d84a8e4aff43d280dcc95470c505c869c140f32220d65224b4e7c17f9caa",
-    "bytes": 18103
-  },
-  {
-    "repo": "realvjy/illlustrations",
-    "license": "MIT",
-    "commit": "b6d6f3286995e6efbbf397eff21b572245c336fd",
-    "sourcePath": "LICENSE",
-    "url": "https://raw.githubusercontent.com/realvjy/illlustrations/b6d6f3286995e6efbbf397eff21b572245c336fd/LICENSE",
-    "file": "illlustrations-LICENSE.txt",
-    "kind": "license",
-    "sha256": "b1418458e6ea8c65567ce82af3c724fb16eeaa1b29e39c7074bc4751a8d9194b",
-    "bytes": 1078
-  },
-  {
-    "repo": "Calinou/kenney-ui-audio",
-    "license": "CC0-1.0",
-    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
-    "sourcePath": "addons/kenney_ui_audio/click1.wav",
-    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/addons/kenney_ui_audio/click1.wav",
-    "file": "ui-click.wav",
-    "kind": "audio",
-    "sha256": "dd90b97f38b0ec7d52161d7c3bf8d61a66655766fd0af06439963351b4853a83",
-    "bytes": 18254
-  },
-  {
-    "repo": "Calinou/kenney-ui-audio",
-    "license": "CC0-1.0",
-    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
-    "sourcePath": "LICENSE.txt",
-    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/LICENSE.txt",
-    "file": "kenney-ui-audio-LICENSE.txt",
-    "kind": "license",
-    "sha256": "4f88ab3c885c87874834441a0d009cea8942f57461d7b870be65cf4e31362073",
-    "bytes": 479
-  },
-  {
     "repo": "lucide-icons/lucide",
     "commit": "1802f33f6c270395fcd981067f22719140e2ffbc",
     "license": "ISC AND MIT (Feather-derived icons)",

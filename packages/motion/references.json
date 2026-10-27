@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Paper Design Shaders",
+    "url": "https://github.com/paper-design/shaders",
+    "role": "Pinned runtime adapter",
+    "version": "0.0.82",
+    "license": "Apache-2.0",
+    "mechanism": "Material/mesh treatments driven with setSpeed(0) and setFrame(milliseconds)"
+  },
+  {
+    "name": "Motion",
+    "url": "https://motion.dev/docs/react",
+    "role": "Mechanism reference; no copied docs or runtime dependency",
+    "mechanism": "Stagger, springs, coordinated React/SVG transforms converted to explicit frame functions"
+  },
+  {
+    "name": "Codrops KineticTypePageTransition",
+    "url": "https://github.com/codrops/KineticTypePageTransition",
+    "role": "Mechanism reference; no sample media or GSAP runtime copied",
+    "license": "MIT source repository",
+    "mechanism": "Shared typographic identity across scale, masks and transitions"
+  },
+  {
+    "name": "Codrops ScrollTextMotion",
+    "url": "https://github.com/codrops/ScrollTextMotion",
+    "role": "Mechanism reference; no sample media or GSAP runtime copied",
+    "license": "MIT source repository",
+    "mechanism": "Line and word choreography converted from scroll progress to frame progress"
+  }
+]

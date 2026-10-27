@@ -1,3 +1,4 @@
+import {legacyFixture} from './fixtures/legacy';
 import {describe,it,expect,beforeAll,afterAll} from 'vitest';
 import {mkdtemp,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -8,7 +9,7 @@ import {startServer} from '../packages/server/src/index.ts';
 describe('real HTTP/WebSocket shared editor',()=>{
  let root:string;let backend:Awaited<ReturnType<typeof startServer>>;
  const port=24317;
- beforeAll(async()=>{root=await mkdtemp(join(tmpdir(),'clipkit-api-'));backend=await startServer({root,port,publicDir:resolve('public')});},30000);
+ beforeAll(async()=>{root=await mkdtemp(join(tmpdir(),'clipkit-api-'));await legacyFixture(root);backend=await startServer({root,port,publicDir:resolve('public')});},30000);
  afterAll(async()=>{await backend?.close();await rm(root,{recursive:true,force:true});});
  const op=async(name:string,args:Record<string,unknown>={},extra:Record<string,string>={})=>{const response=await fetch(`${backend.url}/api/op/${name}`,{method:'POST',headers:{'Content-Type':'application/json','X-ClipKit-Token':backend.token,...extra},body:JSON.stringify(args)});return {status:response.status,body:await response.json() as any};};
  it('requires auth and rejects cross-origin writes',async()=>{expect((await fetch(`${backend.url}/api/state`)).status).toBe(401);expect((await fetch(`${backend.url}/api/bootstrap`,{headers:{Origin:'https://example.com'}})).status).toBe(403);expect((await fetch(`${backend.url}/api/bootstrap`,{headers:{Origin:'http://127.0.0.1:5173'}})).status).toBe(200);});
@@ -35,7 +36,7 @@ describe('real HTTP/WebSocket shared editor',()=>{
 
 describe('gap closures through authenticated HTTP',()=>{
  let root:string,backend:Awaited<ReturnType<typeof startServer>>;
- beforeAll(async()=>{root=await mkdtemp(join(tmpdir(),'clipkit-gap-api-'));backend=await startServer({root,port:24319,publicDir:resolve('public')});await backend.operate('demo_reset');},30000);
+ beforeAll(async()=>{root=await mkdtemp(join(tmpdir(),'clipkit-gap-api-'));await legacyFixture(root);backend=await startServer({root,port:24319,publicDir:resolve('public')});await backend.operate('demo_reset');},30000);
  afterAll(async()=>{await backend?.close();await rm(root,{recursive:true,force:true})});
  const op=async(name:string,args:Record<string,unknown>={},extra:Record<string,string>={})=>{const response=await fetch(`${backend.url}/api/op/${name}`,{method:'POST',headers:{'Content-Type':'application/json','X-ClipKit-Token':backend.token,...extra},body:JSON.stringify(args)});return {status:response.status,body:await response.json() as any}};
  it('keeps proposals off the project, merges independent edits and refuses conflicting acceptance',async()=>{
@@ -66,6 +67,7 @@ describe('gap closures through authenticated HTTP',()=>{
  (backend.runner as any).o.end(lease.turnId);await op('status_idle',{leaseToken:lease.token});
  expect((await op('proposal_accept',{id:proposed.body.proposalId})).status).toBe(200);expect(backend.store.project.tracks[1].items.find(i=>i.id===item.id)!.props.text).toBe('Human reviewed');expect(backend.store.project.comments.find(c=>c.id===comment.commentId)!.status).toBe('resolved');
  });
+ it('varies cacheable renderer resources by Origin',async()=>{for(const origin of ['http://localhost:3000','http://localhost:3001']){const r=await fetch(backend.url+'/vendor/space-grotesk.ttf',{headers:{Origin:origin}});expect(r.status).toBe(200);expect(r.headers.get('access-control-allow-origin')).toBe(origin);expect(r.headers.get('vary')).toContain('Origin');}});
  it('saves and restores a prepared demo as an undoable transaction',async()=>{await op('demo_save');const name=backend.store.project.name;await op('project_rename',{name:'Temporary rehearsal change'});await op('demo_reset');expect(backend.store.project.name).toBe(name);await op('history_undo');expect(backend.store.project.name).toBe('Temporary rehearsal change');});
  it('attaches true before/after values and omits orphan transcript baseline',async()=>{
  const item=backend.store.project.tracks[1].items.find(i=>i.clipId==='kinetic-title')!;const comment=(await op('comments_add',{text:'Edit title',anchor:{layerId:item.id,tStart:1}})).body;

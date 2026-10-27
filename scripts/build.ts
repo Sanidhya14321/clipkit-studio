@@ -15,9 +15,10 @@ await build({entryPoints:[join(root,'packages/cli/src/index.ts')],outfile:join(r
 const distribution=join(root,'artifacts','package');await rm(distribution,{recursive:true,force:true});await mkdir(join(distribution,'dist'),{recursive:true});
 await cp(join(root,'dist'),join(distribution,'dist'),{recursive:true});
 await cp(join(root,'public'),join(distribution,'public'),{recursive:true});
-for(const name of ['core','assets','render'])await cp(join(root,'packages',name,'src'),join(distribution,'runtime','packages',name,'src'),{recursive:true});
-await cp(join(root,'packages/assets/vendor'),join(distribution,'runtime/packages/assets/vendor'),{recursive:true});
-await cp(join(root,'packages/assets/cards'),join(distribution,'runtime/packages/assets/cards'),{recursive:true});
+for(const name of ['core','assets','render','motion','scenes'])await cp(join(root,'packages',name,'src'),join(distribution,'runtime','packages',name,'src'),{recursive:true});
+await cp(join(root,'packages/scenes/compatibility.json'),join(distribution,'runtime/packages/scenes/compatibility.json'));
+await cp(join(root,'packages/motion'),join(distribution,'runtime/packages/motion'),{recursive:true});
+
 const manifest=JSON.parse(await readFile(join(root,'package.json'),'utf8'));
 await writeFile(join(distribution,'package.json'),JSON.stringify({name:'clipkit-studio-local',version:manifest.version,description:'Local, revisioned video collaboration for humans and coding agents',type:'module',bin:{ck:'dist/cli.js'},engines:{node:'>=22'},files:['npm-shrinkwrap.json','dist','public','runtime','README.md','LICENSE','THIRD_PARTY_NOTICES.md','docs','assets','DECISIONS.md','.env.example'],dependencies:manifest.dependencies,overrides:manifest.overrides},null,2));
 for(const file of ['README.md','LICENSE','THIRD_PARTY_NOTICES.md','DECISIONS.md','.env.example'])try{await cp(join(root,file),join(distribution,file));}catch{}
