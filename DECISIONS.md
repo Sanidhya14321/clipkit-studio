@@ -96,3 +96,7 @@ Historical docs/scripts/outputs were hash-verified in the requested external arc
 ## Pipeline update U1
 
 Extend the existing usage catalog with generated JSONL/card indexes; retain old library and pack interfaces. Originals stay at their existing licensed paths instead of duplicating source bytes. Root VERIFICATION.md tracks update evidence; existing release evidence stays in docs/VERIFICATION.md. Open question: additional owner Adobe/media libraries were not supplied.
+
+## Pipeline update U2
+
+Ingestion reads local sources without modifying originals or cloning new libraries. Registration requires license text evidence and revision. Deterministic card drafts cost zero provider tokens; no hidden batch model call. ffprobe metadata is optional; previews without an established renderer are explicitly skipped and logged. Open question: owner-specific grouping can be supplied in the source manifest when directory conventions are ambiguous.
