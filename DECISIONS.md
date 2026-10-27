@@ -92,3 +92,7 @@ Human feedback rejected the initial component-first proof. Component inclusion d
 Independent beats/shots/copy/components/transitions/audio replace the one-shot-per-phrase contract for new preparation; older data stays readable. Nested control paths retain declared labels. Source-schema updates carry compatible human values and remove obsolete bindings. Job status waits up to 45 seconds for agent calls to reduce repeated model polling. Actual runner usage and incremental estimates remain separate; no token-savings claim is made.
 
 Historical docs/scripts/outputs were hash-verified in the requested external archive. Five durable script entrypoints and current setup/architecture/authoring/workflow/sources/verification documents replace historical clutter. Root project bytes were preserved. This is a candidate implementation, not a visually accepted 0.5 release: the clean same-prompt full-film comparison and human preference gate remain open.
+
+## Pipeline update U1
+
+Extend the existing usage catalog with generated JSONL/card indexes; retain old library and pack interfaces. Originals stay at their existing licensed paths instead of duplicating source bytes. Root VERIFICATION.md tracks update evidence; existing release evidence stays in docs/VERIFICATION.md. Open question: additional owner Adobe/media libraries were not supplied.
