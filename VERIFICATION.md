@@ -12,3 +12,5 @@ U3: Babel TypeScript/JSX parser and PostCSS produce symbol offsets, props/defaul
 U4: additive v1 load migration retains pipeline/provenance/layer fields and leaves legacy projects unchanged until edited. Parsed codemods replace literal tokens/defaults and remove selected JSX nodes. Derived output gets local JSON/Zod props schemas and selection paths; publication must pass the existing immutable scene compiler/render verifier before registration. Verification pending U8.
 
 U5: persisted ordered pass state, evidence-based media mode detection, voice-take beat timing, non-destructive base insertion and named deterministic quality gates added. Measurement-dependent checks explicitly return uncertain. Server/CLI wiring and restart/pass atomicity tests follow in U7/U8.
+
+U6: bounded taste search/read loader, 12 concise owner-editable starter guides and validated numeric constraints. Planning reads at most three matching guides before asset retrieval; the same constraints drive search/gates in server wiring. Verification pending U8.

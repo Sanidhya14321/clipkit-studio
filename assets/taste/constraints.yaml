@@ -1,0 +1,8 @@
+minimumTextSize: 24
+maxWords: 8
+maxWps: 4
+maxAnimated: 12
+maxHeavy: 2
+maxUses: 2
+safeArea: 0.05
+excludeTags: []

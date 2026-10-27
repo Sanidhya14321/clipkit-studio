@@ -112,3 +112,7 @@ Keep schemaVersion 1 and journal pointer compatibility with an additive migratio
 ## Pipeline update U5
 
 Add an ordered layer pipeline beside the established creative workflow, retaining its mandatory human proof checkpoint. Resume consumes persisted completed passes, never replays layer operations. Pass patches may edit tracks/provenance and must validate before committing state and layers together. Gates distinguish failure from unmeasured contrast/LUFS; no synthetic claims of perceptual/audio success. Open questions: automatic cut selection is deliberately delegated to existing transcript/candidate operations; without trustworthy word timing, destructive speech edits remain disabled.
+
+## Pipeline update U6
+
+Taste prose is descriptive data with a separate validated constraints.yaml for deterministic checks. Starter values are explicit defaults rather than inferred from arbitrary owner prose. The owner can edit both. Open questions: exact platform-specific exclusion zones and font availability need actual target platform/media review.
