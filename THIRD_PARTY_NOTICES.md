@@ -1,4 +1,4 @@
-# Third-party notices: 0.3.0
+# Third-party notices: 0.4.0
 
 The rejected 0.2 stock/template packs are no longer bundled. Their code, source notices and resource licenses remain in a separately distributed checksum-pinned compatibility archive for existing projects. Historical Git releases retain their original inventories.
 
@@ -13,3 +13,7 @@ Motion and selected Codrops projects are mechanism references listed in packages
 The demonstration source was authored through real Codex scene operations and subsequently refined and edited. Its rhythmic sound is newly synthesized. Its editor evidence consists of actual localhost recordings, cropped for readability. Captures and original example source are MIT under this repository's license; the fonts and runtime notices remain separate. User-imported media retains user-supplied provenance and permissions.
 
 Every export writes a credits JSON sidecar. Demo project delivery excludes provider keys, server tokens and agent-workspace configuration.
+
+- **Motion Primitives — MIT, commit 120f64f6ca60348e251f929e9c81f11ccbe45eda:** original TextEffect, TextMorph and AnimatedGroup source plus LICENCE.md are retained under packages/motion/upstream. Frame-driven adaptations remove browser Motion state/history, callbacks and autonomous clocks. Original checksums and modifications are recorded in sources.json.
+- **React Bits:** reference only under its current MIT + Commons Clause conditions; no component/ported-component pack, tool or sound is redistributed.
+- **Original ClipKit motion study:** source and rendered reference frames are MIT. They contain original geometry/type, not pixels from the user's Video Forge film or private production captures.

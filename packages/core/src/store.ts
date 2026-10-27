@@ -17,7 +17,7 @@ export class ProjectStore {
   private redoStack:number[]=[];
   onChange:()=>void=()=>{};
   private timeoutMs:number;
-  constructor(public root:string,private validateExtra:(project:Project)=>void=()=>{},private now:()=>number=Date.now,private options:{leaseTimeoutMs?:number;prepare?:(next:Project,previous:Project)=>Promise<void>}={}) {this.timeoutMs=Math.max(100,options.leaseTimeoutMs??120000);}
+  constructor(public root:string,private validateExtra:(project:Project)=>void=()=>{},private now:()=>number=Date.now,private options:{leaseTimeoutMs?:number;groupTurnId?:(turnId:string)=>string;prepare?:(next:Project,previous:Project)=>Promise<void>}={}) {this.timeoutMs=Math.max(100,options.leaseTimeoutMs??120000);}
   get dir(){return join(this.root,'.clipkit');}
   async load() {
     await mkdir(join(this.dir,'history'),{recursive:true});
@@ -73,7 +73,7 @@ export class ProjectStore {
     const current=new Map(allItems(next).map(i=>[i.id,JSON.stringify(i)]));
     const changedItemIds=[...new Set([...previous.keys(),...current.keys()])].filter(k=>previous.get(k)!==current.get(k));
     next.rev=before.rev+1;
-    const entry:HistoryEntry={id:id('tx'),rev:next.rev,baseRev:before.rev,requestId:req.requestId,label:req.label.slice(0,200),author,turnId:req.turnId,timestamp:new Date(this.now()).toISOString(),ops:forward,inverse,changedItemIds,kind,target};
+    const entry:HistoryEntry={id:id('tx'),rev:next.rev,baseRev:before.rev,requestId:req.requestId,label:req.label.slice(0,200),author,turnId:req.turnId?(this.options.groupTurnId?.(req.turnId)??req.turnId):undefined,timestamp:new Date(this.now()).toISOString(),ops:forward,inverse,changedItemIds,kind,target};
     const file=await open(join(this.dir,'history','journal.jsonl'),'a');try{await file.write(JSON.stringify(entry)+'\n');await file.sync();}finally{await file.close();}
     this.project=next;this.history.push(entry);this.requests.set(req.requestId,entry);this.rebuildStacks(entry);
     await this.snapshot();if(req.leaseToken)this.heartbeat(req.leaseToken);this.onChange();return entry;

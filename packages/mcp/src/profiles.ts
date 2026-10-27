@@ -1,6 +1,14 @@
 /** App turns receive only the tool family needed for that request. External clients default to all. */
 const base=['export_start','project_patch','project_get','item_update','item_split','item_move','item_duplicate','item_delete','comments_list','comments_bundle','comments_resolve','comments_reply','job_status','history_list','scene_read','scene_draft','scene_status','reel_read'];
 export const toolProfiles:Record<string,string[]>={
+ outline:['video_outline_set','reel_read','project_get','library_list','footage_pack','motion_read'],
+ direction:['video_story_set','video_choreography_set','video_plan_read','motion_reference','motion_search','motion_read','footage_pack','footage_view','library_list'],
+ story:['video_story_set','video_plan_read','motion_search','motion_read','footage_pack','library_list'],
+ choreography:['video_plan_read','video_choreography_set','motion_search','motion_read'],
+ production:[...base,'library_list','library_inspect','library_place','footage_pack','footage_view','motion_reference','video_plan_read','motion_search','motion_read','reel_plan_set','reel_chapter_score_set'],
+ diagnose:['video_edit_decision_set','video_review_frames','video_plan_read','project_get','scene_read','footage_pack','footage_view','motion_search'],
+ edit:[...base,'video_plan_read','motion_search','motion_read'],
+ review:['video_review_frames','video_review_submit','video_plan_read'],
  'scene-edit':base,
  authoring:[...base,'motion_search','motion_read','reel_plan_set','reel_chapter_score_set'],
  media:[...base,'footage_pack','footage_view','footage_candidates','footage_delete_words','footage_transcribe','library_list','library_import','library_place'],

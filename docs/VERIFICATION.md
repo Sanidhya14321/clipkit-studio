@@ -1,32 +1,31 @@
-# ClipKit Studio 0.3.0 verification
+# Current verification: video-first pipeline 0.4.0
 
-Verified locally on 27 October 2026. This release verifies agent-authored video editing and generation, not the removed stock library. Earlier 0.2 reports are historical.
+Verified locally on 27 October 2026. Earlier workspace/library and 0.3 source-authoring reports are historical; see VERIFICATION-0.3.0.md for the previous release.
 
-## Real end-to-end evidence
+## Actual film generation and comparison
 
-- Codex gpt-6.1-sol at medium effort authored a new TSX scene through `scene_draft`, recovered from a validation error, and published a real immutable artifact to localhost. This was not a property-only substitution.
-- A separate real turn authored the 25-second editorial product film. A second turn handled the exact `[150,300)` range comment and changed only that passage. Actual generation and feedback waits are retained in the workflow recording.
-- Human controls changed the headline; undo/redo restored it. A human source save compiled and published, and undo restored the prior code version. No fabricated editor screenshots or agent session are used as proof.
-- A final real property-edit turn used **18 focused scene-edit tools**, changed the headline, resolved feedback and preserved the source version. Incremental request/tool payload was **2,214 estimated tokens**. Actual reported provider usage was 120,056 input, 583 output, 94,080 cached. These numbers measure different things; there is no claim of 2,214 total model tokens or universal savings. The initial source-generation check used 6,048 incremental tokens and did not meet the old 3,000 target.
-- The finished film is **1080×1920, 30 fps, 750 frames**, H.264/AAC, approximately 25 seconds, with original rhythmic sound and cropped genuine editor recordings. The editable project retains scene versions and transaction history.
-- The browser Export action completed and its Download export link saved a real MP4. The workflow recording includes generation, range feedback, human editing, export progress and download across separate genuine sessions.
+- A plain Codex pass and ClipKit pipeline generated real 15-second films from the exact same creative prompt (hash and methodology in VIDEO-AB-COMPARISON.md).
+- Both encoded films have 450 frames, 30 fps, 1080×1920 H.264/AAC and duration within one frame. Their decoded audio hashes match. The side-by-side output is also 450 frames with H.264/AAC.
+- The first pipeline result was weak and remains delivered. The revised director used an original visual composition reference, committed story then choreography, published actual scene code, inspected rendered images, requested a specific repair and passed the repaired sampled frames. No synthetic agent activity or fabricated UI evidence.
+- The plain result remains competitive and faster: 108.4s before export versus 444.0s for the revised reviewed pipeline. This is not a universal superiority or efficiency claim. Production usage is unavailable; reported usage subtotal is explicitly incomplete.
+- Follow-up code fixes deadline handling even on a zero CLI exit, narrows unrelated built-ins and model tool replies, and advertises a complete scalar scene schema. A separate actual Codex capability probe inspected a reference and published a new scene with those unrelated features disabled. The complete A/B pair was not rerun after the final context/deadline/schema changes.
 
-## Local regression and rendering
+## Actual editing loop
 
-**107 default tests pass across 15 files.** Typecheck, built application and five real-backend browser tests cover ownership, stale revisions, atomic patches, undo, source errors, late canceled publication, independent instances, frame ranges and protected timing. Browser checks exercise 1920×1080, 1440×900, 1366×768, 1280×720, 1024×600 and 900×700, equivalent 125% zoom, reachable final controls, keyboard boundaries, saved comments, resizing/reset and source-save focus.
+A real diagnose → edit → visual review turn changed only the accent during `[210,270)` (7–9s at 30fps), kept the immutable source version, and preserved the complete outside signature. The report is edit-loop-verification.json. Automatic agent-attributed comment finalization after review is separately covered by workflow tests.
 
-Rendered outside frames 0,149,300,749 match the original exactly after the scoped edit; frame 225 changes visibly. Preview/export frame 225 matches. The real Paper shader returns identical pixels for seek order 20→65→20, changes over time, and matches preview/export. These are representative local frame checks, not exhaustive cross-machine or every-frame equivalence.
+## Automated and local checks
 
-The separate frozen compatibility archive renders all 46 legacy components twice. It is absent from new-project installation/discovery. Adopted Video Forge/Paper/font records retain licenses and hashes. Source inventory check reports zero errors/warnings. A cache variation regression protects fonts across concurrent loopback renderer origins.
+**128 default tests pass across 17 files.** The default suite covers ordered planning gates, separate editing/review paths, failed gates, cancellation, one repair budget, unreviewed drafts, validated direction reuse, long-form outlining, compact mutation responses, deadline failure, scene contracts, temporal scope, transaction recovery, ownership, undo, source publication and media operations. Typecheck, source inventory and build are required release gates.
 
-## Longer videos and optimized invocation
+**Five real-backend browser checks pass.** They cover six laptop/desktop viewports, reachable final controls, drawers, exact saved frame ranges, human source/prop edits, keyboard boundaries, resize persistence/reset and equivalent zoom. Existing deterministic-frame, immutable export and separately archived legacy-renderer evidence remains in the 0.3 report. New motion primitives are frame-driven; this is not an exhaustive cross-machine/per-frame guarantee.
 
-Plans support stable nonoverlapping chapters, compact paginated summaries, chapter-only score replacement, protected reading windows, and a Generate selected chapter action. Server tests prove chapter scenes stay inside their budget and unrelated content survives. Source can be read in bounded line windows, footage in timestamp windows, and simple edits can reuse supplied props without re-reading skills/source. Tool profiles omit irrelevant voice/media/authoring operations.
+The source inventory preserves pinned MIT Motion Primitives originals and adaptations, Video Forge guidance, original visual study, Paper notices and fonts. React Bits is reference-only. No rejected stock catalog or private Video Forge production capture is bundled.
 
-The schema allows 108,000 frames (one hour at 30 fps). **An hour-long film has not been generated or rendered as an acceptance benchmark.** Chapter generation is explicitly initiated one chapter at a time; no whole-film autonomous batch scheduler is claimed. Pacing/duration verification uses explicit choreography and score changes, not a global playback-speed multiplier.
+## Limits
 
-## Remaining live acceptance
+The critic inspects representative stills and cannot establish every intervening frame, motion feel or audio quality. Human moving playback with sound remains necessary. Long-form outlining and bounded chapter production are implemented, but no hour-long generation/export benchmark is claimed. Claude authentication and Fish live provider acceptance remain unverified.
 
-Claude Code is installed but unauthenticated; its new-scene live acceptance is unverified. Fish transcription/TTS/private cloning require supplied credentials and remain unverified live provider gates. Cached/local media and original sound work without those providers. Full 3D authoring, a visual object/keyframe editor and unrestricted third-party executable packs are outside this release.
+Exact test/build/install/CI results and source commit accompany the release. Exported editable projects exclude provider keys, live server credentials and agent-workspace configuration.
 
-See `verification-0.3.json`, the release artifacts, and the committed verification scripts for exact evidence. The packed-install report records outside-repository compilation/export, idempotent initialization, separate legacy restoration and dependency audit results.
+The outside-repository tarball check passed initialization preservation, the explicit MCP scene schema, native reference-image return, real source compilation, 1080p export, separate compatibility installation/legacy export and an installed dependency audit with zero advisories.

@@ -1,0 +1,167 @@
+{
+  "version": "0.4.0",
+  "date": "2026-10-27",
+  "defaultTests": 128,
+  "browserTests": 5,
+  "realGeneration": "See verification-ab-0.4.json",
+  "realEditLoop": {
+    "passed": true,
+    "outsideUnchanged": true,
+    "insideAccent": "#4d9fff",
+    "sourceVersionUnchanged": true,
+    "session": {
+      "id": "video_5a71f1e2",
+      "mode": "edit",
+      "status": "done",
+      "stage": "review",
+      "scopeId": "film",
+      "startFrame": 210,
+      "endFrame": 270,
+      "prompt": "Apply the attached precise color edit. Do not change scene source if the existing accent property suffices.",
+      "pacing": "balanced",
+      "commentIds": [
+        "comment_08b11959"
+      ],
+      "startedAt": "2026-10-27T14:00:33.691Z",
+      "completedStages": [
+        "diagnose",
+        "edit",
+        "review"
+      ],
+      "attempt": 0,
+      "reviewId": "review_2a7347f8db785a4fb828",
+      "decision": {
+        "diagnosis": "At revision 5, layer layer_b6765ed2 has accent #FF604B. Actual review frames 210, 218, 227, 235, 244, 252, 261 and 269 show the coral accent on the full background at the opening of the selected passage and on accents including panel edges, small text and timeline marker later. The requested defect is solely accent color during [7,9) seconds, frames [210,270) at 30 fps. The supplied plan read contains no additional shot choreography. Existing accent property suffices; no source read or source change is needed. reviewFrames: review_df2e999ebc52eac8619b, revision 5, inspected frames [210,218,227,235,244,252,261,269].",
+        "preserve": [
+          "All frames before 210 and from 270 onward, including original accent #FF604B.",
+          "Immutable scene source/version b4171a11d5743fa31ee824f85df2556ff79ff2ee67d4d8d0894426e0d923c9f0; typography, headline and all other properties.",
+          "Existing choreography, animation phase, timing and source continuity across any range boundaries; retain original source offsets.",
+          "Source speech, captions, shared-rhythm.wav audio, volume and all other layers."
+        ],
+        "changes": [
+          "Apply only props.accent = #4d9fff to layer layer_b6765ed2 during end-exclusive frames [210,270), seconds [7,9). Use timeline range property editing; if segmentation is required, preserve source offsets and animation phase (0, 7 and 9 seconds) and original accent outside the middle segment.",
+          "Use revision 5 as base with explicit target item IDs and a fresh request/revision ID in the edit stage. Reuse the unchanged compiled scene version; do not author scene code.",
+          "After editing, inspect actual renders within the range and boundary frames 209,210,269,270 to verify blue inside and unchanged outside."
+        ]
+      },
+      "metrics": [
+        {
+          "stage": "diagnose",
+          "elapsedMs": 34075,
+          "contextTokens": 1681,
+          "actualUsage": {
+            "input": 95059,
+            "output": 721,
+            "cached": 81920
+          }
+        },
+        {
+          "stage": "edit",
+          "elapsedMs": 33496,
+          "contextTokens": 2336,
+          "actualUsage": {
+            "input": 151599,
+            "output": 521,
+            "cached": 117504
+          }
+        },
+        {
+          "stage": "review",
+          "elapsedMs": 37964,
+          "contextTokens": 2103,
+          "actualUsage": {
+            "input": 148459,
+            "output": 720,
+            "cached": 134144
+          }
+        }
+      ],
+      "revision": 8,
+      "review": {
+        "reviewId": "review_2a7347f8db785a4fb828",
+        "verdict": "pass",
+        "summary": "Pass for the supplied in-range visual evidence at revision 8. Actual frames show the requested blue accent on the full background at 210/218 and on panel edges, small accent text and timeline marker later through 269. Phone-size inspection retains readable headline hierarchy and contrast; ordered frames show the vertical transition into EDIT THE MOMENT and the moving selection panel, with no visible defect attributable to the color edit. Preserve that choreography and intentional panel/text clipping; no redesign or source change is warranted. Supplied context records props.accent #4d9fff and the unchanged scene version. Limits: this review contains no frames 209 or 270, so unchanged outside frames and exact boundary continuity are not visually verified. Stills do not verify moving playback, sound, or source-speech preservation.",
+        "observedFrames": [
+          210,
+          218,
+          227,
+          235,
+          244,
+          252,
+          261,
+          269
+        ],
+        "issues": []
+      }
+    }
+  },
+  "runnerCapability": {
+    "passed": true,
+    "realNewScene": true,
+    "version": "826a51ad588603973fad3fc3a55106ee35d109ac7d5b14b44014e4d505d40772",
+    "restrictedFeatures": [
+      "--disable",
+      "shell_tool",
+      "--disable",
+      "apps",
+      "--disable",
+      "plugins",
+      "--disable",
+      "multi_agent",
+      "--disable",
+      "browser_use",
+      "--disable",
+      "computer_use"
+    ],
+    "telemetry": {
+      "contextTokens": 3322,
+      "baselineTokens": 461,
+      "estimator": "Estimated request + tool argument/result bytes / 4; excludes agent base prompt/tool definitions. Actual provider usage is separate; vision/image encoding is excluded from the text estimate.",
+      "actualUsage": {
+        "input": 221653,
+        "output": 2483,
+        "cached": 210944
+      }
+    }
+  },
+  "knownLimits": [
+    "Stills critique cannot establish complete motion/audio quality",
+    "A/B production usage unavailable; subtotal incomplete",
+    "Full comparison not rerun after final runner/context fixes",
+    "Claude and Fish live acceptance unverified",
+    "Hour-long generation/render unbenchmarked"
+  ],
+  "install": {
+    "passed": true,
+    "version": "0.4.0",
+    "outsideRepository": true,
+    "initPreserved": true,
+    "motionTechniques": 14,
+    "defaultStockItems": 0,
+    "sourceCompileAndPublish": true,
+    "sourceRead": true,
+    "mcpTypedContract": true,
+    "mcpReferenceImage": true,
+    "videoPipelineStatus": true,
+    "ensureStartedLocalhost": true,
+    "export": {
+      "durationSec": 5.013,
+      "video": true,
+      "audio": true,
+      "width": 1080,
+      "height": 1920,
+      "frames": 150
+    },
+    "legacyArchiveRestored": true,
+    "legacyStableId": true,
+    "legacyExport": true,
+    "installedDependencyAudit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  }
+}

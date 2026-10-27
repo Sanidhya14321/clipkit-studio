@@ -26,5 +26,27 @@
     "role": "Mechanism reference; no sample media or GSAP runtime copied",
     "license": "MIT source repository",
     "mechanism": "Line and word choreography converted from scroll progress to frame progress"
+  },
+  {
+    "name": "React Bits",
+    "url": "https://reactbits.dev",
+    "role": "Visual reference only; component redistribution excluded under current Commons Clause",
+    "mechanism": "Text morphs, gradient blinds, spatial scroll and focus-pull treatments translated into original frame-driven compositions",
+    "checked": "2026-10-27"
+  },
+  {
+    "name": "Motion Primitives",
+    "url": "https://github.com/ibelick/motion-primitives",
+    "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "license": "MIT",
+    "role": "Pinned source and frame-driven TSX adaptations",
+    "mechanism": "TextEffect, TextMorph and AnimatedGroup"
+  },
+  {
+    "name": "Codrops typography studies",
+    "url": "https://tympanus.net/codrops/tag/typography/",
+    "role": "Contemporary visual reference; no sample assets copied",
+    "checked": "2026-10-27",
+    "mechanism": "Outlined ghost trails, scale continuity and masked typographic handoffs"
   }
 ]

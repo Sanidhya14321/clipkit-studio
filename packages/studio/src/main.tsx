@@ -1359,7 +1359,7 @@ function App() {
               </button>
             ))}
           </div>
-          {left === "assets" || left === "skills" ? (<MotionPanel op={op} state={state} skills={left==='skills'} selectedId={selected} range={range}/>
+          {left === "assets" || left === "skills" ? (<MotionPanel op={op} state={state} skills={left==='skills'} selectedId={selected} range={range} onSeek={seek}/>
           ) : left === "footage" ? (
             <div className="panel-scroll">
               <button

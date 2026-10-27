@@ -1,6 +1,6 @@
-# ClipKit Studio 0.3.0
+# ClipKit Studio 0.4.0
 
-A local studio for agent-authored reels: **brief → frame score → live animation code → human controls/source edits → frame-range feedback → MP4**.
+A local studio for agent-directed clips, reels and long-form chapters: **brief → frame score → live animation code → human controls/source edits → frame-range feedback → MP4**.
 
 The old stock/template collection has been removed. Motion is a kit of composable mechanisms and Video Forge direction skills, not a JPG/video catalog or a sequence of generic presentation slides. User media remains available separately.
 
@@ -26,7 +26,7 @@ Use the visible Range tool or I/O. Enter HH:MM:SS:FF or integer frames, drag the
 
 ## Skills and authoring
 
-Video Forge 0.7.1 contributes selected MIT direction/rhythm guidance, twelve shot recipes and frame-based helpers. ClipKit retains one project, renderer, history and provider system. Eight mechanism examples teach type, masks, match movement, depth, proof, collage, captions and material reveals. Paper Shaders 0.0.82 is explicitly frame-seeked. Reference sources and actual adopted files are distinguished in [the inventory](packages/motion/sources.json).
+Video Forge 0.7.1 contributes selected MIT direction/rhythm guidance, twelve shot recipes and frame-based helpers. ClipKit retains one project, renderer, history and provider system. Fourteen mechanism examples teach type, masks, match movement, depth, proof, collage, captions and material reveals. Paper Shaders 0.0.82 is explicitly frame-seeked. Reference sources and actual adopted files are distinguished in [the inventory](packages/motion/sources.json).
 
 ```sh
 ck ensure
@@ -62,3 +62,15 @@ Video source, transcripts and selected context are sent to the chosen coding-age
 Agent calls use focused tool profiles for source authoring, targeted scene edits, footage, or voice. Long-form plans support chapter summaries and per-chapter frame scores. Generate selected chapter constrains a turn to that chapter; unrelated scenes and score events remain protected. Large source files can be read in line windows. See [the authoring contract](docs/SCENE-AUTHORING.md). The one-hour planning limit is not a measured one-hour export or generation guarantee.
 
 The delivered reel and workflow recording demonstrate real source generation, a frame-range revision, human property/source edits and export. Live Claude and Fish acceptance remain separate from verified Codex/local functionality. Current evidence is in [verification](docs/VERIFICATION.md); earlier 0.2 reports describe the removed library and are historical.
+
+## Video-first pipeline (0.4)
+
+Generation commits story/copy and frame choreography before producing scenes, then critiques actual rendered images and allows one repair. Editing inspects the selected passage, diagnoses the smallest correction, edits, and rechecks. Draft mode is explicitly unreviewed; unchanged direction can be reused. Long-form requests first produce a chapter outline. See [the pipeline and design decisions](docs/VIDEO-PIPELINE.md).
+
+```sh
+ck video generate --brief-file brief.txt --duration 15 --pacing fast
+ck video status
+ck video review
+```
+
+A real same-prompt 15-second comparison is documented in [A/B results](docs/VIDEO-AB-COMPARISON.md). The first weak pipeline result is retained. The reviewed pipeline costs more time than a plain generation pass; no universal quality or token-savings claim is made.

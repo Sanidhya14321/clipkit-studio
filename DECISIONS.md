@@ -74,3 +74,13 @@ The same check also exposed simultaneous registry rebuilds colliding on generate
 - Extend planning to nonoverlapping chapters and chapter-scoped generation/score changes. Maximum duration is a schema limit; long-form performance remains unbenchmarked. No second agent/provider/project system.
 - Source-file watches require an external authoring lease; app turns submit drafts directly. Compilation/static import validation is not an untrusted-code sandbox.
 - File responses explicitly vary by Origin to prevent cross-renderer font-cache CORS mismatches during parallel export/verification.
+
+## 0.4.0 film-directed pipelines
+
+- Generation and editing use different finite state machines. Narrative/copy and shot/key-pose direction precede source; editing diagnoses a selected passage and preserves its outside content.
+- Combine story and choreography in one director invocation with ordered, validated commits. Source production remains a separate tool profile; visual critique sees actual rendered images and cannot write code.
+- Use an original visual study to communicate staging. The first A/B showed that extra planning fields alone made the result more poster-like. Preserve that failed experiment and its metrics.
+- Keep one automatic repair budget and explicitly report remaining defects. A draft can skip critique but cannot claim to be reviewed. Unchanged validated direction may be reused.
+- Long-form generation begins with a continuous chapter outline, followed by bounded chapter production. Planning is not completion of a film.
+- Use MIT Motion Primitives adaptations for actual website-style TSX motion. Keep React Bits as a visual reference under its redistribution restriction. Do not bundle the user's Video Forge production captures.
+- Treat A/B evidence as one observed pair, not proof of universal quality or efficiency. Preserve exact creative prompt, raw usage, initial weak result and original-speed outputs.

@@ -71,8 +71,76 @@
     "original": "motion/index.tsx",
     "file": "src/index.tsx",
     "originalSha256": "a9aad0e92c439cfc4af038ab9fad27dfe5b51ae57d8a38c53563cba8d9fc180f",
-    "sha256": "6cbdb21134824733f300943a627d1ef165bb4ae15aff52fd8ce34ad16f043ff4",
+    "sha256": "12b302d433d4e6e6a74680e8218c1c4f3e1c39d1b14d0d4c0c9f3f51f55164a7",
     "license": "MIT; Paper runtime separately Apache-2.0",
     "modifications": "Selected frame math, split type, perspective planes and wipe; omitted experimental optics/blur, standalone renderer and GSAP. Added frame-seeked material adapter."
+  },
+  {
+    "source": "https://github.com/ibelick/motion-primitives",
+    "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "original": "LICENCE.md",
+    "file": "upstream/motion-primitives/LICENCE.md",
+    "sha256": "f668f5ef3635eb906f10b1eea9a32e449eb6e1a183ab6879ef6d56c0980dd2f3",
+    "license": "MIT",
+    "modifications": "Unmodified research source; browser clock not executed. Frame adaptation in src/web-motion.tsx."
+  },
+  {
+    "source": "https://github.com/ibelick/motion-primitives",
+    "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "original": "components/core/text-effect.tsx",
+    "file": "upstream/motion-primitives/text-effect.tsx.txt",
+    "sha256": "4b93c0ea6b9d747d69b7a244d5279f790a11a784e73713f3fe17a636abf53484",
+    "license": "MIT",
+    "modifications": "Unmodified research source; browser clock not executed. Frame adaptation in src/web-motion.tsx."
+  },
+  {
+    "source": "https://github.com/ibelick/motion-primitives",
+    "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "original": "components/core/text-morph.tsx",
+    "file": "upstream/motion-primitives/text-morph.tsx.txt",
+    "sha256": "e3839272d22e1b041378263019d0716a29a8b99656b64eb385b66402698c9294",
+    "license": "MIT",
+    "modifications": "Unmodified research source; browser clock not executed. Frame adaptation in src/web-motion.tsx."
+  },
+  {
+    "source": "https://github.com/ibelick/motion-primitives",
+    "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "original": "components/core/animated-group.tsx",
+    "file": "upstream/motion-primitives/animated-group.tsx.txt",
+    "sha256": "0c162bbdd3c332e7aa113cd7ddfa7ac36de3184866cb82ad9140525561e08c35",
+    "license": "MIT",
+    "modifications": "Unmodified research source; browser clock not executed. Frame adaptation in src/web-motion.tsx."
+  },
+  {
+    "source": "Motion Primitives MIT adaptations and original ClipKit website-to-video mechanisms",
+    "original": "components/core/{text-effect,text-morph,animated-group}.tsx",
+    "file": "src/web-motion.tsx",
+    "sha256": "bc77a80441c1425c2d7f767bf8d6034261fc8da150fb2ed45bd4ec29d608ead9",
+    "license": "MIT",
+    "modifications": "Explicit frame clock replaces browser animation, layout history and callbacks. Added original scroll tunnel, gradient blinds and outlined trail type; no React Bits code copied."
+  },
+  {
+    "source": "ClipKit original website-to-video direction guide",
+    "original": "New authored guide",
+    "file": "guides/web-motion.md",
+    "sha256": "732352968911b60144ba47b44aa83a61c0c0c6f9bf67c1536e8002df4c15b22b",
+    "license": "MIT",
+    "modifications": "Frame-driven APIs, selected current references and film-specific adaptation boundaries."
+  },
+  {
+    "source": "ClipKit original visual direction study",
+    "original": "studies/SpatialEditorial.tsx",
+    "file": "studies/SpatialEditorial.tsx",
+    "sha256": "8566b62ce98ce0026d323d65973c6d2aff57edb2436298b5dfef816d0e7030a1",
+    "license": "MIT",
+    "modifications": "Original spatial/type/film-strip direction study, not an insertable template. No Video Forge demo pixels bundled."
+  },
+  {
+    "source": "ClipKit original visual direction study",
+    "original": "references/spatial-editorial.png",
+    "file": "references/spatial-editorial.png",
+    "sha256": "4f26025952dabf415889098be931f5060bc8df07fcf7c92794161214fe784f28",
+    "license": "MIT",
+    "modifications": "Original spatial/type/film-strip direction study, not an insertable template. No Video Forge demo pixels bundled."
   }
 ]

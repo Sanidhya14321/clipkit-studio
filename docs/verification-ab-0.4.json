@@ -1,0 +1,159 @@
+{
+  "userPrompt": "Create a 15-second vertical launch film for ClipKit, 1080\u00d71920 at 30 fps. The idea is that a creator can turn a thought into motion, edit a precise moment, and retain creative control. Use these exact four phrases in this order: \u201cSTOP MAKING SLIDES.\u201d, \u201cDIRECT THE MOTION.\u201d, \u201cEDIT THE MOMENT.\u201d, \u201cCLIPKIT. MAKE IT YOURS.\u201d. Give it the expressiveness of an excellent animated website turned into a film: strong typography as moving objects, connected spatial transitions, sharp rhythmic accents and deliberate readable holds. Use near-black, warm ivory and electric coral. Avoid stock media, generic feature cards, repeating one background, arbitrary orbiting circles, constant shaking and fake UI/product evidence. Make the first image striking and the ending intentional. All graphics should be original React/CSS/SVG. The same original rhythm track will be added after generation to both versions.",
+  "promptSha256": "15f01d0fd0d6ec4c529ad6c08087829ba2a0d8df70c83843ceb34769b6c41fbb",
+  "controls": {
+    "model": "gpt-6.1-sol",
+    "effort": "medium",
+    "fps": 30,
+    "width": 1080,
+    "height": 1920,
+    "frames": 450,
+    "sound": "Identical original rhythm added after generation",
+    "renderer": "Remotion 4.0.538",
+    "comparison": "One plain-agent generation versus the staged ClipKit pipeline plus its motion kit. Creative prompt identical; workflow/system context intentionally differs. No claim of single-variable causality or statistical superiority."
+  },
+  "without": {
+    "passed": true,
+    "elapsedMs": 108438,
+    "actualUsage": {
+      "input_tokens": 14583,
+      "cached_input_tokens": 0,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 3732,
+      "reasoning_output_tokens": 516
+    },
+    "version": "b4171a11d5743fa31ee824f85df2556ff79ff2ee67d4d8d0894426e0d923c9f0",
+    "passes": 1,
+    "decodedAudioSha256": "SHA256=ab89c34e7579dca050b106a6e92a883b320ca974ea2bc98ad7f227dcf60b2ce7"
+  },
+  "previousExperiment": "comparison-v1.json",
+  "revisionNote": "Initial staged planning was too restrictive. V2 combines story/choreography in one director invocation with ordered commits and an original visual composition reference. The original V1 outputs/metrics are retained, not rerolled invisibly.",
+  "with": {
+    "passed": true,
+    "session": {
+      "id": "video_9fee4712",
+      "mode": "generate",
+      "status": "done",
+      "stage": "review",
+      "scopeId": "film",
+      "startFrame": 0,
+      "endFrame": 450,
+      "prompt": "Create a 15-second vertical launch film for ClipKit, 1080\u00d71920 at 30 fps. The idea is that a creator can turn a thought into motion, edit a precise moment, and retain creative control. Use these exact four phrases in this order: \u201cSTOP MAKING SLIDES.\u201d, \u201cDIRECT THE MOTION.\u201d, \u201cEDIT THE MOMENT.\u201d, \u201cCLIPKIT. MAKE IT YOURS.\u201d. Give it the expressiveness of an excellent animated website turned into a film: strong typography as moving objects, connected spatial transitions, sharp rhythmic accents and deliberate readable holds. Use near-black, warm ivory and electric coral. Avoid stock media, generic feature cards, repeating one background, arbitrary orbiting circles, constant shaking and fake UI/product evidence. Make the first image striking and the ending intentional. All graphics should be original React/CSS/SVG. The same original rhythm track will be added after generation to both versions.",
+      "pacing": "fast",
+      "commentIds": [],
+      "startedAt": "2026-10-27T13:59:03.703Z",
+      "completedStages": [
+        "direction",
+        "production",
+        "review",
+        "edit",
+        "review"
+      ],
+      "attempt": 1,
+      "storyCommitted": true,
+      "metrics": [
+        {
+          "stage": "direction",
+          "elapsedMs": 103525,
+          "contextTokens": 6770,
+          "actualUsage": {
+            "input": 125173,
+            "output": 2493,
+            "cached": 109440
+          }
+        },
+        {
+          "stage": "production",
+          "elapsedMs": 180186,
+          "contextTokens": 13011
+        },
+        {
+          "stage": "review",
+          "elapsedMs": 49266,
+          "contextTokens": 4767,
+          "actualUsage": {
+            "input": 157808,
+            "output": 942,
+            "cached": 140672
+          }
+        },
+        {
+          "stage": "edit",
+          "elapsedMs": 61695,
+          "contextTokens": 10672,
+          "actualUsage": {
+            "input": 198952,
+            "output": 1260,
+            "cached": 180096
+          }
+        },
+        {
+          "stage": "review",
+          "elapsedMs": 36501,
+          "contextTokens": 5238,
+          "actualUsage": {
+            "input": 133518,
+            "output": 710,
+            "cached": 116992
+          }
+        }
+      ],
+      "revision": 5,
+      "reviewId": "review_5099bfd36782f0fe1e68",
+      "review": {
+        "reviewId": "review_5099bfd36782f0fe1e68",
+        "verdict": "pass",
+        "summary": "Inspected the actual ordered contact sheet and enlarged frames 98, 240, 329 and 366. Both requested repairs are visible: at 240 and 302, neighboring glyph samples have separated/rotated arms while the selected ivory K alone forms the clean alignment; at 366 and 449, the coral K occupies clear lower-right negative space without crossing the fully readable closing signature. The opening delivers strong cropped scale then a readable hold at 18\u201374. Black, ivory and coral stages change spatial scale and composition; the ribbon, pose band and enlarged selected K provide visible shared-material continuity through sampled handoffs. Exact four phrases appear in order with strong contrast and stable sampled reading holds. No blocking visual defects observed. Ordered stills cannot verify continuous motion, precise transition timing or sound; no audio judgment made.",
+        "observedFrames": [
+          0,
+          18,
+          74,
+          98,
+          128,
+          192,
+          209,
+          240,
+          302,
+          329,
+          366,
+          449
+        ],
+        "issues": []
+      }
+    },
+    "elapsedMs": 444036,
+    "decodedAudioSha256": "SHA256=ab89c34e7579dca050b106a6e92a883b320ca974ea2bc98ad7f227dcf60b2ce7",
+    "totalAgentSeconds": 431.173,
+    "usageTotals": {
+      "input": 615451,
+      "output": 5405,
+      "cached": 547200
+    },
+    "usageCoverage": {
+      "complete": false,
+      "reportedStages": 4,
+      "totalStages": 5,
+      "missingStages": [
+        "production"
+      ]
+    },
+    "usageTotalsNote": "Subtotal of reported stages only. Production did not emit usage; do not present as total cost."
+  },
+  "decodedAudioIdentical": true,
+  "creativePromptByteIdentical": true,
+  "editorialAssessment": {
+    "baseline": "Richer graphic density, bolder type hierarchy and more micro-detail; also uses recognizable poster-like scenes.",
+    "initialPipeline": "Too restrictive and poster-like; critic requested changes and still left a transition-edge defect. Preserved as with-plugin-v1.mp4, not hidden.",
+    "revisedPipeline": "Stronger shared-object continuity: a ribbon guides a K through a pose-selection band into the closing identity. The critic required a repair to make the selection meaningful and keep the closing signature clear.",
+    "conclusion": "The revised pipeline gives better structured continuity and an actual quality-control loop. It does not establish universal aesthetic superiority over the plain agent; the plain version remains competitive and is faster.",
+    "limits": "One creative brief, no blinded panel or audience test. Stills critique is not complete moving/audio review. Both original-speed videos are provided. Workflow, instructions and motion kit differ intentionally."
+  },
+  "runtimeCaveat": "Production ended near the prototype 180-second deadline and omitted usage. The published scene and subsequent image-grounded repair/review are real. Follow-up runner code now treats timeout as failure even when the CLI exits zero, allows a longer production budget and handles larger image event lines.",
+  "followUpOptimizations": {
+    "journalEchoRemoved": true,
+    "explicitScalarSchema": true,
+    "unrelatedCodingToolsDisabled": true,
+    "fullFilmPairRerunAfterTheseChanges": false,
+    "capabilityProbe": "runner-trim-verification.json"
+  }
+}
