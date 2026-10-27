@@ -6,7 +6,7 @@ test('human edits, anchored feedback, server lock and undo share a live project'
   await op('demo_reset');
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('/');
-  await expect(page.getByText('Small details.',{exact:false})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Toggle Properties',exact:true})).toBeVisible();
   await page.getByRole('button',{name:/Kinetic title, /}).click();
   const field=page.getByRole('textbox',{name:'Text',exact:true});await field.fill('One precise change.');await field.blur();
   await expect.poll(async()=>{const s=await state();return s.project.tracks.flatMap((t:any)=>t.items).find((i:any)=>i.clipId==='kinetic-title').props.text;}).toBe('One precise change.');

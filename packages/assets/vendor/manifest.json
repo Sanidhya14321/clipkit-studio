@@ -1,0 +1,592 @@
+[
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "LICENSE",
+    "localFile": "packages/assets/vendor/RenderComp/LICENSE",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/LICENSE",
+    "sha256": "3e0f0f2895a6bf2b5aa9d03aa4a6b68679a7d037d54f24177f99748084a58444",
+    "vendoredSha256": "3e0f0f2895a6bf2b5aa9d03aa4a6b68679a7d037d54f24177f99748084a58444",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/bokeh-circles/BokehCircles.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/bokeh-circles/BokehCircles.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/bokeh-circles/BokehCircles.tsx",
+    "sha256": "abda54544b7fc28db5f29329524479d199dd54e30728c53bffbdf69cfda308d9",
+    "vendoredSha256": "abda54544b7fc28db5f29329524479d199dd54e30728c53bffbdf69cfda308d9",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/brush-stroke-reveal/BrushStrokeReveal.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/brush-stroke-reveal/BrushStrokeReveal.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/brush-stroke-reveal/BrushStrokeReveal.tsx",
+    "sha256": "5b32bd6217c549b55fdf799d1db285cdf3e9e475d6d463ed5825612930d950d6",
+    "vendoredSha256": "5b32bd6217c549b55fdf799d1db285cdf3e9e475d6d463ed5825612930d950d6",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/chapter-title/ChapterTitle.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/chapter-title/ChapterTitle.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/chapter-title/ChapterTitle.tsx",
+    "sha256": "8caae393cf07cd043b7521305974504f4d9dab4e8178fffee7c52d780b049ed8",
+    "vendoredSha256": "f16bedfdb872f73aeaf64b657b50140eb6b07bb8348a20a37553bbe03391da31",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/community-chat/CommunityChat.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/community-chat/CommunityChat.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/community-chat/CommunityChat.tsx",
+    "sha256": "dfbf044202f1919d9a633a6195145e4af0584066d97991678b47579434446824",
+    "vendoredSha256": "9039e5105c0e094a82246aada6367e2473d2da3cde7b89db8ffa8d6d55c4ff03",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/glitch-text/GlitchText.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/glitch-text/GlitchText.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/glitch-text/GlitchText.tsx",
+    "sha256": "d52cb5c614312987fbf162b9be7bb3a1b251dd689d144e3897ffac2bc8e406a3",
+    "vendoredSha256": "7110b7c3d92da19e5289100f6e3c2b2a317bcfe79536146306805590abee0e47",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/gradient-text-sweep/GradientTextSweep.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/gradient-text-sweep/GradientTextSweep.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/gradient-text-sweep/GradientTextSweep.tsx",
+    "sha256": "b092c0776b24a8ff79247bfac538c4f818e4595e1b76dc6214b73fd3fe4b41c8",
+    "vendoredSha256": "cad86a0b4da4555e12c70afc26d995ea809a8535ededcb0cca9df6981a8e331d",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/kinetic-word-stack/KineticWordStack.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/kinetic-word-stack/KineticWordStack.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/kinetic-word-stack/KineticWordStack.tsx",
+    "sha256": "ca427232be7c2955006af56218ba7cfaf536ce745aa40c2f19687ccf73f2e755",
+    "vendoredSha256": "dc45c3f738b6baccc427a2566e0e825f98a98ec6cc260b45c3d38ab8949dd38f",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/line-chart-anim/LineChartAnim.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/line-chart-anim/LineChartAnim.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/line-chart-anim/LineChartAnim.tsx",
+    "sha256": "727cb6c5bc0882b7e2158b2a5c6a90d07270753b091c8ce470a4a940f7b3afde",
+    "vendoredSha256": "727cb6c5bc0882b7e2158b2a5c6a90d07270753b091c8ce470a4a940f7b3afde",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/logo-stroke-draw/LogoStrokeDraw.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/logo-stroke-draw/LogoStrokeDraw.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/logo-stroke-draw/LogoStrokeDraw.tsx",
+    "sha256": "7775bbccae3270eab63c08906c4aa54c3906c270943ab1830b3f98e212d76d78",
+    "vendoredSha256": "b4f7f1c720c6d8157a317219e088aabc57aa7c2e41e3ada0990d1927e48a2289",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/loop-grid-wave/LoopGridWave.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/loop-grid-wave/LoopGridWave.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/loop-grid-wave/LoopGridWave.tsx",
+    "sha256": "011ac878a4108b0031adb87848eeb77032d253aa60ad29d45d178daf62c5ad3d",
+    "vendoredSha256": "fab007387ed5a0206dda058ced0757c287ebd3996b7661782c22eccaa8aac2ce",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/lower-third-glass-card/LowerThirdGlassCard.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/lower-third-glass-card/LowerThirdGlassCard.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/lower-third-glass-card/LowerThirdGlassCard.tsx",
+    "sha256": "4a3750e0770cb01279b50c6796dd47f48d9794d17e240193da2a47cc6a20f016",
+    "vendoredSha256": "8cc697f78afa2e21ee4e31680cc470dcc8e5fdbaf63b4eec80690b8ab7a290ca",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/neon-sign/NeonSign.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/neon-sign/NeonSign.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/neon-sign/NeonSign.tsx",
+    "sha256": "e67abad94f47fd49ffb33b06adaaac586be9639c731c505635df90e1845a074d",
+    "vendoredSha256": "bfce74053150c4238bfc9317771b8faf32880622d2c73e4bb591f4f4cd913aa6",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/pencil-draw/PencilDraw.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/pencil-draw/PencilDraw.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/pencil-draw/PencilDraw.tsx",
+    "sha256": "104041b273eafc30c9eb87e6c8a9988f3d6ae82c91de665d5d77b30b8c5f67f1",
+    "vendoredSha256": "2cd5e04f176630e738aab07272000d3857ee2a3f573b5752d4eecd168962a628",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/scramble-text/ScrambleText.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/scramble-text/ScrambleText.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/scramble-text/ScrambleText.tsx",
+    "sha256": "8ae774eb0434ee67f98f4b30b2ac1695190a08e97595476db05b61d41ded486e",
+    "vendoredSha256": "8ae774eb0434ee67f98f4b30b2ac1695190a08e97595476db05b61d41ded486e",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/social-reel/SocialReel.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/social-reel/SocialReel.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/social-reel/SocialReel.tsx",
+    "sha256": "612f89400ebd7364da916b907e24b763908563866631df94e4bc45cd8f5951b0",
+    "vendoredSha256": "d0ef7d40d23b0c93be261c50c5d09c9c19f64796a33e8d3bf48c399cf9f771fd",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/text-mask-reveal/TextMaskReveal.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/text-mask-reveal/TextMaskReveal.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/text-mask-reveal/TextMaskReveal.tsx",
+    "sha256": "bb8fbe64c4a39c339ffe92a7a269c8d3ee5c0bfec9c0139a409bf2c40ebd361a",
+    "vendoredSha256": "af711df22fc01b1bbdbe125f135a2c91be88b7e414e744bb371f0139c4de87a5",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/wave-text/WaveText.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/wave-text/WaveText.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/wave-text/WaveText.tsx",
+    "sha256": "de1201b5b5db9315cdbf1bab09734d7a0f038f7e36b2ffa3f43a71271d4b9302",
+    "vendoredSha256": "de1201b5b5db9315cdbf1bab09734d7a0f038f7e36b2ffa3f43a71271d4b9302",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "ibelick/motion-primitives",
+    "commit": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "originalFile": "LICENCE.md",
+    "localFile": "packages/assets/vendor/ibelick/LICENCE.md",
+    "url": "https://raw.githubusercontent.com/ibelick/motion-primitives/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md",
+    "sha256": "f668f5ef3635eb906f10b1eea9a32e449eb6e1a183ab6879ef6d56c0980dd2f3",
+    "vendoredSha256": "f668f5ef3635eb906f10b1eea9a32e449eb6e1a183ab6879ef6d56c0980dd2f3",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "ibelick/motion-primitives",
+    "commit": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "originalFile": "components/core/text-morph.tsx",
+    "localFile": "packages/assets/vendor/ibelick/components/core/text-morph.tsx",
+    "url": "https://raw.githubusercontent.com/ibelick/motion-primitives/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/text-morph.tsx",
+    "sha256": "e3839272d22e1b041378263019d0716a29a8b99656b64eb385b66402698c9294",
+    "vendoredSha256": "e3839272d22e1b041378263019d0716a29a8b99656b64eb385b66402698c9294",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "ibelick/motion-primitives",
+    "commit": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+    "originalFile": "components/core/text-scramble.tsx",
+    "localFile": "packages/assets/vendor/ibelick/components/core/text-scramble.tsx",
+    "url": "https://raw.githubusercontent.com/ibelick/motion-primitives/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/text-scramble.tsx",
+    "sha256": "119cda3b695ee97235ab7aaa62698a98e881d5bdc8b9c96d2597730cd07aeff2",
+    "vendoredSha256": "119cda3b695ee97235ab7aaa62698a98e881d5bdc8b9c96d2597730cd07aeff2",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "juliangarnier/anime",
+    "commit": "01b81be1df6843ccfe0a71c0699a746bf740dd77",
+    "originalFile": "LICENSE.md",
+    "localFile": "packages/assets/vendor/juliangarnier/LICENSE.md",
+    "url": "https://raw.githubusercontent.com/juliangarnier/anime/01b81be1df6843ccfe0a71c0699a746bf740dd77/LICENSE.md",
+    "sha256": "3f3e835a9952cfc2a6ca836fb95b3257c981f24fa3ef51249055acb09931897b",
+    "vendoredSha256": "3f3e835a9952cfc2a6ca836fb95b3257c981f24fa3ef51249055acb09931897b",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "juliangarnier/anime",
+    "commit": "01b81be1df6843ccfe0a71c0699a746bf740dd77",
+    "originalFile": "examples/advanced-grid-staggering/index.html",
+    "localFile": "packages/assets/vendor/juliangarnier/examples/advanced-grid-staggering/index.html",
+    "url": "https://raw.githubusercontent.com/juliangarnier/anime/01b81be1df6843ccfe0a71c0699a746bf740dd77/examples/advanced-grid-staggering/index.html",
+    "sha256": "2fb23417e232712aa5ef85e466bb81a4f73ef35e0c671bba0b659ab28f755d2a",
+    "vendoredSha256": "2fb23417e232712aa5ef85e466bb81a4f73ef35e0c671bba0b659ab28f755d2a",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "LICENSE",
+    "localFile": "packages/assets/vendor/boringdesigners/LICENSE",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/LICENSE",
+    "sha256": "528d05b9822f5bfe55d99d68521d12e79fb02cbf40909402fd1c11a488831ecc",
+    "vendoredSha256": "528d05b9822f5bfe55d99d68521d12e79fb02cbf40909402fd1c11a488831ecc",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/components/avatar-bauhaus.tsx",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/components/avatar-bauhaus.tsx",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/components/avatar-bauhaus.tsx",
+    "sha256": "b3f1ab22b50ce546b34a0f12cec14fe7a5ee56a466ef0b50ee9a989ca6beeb97",
+    "vendoredSha256": "b3f1ab22b50ce546b34a0f12cec14fe7a5ee56a466ef0b50ee9a989ca6beeb97",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/components/avatar-beam.tsx",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/components/avatar-beam.tsx",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/components/avatar-beam.tsx",
+    "sha256": "9a09a91abf65746973c772a50b20e68bfec574cc8b7f2c230ac84431b57b58ee",
+    "vendoredSha256": "9a09a91abf65746973c772a50b20e68bfec574cc8b7f2c230ac84431b57b58ee",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/components/avatar-marble.tsx",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/components/avatar-marble.tsx",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/components/avatar-marble.tsx",
+    "sha256": "746cb58cacba2d1c3bc6067c026bdad027c04162fd10da4b50120821511c4074",
+    "vendoredSha256": "746cb58cacba2d1c3bc6067c026bdad027c04162fd10da4b50120821511c4074",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/components/avatar-pixel.tsx",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/components/avatar-pixel.tsx",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/components/avatar-pixel.tsx",
+    "sha256": "26c42092bd17dba5c70d506f70c6aa2f420f209467af20f9d22e3395d8dc71fb",
+    "vendoredSha256": "26c42092bd17dba5c70d506f70c6aa2f420f209467af20f9d22e3395d8dc71fb",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/components/avatar-ring.tsx",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/components/avatar-ring.tsx",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/components/avatar-ring.tsx",
+    "sha256": "3766e34039450ec9ec8379ccf62e3c5e36c11c03518da26043fad1009d55514d",
+    "vendoredSha256": "3766e34039450ec9ec8379ccf62e3c5e36c11c03518da26043fad1009d55514d",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/components/avatar-sunset.tsx",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/components/avatar-sunset.tsx",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/components/avatar-sunset.tsx",
+    "sha256": "4a3ce87478df08ab503f82eb82dc439a29cb101fa53f758037266990f85a46ef",
+    "vendoredSha256": "4a3ce87478df08ab503f82eb82dc439a29cb101fa53f758037266990f85a46ef",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/components/types.ts",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/components/types.ts",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/components/types.ts",
+    "sha256": "da23e70e1ef7aa5f736814da36fb880ca4cb897d8b5359b0761fe2fefa7e635b",
+    "vendoredSha256": "da23e70e1ef7aa5f736814da36fb880ca4cb897d8b5359b0761fe2fefa7e635b",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/index.tsx",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/index.tsx",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/index.tsx",
+    "sha256": "5d935dfcb9b26f24bfc5703e866411e70ba9f9b8c410eb629f05a07997a33adb",
+    "vendoredSha256": "5d935dfcb9b26f24bfc5703e866411e70ba9f9b8c410eb629f05a07997a33adb",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "boringdesigners/boring-avatars",
+    "commit": "d0ff2582a8921b643a89de4a4912be28938a828b",
+    "originalFile": "src/lib/utilities.ts",
+    "localFile": "packages/assets/vendor/boringdesigners/src/lib/utilities.ts",
+    "url": "https://raw.githubusercontent.com/boringdesigners/boring-avatars/d0ff2582a8921b643a89de4a4912be28938a828b/src/lib/utilities.ts",
+    "sha256": "900b49d60363289abb81e6133948262dd623c03ef48fd9afaaa482715474911a",
+    "vendoredSha256": "900b49d60363289abb81e6133948262dd623c03ef48fd9afaaa482715474911a",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "LICENSE",
+    "localFile": "packages/assets/vendor/useAnimations/LICENSE",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/LICENSE",
+    "sha256": "8df8d669d974995cd174ca0cd72c7fd5275e0da893f81c3dc2e1fed25c034535",
+    "vendoredSha256": "8df8d669d974995cd174ca0cd72c7fd5275e0da893f81c3dc2e1fed25c034535",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/checkmark.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/checkmark.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/checkmark.json",
+    "sha256": "785f9a805f1ba9c949850bc5ebc2637e0882f9a81fdf3b41c9dc74760fd4526e",
+    "vendoredSha256": "785f9a805f1ba9c949850bc5ebc2637e0882f9a81fdf3b41c9dc74760fd4526e",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/loading.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/loading.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/loading.json",
+    "sha256": "25f016f046497a8ad3d1301987938fc4c27561c5cbf56ce2386aa13dfa706443",
+    "vendoredSha256": "25f016f046497a8ad3d1301987938fc4c27561c5cbf56ce2386aa13dfa706443",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/heart.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/heart.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/heart.json",
+    "sha256": "8f3ea1c015bc07c147f3eeb775fd246013cdfd53681f4e33e6b87209d80265c2",
+    "vendoredSha256": "8f3ea1c015bc07c147f3eeb775fd246013cdfd53681f4e33e6b87209d80265c2",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/notification.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/notification.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/notification.json",
+    "sha256": "d3ded55782dbbbb983119fd3c701663389290bbdcdd94b7ed2db562b92244fa5",
+    "vendoredSha256": "d3ded55782dbbbb983119fd3c701663389290bbdcdd94b7ed2db562b92244fa5",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/download.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/download.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/download.json",
+    "sha256": "84ec5378485b944a52281730288db9cb7128fe5609f5d12add4772498cf3006c",
+    "vendoredSha256": "84ec5378485b944a52281730288db9cb7128fe5609f5d12add4772498cf3006c",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/upload.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/upload.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/upload.json",
+    "sha256": "364bce21e26ec75b5c52a529ac683e6dfdcf2d78d94ff7120afe128a9885b670",
+    "vendoredSha256": "364bce21e26ec75b5c52a529ac683e6dfdcf2d78d94ff7120afe128a9885b670",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/playPause.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/playPause.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/playPause.json",
+    "sha256": "ddde1d0a2f2213c324135debfb888ccea9f9cbf8b2d18f3a7b60b9cbf4556669",
+    "vendoredSha256": "ddde1d0a2f2213c324135debfb888ccea9f9cbf8b2d18f3a7b60b9cbf4556669",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "useAnimations/react-useanimations",
+    "commit": "035f164df779da512f06f1de4b0b59f7bf5624ba",
+    "originalFile": "icons/microphone.json",
+    "localFile": "packages/assets/vendor/useAnimations/icons/microphone.json",
+    "url": "https://raw.githubusercontent.com/useAnimations/react-useanimations/035f164df779da512f06f1de4b0b59f7bf5624ba/icons/microphone.json",
+    "sha256": "7f12e9577a39e11aecc1d521d77bfe78dfd60b5b1175f69f86ab1f1442fdcfc0",
+    "vendoredSha256": "7f12e9577a39e11aecc1d521d77bfe78dfd60b5b1175f69f86ab1f1442fdcfc0",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "tabler/tabler-icons",
+    "commit": "a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d",
+    "originalFile": "LICENSE",
+    "localFile": "packages/assets/vendor/tabler/LICENSE",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/LICENSE",
+    "sha256": "b740a1d46122672da62833e97f7e7c8a13fa85cbc7445b584b297cc00dde93db",
+    "vendoredSha256": "b740a1d46122672da62833e97f7e7c8a13fa85cbc7445b584b297cc00dde93db",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "tabler/tabler-icons",
+    "commit": "a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d",
+    "originalFile": "icons/outline/rocket.svg",
+    "localFile": "packages/assets/vendor/tabler/icons/outline/rocket.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/rocket.svg",
+    "sha256": "ea5f8a0922691d4c36d56c61c6e5c1dab1ae11ff5856a1036430f26d0eb23214",
+    "vendoredSha256": "ea5f8a0922691d4c36d56c61c6e5c1dab1ae11ff5856a1036430f26d0eb23214",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "tabler/tabler-icons",
+    "commit": "a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d",
+    "originalFile": "icons/outline/bulb.svg",
+    "localFile": "packages/assets/vendor/tabler/icons/outline/bulb.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/bulb.svg",
+    "sha256": "4f4688352f60a3d65ca9abb8cebc9fc3c3d3b9f2fbc47784b44b22008a69f0fc",
+    "vendoredSha256": "4f4688352f60a3d65ca9abb8cebc9fc3c3d3b9f2fbc47784b44b22008a69f0fc",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "tabler/tabler-icons",
+    "commit": "a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d",
+    "originalFile": "icons/outline/chart-line.svg",
+    "localFile": "packages/assets/vendor/tabler/icons/outline/chart-line.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/chart-line.svg",
+    "sha256": "91ae4d96cfc8926df2c715438bd539da2703dc158828336c227ce23e62ca7cb4",
+    "vendoredSha256": "91ae4d96cfc8926df2c715438bd539da2703dc158828336c227ce23e62ca7cb4",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "jdecked/twemoji",
+    "commit": "b6b55fef1e8636b540a6d016a4729ca8cdf2e60b",
+    "originalFile": "LICENSE",
+    "localFile": "packages/assets/vendor/jdecked/LICENSE",
+    "url": "https://raw.githubusercontent.com/jdecked/twemoji/b6b55fef1e8636b540a6d016a4729ca8cdf2e60b/LICENSE",
+    "sha256": "5076b7ec0f98f95aa87a3103bebdcd3852acd88d61fbd99307b8d953024acb67",
+    "vendoredSha256": "5076b7ec0f98f95aa87a3103bebdcd3852acd88d61fbd99307b8d953024acb67",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "jdecked/twemoji",
+    "commit": "b6b55fef1e8636b540a6d016a4729ca8cdf2e60b",
+    "originalFile": "LICENSE-GRAPHICS",
+    "localFile": "packages/assets/vendor/jdecked/LICENSE-GRAPHICS",
+    "url": "https://raw.githubusercontent.com/jdecked/twemoji/b6b55fef1e8636b540a6d016a4729ca8cdf2e60b/LICENSE-GRAPHICS",
+    "sha256": "8ae9438818c26e4873b91d8c6ad620526c011e27e125677f13031eda903f007c",
+    "vendoredSha256": "8ae9438818c26e4873b91d8c6ad620526c011e27e125677f13031eda903f007c",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "jdecked/twemoji",
+    "commit": "b6b55fef1e8636b540a6d016a4729ca8cdf2e60b",
+    "originalFile": "assets/svg/2728.svg",
+    "localFile": "packages/assets/vendor/jdecked/assets/svg/2728.svg",
+    "url": "https://raw.githubusercontent.com/jdecked/twemoji/b6b55fef1e8636b540a6d016a4729ca8cdf2e60b/assets/svg/2728.svg",
+    "sha256": "9271962e9fc8257ce9e008bde83ac1408a2f196db6142548769f290873b70b93",
+    "vendoredSha256": "9271962e9fc8257ce9e008bde83ac1408a2f196db6142548769f290873b70b93",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "jdecked/twemoji",
+    "commit": "b6b55fef1e8636b540a6d016a4729ca8cdf2e60b",
+    "originalFile": "assets/svg/1f680.svg",
+    "localFile": "packages/assets/vendor/jdecked/assets/svg/1f680.svg",
+    "url": "https://raw.githubusercontent.com/jdecked/twemoji/b6b55fef1e8636b540a6d016a4729ca8cdf2e60b/assets/svg/1f680.svg",
+    "sha256": "3892ef66f49ce43d49c8719e9277da0e0e821059f0cc239a549f6629cc12b3cf",
+    "vendoredSha256": "3892ef66f49ce43d49c8719e9277da0e0e821059f0cc239a549f6629cc12b3cf",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "jdecked/twemoji",
+    "commit": "b6b55fef1e8636b540a6d016a4729ca8cdf2e60b",
+    "originalFile": "assets/svg/1f389.svg",
+    "localFile": "packages/assets/vendor/jdecked/assets/svg/1f389.svg",
+    "url": "https://raw.githubusercontent.com/jdecked/twemoji/b6b55fef1e8636b540a6d016a4729ca8cdf2e60b/assets/svg/1f389.svg",
+    "sha256": "194de9942601b9a42cc9ea79663aaca170816cfc07cbe8b2a568852427fa7088",
+    "vendoredSha256": "194de9942601b9a42cc9ea79663aaca170816cfc07cbe8b2a568852427fa7088",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "originalFile": "LICENSE.txt",
+    "localFile": "packages/assets/vendor/Calinou/LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/LICENSE.txt",
+    "sha256": "4f88ab3c885c87874834441a0d009cea8942f57461d7b870be65cf4e31362073",
+    "vendoredSha256": "4f88ab3c885c87874834441a0d009cea8942f57461d7b870be65cf4e31362073",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "originalFile": "addons/kenney_ui_audio/LICENSE.txt",
+    "localFile": "packages/assets/vendor/Calinou/addons/kenney_ui_audio/LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/addons/kenney_ui_audio/LICENSE.txt",
+    "sha256": "4f88ab3c885c87874834441a0d009cea8942f57461d7b870be65cf4e31362073",
+    "vendoredSha256": "4f88ab3c885c87874834441a0d009cea8942f57461d7b870be65cf4e31362073",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "originalFile": "addons/kenney_ui_audio/click1.wav",
+    "localFile": "packages/assets/vendor/Calinou/addons/kenney_ui_audio/click1.wav",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/addons/kenney_ui_audio/click1.wav",
+    "sha256": "dd90b97f38b0ec7d52161d7c3bf8d61a66655766fd0af06439963351b4853a83",
+    "vendoredSha256": "dd90b97f38b0ec7d52161d7c3bf8d61a66655766fd0af06439963351b4853a83",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "originalFile": "addons/kenney_ui_audio/click2.wav",
+    "localFile": "packages/assets/vendor/Calinou/addons/kenney_ui_audio/click2.wav",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/addons/kenney_ui_audio/click2.wav",
+    "sha256": "a8b35cb35ff45738a9d7fe008490ad21a3ad30417dadd544a435d8b0ea84d841",
+    "vendoredSha256": "a8b35cb35ff45738a9d7fe008490ad21a3ad30417dadd544a435d8b0ea84d841",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "originalFile": "addons/kenney_ui_audio/click3.wav",
+    "localFile": "packages/assets/vendor/Calinou/addons/kenney_ui_audio/click3.wav",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/addons/kenney_ui_audio/click3.wav",
+    "sha256": "8d0676a5bcbfedad3e65b7b73e93a044216d7f192c99a3a05caf21e2aa4a8dda",
+    "vendoredSha256": "8d0676a5bcbfedad3e65b7b73e93a044216d7f192c99a3a05caf21e2aa4a8dda",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "Calinou/kenney-ui-audio",
+    "commit": "8c3d81b9159d058c444f89d12d518276b0b09345",
+    "originalFile": "addons/kenney_ui_audio/switch1.wav",
+    "localFile": "packages/assets/vendor/Calinou/addons/kenney_ui_audio/switch1.wav",
+    "url": "https://raw.githubusercontent.com/Calinou/kenney-ui-audio/8c3d81b9159d058c444f89d12d518276b0b09345/addons/kenney_ui_audio/switch1.wav",
+    "sha256": "e48f397e7dffafab68a2252287b8ff0e3805f141f76e51a3c6285e72e0d443d0",
+    "vendoredSha256": "e48f397e7dffafab68a2252287b8ff0e3805f141f76e51a3c6285e72e0d443d0",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "realvjy/illlustrations",
+    "commit": "b6d6f3286995e6efbbf397eff21b572245c336fd",
+    "originalFile": "content/illlustrations/day-95/day95-app-development.svg",
+    "localFile": "packages/assets/vendor/realvjy/content/illlustrations/day-95/day95-app-development.svg",
+    "url": "https://raw.githubusercontent.com/realvjy/illlustrations/b6d6f3286995e6efbbf397eff21b572245c336fd/content/illlustrations/day-95/day95-app-development.svg",
+    "sha256": "b3025c70b96fa7f51dca0a954ec0a84ef985fc29201aff26ad4ba08e3668fb34",
+    "vendoredSha256": "b3025c70b96fa7f51dca0a954ec0a84ef985fc29201aff26ad4ba08e3668fb34",
+    "modifications": "Unchanged upstream bytes."
+  },
+  {
+    "repo": "RenderComp/free-remotion-templates",
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "originalFile": "src/components/eye-reveal/EyeReveal.tsx",
+    "localFile": "packages/assets/vendor/RenderComp/src/components/eye-reveal/EyeReveal.tsx",
+    "url": "https://raw.githubusercontent.com/RenderComp/free-remotion-templates/f648980e528defb7594e24c6447055f0540f340b/src/components/eye-reveal/EyeReveal.tsx",
+    "sha256": "edcf1abc6cf761f2cdf15a64622c4ac32717a59ecd3f85c9fb98a312f1bbb936",
+    "vendoredSha256": "884b0da83367973a53ab2a26ebf392829511dc0556e452d06b99326db4773972",
+    "modifications": "Font inheritance and project-coordinate video configuration adapter; original animation math retained."
+  }
+]

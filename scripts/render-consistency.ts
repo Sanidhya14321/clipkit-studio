@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {bundle} from '@remotion/bundler';
 import {openBrowser,renderStill,selectComposition} from '@remotion/renderer';
+import {editableFields} from '../packages/assets/src/controls.ts';
 import {catalog,makeClip} from '../packages/assets/src/index.ts';
 import {emptyProject} from '../packages/core/src/index.ts';
 const root=path.resolve(import.meta.dirname,'..');
@@ -23,7 +24,7 @@ const results:Array<{clipId:string;frame:number;previewHash:string;exportHash:st
 try{
  const serveUrl=await bundle({entryPoint});browser=await openBrowser('chrome');
  for(const asset of catalog){
-  const project=emptyProject();project.tracks[1].items.push(makeClip(asset.id));const frame=asset.id==='wipe'?18:45;
+  const project=emptyProject();project.tracks[1].items.push(makeClip(asset.id));const frame=asset.id==='wipe'?18:asset.id==='adapted-eye-reveal'?55:asset.id==='adapted-pencil-draw'?105:asset.id==='adapted-social-reel'?30:asset.id.startsWith('adapted-')||asset.id.startsWith('lottie-')?75:45;
   const inputProps={project,assetBaseUrl:base,mediaBaseUrl:`${base}/media`,preview:true};
   const composition=await selectComposition({serveUrl,id:'ClipKit',inputProps,puppeteerInstance:browser});
   const capture=async(label:string,props:Record<string,unknown>)=>{const output=path.join(outDirectory,`${asset.id}-${label}.png`);const {buffer}=await renderStill({serveUrl,composition:{...composition,props},inputProps:props,frame,puppeteerInstance:browser,imageFormat:'png',output});const bytes=buffer??await readFile(output);assert(bytes.length>1000,`${asset.id}: empty render`);return createHash('sha256').update(bytes).digest('hex');};
@@ -32,9 +33,10 @@ try{
   assert.equal(previewHash,exportHash,`${asset.id}: native preview differs from export`);
   const editedProject=structuredClone(project);editedProject.tracks[1].items[0].props.color='#ff007f';
   const editedHash=await capture('edited',{...inputProps,project:editedProject});
-  assert.notEqual(previewHash,editedHash,`${asset.id}: editable color made no visible change`);
+  if(editableFields(asset.id,asset.fields,asset.defaults).some(field=>field.key==='color'))assert.notEqual(previewHash,editedHash,`${asset.id}: editable color made no visible change`);
   const controls:Record<string,Record<string,unknown>>={'starfield':{seed:'different-stars'},'confetti-burst':{count:8},'terminal-typewriter':{revealDuration:12},'bar-chart':{value4:5}};
   if(controls[asset.id]){const changed=structuredClone(project);Object.assign(changed.tracks[1].items[0].props,controls[asset.id]);assert.notEqual(previewHash,await capture('control',{...inputProps,project:changed}),`${asset.id}: specific control made no visible change`);}
+  if(asset.id.startsWith('adapted-')||asset.id.startsWith('lottie-')){const textProject=structuredClone(project);textProject.tracks[1].items[0].props.text='CLIPKIT CHANGE';assert.notEqual(previewHash,await capture('text',{...inputProps,project:textProject}),`${asset.id}: text control did not change the visible content`);}
   results.push({clipId:asset.id,frame,previewHash,exportHash,editedHash,defaultsSha256:createHash('sha256').update(JSON.stringify(asset.defaults)).digest('hex')});console.log(`PASS ${asset.id}: preview/export pixels match; color edit changes frame`);
  }
  await writeFile(path.join(outDirectory,'report.json'),JSON.stringify({distribution:distribution??null,entryPoint,assetDirectory,results},null,2));

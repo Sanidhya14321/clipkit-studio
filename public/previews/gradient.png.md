@@ -12,7 +12,7 @@ tags: [ "preview", "gradient" ]
 mood: "calm-ambient"
 best-for: "Studio library thumbnails only."
 avoid: "Using as flattened footage instead of the editable native clip."
-perf: "Static PNG, 45880 bytes."
+perf: "Static PNG thumbnail, 158925 bytes."
 integration: "Preview URL: /previews/gradient.png. Place the native clip, not this image."
 media-path: "public/previews/gradient.png"
 sha256: "4fecc3daf4e308cbc835a42f57b42d7f9ac4e0e9bf620f578d5e4a622e751076"

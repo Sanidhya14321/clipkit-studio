@@ -12,7 +12,7 @@ tags: [ "preview", "icon-callout" ]
 mood: "clean-positive"
 best-for: "Studio library thumbnails only."
 avoid: "Using as flattened footage instead of the editable native clip."
-perf: "Static PNG, 9182 bytes."
+perf: "Static PNG thumbnail, 12608 bytes."
 integration: "Preview URL: /previews/icon-callout.png. Place the native clip, not this image."
 media-path: "public/previews/icon-callout.png"
 sha256: "a1f9601d00ceb951e137b00fa239ab567312e439a1c1751380a04f53a308a70e"

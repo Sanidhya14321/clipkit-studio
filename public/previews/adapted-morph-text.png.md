@@ -1,0 +1,29 @@
+---
+id: "preview-adapted-morph-text"
+name: "Blur text reveal preview"
+kind: "image"
+version: 1
+source: "scripts/verify-assets.ts"
+author: "Original upstream authors; ClipKit frame adaptation"
+license: "MIT"
+provenance: "Upstream source and license retained under packages/assets/vendor. Adapter and schema are agent-authored; upstream human-only authorship is not certified."
+provenance-status: "agent-authored"
+tags: [ "text", "starter", "adapted-morph-text" ]
+mood: "editorial"
+best-for: "Library thumbnail; use the actual editable template on the timeline."
+avoid: "Unsupported data shapes, baked text editing, and claims of independent human-only certification."
+duration: "Editable bounded timeline duration."
+perf: "Static PNG thumbnail, 8621 bytes."
+integration: "/previews/adapted-morph-text.png"
+source-files: [ "packages/assets/src/starter-specs.ts", "packages/render/src/StarterClips.tsx", "packages/assets/vendor/ibelick/components/core/text-morph.tsx" ]
+uses: []
+tested:
+  status: integrity-verified
+  method: Preview regenerated with the current native render proof.
+  evidence: public/packs/native/determinism.json
+media-path: "public/previews/adapted-morph-text.png"
+sha256: "f79539cd15b4bb0c6a317e3d19e6de8170804fad367d14db5fbaa379e1de860d"
+---
+
+## Appearance
+A rendered preview of Blur text reveal

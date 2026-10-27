@@ -1,37 +1,28 @@
 # Third-party notices
 
-ClipKit ships original native clip components together with a small licensed source pack. The ten catalog clips are frame-driven React components. They contain editable text, colors, sizes, positions, opacity and reveal timing; there are no flattened template videos. Inter and Space Grotesk are used for typography, a selected illlustrations SVG appears in the illustration card, and Lucide supplies the native callout icons. All ten clip implementations, including their layout, browser framing and frame-driven motion, were written originally for ClipKit. No template source code was adapted or copied from RenderComp or any other reference repository. Licensed upstream material is limited to the bundled fonts, illustration and sound, plus installed Lucide icons.
+ClipKit 0.2.0 ships original native components and reviewed upstream adaptations. The first fourteen native templates are agent-authored ClipKit code. The new library includes eighteen adapted RenderComp components, six reviewed frame-driven adaptations of selected browser/vector techniques, and eight MIT-licensed useAnimations JSON animations. Do not describe these as certified human-made artwork or claim all templates are original ClipKit designs.
 
-`public/vendor/manifest.json` records exact upstream commits, original URLs, byte counts and SHA256 hashes for every fetched file and its unmodified license. `pnpm assets:fetch` fetches that same pinned selection without cloning repositories. The default bundled sound is a Kenney UI click, suitable for an imported audio item; it is not automatically added to every clip. Upstream licensing must be checked before changing this selection.
+Exact adopted files, pinned commits, original and retained checksums, authorship and modifications appear in `packages/assets/vendor/manifest.json`. Original notices ship beside those files. Media records with per-file license, attribution, source URL and modifications appear in `public/assets/manifest.json`. Earlier font/illustration/sound originals remain in `public/vendor/manifest.json`. Reference-only candidates in the historical source audit are not additional shipped assets.
 
-| Source | Use and license |
+| Source | Adopted use and license |
 | --- | --- |
-| [RenderComp/free-remotion-templates](https://github.com/RenderComp/free-remotion-templates) | MIT. Template source reference; no files copied. |
-| [tabler/tabler-icons](https://github.com/tabler/tabler-icons/blob/main/LICENSE) | MIT. Verified alternative icon source; no icon files copied. |
-| [lucide-icons/lucide](https://github.com/lucide-icons/lucide/blob/main/LICENSE) | ISC, with MIT notice for listed Feather-derived icons. Installed `lucide-react` supplies icons; retain both notices. |
-| [rsms/inter](https://github.com/rsms/inter/blob/master/LICENSE.txt) | SIL OFL 1.1. Pinned variable TTF and original license bundled. |
-| [floriankarsten/space-grotesk](https://github.com/floriankarsten/space-grotesk/blob/master/OFL.txt) | SIL OFL 1.1. Pinned variable TTF and original license bundled. |
-| [realvjy/illlustrations](https://github.com/realvjy/illlustrations/blob/develop/LICENSE) | MIT. One pinned SVG and original license bundled. |
-| [boringdesigners/boring-avatars](https://github.com/boringdesigners/boring-avatars/blob/master/LICENSE) | MIT. Candidate vector/avatar source; no files copied. |
-| [marvelapp/devices.css](https://github.com/marvelapp/devices.css/blob/master/LICENSE) | MIT. Candidate device-frame source; no files copied. |
-| [jdecked/twemoji](https://github.com/jdecked/twemoji/blob/main/LICENSE-GRAPHICS) | Graphics CC BY 4.0; code MIT. Candidate only; no graphics copied. Future graphics use needs visible attribution. |
-| [useAnimations/react-useanimations](https://github.com/useAnimations/react-useanimations/blob/main/LICENSE) | MIT. Candidate icon motion source; no files copied. |
-| [Calinou/kenney-ui-audio](https://github.com/Calinou/kenney-ui-audio/blob/master/LICENSE.txt) | CC0. One pinned WAV and original license bundled. Source author Kenney Vleugels / Kenney.nl. |
-| [facebookincubator/Meta-open-sound](https://github.com/facebookincubator/Meta-open-sound) | Per collection: instrument collections CC0; Oculus Audio Pack CC BY 4.0. Candidate only; no files copied. |
+| RenderComp/free-remotion-templates | Eighteen selected TSX templates. MIT. Adapted font and logical-canvas integration are recorded per file. |
+| juliangarnier/anime | Retained selected HTML/SVG example; frame-driven React adaptation. MIT. |
+| ibelick/motion-primitives | Retained text examples; frame-driven adaptations. MIT. |
+| boringdesigners/boring-avatars | Beam/Bauhaus vector avatar components. MIT. |
+| useAnimations/react-useanimations | Eight selected animation JSON files. MIT. |
+| tabler/tabler-icons | Three SVG symbols. MIT. Color replacement recorded. |
+| jdecked/twemoji | Three reaction SVGs. Graphics CC BY 4.0; code license is distinct. Attribution retained per item and in export credits. |
+| realvjy/illlustrations | Two selected SVG illustrations. MIT. |
+| Calinou/kenney-ui-audio | Four distinct sound effects by Kenney Vleugels / Kenney.nl. CC0. |
+| rsms/inter | Pinned variable font. SIL OFL 1.1. |
+| floriankarsten/space-grotesk | Pinned headline font. SIL OFL 1.1. |
+| lucide-icons/lucide | Installed icons. ISC plus inherited MIT notice for applicable Feather icons. |
+| Wikimedia Commons | Eight photos and six video excerpts, individually verified CC0 or CC BY 4.0. Per-file author/license/source and trim/transcode modifications are in the media manifest. |
 
-`public/vendor/source-audit.json` records twelve verified source repositories with pinned commits, license URLs and SHA256 hashes. Unmodified license evidence is retained under `public/vendor/references/`, including the separate Meta Oculus collection license. This is an audit of licensed candidates; only the five marked bundled sources supply current assets.
+The distribution retains notices under `public/vendor`, `public/assets/references` and `runtime/packages/assets/vendor`. Exports produce immutable `.credits.json` sidecars alongside MP4 files. Include the required attribution when redistributing CC BY artwork or excerpts; users remain responsible for their own imported media rights.
 
-Excluded candidate: [reactvideoeditor/remotion-templates](https://github.com/reactvideoeditor/remotion-templates) is public, but its license endpoint returned 404. Its suggested MIT license was not established, so no files were used and it is excluded from the twelve verified sources.
-
-Do not describe reference-only repositories as bundled assets. In particular, Meta collection licenses and Twemoji code/graphics licenses are distinct. User footage remains subject to the user's provenance and permissions.
-
-Each export writes a separate immutable `.credits.json` containing project revision/hash, user media provenance, and the bundled manifest next to its MP4. A unique suffix prevents exports from overwriting earlier output. The actual source license texts ship in `public/vendor/` and should accompany redistributed source packs.
-
-The packaged distribution retains `public/vendor/manifest.json`, `public/vendor/source-audit.json`, all bundled asset license notices, and the reference license evidence. Dependencies installed from npm retain their own package licenses; Remotion licensing is separate from these asset permissions.
-
-## Asset-card metadata additions (verified 27 October 2026)
-
-The native motion implementations and generated previews are agent-authored original code, not certified human-made artwork. The cards preserve this distinction. External fonts/art/sound are attributed to their upstream authors using pinned source/license records; these records cannot prove that no AI was involved in a creation process. The card inventory records the exact scope of each check.
+RVE was not vendored because complete license evidence was unavailable. React Bits is excluded under its redistribution restriction. Candidate licenses such as Meta collection-specific licenses do not apply to unrelated files. Dependency packages retain their own notices; Remotion framework licensing remains separate from template permissions.
 
 ### YAML parser — ISC
 

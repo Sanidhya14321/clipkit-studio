@@ -49,6 +49,7 @@ async function initialize(){
   if(!priorCursor.startsWith('---')){await mkdir(dirname(cursorPath),{recursive:true});await writeFile(cursorPath,'---\ndescription: Edit the shared ClipKit timeline through revisioned MCP tools.\nalwaysApply: true\n---\n'+priorCursor);}
   await managedText(cursorPath,'<!-- clipkit:start -->','<!-- clipkit:end -->',agentInstructions);
   await writeFile(join(root,'.clipkit/adapters.json'),JSON.stringify({mcpConfig}));
+  await mkdir(join(root,'assets'),{recursive:true});try{await writeFile(join(root,'assets/README.md'),'# Project assets\n\nAdd media or reviewed pack sources here, then select Library → Rescan. Raw source files are never automatically executed.\n',{flag:'wx'});}catch(error){if((error as NodeJS.ErrnoException).code!=='EEXIST')throw error;}
   await doctor();
   output({initialized:true,root,adapters:['Codex','Claude Code','Cursor','MCP'],next:'ck studio',note:'Agent CLIs must be installed and signed in. Fish Audio is optional until voice generation/transcription.'});
 }
@@ -72,6 +73,7 @@ async function main(){
   if(command==='init')return initialize();
   if(command==='studio')return studio();
   if(command==='doctor')return doctor();
+  if(command==='library'){if(sub==='list')return output(await invoke('library_list',{q:flags.q,kind:flags.kind,origin:flags.origin,offset:Number(flags.offset??0),limit:Number(flags.limit??20)}));if(sub==='inspect')return output(await invoke('library_inspect',{assetId:rest[0]}));if(sub==='rescan')return output(await invoke('library_rescan'));if(sub==='import')return output(await invoke('library_import',{path:resolve(rest[0])}));if(sub==='place')return output(await invoke('library_place',{assetId:rest[0],at:Number(flags.at??0),trackId:flags.track}));}
   if(command==='assets'&&sub==='build'){await buildAssets(installRoot,join(root,'.clipkit','assets'));const {refreshPacks}=await import('../../assets/src/packs.ts');return output(await refreshPacks(root));}
   if(command==='assets'&&sub==='install')return output(await invoke('assets_install',{path:resolve(rest[0]),trust:flags.trust===true}));
   if(command==='mcp'){await serveMcp(invoke);return;}

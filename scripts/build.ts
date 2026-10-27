@@ -16,11 +16,13 @@ const distribution=join(root,'artifacts','package');await rm(distribution,{recur
 await cp(join(root,'dist'),join(distribution,'dist'),{recursive:true});
 await cp(join(root,'public'),join(distribution,'public'),{recursive:true});
 for(const name of ['core','assets','render'])await cp(join(root,'packages',name,'src'),join(distribution,'runtime','packages',name,'src'),{recursive:true});
+await cp(join(root,'packages/assets/vendor'),join(distribution,'runtime/packages/assets/vendor'),{recursive:true});
 await cp(join(root,'packages/assets/cards'),join(distribution,'runtime/packages/assets/cards'),{recursive:true});
 const manifest=JSON.parse(await readFile(join(root,'package.json'),'utf8'));
-await writeFile(join(distribution,'package.json'),JSON.stringify({name:'clipkit-studio-local',version:manifest.version,description:'Local, revisioned video collaboration for humans and coding agents',type:'module',bin:{ck:'dist/cli.js'},engines:{node:'>=22'},files:['npm-shrinkwrap.json','dist','public','runtime','README.md','LICENSE','THIRD_PARTY_NOTICES.md','docs','DECISIONS.md','.env.example'],dependencies:manifest.dependencies,overrides:manifest.overrides},null,2));
+await writeFile(join(distribution,'package.json'),JSON.stringify({name:'clipkit-studio-local',version:manifest.version,description:'Local, revisioned video collaboration for humans and coding agents',type:'module',bin:{ck:'dist/cli.js'},engines:{node:'>=22'},files:['npm-shrinkwrap.json','dist','public','runtime','README.md','LICENSE','THIRD_PARTY_NOTICES.md','docs','assets','DECISIONS.md','.env.example'],dependencies:manifest.dependencies,overrides:manifest.overrides},null,2));
 for(const file of ['README.md','LICENSE','THIRD_PARTY_NOTICES.md','DECISIONS.md','.env.example'])try{await cp(join(root,file),join(distribution,file));}catch{}
 await cp(join(root,'docs'),join(distribution,'docs'),{recursive:true});
+await cp(join(root,'assets'),join(distribution,'assets'),{recursive:true});
 await chmod(join(distribution,'dist','cli.js'),0o755);
 // A dependency's overrides are ignored by npm consumers. Ship a shrinkwrap so
 // the tarball also retains the patched transitive dependency versions.
@@ -30,5 +32,5 @@ await rename(join(distribution,'package-lock.json'),join(distribution,'npm-shrin
 // reconciles exact upstream constraints. Bundle the overridden Remotion tree
 // so consumers receive the tested patched versions rather than re-resolving it.
 await promisify(execFile)('npm',['ci','--omit=dev','--ignore-scripts','--no-audit','--no-fund'],{cwd:distribution,maxBuffer:4*1024*1024,timeout:180000});
-const packagedManifest=JSON.parse(await readFile(join(distribution,'package.json'),'utf8'));packagedManifest.bundledDependencies=Object.keys(manifest.dependencies).filter(name=>name.startsWith('@remotion/')||name==='remotion');await writeFile(join(distribution,'package.json'),JSON.stringify(packagedManifest,null,2));
+const packagedManifest=JSON.parse(await readFile(join(distribution,'package.json'),'utf8'));packagedManifest.bundledDependencies=Object.keys(manifest.dependencies).filter(name=>name.startsWith('@remotion/')||name==='remotion'||name==='lottie-web');await writeFile(join(distribution,'package.json'),JSON.stringify(packagedManifest,null,2));
 console.log('Built studio, CLI, renderer runtime and self-contained package at artifacts/package. Run npm pack ./artifacts/package --pack-destination ./artifacts.');

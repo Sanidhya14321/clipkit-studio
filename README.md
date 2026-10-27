@@ -2,7 +2,7 @@
 
 A local video workspace where you and a coding agent edit the same non-destructive timeline. Agents make small, revisioned patches; you can inspect, change and undo them.
 
-**Status:** local hackathon MVP with audited gap fixes. See the [current checkup](docs/GAP-FIX-CHECKUP.md) and [original Word PRD audit](docs/PRD-FEATURE-AUDIT.md). Live voice and two-client acceptance still require your credentials and rehearsal.
+**Version 0.2.0:** a Premiere-style local workstation with 72 usable timeline assets: 38 editable motion templates, 8 Lottie animations, 8 SVG illustrations/stickers, 8 photos, 6 footage clips and 4 sounds. Two bundled fonts appear in text controls and do not inflate the asset count. See [workspace and library](docs/WORKSPACE-ASSETS-0.2.md) and [verification](docs/VERIFICATION.md). Live Fish and Claude acceptance still require credentials and rehearsal.
 
 ## Start
 
@@ -35,6 +35,18 @@ claude auth login
 Create a comment on a selected layer and choose **Apply open**. You can also use the command field, or hold the voice button/backtick. Commands such as `undo`, `split here` and `go to 12 seconds` use the local deterministic router; free-form instructions become anchored comments. Recognition uses Fish or a supported browser speech-recognition fallback while held. Unclear speech asks for repetition; broad deletion requires confirmation. Typed commands remain available.
 
 For narration, create one slot per script line, then record or generate each line. A cloned voice requires your own in-app recording of at least ten seconds, confirmation that you have the right to clone it, and a trained private Fish model. Prepare the voice and cached takes before presenting. AI, recorded and cloned takes retain separate provenance and selection. Choose stretch, extend, ripple or re-record when a take does not fit. Whole-script recording aligns verified word timestamps to lines; uncertain alignment preserves the recording and asks for line-by-line takes. Bulk clone conversion preserves recorded lines.
+
+## Workspace and assets
+
+Library → Preview → Add at playhead places an independent instance. Edit text and declared bindings in Properties; image/video controls include transform, crop, fit and opacity. Audio supports volume and fades. Undo/redo uses the same revision journal as agent edits. Resize or collapse panels, choose compact grid/list, and use Reset Workspace to recover the default layout.
+
+Put future media or source examples in the project's `assets/` folder and choose Rescan. Importing registers a file; Add places it. Source HTML/JSX/TSX and arbitrary JSON remain visible with an adaptation reason until reviewed. Executable packs require explicit content-bound trust. Text baked into photos or videos remains baked; add an overlay to edit a caption.
+
+```sh
+pnpm ck library list
+pnpm ck library inspect adapted-glitch-text
+pnpm ck library rescan
+```
 
 ## CLI examples
 

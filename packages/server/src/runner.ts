@@ -8,7 +8,7 @@ import {type Activity,type Telemetry,tokenEstimate,id} from '../../core/src/inde
 export const agentInstructions = `# ClipKit editing workflow
 Use only the clipkit MCP tools to edit the video. Do not inspect files or run shell commands.
 The server owns the project; never rewrite project.json directly.
-Search assets_list/assets_search; call asset_card before placing a new clip, then fetch only its schema. Read affected layers and patch precisely.
+Search library_list for ready media or templates, and library_inspect for declared controls and provenance. Search assets_list/assets_search for template-only requests; call asset_card before placing a new clip, then fetch only its schema. Read affected layers and patch precisely.
 Every patch needs a fresh baseRev, a unique requestId, and a concise label.
 When request context already includes a pointer and current values, patch directly; fetch schemas only for new or uncertain props.
 The active turn lease is automatically supplied by the MCP connection.

@@ -2,17 +2,38 @@
   "Typography": [
     "kinetic-title",
     "captions",
-    "terminal-typewriter"
+    "terminal-typewriter",
+    "adapted-brush-stroke-reveal",
+    "adapted-chapter-title",
+    "adapted-community-chat",
+    "adapted-eye-reveal",
+    "adapted-glitch-text",
+    "adapted-gradient-text-sweep",
+    "adapted-kinetic-word-stack",
+    "adapted-logo-stroke-draw",
+    "adapted-lower-third-glass-card",
+    "adapted-neon-sign",
+    "adapted-pencil-draw",
+    "adapted-scramble-text",
+    "adapted-social-reel",
+    "adapted-text-mask-reveal",
+    "adapted-wave-text",
+    "adapted-morph-text",
+    "adapted-scramble-title"
   ],
   "Identity": [
-    "lower-third"
+    "lower-third",
+    "adapted-speaker-avatar",
+    "adapted-team-avatars"
   ],
   "Callout": [
-    "icon-callout"
+    "icon-callout",
+    "adapted-svg-draw"
   ],
   "Data": [
     "counter",
-    "bar-chart"
+    "bar-chart",
+    "adapted-line-chart-anim"
   ],
   "Illustration": [
     "illustration-card"
@@ -22,7 +43,10 @@
   ],
   "Background": [
     "gradient",
-    "starfield"
+    "starfield",
+    "adapted-bokeh-circles",
+    "adapted-loop-grid-wave",
+    "adapted-grid-stagger"
   ],
   "Transition": [
     "wipe"
@@ -32,5 +56,15 @@
   ],
   "Effects": [
     "confetti-burst"
+  ],
+  "Lottie": [
+    "lottie-checkmark",
+    "lottie-download",
+    "lottie-heart",
+    "lottie-loading",
+    "lottie-microphone",
+    "lottie-notification",
+    "lottie-playpause",
+    "lottie-upload"
   ]
 }

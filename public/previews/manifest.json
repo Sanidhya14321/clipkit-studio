@@ -82,5 +82,197 @@
     "frame": 45,
     "sha256": "1a352c238f1d6fb37dec98d36e228262f681edbdbeb6a6838ba66ce2651c7bdc",
     "defaultsSha256": "dad6d436940fb48ff98ea755676c0b9d20df7e522763475a8df56814be414e12"
+  },
+  {
+    "clipId": "adapted-bokeh-circles",
+    "frame": 75,
+    "sha256": "51d4b95a80e871b858ee57e513e1411aac764681edb4419708d5a0ef9a025893",
+    "defaultsSha256": "f9eba1644791b5111b4e596cc2bdb5af2412ae4419c8b58aed6c9214bf7ca11f"
+  },
+  {
+    "clipId": "adapted-brush-stroke-reveal",
+    "frame": 75,
+    "sha256": "11ae21832a57fec4d67dc18f56c0083df7491d5a8278fc7b8f56a7a987132278",
+    "defaultsSha256": "fb0a7a14d5ef603b641643f12ccb59e3ab98aac165fcf1a228f2cbfa5505e1c1"
+  },
+  {
+    "clipId": "adapted-chapter-title",
+    "frame": 75,
+    "sha256": "10edc2e827f4bfaef94e5fc174a7be87959f8ef30984f746cfae137e526b7d4b",
+    "defaultsSha256": "1ede6e3bae1435c909b95d9322ec916035e5aa365d915aa853465358de7a86a9"
+  },
+  {
+    "clipId": "adapted-community-chat",
+    "frame": 75,
+    "sha256": "27e198bbc620eeeda382d4358022452e977928fe501e2519adff597bf4edae02",
+    "defaultsSha256": "5d8a9864c4bd93f471fa84c6344631b055ad88b68703da33e674740e82a5c718"
+  },
+  {
+    "clipId": "adapted-eye-reveal",
+    "frame": 75,
+    "sha256": "f32f49c5ad5a2955cf2ffe5b89eba7ee3c494bd7e20d463bf5c9e1cd5e6ebbc0",
+    "defaultsSha256": "76061f9ac8c6c5ba7dd90c9f02db1b4843051b50488ba44a347b74fd60708ce2"
+  },
+  {
+    "clipId": "adapted-glitch-text",
+    "frame": 75,
+    "sha256": "571fd55f3d7b35084ec8ffde2c6aa837fe3c58b2afa48ab375a755786c5e7c12",
+    "defaultsSha256": "7dc51ec1873ac3c6477c6b1db593d451d0c576943559cf66c0fbefde8535d4d8"
+  },
+  {
+    "clipId": "adapted-gradient-text-sweep",
+    "frame": 75,
+    "sha256": "710d143e56d38d49aa1f2ee79ea439289fea4ba1f366ceccff8d06fd7e3f0373",
+    "defaultsSha256": "50488980f2bd975a29f592b15936a5f808ce7aafd79efa44d64e635ba3a21637"
+  },
+  {
+    "clipId": "adapted-kinetic-word-stack",
+    "frame": 75,
+    "sha256": "0e1baa9e3e51e534cad23f014b1a9f862e37c6fdae68031819ddff146f96d7c6",
+    "defaultsSha256": "6e8a7d19ba7c1ac24f0a6ba716f8d0f2196dae55909622290c70a82a928a6e4c"
+  },
+  {
+    "clipId": "adapted-line-chart-anim",
+    "frame": 75,
+    "sha256": "751624a3bf9c6a495b3787fec8d2a95703a8a74c2606986183fb6842b0b6d227",
+    "defaultsSha256": "79e12ff8ec32a01abfcf095feca92a71891cc84051f7c9966cd666a487b726a0"
+  },
+  {
+    "clipId": "adapted-logo-stroke-draw",
+    "frame": 75,
+    "sha256": "174e14ccea40c8765b2cdca993d143af78e087bd81ca7153eb9efd58ba9f2936",
+    "defaultsSha256": "76a7124a87ee758959418818ed2e1874cdccd1c984d0391b3c18268097922690"
+  },
+  {
+    "clipId": "adapted-loop-grid-wave",
+    "frame": 75,
+    "sha256": "4a3a3607229602b25cebfba780379ccd2fd771a49761f49a68b00ef956f102df",
+    "defaultsSha256": "68a9279c0dd16c2df384a1364719e67a08600cd842cb99e1c35052ab3c8e156f"
+  },
+  {
+    "clipId": "adapted-lower-third-glass-card",
+    "frame": 75,
+    "sha256": "f128d49a6828f87255d14e3ec1d634463b95bb2a747f82b5c696c70d73048db5",
+    "defaultsSha256": "de2bd42bd9f47f3f3ecaac0ef1732a8caa5baa2025a082ac21d1e205179f2a9d"
+  },
+  {
+    "clipId": "adapted-neon-sign",
+    "frame": 75,
+    "sha256": "7e910a40e17bc27d2c8cec663eb1ae12970461e4cad37f5ffd0632a9f10ce6f0",
+    "defaultsSha256": "c113e4a368aca489e233473f845c71d7fba327be4aa4b0a9b645b4d01331b767"
+  },
+  {
+    "clipId": "adapted-pencil-draw",
+    "frame": 75,
+    "sha256": "06375cba284d2986ecc64d5753fb3e48fa827edf38601ba23996c24c40bf8e41",
+    "defaultsSha256": "3b84f74a4985b72fec2a89d596fc1a8b7bec332ba64c0c26ff1ea51f0d73f6cd"
+  },
+  {
+    "clipId": "adapted-scramble-text",
+    "frame": 75,
+    "sha256": "6a76de6e8c54e118d8e22af96d3e963fe43c33baa28a3170142a46d3b0a74543",
+    "defaultsSha256": "8ea2073bb5fc9e378d46d95846915232c5f5b9d1f91e884b01f42956fc432d6b"
+  },
+  {
+    "clipId": "adapted-social-reel",
+    "frame": 75,
+    "sha256": "6dd646e4498cf23cc4445f878e9eee11d4ed8769e25bf0226bbf6c418b62d0d6",
+    "defaultsSha256": "6e979bf28e6f14bae06f2712ba42ebab420331010da0cb39a33ce01551c15f7c"
+  },
+  {
+    "clipId": "adapted-text-mask-reveal",
+    "frame": 75,
+    "sha256": "d5c0f9edf233aff1231e25b01a3b0c76258f3de2887981abb03a16d5076319ad",
+    "defaultsSha256": "0211aeac01f93beee34235a0a1d81526d43c6722a29eb791875b4298ab6224a4"
+  },
+  {
+    "clipId": "adapted-wave-text",
+    "frame": 75,
+    "sha256": "b04ee43ea1e74033dc13efe7e506b0df169b30f1da7345e6e89c8a5e057d2f99",
+    "defaultsSha256": "9f38e78dc7f4bca798e6a56afbea264fe324520a1f37f2774b3e7596da2b8bfe"
+  },
+  {
+    "clipId": "adapted-morph-text",
+    "frame": 75,
+    "sha256": "f79539cd15b4bb0c6a317e3d19e6de8170804fad367d14db5fbaa379e1de860d",
+    "defaultsSha256": "91c28fe32f39f84d1d5fe71cbb95e2effd1784d0f3a70eddb678a02d9488af31"
+  },
+  {
+    "clipId": "adapted-scramble-title",
+    "frame": 75,
+    "sha256": "ac1eb210dd8fc7f8c65ba23563f655fdada2814a5df33ff8f050a2d2ce8dff5a",
+    "defaultsSha256": "ba497a4a2babe37e697f5164a30a244d54ef3fa5fbffa2218ad3c490043df139"
+  },
+  {
+    "clipId": "adapted-svg-draw",
+    "frame": 75,
+    "sha256": "d4abc200e6e069320bb0cc0cbbdb5e905cfbb55b682694c0a318c1d2745e7475",
+    "defaultsSha256": "cd0768cdfade825eb9c116478dd291f15958511f89f9cb1bc571259a24dbf246"
+  },
+  {
+    "clipId": "adapted-grid-stagger",
+    "frame": 75,
+    "sha256": "2df90f0fc8a541cbc4cdde207c03bcdeae697ad7f586f91ee89c855fbbb13efc",
+    "defaultsSha256": "9f737bd08e6afd55516b510d99b61613806ab2c6357f86edd14949cd44ee2296"
+  },
+  {
+    "clipId": "adapted-speaker-avatar",
+    "frame": 75,
+    "sha256": "73ca3de4e5c503b31611885d09dc4f65479e223444407f0beb6ce93f6603817d",
+    "defaultsSha256": "9bb54dddd4e8e9a2e2d468b5bbff6c4d60fe134e94b9d0ea84380d23c6704512"
+  },
+  {
+    "clipId": "adapted-team-avatars",
+    "frame": 75,
+    "sha256": "a54190c9c827eeac14209ece40f92906501db15f4ad7894efd673e3a6a13fb54",
+    "defaultsSha256": "5cc96277b1c78f7f8f8c3a80da6801e2b1e7caa564f1209ec20f0aec33067cc5"
+  },
+  {
+    "clipId": "lottie-checkmark",
+    "frame": 75,
+    "sha256": "7c8efde3fcb94c4c8271c0ab45c2b490eefa43b1b0dabb850c05bacf370ec23c",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
+  },
+  {
+    "clipId": "lottie-download",
+    "frame": 75,
+    "sha256": "70ca0d0fb3e62213f99933ef50899281838185e30332200d319753f154941635",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
+  },
+  {
+    "clipId": "lottie-heart",
+    "frame": 75,
+    "sha256": "0cb80e4963b29a894add6b68aa6e83142cf1a3ec9373f203faf41fccfb35364f",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
+  },
+  {
+    "clipId": "lottie-loading",
+    "frame": 75,
+    "sha256": "5dc44e8aa9d06b9f236f92bcb33df436dd538ca13324e9f4d41369a56a22a098",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
+  },
+  {
+    "clipId": "lottie-microphone",
+    "frame": 75,
+    "sha256": "a255cb192b1699c8de82fcfca47e4d1130a9f4c69043b97d380af77fbde6fd49",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
+  },
+  {
+    "clipId": "lottie-notification",
+    "frame": 75,
+    "sha256": "a9213842b463c44258db9d91bb7c4236d672293a81568b74f60d91f828c0dad5",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
+  },
+  {
+    "clipId": "lottie-playpause",
+    "frame": 75,
+    "sha256": "8a15361715868568964277e50cc45a53b60e72bc5363ec3947a49c5b6c1a667e",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
+  },
+  {
+    "clipId": "lottie-upload",
+    "frame": 75,
+    "sha256": "fb3f9d541d73a2da8f73cfdccd41898b6f66ca90bf39c950ada6c695a8a90726",
+    "defaultsSha256": "b74cb70c85554062e55cfc0e72717207f4c0bed8f559f44ea5af919f20e6aa9d"
   }
 ]

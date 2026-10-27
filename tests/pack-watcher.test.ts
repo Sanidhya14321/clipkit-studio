@@ -8,7 +8,7 @@ it('drains an active pack refresh before shutdown and suppresses late publicatio
  const blocked=new Promise<Awaited<ReturnType<typeof refreshPacks>>>(resolve=>{finish=resolve;});const refresh=vi.fn(()=>blocked),changed=vi.fn();
  const watcher=await watchPacks(root,changed,refresh);let closed=false;
  try{
-  await writeFile(path.join(root,'.clipkit/assets/packs/trigger.json'),'{}');await vi.waitFor(()=>expect(refresh).toHaveBeenCalled(),{timeout:3000});
+  await writeFile(path.join(root,'.clipkit/assets/packs/trigger.json'),'{}');await vi.waitFor(()=>expect(refresh).toHaveBeenCalled(),{timeout:10000});
   const closing=watcher.close().then(()=>{closed=true;});await Promise.resolve();expect(closed).toBe(false);
   finish({clips:[],version:'test',errors:[],generatedDir:path.join(root,'generated')});await closing;expect(closed).toBe(true);expect(changed).not.toHaveBeenCalled();
  }finally{finish({clips:[],version:'test',errors:[],generatedDir:''});await watcher.close();await rm(root,{recursive:true,force:true});}

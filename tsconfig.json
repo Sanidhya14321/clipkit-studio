@@ -42,5 +42,10 @@
     "scripts",
     "tests",
     "*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "artifacts",
+    "packages/assets/vendor"
   ]
 }

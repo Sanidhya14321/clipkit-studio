@@ -5,7 +5,7 @@ import {z} from 'zod';
 import {catalog,clipSchemas,validateClipProps} from './index';
 const editableKeys=['text','color','size','x','y','opacity','revealDuration'];
 /** Only this compiled registry can provide executable components. Pack JSON is metadata. */
-export const nativePackManifest={format:'clipkit.asset-pack/v1',id:'clipkit-native',version:'1.1.0',license:'MIT',runtime:{kind:'compiled',registry:'clipkit/native-v1'},editableContract:{layerAttribute:'data-ck-layer',propertyAttribute:'data-ck-path',elementAttribute:'data-ck-element',requiredProps:editableKeys},clips:catalog.map(a=>({clipId:a.id,license:a.license,defaults:a.defaults,fields:a.fields,previewPath:a.previewPath,schemaPath:`schemas/${a.id}.json`}))};
+export const nativePackManifest={format:'clipkit.asset-pack/v1',id:'clipkit-native',version:'1.2.0',license:'MIT',runtime:{kind:'compiled',registry:'clipkit/native-v1'},editableContract:{layerAttribute:'data-ck-layer',propertyAttribute:'data-ck-path',elementAttribute:'data-ck-element',requiredProps:editableKeys},clips:catalog.map(a=>({clipId:a.id,license:a.license,defaults:a.defaults,fields:a.fields,previewPath:a.previewPath,schemaPath:`schemas/${a.id}.json`}))};
 /** Build deterministic metadata from the trusted in-process native registry; never load pack code. */
 export async function buildAssets(root:string,outputDir=path.join(root,'public','packs','native')){
  const previewManifest=JSON.parse(await readFile(path.join(root,'public/previews/manifest.json'),'utf8')) as Array<{clipId:string;sha256:string;defaultsSha256:string}>;

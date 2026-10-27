@@ -30,6 +30,13 @@ export const toolDefinitions:Record<string,{description:string;shape:Record<stri
   job_status:{description:'Wait up to 15 seconds for an asynchronous job; call again if still running. Check failure before claiming completion.',shape:{jobId:z.string()}},
   export_start:{description:'Start real export from an immutable revision snapshot; returns a job.',shape:{}},
 };
+Object.assign(toolDefinitions,{
+ library_list:{description:'Browse real ready or blocked library resources; pagination is required.',shape:{q:z.string().optional(),kind:z.string().optional(),origin:z.string().optional(),offset:z.number().optional(),limit:z.number().min(1).max(10).default(5)}},
+ library_inspect:{description:'Inspect one resource, its actual editing controls, source and usage card before placement.',shape:{assetId:z.string()}},
+ library_rescan:{description:'Rescan the project assets folder without executing source files.',shape:{}},
+ library_import:{description:'Register media without placing it. Returns a processing job.',shape:{path:z.string()}},
+ library_place:{description:'Place an independent ready library item at a time. Read its card first.',shape:{assetId:z.string(),at:z.number(),trackId:z.string().optional()}}
+});
 const string=z.string(),num=z.number();
 Object.assign(toolDefinitions,{
  project_suggest:{description:'Save a non-destructive proposal for human review; never accepts it automatically.',shape:{baseRev:num.optional(),label:string,ops:toolDefinitions.project_patch.shape.ops}},
@@ -62,7 +69,7 @@ toolDefinitions.footage_candidates.shape.offset=num.int().nonnegative().optional
 toolDefinitions.footage_pack.shape.cursor=num.int().nonnegative().optional();
 toolDefinitions.export_start.shape={preset:z.enum(['vertical-720','vertical-1080','square','landscape']).optional(),quality:z.enum(['draft','standard','high']).optional()};
 export async function serveMcp(invoke:(name:string,args:Record<string,unknown>)=>Promise<unknown>){
-  const server=new McpServer({name:'clipkit',version:'0.1.2'});
+  const server=new McpServer({name:'clipkit',version:'0.2.0'});
   for(const [name,def] of Object.entries(toolDefinitions))server.registerTool(name,{description:def.description,inputSchema:def.shape,annotations:{readOnlyHint:['project_get','assets_list','asset_card','assets_search','asset_schema','footage_pack','footage_candidates','comments_list','comments_bundle','history_list','job_status'].includes(name),destructiveHint:false,openWorldHint:['voice_generate'].includes(name)}},async(args:Record<string,unknown>)=>{
     try{const value=await invoke(name,args);if(name==='footage_view'){const view=value as {path:string;mime:string};return {content:[{type:'image' as const,mimeType:view.mime,data:(await readFile(view.path)).toString('base64')}]};}const json=JSON.stringify(name==='asset_card'?{id:(value as any).id,markdown:(value as any).markdown,sha256:(value as any).sha256}:value);if(Buffer.byteLength(json)>16000)return {isError:true,content:[{type:'text',text:'CONTEXT_TOO_LARGE: request one layer, a smaller asset page, fewer comments, or a shorter transcript range.'}]};return {content:[{type:'text',text:json}]};}
     catch(e){return {isError:true,content:[{type:'text',text:(e as Error).message.slice(0,1200)}]};}

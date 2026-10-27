@@ -50,3 +50,16 @@ These are agent-authored native components, not imported human-made animations. 
 Final regression caught a pack-watch shutdown race: closing the watcher stopped new events but did not drain an active registry write. Server shutdown now awaits that work and suppresses late state publication. A deferred-refresh test forces the race and verifies close waits before temporary-project cleanup.
 
 The same check also exposed simultaneous registry rebuilds colliding on generated files. Rebuilds now serialize per project, with installation waits outside the queue to avoid deadlocks. Eight concurrent rebuild requests are covered by a real-filesystem regression.
+
+## 0.2.0 workspace and library
+
+- Use a resizable panel workstation, with one sidebar on compact desktops and a focus-managed drawer on narrow screens; do not introduce floating docking complexity.
+- Count only ready timeline insertions: 46 native templates/animations plus 26 media resources. Fonts and supporting source files are separate.
+- Keep registration separate from placement. Use copied, immutable source media and transaction-controlled instances; legacy footage_add remains compatible.
+- Review/compile TSX and JSX packs behind content-bound trust. Raw HTML and source JSON stay descriptive until adapted and validated.
+- Retain upstream source and notices, with separate original and adapted checksums. Adapt selected RenderComp components directly and replace browser clocks with project frames.
+- Compare repeat stills exactly. Complete encoded video checks use exact decoded hashes first, then explicitly reported strict sparse raster-equivalence limits; audio stays exact. This is local Chromium evidence, not cross-machine certification.
+- Allow loopback renderer GET requests for resource routes, including null-origin font loads. Keep mutation origin checks and private-media authentication intact.
+- Preserve two-frame SFX audibility with bounded fades; property/volume edits must never quantize or retime unchanged source duration.
+- Bundle the exact lottie-web peer explicitly so exports work outside the development checkout. Verify packed export duration against the project frame count, including legacy footage append behavior, rather than a fixed demo duration.
+- Exclude cached copies of bundled/local resources from the ready catalog count while retaining recovery visibility when the original resource disappears.

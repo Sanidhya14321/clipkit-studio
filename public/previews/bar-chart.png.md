@@ -13,7 +13,7 @@ mood: "editorial"
 best-for: "Studio library thumbnail."
 avoid: "Flattening the editable native clip."
 duration: "Editable timeline duration; motion uses project frames."
-perf: "Static PNG, 19375 bytes."
+perf: "Static PNG thumbnail, 19375 bytes."
 integration: "Preview URL: /previews/bar-chart.png"
 source-files: [ "scripts/verify-assets.ts" ]
 uses: []

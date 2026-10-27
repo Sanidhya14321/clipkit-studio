@@ -12,7 +12,7 @@ tags: [ "preview", "counter" ]
 mood: "confident-editorial"
 best-for: "Studio library thumbnails only."
 avoid: "Using as flattened footage instead of the editable native clip."
-perf: "Static PNG, 10633 bytes."
+perf: "Static PNG thumbnail, 12865 bytes."
 integration: "Preview URL: /previews/counter.png. Place the native clip, not this image."
 media-path: "public/previews/counter.png"
 sha256: "01868987ee688336c70d49c5aa23baaf0e8b09f66fe90288f35ec614ce2d2a70"

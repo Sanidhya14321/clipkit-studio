@@ -1,4 +1,22 @@
-# Current verification (asset release 0.1.2)
+# Current verification: workspace and assets 0.2.0
+
+Verified on 27 October 2026. **116 default tests passed**, with two real-render tests skipped by default; the separate 12-test opt-in suite passed, bringing coverage to **118 unique Vitest tests**. A final nine-test library check covers the cache-copy count fix. **All ten real-backend browser tests passed**, including six viewport sizes, 125% equivalent desktop zoom emulation, keyboard resizing/persistence/reset, final-card/control hit testing, drawer focus, drag-to-track and exact undo. Typecheck, build and production dependency audit passed; the audit found zero advisories.
+
+The initial catalog has **72 ready timeline items**, with two fonts counted separately. All 72 were inserted and exported in a 101.717-second 720×1280 video; both local fonts loaded and no resource requests failed. Each of 46 native templates/animations passed repeated start/middle/end still checks. All 46 passed preview/export equality and meaningful visible text/color edit checks, sampled during the corresponding animation scenes.
+
+Two complete 138-second native reels were exported at 360×640. Decoded audio matches exactly. Video is visually equivalent within the recorded strict sparse-raster tolerance: one frame differs in 163 color channels, maximum channel error 8/255 and mean error 0.0005324/255. This is **not** a claim of identical video hashes or cross-machine determinism.
+
+A real Codex gpt-6.1-sol medium turn read the adapted Glitch Text card, changed only the requested text, resolved its comment and released ownership. Estimated incremental context was 1,618 tokens against a 20,509-token constructed baseline; actual runner usage is separately reported and includes much more than this incremental payload. A second combined agent rehearsal hit the account usage limit. The local footage/photo/title/Lottie/sound/crop/undo/export rehearsal succeeded without substituting a simulated agent turn.
+
+The tarball was installed in a fresh directory under `/tmp`, outside the repository. Idempotent init preserved existing instructions/configuration; all 72 items, adapted TSX, Lottie, a custom pack and portrait/landscape H.264/AAC exports worked. The portrait output has exactly 301 expected video frames at 30 fps; duration differs by less than one frame. Installed dependency audit reports zero advisories. Final documentation and the UI-only drop-error/contrast updates were repacked after that runtime check and separately browser-tested.
+
+Your existing live project stayed at revision 36 with identical saved bytes through restart. Fish and Claude live acceptance remain outstanding. No human listening or second-machine certification is claimed.
+
+Evidence: [machine-readable report](verification-0.2.json), [72-item inventory](library-inventory-0.2.json), [workspace and format boundaries](WORKSPACE-ASSETS-0.2.md), [laptop screenshots](audit/workspace-0.2/), and the committed frame proof at `public/packs/native/determinism.json`. Exported MP4s and the installable tarball are release artifacts.
+
+---
+
+# Previous verification (asset release 0.1.2)
 
 Four new native clips bring the library to fourteen, with 33 usage cards. All 105 default tests and 13 opt-in tests passed (107 unique Vitest tests); all six browser tests passed. Repeated frame checks, two matching complete 42-second exports, preview/export equality and editable-control checks passed. A real Codex turn inserted the requested chart after reading its card. See [motion verification](ASSET-MOTION.md) and [machine-readable results](asset-motion-verification.json).
 

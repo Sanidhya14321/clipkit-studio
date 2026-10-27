@@ -12,7 +12,7 @@ tags: [ "preview", "captions" ]
 mood: "clear-accessible"
 best-for: "Studio library thumbnails only."
 avoid: "Using as flattened footage instead of the editable native clip."
-perf: "Static PNG, 10032 bytes."
+perf: "Static PNG thumbnail, 17128 bytes."
 integration: "Preview URL: /previews/captions.png. Place the native clip, not this image."
 media-path: "public/previews/captions.png"
 sha256: "956117a67ba80dbd823d4f00f2a17b3fb69bc6eb9be75135f37db9b2eb5d710f"

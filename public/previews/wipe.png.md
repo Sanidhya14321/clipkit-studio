@@ -12,7 +12,7 @@ tags: [ "preview", "wipe" ]
 mood: "energetic-clean"
 best-for: "Studio library thumbnails only."
 avoid: "Using as flattened footage instead of the editable native clip."
-perf: "Static PNG, 1934 bytes."
+perf: "Static PNG thumbnail, 4769 bytes."
 integration: "Preview URL: /previews/wipe.png. Place the native clip, not this image."
 media-path: "public/previews/wipe.png"
 sha256: "017ebe4e30478ff71278bee3ec4d7931275f06fd3ab62286082c5a96c4a3decc"

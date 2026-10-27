@@ -1,0 +1,226 @@
+{
+  "clipId": "adapted-bokeh-circles",
+  "defaults": {
+    "easing": "ease-out",
+    "text": "Background Demo",
+    "color": "#ffffff",
+    "size": 64,
+    "x": 0,
+    "y": 0,
+    "opacity": 1,
+    "revealDuration": 0.65,
+    "scale": 1,
+    "width": 600,
+    "subtitle": "",
+    "background": "#151820",
+    "dataJson": "[\"#ffd1a4\",\"#ffe6c7\",\"#fff3d6\",\"#ffc89e\"]"
+  },
+  "fields": [
+    {
+      "key": "easing",
+      "label": "Easing",
+      "type": "select",
+      "options": [
+        "linear",
+        "ease-out",
+        "ease-in-out"
+      ]
+    },
+    {
+      "key": "text",
+      "label": "Text",
+      "type": "textarea"
+    },
+    {
+      "key": "subtitle",
+      "label": "Supporting text",
+      "type": "text"
+    },
+    {
+      "key": "color",
+      "label": "Accent",
+      "type": "color"
+    },
+    {
+      "key": "background",
+      "label": "Background",
+      "type": "color"
+    },
+    {
+      "key": "size",
+      "label": "Type size",
+      "type": "number",
+      "min": 12,
+      "max": 180
+    },
+    {
+      "key": "x",
+      "label": "Horizontal position",
+      "type": "number",
+      "min": -1500,
+      "max": 1500
+    },
+    {
+      "key": "y",
+      "label": "Vertical position",
+      "type": "number",
+      "min": -2000,
+      "max": 2000
+    },
+    {
+      "key": "opacity",
+      "label": "Opacity",
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "step": 0.05
+    },
+    {
+      "key": "revealDuration",
+      "label": "Reveal seconds",
+      "type": "number",
+      "min": 0.05,
+      "max": 20,
+      "step": 0.05
+    },
+    {
+      "key": "scale",
+      "label": "Scale",
+      "type": "number",
+      "min": 0.1,
+      "max": 4,
+      "step": 0.05
+    },
+    {
+      "key": "width",
+      "label": "Width",
+      "type": "number",
+      "min": 100,
+      "max": 2200
+    },
+    {
+      "key": "dataJson",
+      "label": "Data JSON",
+      "type": "textarea"
+    }
+  ],
+  "propsSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "fontFamily": {
+        "type": "string",
+        "enum": [
+          "Inter",
+          "Space Grotesk"
+        ]
+      },
+      "easing": {
+        "default": "ease-out",
+        "type": "string",
+        "enum": [
+          "linear",
+          "ease-out",
+          "ease-in-out"
+        ]
+      },
+      "text": {
+        "default": "Background Demo",
+        "type": "string",
+        "maxLength": 1000
+      },
+      "color": {
+        "default": "#ffffff",
+        "type": "string",
+        "pattern": "^#[0-9a-fA-F]{3,8}$"
+      },
+      "size": {
+        "default": 64,
+        "type": "number",
+        "minimum": 12,
+        "maximum": 180
+      },
+      "x": {
+        "default": 0,
+        "type": "number",
+        "minimum": -1500,
+        "maximum": 1500
+      },
+      "y": {
+        "default": 0,
+        "type": "number",
+        "minimum": -2000,
+        "maximum": 2000
+      },
+      "opacity": {
+        "default": 1,
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "revealDuration": {
+        "default": 0.65,
+        "type": "number",
+        "minimum": 0.05,
+        "maximum": 20
+      },
+      "scale": {
+        "default": 1,
+        "type": "number",
+        "minimum": 0.1,
+        "maximum": 4
+      },
+      "width": {
+        "default": 600,
+        "type": "number",
+        "minimum": 100,
+        "maximum": 2200
+      },
+      "subtitle": {
+        "default": "",
+        "type": "string",
+        "maxLength": 1000
+      },
+      "background": {
+        "default": "#151820",
+        "type": "string",
+        "pattern": "^#[0-9a-fA-F]{3,8}$"
+      },
+      "dataJson": {
+        "type": "string",
+        "maxLength": 12000,
+        "default": "[\"#ffd1a4\",\"#ffe6c7\",\"#fff3d6\",\"#ffc89e\"]"
+      }
+    },
+    "required": [
+      "easing",
+      "text",
+      "color",
+      "size",
+      "x",
+      "y",
+      "opacity",
+      "revealDuration",
+      "scale",
+      "width",
+      "subtitle",
+      "background",
+      "dataJson"
+    ],
+    "additionalProperties": false
+  },
+  "editableContract": {
+    "layerAttribute": "data-ck-layer",
+    "propertyAttribute": "data-ck-path",
+    "elementAttribute": "data-ck-element",
+    "requiredProps": [
+      "text",
+      "color",
+      "size",
+      "x",
+      "y",
+      "opacity",
+      "revealDuration"
+    ]
+  }
+}

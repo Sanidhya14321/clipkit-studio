@@ -4,6 +4,7 @@ This is a targeted scan and file-exclusion check, not a guarantee that arbitrary
 credentials or personal information can be detected automatically.
 """
 import json
+import hashlib
 import re
 import subprocess
 from pathlib import Path
@@ -54,11 +55,24 @@ ignore_results = {
     name: subprocess.run(["git", "check-ignore", "-q", name]).returncode == 0
     for name in excluded
 }
+# Only the selected, licensed starter footage may be committed as media.
+# Project footage and arbitrary exports remain excluded.
+redistributable_media = set()
+manifest_path = Path("public/assets/manifest.json")
+if manifest_path.exists():
+    for asset in json.loads(manifest_path.read_text()).get("assets", []):
+        candidate = Path("public") / asset.get("file", "")
+        if (candidate.as_posix().startswith("public/assets/video/")
+                and ".." not in candidate.parts
+                and asset.get("license") in {"CC0-1.0", "CC-BY-4.0"}
+                and candidate.is_file()
+                and hashlib.sha256(candidate.read_bytes()).hexdigest() == asset.get("sha256")):
+            redistributable_media.add(candidate.as_posix())
 unsafe_files = [name for name in tracked if name.startswith((".clipkit/", "node_modules/", "artifacts/", "test-results/"))
                 or (Path(name).name == ".env")
-                or name.lower().endswith((".docx", ".mp4", ".webm", ".tgz"))]
+                or (name.lower().endswith((".docx", ".mp4", ".webm", ".tgz")) and name not in redistributable_media)]
 report = {"sourceCommit": git("rev-parse", "HEAD").decode().strip(),
-          "textBlobsScanned": scanned, "credentialPatternFindings": findings,
+          "textBlobsScanned": scanned, "licensedStarterVideos": sorted(redistributable_media), "credentialPatternFindings": findings,
           "excludedPathsIgnored": ignore_results, "unexpectedTrackedPrivateOrBuildFiles": unsafe_files,
           "passed": not findings and not unsafe_files and all(ignore_results.values())}
 destination = Path(".clipkit/verification/prd-audit/publication-scan.json")

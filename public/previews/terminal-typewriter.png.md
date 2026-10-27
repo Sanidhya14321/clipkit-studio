@@ -13,7 +13,7 @@ mood: "technical"
 best-for: "Studio library thumbnail."
 avoid: "Flattening the editable native clip."
 duration: "Editable timeline duration; motion uses project frames."
-perf: "Static PNG, 13503 bytes."
+perf: "Static PNG thumbnail, 13503 bytes."
 integration: "Preview URL: /previews/terminal-typewriter.png"
 source-files: [ "scripts/verify-assets.ts" ]
 uses: []

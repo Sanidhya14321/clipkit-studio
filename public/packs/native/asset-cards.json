@@ -1,5 +1,53 @@
 [
   {
+    "id": "kenney-click-2",
+    "name": "Interface click 2",
+    "kind": "audio",
+    "summary": "Interface click 2.",
+    "tags": [
+      "starter",
+      "audio"
+    ],
+    "mood": "editorial",
+    "bestFor": "Subtle interface or scene punctuation.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/audio/kenney-click-2.wav.md",
+    "sha256": "5d4beaf99a17ff3510114a1a19d723443678972b97e4c53dd1acb298af8e0155"
+  },
+  {
+    "id": "kenney-click-3",
+    "name": "Interface click 3",
+    "kind": "audio",
+    "summary": "Interface click 3.",
+    "tags": [
+      "starter",
+      "audio"
+    ],
+    "mood": "editorial",
+    "bestFor": "Subtle interface or scene punctuation.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/audio/kenney-click-3.wav.md",
+    "sha256": "d8549de28b0a7b6f8baadc33d596c3d3baae9edeb66c48c13eac329a526c274f"
+  },
+  {
+    "id": "kenney-switch",
+    "name": "Interface switch",
+    "kind": "audio",
+    "summary": "Interface switch.",
+    "tags": [
+      "starter",
+      "audio"
+    ],
+    "mood": "editorial",
+    "bestFor": "Subtle interface or scene punctuation.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/audio/kenney-switch.wav.md",
+    "sha256": "e47e2328271717515d0d774b27d08da21ae66666b3c970a5fcccddb8ed90b51e"
+  },
+  {
     "id": "kenney-ui-click",
     "name": "Kenney UI click",
     "kind": "audio",
@@ -15,6 +63,63 @@
     "provenanceStatus": "human-attributed",
     "cardPath": "vendor/ui-click.wav.md",
     "sha256": "b6d11dc88e2c1cab47e81d2da0fa423698f1fc31d7cccd699550b486ddad8e6d"
+  },
+  {
+    "id": "adapted-bokeh-circles",
+    "name": "Bokeh Circles",
+    "kind": "backgrounds",
+    "summary": "Editable adaptation of RenderComp BokehCircles. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "backgrounds",
+      "starter",
+      "adapted-bokeh-circles"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp BokehCircles. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-bokeh-circles.md",
+    "sha256": "416017da5f284c709b79e04696d43c2600fd5ee9d206fe20690795cd9d369dec",
+    "schemaPath": "packages/assets/cards/backgrounds/adapted-bokeh-circles/schema.ts"
+  },
+  {
+    "id": "adapted-grid-stagger",
+    "name": "Staggered tiles",
+    "kind": "backgrounds",
+    "summary": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "backgrounds",
+      "starter",
+      "adapted-grid-stagger"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-grid-stagger.md",
+    "sha256": "62df0e382967928fea0f4a76956339207970023f3cb8ac6172c76102099e69c7",
+    "schemaPath": "packages/assets/cards/backgrounds/adapted-grid-stagger/schema.ts"
+  },
+  {
+    "id": "adapted-loop-grid-wave",
+    "name": "Loop Grid Wave",
+    "kind": "backgrounds",
+    "summary": "Editable adaptation of RenderComp LoopGridWave. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "backgrounds",
+      "starter",
+      "adapted-loop-grid-wave"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp LoopGridWave. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-loop-grid-wave.md",
+    "sha256": "422f3401cf759c7c117a98e2bc9bc46c8cf567529b7bcc14637cc25560d40a19",
+    "schemaPath": "packages/assets/cards/backgrounds/adapted-loop-grid-wave/schema.ts"
   },
   {
     "id": "gradient",
@@ -57,6 +162,25 @@
     "cardPath": "packs/native/cards/starfield.md",
     "sha256": "a418c239eb7fd7ba6cd8777ee8611d0074a56abd62bfd0aba72a89fa314d2bc2",
     "schemaPath": "packages/assets/cards/backgrounds/starfield/schema.ts"
+  },
+  {
+    "id": "adapted-line-chart-anim",
+    "name": "Line Chart Anim",
+    "kind": "data",
+    "summary": "Editable adaptation of RenderComp LineChartAnim. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "data",
+      "starter",
+      "adapted-line-chart-anim"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp LineChartAnim. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-line-chart-anim.md",
+    "sha256": "92649a7900b4798a407e6d1dbecac720908e61ad3d7eabf6350ff0f4ab5a0bb3",
+    "schemaPath": "packages/assets/cards/data/adapted-line-chart-anim/schema.ts"
   },
   {
     "id": "bar-chart",
@@ -153,6 +277,70 @@
     "schemaPath": "packages/assets/cards/fx/confetti-burst/schema.ts"
   },
   {
+    "id": "app-development-illustration",
+    "name": "App development illustration",
+    "kind": "image",
+    "summary": "App development illustration.",
+    "tags": [
+      "starter",
+      "image"
+    ],
+    "mood": "editorial",
+    "bestFor": "Illustrations, stickers and visual callouts.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/svg/app-development-illustration.svg.md",
+    "sha256": "2bd616460fc197e08a7961cd25910d01faa1ef72be2b090c21c4fa69487685dc"
+  },
+  {
+    "id": "emoji-celebration",
+    "name": "celebration sticker",
+    "kind": "image",
+    "summary": "celebration sticker.",
+    "tags": [
+      "starter",
+      "image"
+    ],
+    "mood": "editorial",
+    "bestFor": "Illustrations, stickers and visual callouts.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/svg/emoji-celebration.svg.md",
+    "sha256": "dd913ecaf3e997e6afde7e52c0b3c0800edb99a36c02095c7d2a21c6b2e26e75"
+  },
+  {
+    "id": "emoji-rocket",
+    "name": "rocket sticker",
+    "kind": "image",
+    "summary": "rocket sticker.",
+    "tags": [
+      "starter",
+      "image"
+    ],
+    "mood": "editorial",
+    "bestFor": "Illustrations, stickers and visual callouts.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/svg/emoji-rocket.svg.md",
+    "sha256": "b9c5b74e2dca16beb3a2cd1ea860fcdfc366deb77619cf5e9cf3cc6f7f25fcba"
+  },
+  {
+    "id": "emoji-sparkles",
+    "name": "sparkles sticker",
+    "kind": "image",
+    "summary": "sparkles sticker.",
+    "tags": [
+      "starter",
+      "image"
+    ],
+    "mood": "editorial",
+    "bestFor": "Illustrations, stickers and visual callouts.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/svg/emoji-sparkles.svg.md",
+    "sha256": "d6883fbe0b760bd496737bb2761d9c856c01c7249079803c833fae808ec8ea0f"
+  },
+  {
     "id": "gym-illustration",
     "name": "Gym illustration",
     "kind": "image",
@@ -187,6 +375,574 @@
     "sha256": "562064e38b2f6b81b5d2dff3808299cb9cc341cd1f598e0679b43d9e2cf927e7"
   },
   {
+    "id": "photo-01",
+    "name": "(Landscape of waterfall emerging from a vegetative mountain on Kauai Island, United States) - DPLA - 759641c80aec24d682f7e56a56020555",
+    "kind": "image",
+    "summary": "(Landscape of waterfall emerging from a vegetative mountain on Kauai Island, United States) - DPLA - 759641c80aec24d682f7e56a56020555.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-01.jpg.md",
+    "sha256": "d09fda096aea5385bd325acce6dc3237a2d00b09301936c432013f101b430590"
+  },
+  {
+    "id": "photo-02",
+    "name": "Chiba prefecture mountain landscapes",
+    "kind": "image",
+    "summary": "Chiba prefecture mountain landscapes.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-02.jpg.md",
+    "sha256": "ff8eff674efedabe1da961f35cc2603348472fd9187507fcbdba5def3c372916"
+  },
+  {
+    "id": "photo-03",
+    "name": "Mountain lake in Switzerland",
+    "kind": "image",
+    "summary": "Mountain lake in Switzerland.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-03.jpg.md",
+    "sha256": "1c5c76f596bc03589cadd5fda31c3f3e80ff4a79f2b14dc553229c6c90ba6a58"
+  },
+  {
+    "id": "photo-04",
+    "name": "Modern Architecture in Den Haag",
+    "kind": "image",
+    "summary": "Modern Architecture in Den Haag.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-04.jpg.md",
+    "sha256": "d3ddcf61432f9110b6b4a0de32739a429712a4e5d279695e0e7d5da88e55fe21"
+  },
+  {
+    "id": "photo-05",
+    "name": "The example of the modern architecture in Seevorstadt, Dresden",
+    "kind": "image",
+    "summary": "The example of the modern architecture in Seevorstadt, Dresden.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-05.jpg.md",
+    "sha256": "554a0f48668a0ae96335d6c4d516ea1f9adb5fcd59473c12533359053db81b04"
+  },
+  {
+    "id": "photo-06",
+    "name": "Ruisseau du Vialais - March 2021 - B",
+    "kind": "image",
+    "summary": "Ruisseau du Vialais - March 2021 - B.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-06.jpg.md",
+    "sha256": "b589548fdfbae24fc5c2c7b61f4f2533d032f18003255dc37baf83587b43f9cf"
+  },
+  {
+    "id": "photo-07",
+    "name": "Trees along the Hald Sø Viborg Commune Danemark",
+    "kind": "image",
+    "summary": "Trees along the Hald Sø Viborg Commune Danemark.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-07.jpg.md",
+    "sha256": "099567f8e62f5f718b7751fda66d1d0adf35e97864943ddf6add4596bc04e19d"
+  },
+  {
+    "id": "photo-08",
+    "name": "(Aerial photograph of coastline of American Samoa) - DPLA - 9234e5527bafbf158d40d9de65c52505",
+    "kind": "image",
+    "summary": "(Aerial photograph of coastline of American Samoa) - DPLA - 9234e5527bafbf158d40d9de65c52505.",
+    "tags": [
+      "image",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/images/photo-08.jpg.md",
+    "sha256": "1a5b799828d7a0ca7670dc46cc1c2d70c80a31e053a153a5af217d2d4430477d"
+  },
+  {
+    "id": "preview-adapted-bokeh-circles",
+    "name": "Bokeh Circles preview",
+    "kind": "image",
+    "summary": "A rendered preview of Bokeh Circles",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "backgrounds",
+      "starter",
+      "adapted-bokeh-circles"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-bokeh-circles.png.md",
+    "sha256": "dfc3ec62a0fb77b416211d70f1ae634c20dd77cea1e10a2e64e8c6d967e4267c"
+  },
+  {
+    "id": "preview-adapted-brush-stroke-reveal",
+    "name": "Brush Stroke Reveal preview",
+    "kind": "image",
+    "summary": "A rendered preview of Brush Stroke Reveal",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-brush-stroke-reveal"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-brush-stroke-reveal.png.md",
+    "sha256": "2c2a86eccf440099498b441ae5dd87d5f4976275d48b70447b75a8f03fee3a0a"
+  },
+  {
+    "id": "preview-adapted-chapter-title",
+    "name": "Chapter Title preview",
+    "kind": "image",
+    "summary": "A rendered preview of Chapter Title",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-chapter-title"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-chapter-title.png.md",
+    "sha256": "5e9d769c4eb0039dbdfe8d0bde042b73bb00e141d959b1cff1723ae6f54afdb9"
+  },
+  {
+    "id": "preview-adapted-community-chat",
+    "name": "Community Chat preview",
+    "kind": "image",
+    "summary": "A rendered preview of Community Chat",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-community-chat"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-community-chat.png.md",
+    "sha256": "e6d38dd8ed6c35101324d9676bf1f8ade94bd0b91eef866b1da87963cc25c82a"
+  },
+  {
+    "id": "preview-adapted-eye-reveal",
+    "name": "Eye Reveal preview",
+    "kind": "image",
+    "summary": "A rendered preview of Eye Reveal",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-eye-reveal"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-eye-reveal.png.md",
+    "sha256": "b23e9e617e1863436e112946808536abbc08d07ff599e362f721b63101e64cc4"
+  },
+  {
+    "id": "preview-adapted-glitch-text",
+    "name": "Glitch Text preview",
+    "kind": "image",
+    "summary": "A rendered preview of Glitch Text",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-glitch-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-glitch-text.png.md",
+    "sha256": "7590885808960c7a72ff639269785aa32118d210577ff677d0424b4e0308d441"
+  },
+  {
+    "id": "preview-adapted-gradient-text-sweep",
+    "name": "Gradient Text Sweep preview",
+    "kind": "image",
+    "summary": "A rendered preview of Gradient Text Sweep",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-gradient-text-sweep"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-gradient-text-sweep.png.md",
+    "sha256": "6606a843a57935edbb810d86f8c3988c23fe52ea32e9784b650d23d1437bb82b"
+  },
+  {
+    "id": "preview-adapted-grid-stagger",
+    "name": "Staggered tiles preview",
+    "kind": "image",
+    "summary": "A rendered preview of Staggered tiles",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "backgrounds",
+      "starter",
+      "adapted-grid-stagger"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-grid-stagger.png.md",
+    "sha256": "1a1fa0548497dfa1b680a26092ef92db078db859fd0299d8ef82f8682fd1cb97"
+  },
+  {
+    "id": "preview-adapted-kinetic-word-stack",
+    "name": "Kinetic Word Stack preview",
+    "kind": "image",
+    "summary": "A rendered preview of Kinetic Word Stack",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-kinetic-word-stack"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-kinetic-word-stack.png.md",
+    "sha256": "437c62553e7b57942e395724bfc096c6de8e90a69c66a522a7cf06f80e434bed"
+  },
+  {
+    "id": "preview-adapted-line-chart-anim",
+    "name": "Line Chart Anim preview",
+    "kind": "image",
+    "summary": "A rendered preview of Line Chart Anim",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "data",
+      "starter",
+      "adapted-line-chart-anim"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-line-chart-anim.png.md",
+    "sha256": "86807d1200e84ef7da475bc530c19da471f9ab9dbb051ef541f1187d905a5160"
+  },
+  {
+    "id": "preview-adapted-logo-stroke-draw",
+    "name": "Logo Stroke Draw preview",
+    "kind": "image",
+    "summary": "A rendered preview of Logo Stroke Draw",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-logo-stroke-draw"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-logo-stroke-draw.png.md",
+    "sha256": "3f9705b0e32b637678352a8b2eccae1632a1a8399485bd41f355f1064c41a06d"
+  },
+  {
+    "id": "preview-adapted-loop-grid-wave",
+    "name": "Loop Grid Wave preview",
+    "kind": "image",
+    "summary": "A rendered preview of Loop Grid Wave",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "backgrounds",
+      "starter",
+      "adapted-loop-grid-wave"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-loop-grid-wave.png.md",
+    "sha256": "464363f35c43779e2c75dcd0d1109c45f0178022083cb5039c48c794576c1447"
+  },
+  {
+    "id": "preview-adapted-lower-third-glass-card",
+    "name": "Lower Third Glass Card preview",
+    "kind": "image",
+    "summary": "A rendered preview of Lower Third Glass Card",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-lower-third-glass-card"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-lower-third-glass-card.png.md",
+    "sha256": "468c3b57934c1a9315df6681e7f660e5c35d017ab3105fa8ebc74349b72b3a8b"
+  },
+  {
+    "id": "preview-adapted-morph-text",
+    "name": "Blur text reveal preview",
+    "kind": "image",
+    "summary": "A rendered preview of Blur text reveal",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-morph-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-morph-text.png.md",
+    "sha256": "e3390cc816f6b728bb95050454df3fbd6581cfe592115383f0d2541f7900516d"
+  },
+  {
+    "id": "preview-adapted-neon-sign",
+    "name": "Neon Sign preview",
+    "kind": "image",
+    "summary": "A rendered preview of Neon Sign",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-neon-sign"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-neon-sign.png.md",
+    "sha256": "2743da36196aff14b7f29c4d59d17ee2cb0ca920de749f0fababd3ca1aec1cbc"
+  },
+  {
+    "id": "preview-adapted-pencil-draw",
+    "name": "Pencil Draw preview",
+    "kind": "image",
+    "summary": "A rendered preview of Pencil Draw",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-pencil-draw"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-pencil-draw.png.md",
+    "sha256": "95c4f8d605f151351cb2958daed7b1f3289c31817b2a43bc3728a01f05f0c7d9"
+  },
+  {
+    "id": "preview-adapted-scramble-text",
+    "name": "Scramble Text preview",
+    "kind": "image",
+    "summary": "A rendered preview of Scramble Text",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-scramble-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-scramble-text.png.md",
+    "sha256": "56c1150fee672a1723dd6eab68365f55966d41f16859c221e8823dce916cac7c"
+  },
+  {
+    "id": "preview-adapted-scramble-title",
+    "name": "Scramble title preview",
+    "kind": "image",
+    "summary": "A rendered preview of Scramble title",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-scramble-title"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-scramble-title.png.md",
+    "sha256": "c5c26bfb63601a8187795bfa324264a42d0125a7cef4128039008b037767a5f3"
+  },
+  {
+    "id": "preview-adapted-social-reel",
+    "name": "Social Reel preview",
+    "kind": "image",
+    "summary": "A rendered preview of Social Reel",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-social-reel"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-social-reel.png.md",
+    "sha256": "af7a0dbf3431599da499487f296302ad25338bb2a84947ff4ed052f1bbb24dc3"
+  },
+  {
+    "id": "preview-adapted-speaker-avatar",
+    "name": "Speaker card preview",
+    "kind": "image",
+    "summary": "A rendered preview of Speaker card",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-speaker-avatar"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-speaker-avatar.png.md",
+    "sha256": "bd0b99ed5d90ee020c22678b32af68b28f7092e361d09a3d3b3939ad85207ff8"
+  },
+  {
+    "id": "preview-adapted-svg-draw",
+    "name": "SVG path reveal preview",
+    "kind": "image",
+    "summary": "A rendered preview of SVG path reveal",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-svg-draw"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-svg-draw.png.md",
+    "sha256": "0bf6cbe9c7a25e3a6b07e476e5d1cee56472890a9ddb35644f359a659ee16073"
+  },
+  {
+    "id": "preview-adapted-team-avatars",
+    "name": "Team introduction preview",
+    "kind": "image",
+    "summary": "A rendered preview of Team introduction",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-team-avatars"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-team-avatars.png.md",
+    "sha256": "f02994084b4028268aab8c5d8dbf3129cca24d2e2c9fb22ad8e16fa98899325c"
+  },
+  {
+    "id": "preview-adapted-text-mask-reveal",
+    "name": "Text Mask Reveal preview",
+    "kind": "image",
+    "summary": "A rendered preview of Text Mask Reveal",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-text-mask-reveal"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-text-mask-reveal.png.md",
+    "sha256": "9b131abfef3d205979fd9e3a65f0b0429d33e235888bea68992a6605b59ff511"
+  },
+  {
+    "id": "preview-adapted-wave-text",
+    "name": "Wave Text preview",
+    "kind": "image",
+    "summary": "A rendered preview of Wave Text",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-wave-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/adapted-wave-text.png.md",
+    "sha256": "5477a60b9f44a496719cbe64f4d610c114a606e4304de068f440674d65bca642"
+  },
+  {
     "id": "preview-bar-chart",
     "name": "Animated bar chart preview",
     "kind": "image",
@@ -201,7 +957,7 @@
     "avoid": "Flattening the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/bar-chart.png.md",
-    "sha256": "8704dca3860b775bd08dfb34f1acd31f3ba8d3c036c34ced24e0c7bc4a08118c"
+    "sha256": "19053e5a0542280b73eab1d0f0ffb83dc528607abab60695db25173ef9490f5e"
   },
   {
     "id": "preview-captions",
@@ -217,7 +973,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/captions.png.md",
-    "sha256": "b37e8e11deeae02ce8aedef4cd7b6f0a9a6e63f6516ae5b0b45ffc736d4a7f7c"
+    "sha256": "6aa31f44451d16a44ace209b661628441999a9242974093b5318577ee643b2d8"
   },
   {
     "id": "preview-confetti-burst",
@@ -234,7 +990,7 @@
     "avoid": "Flattening the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/confetti-burst.png.md",
-    "sha256": "5a9ebb209011af4dc60bbb361038b2fb73cf2506308a7a18925611ed3638e3c9"
+    "sha256": "a7735dc0828891f55beb7a50cac49f1275b56c225a12058751e7cf8e137c730a"
   },
   {
     "id": "preview-counter",
@@ -250,7 +1006,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/counter.png.md",
-    "sha256": "6cb1dd5711b68693b958bf01757d15074235c8c35c4547a9df27c3031906ed2f"
+    "sha256": "5755c678dee7e07d17e947f16f4b075d3218f568e5aa5eab8d403a0239e853eb"
   },
   {
     "id": "preview-cta",
@@ -266,7 +1022,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/cta.png.md",
-    "sha256": "7c4503d41fb741e2baa429ad722af820a3f9a5f76d638586e478cab987e44e1c"
+    "sha256": "b13d58fa13aab86d2bceda788b65b3c76982dc34d04215d6669f50c690929ee5"
   },
   {
     "id": "preview-gradient",
@@ -282,7 +1038,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/gradient.png.md",
-    "sha256": "80b0bfd99c1f8f3e2df2e76fa8b90feb262352b1b81b4f2e0ea8ae8641280b78"
+    "sha256": "59a7ce00392b75f1c8842bb432a56b3636eed3e5b7f4fb1639f57efdc88185ea"
   },
   {
     "id": "preview-icon-callout",
@@ -298,7 +1054,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/icon-callout.png.md",
-    "sha256": "80063ad10bbb936e3dffe7d7d1b32dc0047ad4196c62a6d6a5783c78f774b703"
+    "sha256": "d132dea57000d8cbf2637bdb63837b969bf15c6afdde8843b9f65522d38dbb96"
   },
   {
     "id": "preview-illustration-card",
@@ -314,7 +1070,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/illustration-card.png.md",
-    "sha256": "92eab22384e4ad462cadf09d7c074783f0fc70985c64301651ea3bd2c7eedd35"
+    "sha256": "3e3409fc0d52511a784c5b3d35c013afa8047734506ce8b28a1522ef3e5266d5"
   },
   {
     "id": "preview-kinetic-title",
@@ -330,7 +1086,151 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/kinetic-title.png.md",
-    "sha256": "c02797d0b195e6b59d75756669ad0120f054a0a163e21cd0f78ca57647cd75ce"
+    "sha256": "45475617fef30deac8842ff5e9a40897843960cdcc25ecab8b3bcbd5c48c6022"
+  },
+  {
+    "id": "preview-lottie-checkmark",
+    "name": "checkmark animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of checkmark animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-checkmark"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-checkmark.png.md",
+    "sha256": "4360f2281fff13426587248cc6e30e5080dae9f132f1a85e0289352ec2b8fdb0"
+  },
+  {
+    "id": "preview-lottie-download",
+    "name": "download animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of download animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-download"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-download.png.md",
+    "sha256": "284cd6701ecff503a225c6858e1761d9694b4ef0bc171786784690b5dfc3e514"
+  },
+  {
+    "id": "preview-lottie-heart",
+    "name": "heart animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of heart animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-heart"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-heart.png.md",
+    "sha256": "83d7f8f6985f7096a0f3bcc52d01ffc270044804b2777cb33172c4e9afa16b0e"
+  },
+  {
+    "id": "preview-lottie-loading",
+    "name": "loading animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of loading animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-loading"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-loading.png.md",
+    "sha256": "404df3ed597297cc29f2adbbc763522c8c8341be17547bf490a6e3eafa3b1f5f"
+  },
+  {
+    "id": "preview-lottie-microphone",
+    "name": "microphone animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of microphone animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-microphone"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-microphone.png.md",
+    "sha256": "896a236eb27ce4738ccc56a29c61072ca1653ec472b6b2221c59ac510443d0d2"
+  },
+  {
+    "id": "preview-lottie-notification",
+    "name": "notification animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of notification animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-notification"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-notification.png.md",
+    "sha256": "e964932472dc795769a10c805f466451771e326cc34a98e2082d3a9e22146b87"
+  },
+  {
+    "id": "preview-lottie-playpause",
+    "name": "play Pause animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of play Pause animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-playpause"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-playpause.png.md",
+    "sha256": "f38bd33f6c45687858909b4407cd121ad0613e37a6c95c9832c6a36e0ee72655"
+  },
+  {
+    "id": "preview-lottie-upload",
+    "name": "upload animation preview",
+    "kind": "image",
+    "summary": "A rendered preview of upload animation",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-upload"
+    ],
+    "mood": "editorial",
+    "bestFor": "Library thumbnail; use the actual editable template on the timeline.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "previews/lottie-upload.png.md",
+    "sha256": "1b773de7a58c7a1c607b711ef44dddf7262aa55d9abe15b8b57754ab3c518c3a"
   },
   {
     "id": "preview-lower-third",
@@ -346,7 +1246,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/lower-third.png.md",
-    "sha256": "94fe638a5b9609848fe7b0c18bbb0e327e960c54911e37d442e6a7b962b93261"
+    "sha256": "b800ae28a22c12bc1f7056d8288070e1215b4685b288127be1887071d5f26f00"
   },
   {
     "id": "preview-screenshot-frame",
@@ -362,7 +1262,7 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/screenshot-frame.png.md",
-    "sha256": "8c87e94f29d6faa7bd8b264dbf3cdd5c5dbbee75c2e3c7906028417ec445d771"
+    "sha256": "02045f37e483d3931a17c7fef87fb953da0d6d43269872d80bddca012dceea7f"
   },
   {
     "id": "preview-starfield",
@@ -379,7 +1279,7 @@
     "avoid": "Flattening the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/starfield.png.md",
-    "sha256": "32b0b61c23af2641df0a14c8d4294fd1ae23ecfc6ccda675b1b4408449713f3a"
+    "sha256": "07b281e7ade17ac1a76305f0c380bfbfed629bffe66b5663bc86e778c3014352"
   },
   {
     "id": "preview-terminal-typewriter",
@@ -396,7 +1296,7 @@
     "avoid": "Flattening the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/terminal-typewriter.png.md",
-    "sha256": "31f8a35a4e2d94f3725abf1c6cb4ed320cd6e7e9029204fd1395c65204418b09"
+    "sha256": "bbfe474f48a61e8697bb9d0ea7e835f6a646bd721031f1ac7c4bb423c098b6e8"
   },
   {
     "id": "preview-wipe",
@@ -412,7 +1312,55 @@
     "avoid": "Using as flattened footage instead of the editable native clip.",
     "provenanceStatus": "agent-authored",
     "cardPath": "previews/wipe.png.md",
-    "sha256": "5e8ea5ae3fbc6b3c76959d33b883453b043155f0c732e5d76bc2019ab822c7c1"
+    "sha256": "b18cffce2d7dacbedeea3c3dab300dbd723969e60197638e6cf71573790bcc35"
+  },
+  {
+    "id": "tabler-bulb",
+    "name": "bulb symbol",
+    "kind": "image",
+    "summary": "bulb symbol.",
+    "tags": [
+      "starter",
+      "image"
+    ],
+    "mood": "editorial",
+    "bestFor": "Illustrations, stickers and visual callouts.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/svg/tabler-bulb.svg.md",
+    "sha256": "f2488a6213b1182480689a09c429c0b3d5b44e686186293de2ed63eb0f6fa274"
+  },
+  {
+    "id": "tabler-chart-line",
+    "name": "chart-line symbol",
+    "kind": "image",
+    "summary": "chart-line symbol.",
+    "tags": [
+      "starter",
+      "image"
+    ],
+    "mood": "editorial",
+    "bestFor": "Illustrations, stickers and visual callouts.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/svg/tabler-chart-line.svg.md",
+    "sha256": "df8f7e3fa0f83651a692e3d1f1eb3fdb29327363d14b362ac27e116b1d3002e0"
+  },
+  {
+    "id": "tabler-rocket",
+    "name": "rocket symbol",
+    "kind": "image",
+    "summary": "rocket symbol.",
+    "tags": [
+      "starter",
+      "image"
+    ],
+    "mood": "editorial",
+    "bestFor": "Illustrations, stickers and visual callouts.",
+    "avoid": "Claiming endorsement or exposing nonexistent baked-text bindings.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/svg/tabler-rocket.svg.md",
+    "sha256": "37c230eaa91f3a08e41be9e04c440b77634787dba3157bffc950393a5b6c26c9"
   },
   {
     "id": "illustration-card",
@@ -435,6 +1383,158 @@
     "cardPath": "packs/native/cards/illustration-card.md",
     "sha256": "537ff55efc9875d1433ac25a0fae6c904209a0b9f603226f21e2fef70edbe26d",
     "schemaPath": "packages/assets/cards/media/illustration-card/schema.ts"
+  },
+  {
+    "id": "lottie-checkmark",
+    "name": "checkmark animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-checkmark"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-checkmark.md",
+    "sha256": "87538f2c3e15d63e2c10c684e20c8b27a2495cda959aad08603391b9d8d4d0d5",
+    "schemaPath": "packages/assets/cards/media/lottie-checkmark/schema.ts"
+  },
+  {
+    "id": "lottie-download",
+    "name": "download animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-download"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-download.md",
+    "sha256": "27728b51f7bfb20519e89a38bb14910ac410fe2f50d169121631f800d8d0f105",
+    "schemaPath": "packages/assets/cards/media/lottie-download/schema.ts"
+  },
+  {
+    "id": "lottie-heart",
+    "name": "heart animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-heart"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-heart.md",
+    "sha256": "8b3d7923585d82de7579b9badb441287813209021bc8e62ff4d6cb1ee2a980b9",
+    "schemaPath": "packages/assets/cards/media/lottie-heart/schema.ts"
+  },
+  {
+    "id": "lottie-loading",
+    "name": "loading animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-loading"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-loading.md",
+    "sha256": "8cd76003b1361a987a88b49c84de8322e391e792f9579cb6718c9c18d50d92f9",
+    "schemaPath": "packages/assets/cards/media/lottie-loading/schema.ts"
+  },
+  {
+    "id": "lottie-microphone",
+    "name": "microphone animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-microphone"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-microphone.md",
+    "sha256": "1910f3bf061febb728694c63dcf4957dd01e301f6afb1d508186dd34a283604d",
+    "schemaPath": "packages/assets/cards/media/lottie-microphone/schema.ts"
+  },
+  {
+    "id": "lottie-notification",
+    "name": "notification animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-notification"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-notification.md",
+    "sha256": "39f4c61c737a2a7edbc6ca68ca7743184392153c9dbf3a9cfeb08097d685567f",
+    "schemaPath": "packages/assets/cards/media/lottie-notification/schema.ts"
+  },
+  {
+    "id": "lottie-playpause",
+    "name": "play Pause animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-playpause"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-playpause.md",
+    "sha256": "b155ef899224648d83fe7da5ec3f32cd2016b66cb110e9058690ab94222f7e5a",
+    "schemaPath": "packages/assets/cards/media/lottie-playpause/schema.ts"
+  },
+  {
+    "id": "lottie-upload",
+    "name": "upload animation",
+    "kind": "media",
+    "summary": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "media",
+      "starter",
+      "lottie-upload"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven useAnimations JSON with editable tint and optional label.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/lottie-upload.md",
+    "sha256": "aa4ae9dab7b919eaf4b56b5fc46150f0271889e867d292a10768b7ca7cb15bf6",
+    "schemaPath": "packages/assets/cards/media/lottie-upload/schema.ts"
   },
   {
     "id": "icon-callout",
@@ -503,6 +1603,386 @@
     "cardPath": "packs/native/cards/screenshot-frame.md",
     "sha256": "96c4d84f5f4349434f0c3814f56a8cf67f3fed598136d214515a939c4b2638c3",
     "schemaPath": "packages/assets/cards/overlays/screenshot-frame/schema.ts"
+  },
+  {
+    "id": "adapted-brush-stroke-reveal",
+    "name": "Brush Stroke Reveal",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp BrushStrokeReveal. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-brush-stroke-reveal"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp BrushStrokeReveal. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-brush-stroke-reveal.md",
+    "sha256": "f605e5405b7157c49baeaaf61b2af979e68cb0395a8a37dcd7f6b73b9b46b69f",
+    "schemaPath": "packages/assets/cards/text/adapted-brush-stroke-reveal/schema.ts"
+  },
+  {
+    "id": "adapted-chapter-title",
+    "name": "Chapter Title",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp ChapterTitle. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-chapter-title"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp ChapterTitle. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-chapter-title.md",
+    "sha256": "64a5bd8acb319f1aecf418d4054b32a449e17a1ef124d40b304b91758377d3ee",
+    "schemaPath": "packages/assets/cards/text/adapted-chapter-title/schema.ts"
+  },
+  {
+    "id": "adapted-community-chat",
+    "name": "Community Chat",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp CommunityChat. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-community-chat"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp CommunityChat. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-community-chat.md",
+    "sha256": "c50f81ea9434d7c55ff9d2b6cd865bbf9c18bf079138b8aaeb463dae3e40b345",
+    "schemaPath": "packages/assets/cards/text/adapted-community-chat/schema.ts"
+  },
+  {
+    "id": "adapted-eye-reveal",
+    "name": "Eye Reveal",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp EyeReveal. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-eye-reveal"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp EyeReveal. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-eye-reveal.md",
+    "sha256": "d6f7d4d09702729b123bcc2f4e6da23d66b305df1e1dc71b38071d536139ac82",
+    "schemaPath": "packages/assets/cards/text/adapted-eye-reveal/schema.ts"
+  },
+  {
+    "id": "adapted-glitch-text",
+    "name": "Glitch Text",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp GlitchText. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-glitch-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp GlitchText. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-glitch-text.md",
+    "sha256": "801660adddadd3f54ae934a2fe497d09eed4016d11d9fea50d222ac852a41527",
+    "schemaPath": "packages/assets/cards/text/adapted-glitch-text/schema.ts"
+  },
+  {
+    "id": "adapted-gradient-text-sweep",
+    "name": "Gradient Text Sweep",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp GradientTextSweep. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-gradient-text-sweep"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp GradientTextSweep. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-gradient-text-sweep.md",
+    "sha256": "5ccc8e95b60b8af1ad5f152bcc4e1b67883f26abea0d04705d162f3603e0d10e",
+    "schemaPath": "packages/assets/cards/text/adapted-gradient-text-sweep/schema.ts"
+  },
+  {
+    "id": "adapted-kinetic-word-stack",
+    "name": "Kinetic Word Stack",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp KineticWordStack. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-kinetic-word-stack"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp KineticWordStack. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-kinetic-word-stack.md",
+    "sha256": "c7f72fc846017c12ca296537db20ac1e97480fa08f31086a73934915b6607b11",
+    "schemaPath": "packages/assets/cards/text/adapted-kinetic-word-stack/schema.ts"
+  },
+  {
+    "id": "adapted-logo-stroke-draw",
+    "name": "Logo Stroke Draw",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp LogoStrokeDraw. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-logo-stroke-draw"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp LogoStrokeDraw. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-logo-stroke-draw.md",
+    "sha256": "ac42819c2a0988005414d4247b4e3cb4c0835e48eb19a2298e38501e6816be4b",
+    "schemaPath": "packages/assets/cards/text/adapted-logo-stroke-draw/schema.ts"
+  },
+  {
+    "id": "adapted-lower-third-glass-card",
+    "name": "Lower Third Glass Card",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp LowerThirdGlassCard. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-lower-third-glass-card"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp LowerThirdGlassCard. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-lower-third-glass-card.md",
+    "sha256": "d2bffc9c003c344887bcb9800818cb5b9918f8803513d37538a1ab3c842797eb",
+    "schemaPath": "packages/assets/cards/text/adapted-lower-third-glass-card/schema.ts"
+  },
+  {
+    "id": "adapted-morph-text",
+    "name": "Blur text reveal",
+    "kind": "text",
+    "summary": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-morph-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-morph-text.md",
+    "sha256": "b6e2f18c9d33f789bfdc57f0577577795b9b5fde0d4aa97a3a5398aeb765893e",
+    "schemaPath": "packages/assets/cards/text/adapted-morph-text/schema.ts"
+  },
+  {
+    "id": "adapted-neon-sign",
+    "name": "Neon Sign",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp NeonSign. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-neon-sign"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp NeonSign. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-neon-sign.md",
+    "sha256": "4123dc9cb7d60d17b63029124c7c48ffcd49ddc81fb206a29f37c68e7e41a063",
+    "schemaPath": "packages/assets/cards/text/adapted-neon-sign/schema.ts"
+  },
+  {
+    "id": "adapted-pencil-draw",
+    "name": "Pencil Draw",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp PencilDraw. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-pencil-draw"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp PencilDraw. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-pencil-draw.md",
+    "sha256": "aa35827294be6fbf2b2129d5b675031e48d33e30eff59a76a18f08215d4eb5eb",
+    "schemaPath": "packages/assets/cards/text/adapted-pencil-draw/schema.ts"
+  },
+  {
+    "id": "adapted-scramble-text",
+    "name": "Scramble Text",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp ScrambleText. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-scramble-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp ScrambleText. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-scramble-text.md",
+    "sha256": "ac4bc26311bb8c454fe7bd7c24a4462a4cb84d19047326076fed033456917bfe",
+    "schemaPath": "packages/assets/cards/text/adapted-scramble-text/schema.ts"
+  },
+  {
+    "id": "adapted-scramble-title",
+    "name": "Scramble title",
+    "kind": "text",
+    "summary": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-scramble-title"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-scramble-title.md",
+    "sha256": "1c25626bc3d9ec949329798b694efdd406893c6b0aa49ffb8e943547e0b10aa5",
+    "schemaPath": "packages/assets/cards/text/adapted-scramble-title/schema.ts"
+  },
+  {
+    "id": "adapted-social-reel",
+    "name": "Social Reel",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp SocialReel. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-social-reel"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp SocialReel. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-social-reel.md",
+    "sha256": "67798b10ac31260abfd2eea0bc4cc7cd2596d445cde80576cea574ea26018eb8",
+    "schemaPath": "packages/assets/cards/text/adapted-social-reel/schema.ts"
+  },
+  {
+    "id": "adapted-speaker-avatar",
+    "name": "Speaker card",
+    "kind": "text",
+    "summary": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-speaker-avatar"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-speaker-avatar.md",
+    "sha256": "c24727be6225fe94f92603de4f64b2f2b897d5087cab9d0ac26845ac202bf3f2",
+    "schemaPath": "packages/assets/cards/text/adapted-speaker-avatar/schema.ts"
+  },
+  {
+    "id": "adapted-svg-draw",
+    "name": "SVG path reveal",
+    "kind": "text",
+    "summary": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-svg-draw"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-svg-draw.md",
+    "sha256": "f14a2e5a585a42f0a60d863226c3dc1430a51f14c8fbdd020090d23cf60ee971",
+    "schemaPath": "packages/assets/cards/text/adapted-svg-draw/schema.ts"
+  },
+  {
+    "id": "adapted-team-avatars",
+    "name": "Team introduction",
+    "kind": "text",
+    "summary": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-team-avatars"
+    ],
+    "mood": "editorial",
+    "bestFor": "Frame-driven adaptation with editable text and palette; original source attribution is preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-team-avatars.md",
+    "sha256": "08e821078f1ab16be697e3beb9e41a4fe173016b6514e581363251f31cddb100",
+    "schemaPath": "packages/assets/cards/text/adapted-team-avatars/schema.ts"
+  },
+  {
+    "id": "adapted-text-mask-reveal",
+    "name": "Text Mask Reveal",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp TextMaskReveal. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-text-mask-reveal"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp TextMaskReveal. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-text-mask-reveal.md",
+    "sha256": "1050c1e2454fb7e5d38e68b045e662945198ce2c7a297a67b04b8c276647cee3",
+    "schemaPath": "packages/assets/cards/text/adapted-text-mask-reveal/schema.ts"
+  },
+  {
+    "id": "adapted-wave-text",
+    "name": "Wave Text",
+    "kind": "text",
+    "summary": "Editable adaptation of RenderComp WaveText. Source notices are preserved.",
+    "duration": "Editable bounded timeline duration.",
+    "tags": [
+      "text",
+      "starter",
+      "adapted-wave-text"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editable adaptation of RenderComp WaveText. Source notices are preserved.",
+    "avoid": "Unsupported data shapes, baked text editing, and claims of independent human-only certification.",
+    "provenanceStatus": "agent-authored",
+    "cardPath": "packs/native/cards/adapted-wave-text.md",
+    "sha256": "434c1755612f838d2fe3c82f1fe6915c3e7573e63de5314260c502474af388db",
+    "schemaPath": "packages/assets/cards/text/adapted-wave-text/schema.ts"
   },
   {
     "id": "captions",
@@ -613,5 +2093,107 @@
     "cardPath": "packs/native/cards/wipe.md",
     "sha256": "a8c67f45a7325a652fef80818c6b1c225e401a83aa27e00ff763ef1d750f2092",
     "schemaPath": "packages/assets/cards/transitions/wipe/schema.ts"
+  },
+  {
+    "id": "video-01",
+    "name": "Ocean surface waves 06",
+    "kind": "video",
+    "summary": "Ocean surface waves 06.",
+    "tags": [
+      "video",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/video/video-01.mp4.md",
+    "sha256": "54b10b9984d6640ef777f8db8e2365cd6ad02512d1ec60f7c3e5881ff8fbfdc0"
+  },
+  {
+    "id": "video-02",
+    "name": "Tuuleheide Viimsis 2020",
+    "kind": "video",
+    "summary": "Tuuleheide Viimsis 2020 .",
+    "tags": [
+      "video",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/video/video-02.mp4.md",
+    "sha256": "5b9ac6bb44a91ae6dbdf656e8aa6b34e4ce7e753b58c03d28e6dce7241b2efca"
+  },
+  {
+    "id": "video-03",
+    "name": "Clouds transformation",
+    "kind": "video",
+    "summary": "Clouds transformation.",
+    "tags": [
+      "video",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/video/video-03.mp4.md",
+    "sha256": "c19c50448aa86c212ee7fad29e02a47a8471deceddd731f85f90befeca4e2ba6"
+  },
+  {
+    "id": "video-04",
+    "name": "Lenticular cloud over Longs Peak, Colorado (time lapse)",
+    "kind": "video",
+    "summary": "Lenticular cloud over Longs Peak, Colorado (time lapse).",
+    "tags": [
+      "video",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/video/video-04.mp4.md",
+    "sha256": "5f3938a5ccb3f6e22275ad38d671995415202a382180e8ae1c18b7c234993e6f"
+  },
+  {
+    "id": "video-05",
+    "name": "Klosterneuburg-Korneuburg-Timelapse",
+    "kind": "video",
+    "summary": "Klosterneuburg-Korneuburg-Timelapse.",
+    "tags": [
+      "video",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/video/video-05.mp4.md",
+    "sha256": "513cdc173a16be47026f9b9d4647c64583722db0b08b23b85bab648519e7e33a"
+  },
+  {
+    "id": "video-06",
+    "name": "APEX Turns its Eye to Dark Clouds in Taurus (pan)",
+    "kind": "video",
+    "summary": "APEX Turns its Eye to Dark Clouds in Taurus (pan).",
+    "tags": [
+      "video",
+      "starter",
+      "commons"
+    ],
+    "mood": "editorial",
+    "bestFor": "Editorial sequences and backgrounds with user-controlled crop and timing.",
+    "avoid": "Claiming endorsement or treating baked pixels as editable text.",
+    "provenanceStatus": "human-attributed",
+    "cardPath": "assets/video/video-06.mp4.md",
+    "sha256": "fc37d8ff550b71d36c7b247ab3735d11f93d0489c25bd4552f64019daccc89e0"
   }
 ]

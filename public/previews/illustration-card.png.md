@@ -12,7 +12,7 @@ tags: [ "preview", "illustration-card" ]
 mood: "friendly-editorial"
 best-for: "Studio library thumbnails only."
 avoid: "Using as flattened footage instead of the editable native clip."
-perf: "Static PNG, 15819 bytes."
+perf: "Static PNG thumbnail, 20301 bytes."
 integration: "Preview URL: /previews/illustration-card.png. Place the native clip, not this image."
 media-path: "public/previews/illustration-card.png"
 sha256: "4c1753961b61ddbc71d2076bb4a25dc413c6e4c29b3ed73de5343c28d5fc02bd"

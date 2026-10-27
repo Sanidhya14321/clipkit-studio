@@ -13,7 +13,7 @@ mood: "calm-ambient"
 best-for: "Studio library thumbnail."
 avoid: "Flattening the editable native clip."
 duration: "Editable timeline duration; motion uses project frames."
-perf: "Static PNG, 104262 bytes."
+perf: "Static PNG thumbnail, 104262 bytes."
 integration: "Preview URL: /previews/starfield.png"
 source-files: [ "scripts/verify-assets.ts" ]
 uses: []

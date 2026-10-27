@@ -13,7 +13,7 @@ mood: "celebratory"
 best-for: "Studio library thumbnail."
 avoid: "Flattening the editable native clip."
 duration: "Editable timeline duration; motion uses project frames."
-perf: "Static PNG, 6368 bytes."
+perf: "Static PNG thumbnail, 6368 bytes."
 integration: "Preview URL: /previews/confetti-burst.png"
 source-files: [ "scripts/verify-assets.ts" ]
 uses: []
