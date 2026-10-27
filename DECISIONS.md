@@ -100,3 +100,7 @@ Extend the existing usage catalog with generated JSONL/card indexes; retain old 
 ## Pipeline update U2
 
 Ingestion reads local sources without modifying originals or cloning new libraries. Registration requires license text evidence and revision. Deterministic card drafts cost zero provider tokens; no hidden batch model call. ffprobe metadata is optional; previews without an established renderer are explicitly skipped and logged. Open question: owner-specific grouping can be supplied in the source manifest when directory conventions are ambiguous.
+
+## Pipeline update U3
+
+Installed TypeScript 7 exposes a native compiler rather than the old createSourceFile API. Use the already resolved MIT Babel parser directly, and MIT PostCSS, as declared runtime dependencies for ingestion/codemods. No model-based parsing. A missing GLSL parser is reported as unsupported; no fake symbol map. Budgets measure returned UTF-8 bytes, not unobservable provider context. Open question: GLSL-specific semantic extraction remains unsupported until a parser is selected.

@@ -19,6 +19,7 @@
     "benchmark": "tsx scripts/benchmark.ts"
   },
   "dependencies": {
+    "@babel/parser": "7.24.1",
     "@hono/node-server": "2.1.5",
     "@modelcontextprotocol/sdk": "1.32.2",
     "@paper-design/shaders": "0.0.82",
@@ -31,6 +32,7 @@
     "ffmpeg-static": "5.3.0",
     "hono": "4.13.14",
     "lucide-react": "1.61.0",
+    "postcss": "8.5.31",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "remotion": "4.0.538",
