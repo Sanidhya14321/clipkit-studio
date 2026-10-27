@@ -1,0 +1,128 @@
+{
+  "format": "clipkit.ast/v1",
+  "sourceHash": "9947ea87c70b893bff4058b373c3a13fde0e1d6d8a11719c1123f8057289715e",
+  "exports": [],
+  "props": [],
+  "primitives": [
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    }
+  ],
+  "tokens": [],
+  "imports": [
+    "remotion",
+    "@/schemas",
+    "../../promo/glow",
+    "../../promo/kinetic",
+    "../../promo/timing",
+    "../../scene-module"
+  ],
+  "outline": [
+    "KineticLayer",
+    "div",
+    "span",
+    "Composition"
+  ],
+  "symbols": [
+    {
+      "name": "LetterFlip",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 425,
+      "end": 2578,
+      "startLine": 13,
+      "endLine": 79,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "clipFrame",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 633,
+      "end": 662,
+      "startLine": 30,
+      "endLine": 30,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "frame",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 672,
+      "end": 704,
+      "startLine": 31,
+      "endLine": 31,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "letters",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 714,
+      "end": 740,
+      "startLine": 32,
+      "endLine": 32,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "reach",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 750,
+      "end": 809,
+      "startLine": 33,
+      "endLine": 33,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "burnAt",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 868,
+      "end": 953,
+      "startLine": 35,
+      "endLine": 35,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "burn",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 963,
+      "end": 1037,
+      "startLine": 36,
+      "endLine": 36,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "start",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 1467,
+      "end": 1498,
+      "startLine": 49,
+      "endLine": 49,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "turn",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 1516,
+      "end": 1595,
+      "startLine": 50,
+      "endLine": 50,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "letterFlipScene",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "start": 2594,
+      "end": 3024,
+      "startLine": 81,
+      "endLine": 97,
+      "kind": "VariableDeclarator"
+    }
+  ],
+  "cost": {
+    "animatedElements": 4,
+    "webgl": false
+  },
+  "unsupported": []
+}

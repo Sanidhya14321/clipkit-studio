@@ -1,0 +1,287 @@
+{
+  "format": "clipkit.ast/v1",
+  "sourceHash": "c2b49613e1c247adb6ca81943afb5d84a5f66b339e8475b7eb31ca244775c517",
+  "exports": [],
+  "props": [
+    {
+      "name": "letter",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "pop",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "bounce",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "gone",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "tilt",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "lift",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "grow",
+      "type": "number",
+      "required": true
+    }
+  ],
+  "primitives": [
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    }
+  ],
+  "tokens": [
+    "../../connectors/fonts"
+  ],
+  "imports": [
+    "remotion",
+    "@/schemas",
+    "../../connectors/badge",
+    "../../connectors/chalk-board",
+    "../../connectors/fonts",
+    "../../promo/ink-geometry",
+    "../../promo/timing",
+    "../../scene-module"
+  ],
+  "outline": [
+    "span",
+    "ChalkLayer",
+    "div",
+    "div",
+    "Letter",
+    "div",
+    "div",
+    "div",
+    "Letter",
+    "Composition"
+  ],
+  "symbols": [
+    {
+      "name": "FILTER_ID",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 536,
+      "end": 566,
+      "startLine": 15,
+      "endLine": 15,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "clamp01",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 575,
+      "end": 643,
+      "startLine": 17,
+      "endLine": 17,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "Letter",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 652,
+      "end": 1334,
+      "startLine": 19,
+      "endLine": 50,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "overshoot",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 859,
+      "end": 902,
+      "startLine": 36,
+      "endLine": 36,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "scale",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 912,
+      "end": 978,
+      "startLine": 37,
+      "endLine": 37,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "ChunkyTypeStack",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 1350,
+      "end": 6472,
+      "startLine": 52,
+      "endLine": 212,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "frame",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 1674,
+      "end": 1714,
+      "startLine": 77,
+      "endLine": 77,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "fontFamily",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 1724,
+      "end": 1758,
+      "startLine": 78,
+      "endLine": 78,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "cursor",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 1766,
+      "end": 1776,
+      "startLine": 79,
+      "endLine": 79,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "laidOut",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 1786,
+      "end": 1987,
+      "startLine": 80,
+      "endLine": 88,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "order",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 1865,
+      "end": 1879,
+      "startLine": 82,
+      "endLine": 82,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "typedEnd",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 1997,
+      "end": 2055,
+      "startLine": 89,
+      "endLine": 89,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "longest",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 2065,
+      "end": 2125,
+      "startLine": 90,
+      "endLine": 90,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "exitEnd",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 2135,
+      "end": 2239,
+      "startLine": 91,
+      "endLine": 92,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "burstStart",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 2249,
+      "end": 2273,
+      "startLine": 93,
+      "endLine": 93,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "burstProgress",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 2283,
+      "end": 2343,
+      "startLine": 94,
+      "endLine": 94,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "tagStart",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 2353,
+      "end": 2396,
+      "startLine": 95,
+      "endLine": 95,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "line",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 2874,
+      "end": 2897,
+      "startLine": 112,
+      "endLine": 112,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "exitStart",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 2988,
+      "end": 3032,
+      "startLine": 116,
+      "endLine": 116,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "showBar",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 3050,
+      "end": 3106,
+      "startLine": 117,
+      "endLine": 117,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "barGrow",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 3124,
+      "end": 3182,
+      "startLine": 118,
+      "endLine": 118,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "barGone",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 3200,
+      "end": 3259,
+      "startLine": 119,
+      "endLine": 119,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "chunkyTypeStackScene",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "start": 6488,
+      "end": 6975,
+      "startLine": 214,
+      "endLine": 230,
+      "kind": "VariableDeclarator"
+    }
+  ],
+  "cost": {
+    "animatedElements": 10,
+    "webgl": false
+  },
+  "unsupported": []
+}

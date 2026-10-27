@@ -1,0 +1,136 @@
+{
+  "format": "clipkit.ast/v1",
+  "sourceHash": "258e3e13922e5edb181c99974bb38a4419e13faa0514e3bd7ee51e7086aedfcf",
+  "exports": [],
+  "props": [],
+  "primitives": [
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    }
+  ],
+  "tokens": [
+    "../../promo/fonts"
+  ],
+  "imports": [
+    "react",
+    "remotion",
+    "@/schemas",
+    "../../promo/backdrop",
+    "../../promo/desk/canvas-texture",
+    "../../promo/fonts",
+    "../../promo/transition-frame",
+    "../../ribbon-words/ribbon-strand",
+    "../../scene-module"
+  ],
+  "outline": [
+    "TransitionFrame",
+    "Backdrop",
+    "AbsoluteFill",
+    "svg",
+    "RibbonStrand",
+    "RibbonStrand",
+    "Composition"
+  ],
+  "symbols": [
+    {
+      "name": "MAIN_LANE",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 626,
+      "end": 662,
+      "startLine": 16,
+      "endLine": 16,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "strandColors",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 671,
+      "end": 1036,
+      "startLine": 18,
+      "endLine": 27,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "ribbonColor",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 783,
+      "end": 838,
+      "startLine": 20,
+      "endLine": 20,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "fieldColor",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 848,
+      "end": 902,
+      "startLine": 21,
+      "endLine": 21,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "RibbonWords",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 1045,
+      "end": 2507,
+      "startLine": 29,
+      "endLine": 70,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "frame",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 1248,
+      "end": 1288,
+      "startLine": 32,
+      "endLine": 32,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "baseId",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 1344,
+      "end": 1402,
+      "startLine": 34,
+      "endLine": 34,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "colors",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 1412,
+      "end": 1440,
+      "startLine": 35,
+      "endLine": 35,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "stageLook",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 1450,
+      "end": 1555,
+      "startLine": 36,
+      "endLine": 38,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "ribbonWordsScene",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "start": 2523,
+      "end": 2964,
+      "startLine": 72,
+      "endLine": 88,
+      "kind": "VariableDeclarator"
+    }
+  ],
+  "cost": {
+    "animatedElements": 7,
+    "webgl": true
+  },
+  "unsupported": []
+}

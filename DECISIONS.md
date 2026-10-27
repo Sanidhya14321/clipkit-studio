@@ -116,3 +116,7 @@ Add an ordered layer pipeline beside the established creative workflow, retainin
 ## Pipeline update U6
 
 Taste prose is descriptive data with a separate validated constraints.yaml for deterministic checks. Starter values are explicit defaults rather than inferred from arbitrary owner prose. The owner can edit both. Open questions: exact platform-specific exclusion zones and font availability need actual target platform/media review.
+
+## Pipeline update U7
+
+Integrate the pre-existing source/card reorganization as the required baseline for knowledge ingestion; preserve original file hashes/notices and rebuild source paths in the component catalog. Keep unrelated creative-workflow edits in the working tree. TypeScript becomes a runtime dependency so derived components undergo actual static checks, then the existing deterministic render verifier, before publication. The new pass orchestrator uses the same store, lease, proposal and range guards. Existing stock/native/pack commands remain available; the new ladder is the runtime agent path. Open question: a real creative turn still depends on the owner's signed-in client and human approval; fixture runs cannot certify taste.

@@ -1,0 +1,129 @@
+{
+  "format": "clipkit.ast/v1",
+  "sourceHash": "de8e7878114beb46359183a65248566410f65d30075d02183ea54c5ba33d1e18",
+  "exports": [],
+  "props": [
+    {
+      "name": "frame",
+      "type": "number",
+      "required": true
+    }
+  ],
+  "primitives": [
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    },
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    }
+  ],
+  "tokens": [],
+  "imports": [
+    "remotion",
+    "@/schemas",
+    "../../coming-soon-flips/flip-grain",
+    "../../coming-soon-flips/flip-word",
+    "../../coming-soon-flips/light-streak",
+    "../../coming-soon-flips/timeline",
+    "../../coming-soon-flips/tracked-title",
+    "../../promo/transition-frame",
+    "../../scene-module"
+  ],
+  "outline": [
+    "AbsoluteFill",
+    "FlipWord",
+    "LitWall",
+    "AbsoluteFill",
+    "LitWall",
+    "TrackedTitle",
+    "TransitionFrame",
+    "CueLayer",
+    "FlipGrain",
+    "Composition"
+  ],
+  "symbols": [
+    {
+      "name": "CueLayer",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 695,
+      "end": 1811,
+      "startLine": 17,
+      "endLine": 50,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "cue",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 861,
+      "end": 906,
+      "startLine": 20,
+      "endLine": 20,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "light",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 947,
+      "end": 980,
+      "startLine": 22,
+      "endLine": 22,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "toneAt",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 1820,
+      "end": 2080,
+      "startLine": 52,
+      "endLine": 58,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "cue",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 1923,
+      "end": 1968,
+      "startLine": 53,
+      "endLine": 53,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "ComingSoonFlips",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 2089,
+      "end": 2562,
+      "startLine": 60,
+      "endLine": 74,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "frame",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 2150,
+      "end": 2208,
+      "startLine": 61,
+      "endLine": 61,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "comingSoonFlipsScene",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "start": 2578,
+      "end": 3065,
+      "startLine": 76,
+      "endLine": 92,
+      "kind": "VariableDeclarator"
+    }
+  ],
+  "cost": {
+    "animatedElements": 10,
+    "webgl": false
+  },
+  "unsupported": []
+}

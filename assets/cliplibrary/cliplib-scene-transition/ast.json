@@ -1,0 +1,213 @@
+{
+  "format": "clipkit.ast/v1",
+  "sourceHash": "b402a18337e4bcff489a9dff563238f383f4f4b5a711f432e7620c9970d96e07",
+  "exports": [],
+  "props": [
+    {
+      "name": "x",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "y",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "reach",
+      "type": "number",
+      "required": true
+    }
+  ],
+  "primitives": [
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    },
+    {
+      "name": "interpolate",
+      "parameters": [
+        "frame",
+        "[0, coverEnd]",
+        "[0, 1]",
+        "clamp"
+      ]
+    },
+    {
+      "name": "interpolate",
+      "parameters": [
+        "frame",
+        "[openStart, durationInFrames]",
+        "[0, 1]",
+        "clamp"
+      ]
+    }
+  ],
+  "tokens": [],
+  "imports": [
+    "react",
+    "remotion",
+    "@/schemas",
+    "../../kit/easing",
+    "../../scene-module"
+  ],
+  "outline": [
+    "AbsoluteFill",
+    "Composition"
+  ],
+  "symbols": [
+    {
+      "name": "IrisCenter",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 383,
+      "end": 441,
+      "startLine": 12,
+      "endLine": 12,
+      "kind": "TSTypeAliasDeclaration"
+    },
+    {
+      "name": "farthestCorner",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 449,
+      "end": 592,
+      "startLine": 14,
+      "endLine": 15,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "irisCenter",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 601,
+      "end": 836,
+      "startLine": 17,
+      "endLine": 23,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "coverStyle",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 845,
+      "end": 1916,
+      "startLine": 25,
+      "endLine": 54,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "bars",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 981,
+      "end": 1016,
+      "startLine": 31,
+      "endLine": 31,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "SceneTransition",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 1932,
+      "end": 2745,
+      "startLine": 56,
+      "endLine": 75,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "frame",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2054,
+      "end": 2079,
+      "startLine": 64,
+      "endLine": 64,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "hold",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2153,
+      "end": 2215,
+      "startLine": 66,
+      "endLine": 66,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "coverEnd",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2225,
+      "end": 2265,
+      "startLine": 67,
+      "endLine": 67,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "openStart",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2275,
+      "end": 2302,
+      "startLine": 68,
+      "endLine": 68,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "curve",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2312,
+      "end": 2341,
+      "startLine": 69,
+      "endLine": 69,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "clamp",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2351,
+      "end": 2438,
+      "startLine": 70,
+      "endLine": 70,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "cover",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2448,
+      "end": 2504,
+      "startLine": 71,
+      "endLine": 71,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "open",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2514,
+      "end": 2585,
+      "startLine": 72,
+      "endLine": 72,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "iris",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2595,
+      "end": 2645,
+      "startLine": 73,
+      "endLine": 73,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "sceneTransitionScene",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "start": 2761,
+      "end": 3246,
+      "startLine": 77,
+      "endLine": 93,
+      "kind": "VariableDeclarator"
+    }
+  ],
+  "cost": {
+    "animatedElements": 2,
+    "webgl": false
+  },
+  "unsupported": []
+}

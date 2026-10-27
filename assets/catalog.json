@@ -1,0 +1,897 @@
+{
+  "format": "clipkit.motion-library/v1",
+  "entries": [
+    {
+      "id": "cliplib-word-punch",
+      "name": "Word Punch",
+      "type": "component",
+      "repository": "https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
+      "license": "MIT \u2014 Clip Library / clawwde",
+      "sourcePath": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "instructionPath": "assets/instructions/cliplib-word-punch.md",
+      "summary": "One huge word at a time types on behind its full stop and deletes from the front, or punches in.",
+      "whenToUse": [
+        "A sharp claim, launch hook or single decisive word."
+      ],
+      "avoid": [
+        "Long explanation, measured dialogue or every phrase in a film."
+      ],
+      "adaptToPrompt": [
+        "Set text from the exact approved copy; adjust size/tracking to aspect ratio, wordFrames to reading time, and look palette to brand. Choose type or punch by the intention.",
+        "Carry the outgoing word edge/period into the next shot instead of fading to another centered title."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "text",
+        "highlight",
+        "style",
+        "size",
+        "shrink",
+        "weight",
+        "tracking",
+        "accentPunctuation",
+        "delay",
+        "wordFrames",
+        "swapFrames",
+        "typeFrames",
+        "punch",
+        "rise",
+        "placement.horizontal",
+        "placement.vertical",
+        "placement.insetX",
+        "placement.insetY"
+      ],
+      "tags": [
+        "kinetic",
+        "headline",
+        "typing",
+        "text",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "cliplib-letter-flip",
+      "name": "Letter Flip",
+      "type": "component",
+      "repository": "https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
+      "license": "MIT \u2014 Clip Library / clawwde",
+      "sourcePath": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+      "instructionPath": "assets/instructions/cliplib-letter-flip.md",
+      "summary": "Each letter swings in from its mirror image and lands in turn.",
+      "whenToUse": [
+        "A short transformation, reveal or change of meaning."
+      ],
+      "avoid": [
+        "A long paragraph or constant flipping under narration."
+      ],
+      "adaptToPrompt": [
+        "Preserve the exact string; tune stagger, flipFrames, depth and typography for a legible resolved pose. Hold before exiting.",
+        "Match a rotating character plane to the incoming surface; preserve its direction across the cut."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "text",
+        "size",
+        "weight",
+        "tracking",
+        "startAngle",
+        "slide",
+        "delay",
+        "stagger",
+        "flipFrames",
+        "depth",
+        "highlight",
+        "glowOut",
+        "placement.horizontal",
+        "placement.vertical",
+        "placement.insetX",
+        "placement.insetY",
+        "placement.width",
+        "look.showBackdrop"
+      ],
+      "tags": [
+        "flip",
+        "text",
+        "logo",
+        "reveal",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "cliplib-ribbon-words",
+      "name": "Ribbon Words",
+      "type": "component",
+      "repository": "https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
+      "license": "MIT \u2014 Clip Library / clawwde",
+      "sourcePath": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+      "instructionPath": "assets/instructions/cliplib-ribbon-words.md",
+      "summary": "A bold white ribbon draws a big S down a black frame, carrying a short phrase that settles mid-ribbon and drifts, then rides off as the ribbon retracts.",
+      "whenToUse": [
+        "A directed phrase, path metaphor, connective motion or editorial flourish."
+      ],
+      "avoid": [
+        "Dense captions or a decorative ribbon with no narrative purpose."
+      ],
+      "adaptToPrompt": [
+        "Bind text, words.size, ribbon.width/color, path geometry and timing to the brief. Disable the second phrase unless it serves the story.",
+        "Inherit an existing line or mask as the ribbon; flatten its tangent into the next shot edge. Preserve continuous source phase."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "text",
+        "highlight",
+        "words.size",
+        "words.weight",
+        "words.tracking",
+        "words.centering",
+        "ribbon.color",
+        "ribbon.width",
+        "ribbon.style",
+        "ribbon.outline",
+        "second.enabled",
+        "second.text",
+        "second.offsetY",
+        "second.shift",
+        "second.delay",
+        "inverted",
+        "path.shape",
+        "path.centerY"
+      ],
+      "tags": [
+        "kinetic",
+        "text",
+        "draw",
+        "slide",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "cliplib-chunky-type-stack",
+      "name": "Chunky Type Stack",
+      "type": "component",
+      "repository": "https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
+      "license": "MIT \u2014 Clip Library / clawwde",
+      "sourcePath": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+      "instructionPath": "assets/instructions/cliplib-chunky-type-stack.md",
+      "summary": "Chunky hand-cut letters pop in one by one into a staggered headline stack, then a giant glyph punches through to an end tag.",
+      "whenToUse": [
+        "An intentionally tactile typography object or bold editorial stack."
+      ],
+      "avoid": [
+        "A default opening for every brief; a small centered poster with unused space."
+      ],
+      "adaptToPrompt": [
+        "Bind lines[i].text/size/offset and look palette to the approved hierarchy. Choose crop, scale and camera placement before animating letters.",
+        "Author a parent camera, hinge or mask around the actual stack. A zoom ending on the same poster is not a complete creative direction."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "lines[0].text",
+        "lines[0].size",
+        "lines[0].offset",
+        "lines[1].text",
+        "lines[1].size",
+        "lines[1].offset",
+        "lines[2].text",
+        "lines[2].size",
+        "lines[2].offset",
+        "lines[3].text",
+        "lines[3].size",
+        "lines[3].offset",
+        "color",
+        "font",
+        "lineGap",
+        "jitter",
+        "seed",
+        "delay"
+      ],
+      "tags": [
+        "kinetic",
+        "headline",
+        "stack",
+        "typing",
+        "zoom",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "cliplib-coming-soon-flips",
+      "name": "Coming Soon Flips",
+      "type": "component",
+      "repository": "https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
+      "license": "MIT \u2014 Clip Library / clawwde",
+      "sourcePath": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+      "instructionPath": "assets/instructions/cliplib-coming-soon-flips.md",
+      "summary": "Condensed words with a growing underline hard cut between ink and tangerine plates, one flickering through typefaces, then a tracked-in title while slatted light sweeps a plaster wall to reveal a logo.",
+      "whenToUse": [
+        "An actual announcement, anticipation or staged countdown."
+      ],
+      "avoid": [
+        "A request that has no announcement concept; filler between unrelated phrases."
+      ],
+      "adaptToPrompt": [
+        "Adapt beats/words/title to real approved information. Adjust wall, beam, flashes and timing for the reading/sound score.",
+        "Carry a flipping plane, beam or word into adjacent staging; avoid restarting the whole stock sequence."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "beats[0].text",
+        "beats[0].tone",
+        "beats[0].frames",
+        "beats[0].blank",
+        "beats[0].cycleFonts",
+        "beats[1].text",
+        "beats[1].tone",
+        "beats[1].frames",
+        "beats[1].blank",
+        "beats[1].cycleFonts",
+        "beats[2].text",
+        "beats[2].tone",
+        "beats[2].frames",
+        "beats[2].blank",
+        "beats[2].cycleFonts",
+        "beats[3].text",
+        "beats[3].tone",
+        "beats[3].frames"
+      ],
+      "tags": [
+        "kinetic",
+        "text",
+        "headline",
+        "flip",
+        "outline",
+        "reveal",
+        "logo",
+        "texture",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "cliplib-dot-wordmark-reveal",
+      "name": "Dot Wordmark Reveal",
+      "type": "component",
+      "repository": "https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/brand/dot-wordmark-reveal.tsx",
+      "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
+      "license": "MIT \u2014 Clip Library / clawwde",
+      "sourcePath": "assets/sources/cliplibrary/src/compositions/scenes/brand/dot-wordmark-reveal.tsx",
+      "instructionPath": "assets/instructions/cliplib-dot-wordmark-reveal.md",
+      "summary": "A jade dot hops across a cream frame dropping a tagline word by word, swells into a full jade field where a rounded wordmark writes itself stroke by stroke, then the field morphs into a rounded tile badge that tumbles the lockup away.",
+      "whenToUse": [
+        "A brief brand resolve with a recognizable mark or dot motif."
+      ],
+      "avoid": [
+        "Using an arbitrary dot as decoration or withholding the brand too long."
+      ],
+      "adaptToPrompt": [
+        "Use real copy and brand palette; tune dot/type/roll/timing for exact final hold. Keep last readable frame intentional.",
+        "The dot can inherit a prior period, cursor or accent that already has meaning; resolve into a stable signature."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "copy.tagline",
+        "copy.wordmark",
+        "copy.monogram",
+        "copy.accentLetter",
+        "look.showBackdrop",
+        "look.paper",
+        "look.brand",
+        "look.flash",
+        "look.onBrand",
+        "look.mark",
+        "look.accent",
+        "look.monogramInk",
+        "look.streak",
+        "look.sheen",
+        "look.badgeCorner",
+        "look.glow",
+        "look.pulse",
+        "look.monogramDot"
+      ],
+      "tags": [
+        "logo",
+        "reveal",
+        "draw",
+        "text",
+        "badge",
+        "minimal",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "cliplib-scene-transition",
+      "name": "Scene Transition",
+      "type": "component",
+      "repository": "https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/transitions/scene-transition.tsx",
+      "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
+      "license": "MIT \u2014 Clip Library / clawwde",
+      "sourcePath": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+      "instructionPath": "assets/instructions/cliplib-scene-transition.md",
+      "summary": "A solid colour covers the frame and opens again, to bridge two clips on the timeline.",
+      "whenToUse": [
+        "A motivated overlapping handoff between two already composed shots."
+      ],
+      "avoid": [
+        "Hiding unrelated layouts with repeated full-screen wipes."
+      ],
+      "adaptToPrompt": [
+        "Choose kind, center, easing, color and holdFrames from incoming/outgoing geometry; budget overlap separately from copy.",
+        "Use as the transition mechanism, not the entire shot. Maintain object position and velocity on both sides."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "kind",
+        "color",
+        "easing",
+        "holdFrames",
+        "centerX",
+        "centerY"
+      ],
+      "tags": [
+        "wipe",
+        "cover",
+        "minimal",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "web-gooey-morphing-text",
+      "name": "Gooey Morphing Text",
+      "type": "component",
+      "repository": "https://github.com/magicuidesign/magicui/tree/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "license": "MIT \u2014 Magic UI",
+      "sourcePath": "assets/adapters/web.tsx",
+      "instructionPath": "assets/instructions/web-gooey-morphing-text.md",
+      "summary": "Actual Magic UI source adapted to seekable video frame time",
+      "whenToUse": [
+        "A short semantic word change or material transformation."
+      ],
+      "avoid": [
+        "Long copy, dense captions, or continuous morphing while a claim must be read."
+      ],
+      "adaptToPrompt": [
+        "Bind the texts array to approved words; tune morphFrames/holdFrames, size and colors. Keep each resolved word readable at phone size.",
+        "Retain the original paired blur and SVG threshold mechanism. Match its resolved silhouette to the next object."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "texts[0]",
+        "texts[1]",
+        "texts[2]",
+        "color",
+        "background",
+        "size",
+        "morphFrames",
+        "holdFrames"
+      ],
+      "tags": [
+        "website",
+        "motion",
+        "magic ui",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "web-kinetic-center-build",
+      "name": "Kinetic Center Build",
+      "type": "component",
+      "repository": "https://github.com/codse/animata/tree/25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
+      "revision": "25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
+      "license": "MIT \u2014 Animata",
+      "sourcePath": "assets/adapters/web.tsx",
+      "instructionPath": "assets/instructions/web-kinetic-center-build.md",
+      "summary": "Actual Animata source adapted to seekable video frame time",
+      "whenToUse": [
+        "Words joining a growing idea while previous words reflow."
+      ],
+      "avoid": [
+        "A long sentence that exceeds the canvas or identical arrivals for every shot."
+      ],
+      "adaptToPrompt": [
+        "Bind words to the sentence, measure widths with the actual font, tune size/gap/pushFrames. Recompose into lines when needed rather than shrinking to unreadability.",
+        "Keep earlier words present as the composition re-centers; choose a meaningful final alignment to hand off."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "words[0]",
+        "words[1]",
+        "words[2]",
+        "background",
+        "color",
+        "size",
+        "gap",
+        "pushFrames"
+      ],
+      "tags": [
+        "website",
+        "motion",
+        "animata",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "web-aperture-reveal",
+      "name": "Aperture Reveal",
+      "type": "component",
+      "repository": "https://github.com/codse/animata/tree/25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
+      "revision": "25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
+      "license": "MIT \u2014 Animata",
+      "sourcePath": "assets/adapters/web.tsx",
+      "instructionPath": "assets/instructions/web-aperture-reveal.md",
+      "summary": "Actual Animata source adapted to seekable video frame time",
+      "whenToUse": [
+        "Revealing real footage, a texture, screenshot or evidence through a composed aperture."
+      ],
+      "avoid": [
+        "Invented product evidence or a stock-photo hero unrelated to the brief."
+      ],
+      "adaptToPrompt": [
+        "Use a registered imageSourceId for real media; bind lead/trail/caption, delays, expansion and type size. Preserve the source media.",
+        "Translate scroll progression into frame progress; the aperture edge becomes a next-shot mask or frame."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "lead",
+        "trail",
+        "caption",
+        "size",
+        "captionSize",
+        "background",
+        "color",
+        "imageSourceId",
+        "delayFrames",
+        "expandFrames"
+      ],
+      "tags": [
+        "website",
+        "motion",
+        "animata",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "web-liquid-metal",
+      "name": "Liquid Metal",
+      "type": "component",
+      "repository": "https://github.com/paper-design/shaders",
+      "revision": "npm:@paper-design/shaders@0.0.82",
+      "license": "Apache-2.0 \u2014 Paper Design",
+      "sourcePath": "assets/adapters/web.tsx",
+      "instructionPath": "assets/instructions/web-liquid-metal.md",
+      "summary": "Actual Paper Design source adapted to seekable video frame time",
+      "whenToUse": [
+        "A short material accent, logo treatment or texture reveal supporting the thesis."
+      ],
+      "avoid": [
+        "An expensive full-film background or distortion of essential reading text."
+      ],
+      "adaptToPrompt": [
+        "Use explicit frame time and cached texture preprocessing. Bind material settings to brand/shape; keep a stable foreground reading layer.",
+        "Introduce from a meaningful surface and settle/cut cleanly. Verify GPU seeking and export before approving."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "background",
+        "color",
+        "imageSourceId",
+        "repetition",
+        "distortion",
+        "angle",
+        "speed"
+      ],
+      "tags": [
+        "website",
+        "motion",
+        "paper design",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "web-fluted-glass",
+      "name": "Fluted Glass",
+      "type": "component",
+      "repository": "https://github.com/paper-design/shaders",
+      "revision": "npm:@paper-design/shaders@0.0.82",
+      "license": "Apache-2.0 \u2014 Paper Design",
+      "sourcePath": "assets/adapters/web.tsx",
+      "instructionPath": "assets/instructions/web-fluted-glass.md",
+      "summary": "Actual Paper Design source adapted to seekable video frame time",
+      "whenToUse": [
+        "A lens/refractive reveal of layered art or real media."
+      ],
+      "avoid": [
+        "Calling a translucent rectangle refraction, or distorting evidence for its whole read."
+      ],
+      "adaptToPrompt": [
+        "Choose a real media source or original graphic; tune distortion/angle/size/blur and frame-driven shift. Evaluate at target resolution.",
+        "Move the lens to reveal a relationship, then let the viewer read. Keep preview/export frame time identical."
+      ],
+      "videoClock": "Retain actual frame-native choreography; derive all interaction/scroll progress from integral project frames. No wall-clock playback.",
+      "editablePaths": [
+        "background",
+        "color",
+        "imageSourceId",
+        "size",
+        "distortion",
+        "angle",
+        "blur",
+        "speed"
+      ],
+      "tags": [
+        "website",
+        "motion",
+        "paper design",
+        "animation",
+        "video"
+      ],
+      "implementation": "Ready component: inspect API through library_inspect, place with library_place, or compose via @clipkit/components with item and bindPath.",
+      "approval": "Prove the chosen composition in the three-second sample; component inclusion is optional."
+    },
+    {
+      "id": "reactbits-blur-text",
+      "name": "React Bits \u00b7 Blur Text",
+      "type": "reference",
+      "repository": "https://reactbits.dev/text-animations/blur-text",
+      "revision": null,
+      "license": "Reference only; inspect the exact source license before importing code. React Bits pack redistribution is not included.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/reactbits-blur-text.md",
+      "summary": "Soft-to-sharp staggered text resolution.",
+      "whenToUse": [
+        "A short reveal or shift from uncertainty to clarity."
+      ],
+      "avoid": [
+        "Measured subtitles or blur that prevents the required reading interval."
+      ],
+      "adaptToPrompt": [
+        "Author frame-derived per-word progress; map it to opacity, vertical offset and blur, then hold at zero blur. Keep exact user copy and tune stagger to reading time."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "blur",
+        "text",
+        "reveal",
+        "soft",
+        "focus"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "reactbits-split-text",
+      "name": "React Bits \u00b7 Split Text",
+      "type": "reference",
+      "repository": "https://reactbits.dev/text-animations/split-text",
+      "revision": null,
+      "license": "Reference only; inspect the exact source license before importing code. React Bits pack redistribution is not included.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/reactbits-split-text.md",
+      "summary": "Characters or words animate as separately controlled objects.",
+      "whenToUse": [
+        "A typographic phrase with spatial relationships and a shared destination."
+      ],
+      "avoid": [
+        "Every letter following the same spring throughout an entire film."
+      ],
+      "adaptToPrompt": [
+        "Split without changing copy semantics. Derive local progress from frame minus element delay; preserve layout metrics and explicit final poses."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "text",
+        "letters",
+        "stagger",
+        "typography"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "reactbits-scroll-float",
+      "name": "React Bits \u00b7 Scroll Float",
+      "type": "reference",
+      "repository": "https://reactbits.dev/text-animations/scroll-float",
+      "revision": null,
+      "license": "Reference only; inspect the exact source license before importing code. React Bits pack redistribution is not included.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/reactbits-scroll-float.md",
+      "summary": "Progress-linked floating/parallax typography.",
+      "whenToUse": [
+        "A continuous travel passage through layered type."
+      ],
+      "avoid": [
+        "Unmotivated perpetual floating or a scroll dependency in an export."
+      ],
+      "adaptToPrompt": [
+        "Replace scroll progress with a bounded frame interval. Couple depth, camera and position to the same progress, then give the viewer a stable read."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "depth",
+        "float",
+        "parallax",
+        "camera",
+        "travel"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "reactbits-scroll-velocity",
+      "name": "React Bits \u00b7 Scroll Velocity",
+      "type": "reference",
+      "repository": "https://reactbits.dev/text-animations/scroll-velocity",
+      "revision": null,
+      "license": "Reference only; inspect the exact source license before importing code. React Bits pack redistribution is not included.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/reactbits-scroll-velocity.md",
+      "summary": "Velocity-sensitive typographic movement.",
+      "whenToUse": [
+        "A deliberate acceleration, energetic texture or speed contrast."
+      ],
+      "avoid": [
+        "Unreadable marquee as the only presentation of essential copy."
+      ],
+      "adaptToPrompt": [
+        "Author a velocity curve from the shot score, integrate position deterministically, and choreograph acceleration/deceleration. Retain a stable reading layer."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "speed",
+        "velocity",
+        "marquee",
+        "fast",
+        "kinetic"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "reactbits-decrypted-text",
+      "name": "React Bits \u00b7 Decrypted Text",
+      "type": "reference",
+      "repository": "https://reactbits.dev/text-animations/decrypted-text",
+      "revision": null,
+      "license": "Reference only; inspect the exact source license before importing code. React Bits pack redistribution is not included.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/reactbits-decrypted-text.md",
+      "summary": "Text resolves from coded/scrambled states.",
+      "whenToUse": [
+        "A real decode, reveal or discovery metaphor."
+      ],
+      "avoid": [
+        "Generic hacker decoration or corrupting exact user copy at the final pose."
+      ],
+      "adaptToPrompt": [
+        "Use seeded character choices indexed by frame and character. Freeze resolved characters and end with exact approved text; preserve a readable hold."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "decode",
+        "scramble",
+        "text",
+        "reveal"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "reactbits-circular-gallery",
+      "name": "React Bits \u00b7 Circular Gallery",
+      "type": "reference",
+      "repository": "https://reactbits.dev/components/circular-gallery",
+      "revision": null,
+      "license": "Reference only; inspect the exact source license before importing code. React Bits pack redistribution is not included.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/reactbits-circular-gallery.md",
+      "summary": "A spatial sequence of image planes.",
+      "whenToUse": [
+        "Curated evidence, work samples or a gallery with actual licensed media."
+      ],
+      "avoid": [
+        "Arbitrary stock cards or introducing full 3D when CSS planes suffice."
+      ],
+      "adaptToPrompt": [
+        "Map authored camera/progress to plane positions. Use real media slots, preserve aspect ratios, land on one meaningful image and verify frame seeking."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "gallery",
+        "media",
+        "depth",
+        "spatial",
+        "footage"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "motion-linked-progress",
+      "name": "Motion \u00b7 Linked progress",
+      "type": "reference",
+      "repository": "https://motion.dev/docs/react-scroll-animations",
+      "revision": null,
+      "license": "Reference only; no executable source vendored by this entry.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/motion-linked-progress.md",
+      "summary": "One normalized progress controls coordinated transforms.",
+      "whenToUse": [
+        "Continuous spatial storytelling, parallax and shared transitions."
+      ],
+      "avoid": [
+        "Multiple unrelated clocks or requiring pointer/scroll during export."
+      ],
+      "adaptToPrompt": [
+        "Translate scrollYProgress into project-frame progress, map chosen ranges to transform/mask/opacity, and keep the camera and outgoing/incoming geometry synchronized."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "camera",
+        "parallax",
+        "continuity",
+        "transition"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "codrops-kinetic-type",
+      "name": "Codrops \u00b7 Kinetic type continuity",
+      "type": "reference",
+      "repository": "https://github.com/codrops/KineticTypePageTransition",
+      "revision": null,
+      "license": "Reference only; no executable source vendored by this entry.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/codrops-kinetic-type.md",
+      "summary": "Typography and masks connect changing compositions.",
+      "whenToUse": [
+        "A word/shape that physically carries the viewer into the next idea."
+      ],
+      "avoid": [
+        "Independent posters with a wipe placed between them."
+      ],
+      "adaptToPrompt": [
+        "Study source choreography and license before adapting. Author shared type geometry and coordinated masking with frame-derived values; exclude sample photos/fonts without separate rights."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "type",
+        "mask",
+        "continuity",
+        "transition"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    },
+    {
+      "id": "codrops-text-motion",
+      "name": "Codrops \u00b7 Text motion",
+      "type": "reference",
+      "repository": "https://github.com/codrops/ScrollTextMotion",
+      "revision": null,
+      "license": "Reference only; no executable source vendored by this entry.",
+      "sourcePath": null,
+      "instructionPath": "assets/instructions/codrops-text-motion.md",
+      "summary": "Progress-linked typography sequences.",
+      "whenToUse": [
+        "Changing type hierarchy and spatial rhythm across a connected passage."
+      ],
+      "avoid": [
+        "A copied webpage scroll interaction or template sequence detached from the story."
+      ],
+      "adaptToPrompt": [
+        "Translate selected scroll key poses into authored frame intervals. Preserve typography hierarchy, vary shot scale and protect exact-copy reading windows."
+      ],
+      "videoClock": "Replace interactive progress with deterministic authored frame progress.",
+      "editablePaths": [
+        "approved copy",
+        "palette",
+        "camera/path",
+        "entry/read/exit frames",
+        "media slots where relevant"
+      ],
+      "tags": [
+        "type",
+        "scroll",
+        "rhythm",
+        "layout"
+      ],
+      "implementation": "Technique guidance. Author an original scene or a reviewed, appropriately licensed project-source adaptation; this entry is not an insertable component.",
+      "approval": "Show the mechanism in a moving proof before full production."
+    }
+  ]
+}

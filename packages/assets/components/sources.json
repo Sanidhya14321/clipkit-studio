@@ -1,6 +1,6 @@
 [
   {
-    "file": "upstream/cliplibrary/LICENSE",
+    "file": "assets/sources/cliplibrary/LICENSE",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "09b01045d604d6f988c2851060f7bc9c0cb893ff209247e15869cd0cd8475ce1",
@@ -8,7 +8,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/flip-grain.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/flip-grain.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "22ceffa7683575b61fbd0b577636aa66957d06d192e00dbab2326c09d1f2922c",
@@ -16,7 +16,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/flip-word.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/flip-word.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "537301af3beb439802ce9e7b4297a7ce862d0a11155bcfab1e1fe04f2dcb6933",
@@ -24,7 +24,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/fonts.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/fonts.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "c10e1d634d7ca9576f6863fc470800abc28bdcbadd4c79c9a62f2b60579fc187",
@@ -32,7 +32,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/light-streak.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/light-streak.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "d9963f6ca56a0d12be855955537fd52fde34e3181a1572b08defd8af39a2d049",
@@ -40,7 +40,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/logo-mark.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/logo-mark.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7670e3e1504b15383c0430344506b6d14e4e455c9a9ee5557383ea38ebc6edfc",
@@ -48,7 +48,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/plaster-wall.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/plaster-wall.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "445a8490591ccf716f3c9dd55558f5110b13abbacdb363b84f87dae7237f0b8c",
@@ -56,7 +56,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/timeline.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/timeline.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "ee225a316b130e428e8089b0f0325268369d82c9791cc10be4f91795edf71ce5",
@@ -64,7 +64,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/coming-soon-flips/tracked-title.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/coming-soon-flips/tracked-title.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "a9e4284df0aa998b192180ae05bdc6b7baecf58fedc77e33a3f5ab52cc7f389f",
@@ -72,7 +72,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/connectors/badge-designs.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/connectors/badge-designs.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "b905546e85a2fbc20045ba44fa61dd7c90e9615a6359ff8c16efee9a928e0cbc",
@@ -80,7 +80,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/connectors/badge-parts.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/connectors/badge-parts.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "60c9437499f00c8bc238c016d8c6b032cdba1239c0b468ca7a48d2376755df6b",
@@ -88,7 +88,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/connectors/badge.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/connectors/badge.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7c20ceef994fdd21bdfb5f888f2cd93918724d3423413129f4b0ada966346d6a",
@@ -96,7 +96,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/connectors/brush.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/connectors/brush.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "a7fd7afac3058bc525475bef4ea2c8d2dafa3bcd1ab131db784ca2d35ba5b95b",
@@ -104,7 +104,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/connectors/chalk-board.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/connectors/chalk-board.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "3eaa0037081a19827d03bded81f6af2293f699f7981f11685e2f6cb878e39c3e",
@@ -112,7 +112,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/connectors/fonts.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/connectors/fonts.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "f6b818b27208b9005ea1c78cf64222426d3291faefea87be7a6741500ad45809",
@@ -120,7 +120,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/beats.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/beats.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "9b5aa1cab4676423d2aeea90b5751b139371ec5874d58583492399fd29f79af4",
@@ -128,7 +128,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/brand-field.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/brand-field.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "6035d6ebab1b41a4da5e969f057b74a1ab30cf2b7d2440788d2c10da11ec70b0",
@@ -136,7 +136,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/dot-path.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/dot-path.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "e4d19ddf4d477dcafb3609ae15b547f42f82c6332c01d77a98ae3defb3fd3796",
@@ -144,7 +144,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/frame-state.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/frame-state.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "b5b6d6eb742aedf84ccbc264436a1afb6bb32a09db061bc9a2c1ac5aa9b3151b",
@@ -152,7 +152,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/glyph-strokes.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/glyph-strokes.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "455e4d7695da8ac427e6a6f282d017890acf36b94c9b0114a4945ff986b401ab",
@@ -160,7 +160,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/glyphs.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/glyphs.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "05aaadefeb1e5d6eb081b77f24b5b11ab95a8bd9e9025b51a8f21ec3010763d6",
@@ -168,7 +168,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/lockup.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/lockup.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "90cf3f333a26962703313b0d4bea01840773dc5dd0b9518894b7c67216cd74f0",
@@ -176,7 +176,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/paper-lockup.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/paper-lockup.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "2eee56743c6350f65597526eb161e40dfc59a1a66942006f8e3a954e98f96548",
@@ -184,7 +184,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/strokes.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/strokes.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "244645be7873af9bc87db52f439f0027178463534427239b8903d5fe11b481b9",
@@ -192,7 +192,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/dot-wordmark-reveal/tagline.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/dot-wordmark-reveal/tagline.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7b1070567c74657854127320b4fc52555ae36a043f2a83357144d1b96253e0fd",
@@ -200,7 +200,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/kit/easing.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/kit/easing.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "5da4cc0abf92c05496f14425cee3b4cbe430a4bdd2d994aabde8f86fcddf2467",
@@ -208,7 +208,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/printer/geometry.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/printer/geometry.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "3c315af773924b8d23c4d76065f16daa845cc8ade9ab0a50905fae5b90536ce8",
@@ -216,7 +216,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/printer/page-motion.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/printer/page-motion.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "d011593f5c6c49743c7767762e8d315d3b3314ae31d8b3a834c573790aca72dc",
@@ -224,7 +224,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/backdrop.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/backdrop.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "d12f5f457969fb46325cf768b085e620f360a1219f9331a8ccbc3632e4226060",
@@ -232,7 +232,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/desk/canvas-texture.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/desk/canvas-texture.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "099dfa8409ddc3a61042c077c2f4f941545eedf8b777f2a43adc72a85f4db883",
@@ -240,7 +240,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/fonts.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/fonts.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "fcd4476a696384964d456e1b9c316c324148f2f43f7753e4d5c7281933723a95",
@@ -248,7 +248,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/glow.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/glow.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "d18821ca896e46fed0dd26bcf0d34fc4cc092490d231117935b736751741709c",
@@ -256,7 +256,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/ink-geometry.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/ink-geometry.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "815275ad196faf886408fe9163c2b44ee296b1793685708b78dafc24c8f97ae0",
@@ -264,7 +264,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/kinetic.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/kinetic.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "5ff3c1cdb0f46305de2c411943f149510a41433152fe263dc69b270d240878ea",
@@ -272,7 +272,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/promo-layer.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/promo-layer.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "0b51416b5e1aab668ead0688aee9c64ad66174665be12578a5c7e1f55320c78d",
@@ -280,7 +280,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/timing.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/timing.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "a9ac6c84920b3eb0a973860a542ca15a8586de3ef2a95d45c5779a7d830d2048",
@@ -288,7 +288,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/transition-frame.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/transition-frame.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "99de4b9ae8796c030976c95c3a5a7bc57e49fc6e086b7d569018688305733a7e",
@@ -296,7 +296,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/promo/words.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/promo/words.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7c6c63d3db765561d4062af892f33898eddeb732a688dc5e6bcacccf32bf530e",
@@ -304,7 +304,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/ribbon-words/ribbon-curve.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/ribbon-words/ribbon-curve.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "d56195cd8537bc26b831e6aa38c421af12b97f8d6551d516b1a62e4843738f0b",
@@ -312,7 +312,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/ribbon-words/ribbon-path.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/ribbon-words/ribbon-path.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "374a340dc2ffcc53d324ec105ac5dc97474642720178f5c58a075ff4f4c911da",
@@ -320,7 +320,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/ribbon-words/ribbon-strand.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/ribbon-words/ribbon-strand.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7af1357cf03a97952d6ca0e63a8f94aba58cef3313a39fea65870885e9d26c25",
@@ -328,7 +328,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/ribbon-words/ribbon-text.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/ribbon-words/ribbon-text.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "8084cfe831efbc8d59ae3345842054a162b034bcbbfa5a5106c5ec188e745adc",
@@ -336,7 +336,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/ribbon-words/ribbon-timing.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/ribbon-words/ribbon-timing.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "078d670087925dd2698715c900520acd6fa23fe9207eab63cb0335e84541e29b",
@@ -344,7 +344,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scene-module.ts",
+    "file": "assets/sources/cliplibrary/src/compositions/scene-module.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "4b62e1372a69ecbe47d37076b54f3b02c3dde27481f378989bb486c004c8c897",
@@ -352,7 +352,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scenes/brand/dot-wordmark-reveal.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/scenes/brand/dot-wordmark-reveal.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "aa2b0a96e4d807fd6c2914a69671e54ad9c27c6fea58f75f3a1cd258071190d0",
@@ -360,7 +360,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "60d1e7058e28d88198cfc2194d5b70c3cfe3bfb3c26b47b61d6015ae79d5670e",
@@ -368,7 +368,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "1c6b0d20f2a546a508efc45972c6df98bd85fff21c3cbebca64f19c7ae0ab77f",
@@ -376,7 +376,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "eaa8ea32c5c1fb69ca9a6e84a2bb5511d190a59849fdd340a7cae94e15ac5ba6",
@@ -384,7 +384,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "5422857555e8cbbd319d9b66bfabc3d50cca57b12786f8c6961656b3ae05c641",
@@ -392,7 +392,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "bc574bd1a52062c100d9e919057e7aceffca5382ce8bb7102c4116285de6972f",
@@ -400,7 +400,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
+    "file": "assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "0145e20df932657a5bfd302147847719ef52d2a593e3e83276b6fdb9ad72a89e",
@@ -408,7 +408,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/anniversary-common.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/anniversary-common.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "81c3e852dbd4e7d12651f0eb402938ef2d62b033e9b9b051488216b25796affc",
@@ -416,7 +416,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clip-props.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clip-props.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "fdd95df1aefc9b63df5a79cd75b82b70bb91c0861ab57bd70b34405ff9c2856a",
@@ -424,7 +424,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/ad-reveals/battery-charge-success.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/ad-reveals/battery-charge-success.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "95a240113588359eb2e71a9aeef5e41ffb966dfe7b3f2ba6b0951a6ba1c5db8d",
@@ -432,7 +432,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/ad-reveals/billboard-reader.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/ad-reveals/billboard-reader.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7f644244611e04dc7124eccf7b425e747348b04b1ca1e7a4b7a14c0931c1bf82",
@@ -440,7 +440,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/ad-reveals/burning-paper-reveal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/ad-reveals/burning-paper-reveal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "79331f563f35e8be049c883f3be8aeb7019ed18ea2130eccc000249b278fb53e",
@@ -448,7 +448,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/ad-reveals/crumpled-paper-reveal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/ad-reveals/crumpled-paper-reveal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "6c5455d8c1881907c11d1e62c0408a08485696380e8b113d18f03cb7d8796d5c",
@@ -456,7 +456,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/ad-reveals/helicopter-unveil.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/ad-reveals/helicopter-unveil.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "2d9090bb86179fbd9f9db5b0745c5e4ec8b3bcc521b2f5e89aefab7632be56ca",
@@ -464,7 +464,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/ad-reveals/problem-strikeout.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/ad-reveals/problem-strikeout.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "c155becc0c352e53217d1229b14a8e82c61f43c6b0ce27ef76529c20df2cbbe9",
@@ -472,7 +472,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/ad-reveals/spill-reveal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/ad-reveals/spill-reveal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "b7b21d7fc42655891b4f1e4559815e09709e389f810875da3f02d7c255c823f6",
@@ -480,7 +480,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/backgrounds/relief-backdrop.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/backgrounds/relief-backdrop.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "aa329bbed5ac719a40e0f0e6aa229007ac91d5ab2a4fcc4a2d5bd63b56aaf0ff",
@@ -488,7 +488,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/brand/app-icon-reveal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/brand/app-icon-reveal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "f881547cfa88714d3271a4f73986db5deb58e63f0ff6e6f74cb5bbe008bbc292",
@@ -496,7 +496,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/brand/brand-reveal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/brand/brand-reveal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "9e319793f0342e0d6f8cc0a3922ad03dab1b0cc24d46132045d4aa4875f28ea6",
@@ -504,7 +504,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/brand/cta-end-card.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/brand/cta-end-card.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "8593e7ca681081b00526d1c64e24ce94277e92280dd9893358e17ac4b4532f99",
@@ -512,7 +512,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/brand/dot-wordmark-reveal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/brand/dot-wordmark-reveal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "cc649cf1453ce1d87f9ac4cd2e1188737d6d515ea33035cbda7e61956ddbff29",
@@ -520,7 +520,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/brand/puzzle-success.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/brand/puzzle-success.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "46da1da835c41c2a35fbff7cab4823f7812024470b169083e60e92fb7b49db2d",
@@ -528,7 +528,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/desk-scenes/laptop-wipe-reveal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/desk-scenes/laptop-wipe-reveal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "ba45f8dd5512dfb19d98b79e6d0557c0bf246b73d70c7a3bbcc7be1b60fa6c93",
@@ -536,7 +536,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/desk-scenes/website-found-spotlight.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/desk-scenes/website-found-spotlight.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "20e8ca54503efd76f0c7a43336efc4f2da21490ffb532f1f22dd1c7b86d7ab54",
@@ -544,7 +544,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/hand-drawn/chalk-badge-grid.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/hand-drawn/chalk-badge-grid.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "999d81d5585191e726208c6986b4cf38aa9a88cbe0253fabfceb746963656346",
@@ -552,7 +552,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/hand-drawn/chalk-badge.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/hand-drawn/chalk-badge.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "420a00c17e43d5407e1402cac1b1ea123603e7c5e6876770aca5ef566158360d",
@@ -560,7 +560,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/hand-drawn/chalk-badges-reel.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/hand-drawn/chalk-badges-reel.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "ad78321eff1a98e9dcbb5102eb861a1a3c4059eb0a89de2445a6dcb4ca8f571b",
@@ -568,7 +568,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/hand-drawn/chalk-title.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/hand-drawn/chalk-title.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7be066060c365cc10ce8ae6eca5b9e1870adfe7380bf041bce9ae763d8188248",
@@ -576,7 +576,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/hand-drawn/doodle-arrows.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/hand-drawn/doodle-arrows.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "f45b705a636a2aecccd2414775006acdda0c66f34eb486bd4e092fce091a98ce",
@@ -584,7 +584,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/hand-drawn/handwritten-note.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/hand-drawn/handwritten-note.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "77b44d6dcb396101be5785787ff7f5c59d0b511ac35d462dd5e54756af0422af",
@@ -592,7 +592,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/hand-drawn/scribble-caption.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/hand-drawn/scribble-caption.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "2dd588f92230667486e97298c7c333cfa828b88a3ed70c1c27bdde44e40fbf64",
@@ -600,7 +600,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/anniversary-kinetic.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/anniversary-kinetic.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "b1bec960cd5b5f24e289925466f3326c5d6674f516f79ec7d0fc607a41949fd6",
@@ -608,7 +608,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/branding-is-ticker.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/branding-is-ticker.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "088f51a26933c0e89b76594d67cbb6d58b19e31f4cd2c763681761bb345522b7",
@@ -616,7 +616,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/chunky-type-stack.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/chunky-type-stack.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "17d40aa0e0ff17a25c51ef97fe50984fb2724c575cc36c44eeaa80f62fe15df0",
@@ -624,7 +624,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/circle-pop.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/circle-pop.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "de477081e3f41d8daa7cce3b4a4f9ac965d4dfc219a0d3cb0c28cdb7cf862869",
@@ -632,7 +632,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/coming-soon-flips.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/coming-soon-flips.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "f5ff24c703a4965c4b540756d2049068b67410ae05caf472c9557818aecb1165",
@@ -640,7 +640,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/domino-words.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/domino-words.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "74c300b78d37032a4a1a8e92394cfaea646dd184cc51658744ad895418ca0ac0",
@@ -648,7 +648,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/echo-stack.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/echo-stack.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "e00c8b46e5cb5aba2d93d1e1ee486b6233e14f892c60d70aca9dc304c28a3286",
@@ -656,7 +656,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/grid-stack.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/grid-stack.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "37dd59fb05417ea9a647ccfa33b54830aa97cd413dd32c91bc38d46f2637b0c7",
@@ -664,7 +664,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/hanging-words.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/hanging-words.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "cd2dac69a8016477e04f13438d2640f73f561e0d6ea61b041175de49d956b6c2",
@@ -672,7 +672,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/lens-orbit.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/lens-orbit.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "35f397f6fc08ce512204aa19269f44bda4c07f16d15a088b1c4e31ea3cd00df9",
@@ -680,7 +680,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/outline-marquee.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/outline-marquee.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "ee7dbf50236c3952dc1bce33c5797c936d181babb5d3e6b4cca1c4eceb43f32b",
@@ -688,7 +688,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/ribbon-words.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/ribbon-words.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "27c756afa3a78b964d556acf757c2428db9b6ee65e7018ae90846b3d1aa7b49d",
@@ -696,7 +696,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/scroller-callout.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/scroller-callout.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "684477de7827b242dca40df2746593e6cc73b8ecdbe923124ded5b95ef1b8854",
@@ -704,7 +704,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/scroller-wall.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/scroller-wall.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "827872fa8a4478decec10c0128ac082e9d0aaa4f5cd4bb61068be781679ca8e6",
@@ -712,7 +712,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/sticker-stack.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/sticker-stack.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "7e840d488ccc4640dd91d6a16ed7930d47321af40180a0495652cf29bbe83fa5",
@@ -720,7 +720,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/text-rings.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/text-rings.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "a7972918ffd9d7874bd993a14f13e750b1b0d23df28112339b319f26d11940b8",
@@ -728,7 +728,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/word-build.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/word-build.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "3e752c9560650ad705eba2816571bede74fb89d34bb330ab59fc9f60131569d7",
@@ -736,7 +736,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/word-field.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/word-field.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "c498dec391dc28af33351f2d7f5094df8474f7e5fa6123b81ed451c39a05fd21",
@@ -744,7 +744,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/word-punch.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/word-punch.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "cafc024acce015a216cdbee4ee9bad99f12a2e851be16d9b575f0d1d6ba10cea",
@@ -752,7 +752,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/kinetic-type/word-streams.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/kinetic-type/word-streams.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "4c5e53b4bc81a19d7de88ad6bf4eed1b45e319d64deeb9149ff80893bdca65ca",
@@ -760,7 +760,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/color-pills.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/color-pills.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "667e1b877804af0ae77cdb065b27ebcb79452feb8133fd01296e1bc370918927",
@@ -768,7 +768,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/heading-list.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/heading-list.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "44e219bfffac8bde8ff160b38d32a2af6fbd1b86b08a1c7eb2eccb6da1492082",
@@ -776,7 +776,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/list-pickers-reel.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/list-pickers-reel.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "3d96f0064bbf255fd8c368f778fd0efe3ab3da335f57be7c456e957623ed5048",
@@ -784,7 +784,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/menu-stack.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/menu-stack.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "10505992f60f979a9e919e33f341e8b8ba5a0f5126bb1e43ff1c792f31f4de50",
@@ -792,7 +792,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/mind-map.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/mind-map.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "844d4e3bf453e368c4c5915ffefe278d9eecbc4ce8117156b8bb79f463c7bee5",
@@ -800,7 +800,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/pill-fan.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/pill-fan.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "21a671df49c7b075e1fcff3051e639243085b974104f65ed1b43e3038f1bd849",
@@ -808,7 +808,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/product-cards.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/product-cards.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "274f19b0691bfa3ded108581f71bef78f1ddd742922fcff56ae397e3bfd5a70b",
@@ -816,7 +816,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/skill-wheel.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/skill-wheel.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "5b727724c084318a33b905ac5f1e3a20365eae7166a8d634f9681be0292857d6",
@@ -824,7 +824,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/word-picker.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/word-picker.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "e050fd745ce93d009f75c7869b56b40b48b02d46f5d8044bd63f2d6feee722de",
@@ -832,7 +832,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/list-pickers/year-dial.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/list-pickers/year-dial.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "c0e1bb33615fb01141c153ccc8edbfb2b896eb938b8b6e2590fd22e823658d03",
@@ -840,7 +840,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/overlays/film-dust.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/overlays/film-dust.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "cda0eb02bc984c27b5320718e5ac543554091bba882e71e3fe93d774a06c657e",
@@ -848,7 +848,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/overlays/floating-cards.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/overlays/floating-cards.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "78bd52de63793073aa1482b6f79bbea13ad777e492c93c7a29149e0784e9ef72",
@@ -856,7 +856,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/overlays/spider-web-services.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/overlays/spider-web-services.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "044d4706948ce55fc1eb607f49d36ad55d11775755b3c0b34ff2995fa4ae9386",
@@ -864,7 +864,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-layouts/charge-compare.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-layouts/charge-compare.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "9c6f41e6dcbf6022d50b294daef0f0d7c1309bacd5e7554dd4d89bed0ab45a69",
@@ -872,7 +872,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-layouts/phone-fan.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-layouts/phone-fan.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "b3e64b292eb0d44d20559a65866e2b2d33a43bb43a975d9d2b03380494287f10",
@@ -880,7 +880,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-layouts/phone-pair.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-layouts/phone-pair.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "4eb16545915b3ce3a2febf5052422a87f13dd0f64e9fdbdc63d2515816d924a4",
@@ -888,7 +888,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-layouts/phone-wall.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-layouts/phone-wall.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "96b0462ee729843b84d95fda4dd47d3431970a50aa982f2d140b67f20062571c",
@@ -896,7 +896,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-reveals/phone-flat-lay.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-reveals/phone-flat-lay.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "2dacc6687c983c7a65bd71301cadb8b9fd2391e06d40504f731c25c52f94bafd",
@@ -904,7 +904,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-reveals/phone-pedestal.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-reveals/phone-pedestal.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "365077a8daba71b0626768bffdcdc3a162d82310cd9929026f72e2c4ea6ec01e",
@@ -912,7 +912,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-reveals/phone-spin-in.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-reveals/phone-spin-in.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "174ceb51e23a96ee29bc171b7876f28fc34d65f7391c6f1fb9a5668fd1dea0d2",
@@ -920,7 +920,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/phone-reveals/phone-turnaround.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/phone-reveals/phone-turnaround.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "590d23cb1a7f254bc7b1d7c8e6dcbaf6fca7c1b39c37a759cc4754c5a9382da6",
@@ -928,7 +928,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/screen-demos/incoming-call-teaser.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/screen-demos/incoming-call-teaser.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "35e878eb65c7154995ee460cb334d69d4d67bd622ac2365fe26e2a7c53749b93",
@@ -936,7 +936,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/screen-demos/keyboard-typing-cta.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/screen-demos/keyboard-typing-cta.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "d485b13daa135d0df9b9f048abd613c9cb8f8d1ecca6796baf6614e60fe7ab69",
@@ -944,7 +944,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/screen-demos/message-arise.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/screen-demos/message-arise.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "ce2c2e7886193acf16ede581a8653197bb5b7b448fa1caa58443c39614babec8",
@@ -952,7 +952,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/screen-demos/phone-scroll.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/screen-demos/phone-scroll.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "9ac4c577aa31523c5ea70ade35985a971711e04357058fc48c37d446a91e5572",
@@ -960,7 +960,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/screen-demos/phone-swap.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/screen-demos/phone-swap.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "57d34e5a09118e09f78717ac05f9bc63784e42c8a03291f4f29aef2b12f6045d",
@@ -968,7 +968,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/text-reveals/going-live-teaser.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/text-reveals/going-live-teaser.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "25cd2faaab8d37ca1805096348ed1fb815a0d03bf030ca96474fda52331f929d",
@@ -976,7 +976,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/text-reveals/letter-flip.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/text-reveals/letter-flip.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "4d068effeb93dc2b41a46996474236091ef5314564a33c16203b5c5f28f36163",
@@ -984,7 +984,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/text-reveals/magnifier-caption.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/text-reveals/magnifier-caption.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "2348c2045b1cdaf38530deae6c1d7a805f3d1d7d6b7e326a389b9a2160d9a1aa",
@@ -992,7 +992,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/text-reveals/neon-sign-flicker.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/text-reveals/neon-sign-flicker.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "8897a190b9f85a1cc05302a7a92f44056b21d115095d91755949cec04b5ca4c8",
@@ -1000,7 +1000,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/text-reveals/number-counter.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/text-reveals/number-counter.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "4532e6de01573b92136c6de87c21e6c232df6edf726768e1aab12268f738eee9",
@@ -1008,7 +1008,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/text-reveals/printer-pages.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/text-reveals/printer-pages.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "8bbbf7991360cd2cbe5226b63a79567cee5ea5e7fbf5ae8a5df6b838bbcc0c8f",
@@ -1016,7 +1016,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/text-reveals/typewriter.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/text-reveals/typewriter.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "2efb1e635c813eb7a1579becfd95426587901c571ead7f210a64ff57f32ce885",
@@ -1024,7 +1024,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/clips/transitions/scene-transition.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/clips/transitions/scene-transition.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "f2aaa48e6f19d52c0cc95bf7d5856d05567a7f1a0b0b1ebe69984958f071acab",
@@ -1032,7 +1032,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/connector-common.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/connector-common.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "e2f7b5639a1b04fb44b86b7f58e5ea798151cca0879c5a898f82bbb34aa0227f",
@@ -1040,7 +1040,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/control-layout.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/control-layout.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "e86c96885b846eedc497c95a9cc6238212d3771b432a4483a3fafa71de21245b",
@@ -1048,7 +1048,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/control.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/control.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "05483e9b6e50127d5f80b7664a987565d47dd7cbb883dc38f5e81a161184c692",
@@ -1056,7 +1056,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/doodle-common.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/doodle-common.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "76aba75897250a6909a61a0a81b34b5597075a17d6566293f1d0abbee9a46663",
@@ -1064,7 +1064,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/easing.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/easing.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "fefbaade2d24c0b05d565cbecd5b4ab73ccf8b2caeceadd5717989f8dfa6fb93",
@@ -1072,7 +1072,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/index.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/index.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "454d2cb1b933603ced58c263f61dbe5e1d195c9f15c3d277d533acc33b107a2c",
@@ -1080,7 +1080,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/picker-common.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/picker-common.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "13828e56f1d9cd6f82836f09e43083cfd01079cc4c070cc4589094273fb3ef7b",
@@ -1088,7 +1088,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/promo-common.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/promo-common.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "72f5a75a230c96532d8b171a4a5f9da39347a44d7c903d208c35f150d1a3cf99",
@@ -1096,7 +1096,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/registry.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/registry.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "4f453b54836b3f52bee8922fd597fb648d0449861fc3b5b21f71c1cccf3b76b1",
@@ -1104,7 +1104,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/taxonomy.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/taxonomy.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "8c12b5a5561418c811e8c5c206d8a199eb556d6fe064e1057841e1893322a1bb",
@@ -1112,7 +1112,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/cliplibrary/src/schemas/type3d-common.ts",
+    "file": "assets/sources/cliplibrary/src/schemas/type3d-common.ts",
     "repository": "https://github.com/meetportal/cliplibrary",
     "revision": "c4585582f712294b82faccd4c9ed233308925f9b",
     "sha256": "fa9895a2378a80ea27a84e8071ffaa4df721c8949b0617b738f08bedb1c4a252",
@@ -1120,7 +1120,7 @@
     "modifications": "Selected scene dependency closure. Selected schema index only; runtime aliases provide React/Remotion and locally pinned fonts."
   },
   {
-    "file": "upstream/magicui/LICENSE.md",
+    "file": "assets/sources/magicui/LICENSE.md",
     "repository": "https://github.com/magicuidesign/magicui",
     "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
     "sha256": "0147b84235ed916b8b4e89c1f80655351c5afe7d211b629be61f553a227b34ba",
@@ -1128,7 +1128,7 @@
     "modifications": "Original source retained as text. Adapter preserves paired blur/threshold formula; frame time replaces animation loop."
   },
   {
-    "file": "upstream/magicui/morphing-text.tsx.txt",
+    "file": "assets/sources/magicui/morphing-text.tsx.txt",
     "repository": "https://github.com/magicuidesign/magicui",
     "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
     "sha256": "8475ec9beae637a2af6183ed1f91227d0e048f93051352faa0e8d921b2c53d62",
@@ -1136,7 +1136,7 @@
     "modifications": "Original source retained as text. Adapter preserves paired blur/threshold formula; frame time replaces animation loop."
   },
   {
-    "file": "upstream/animata/LICENSE.md",
+    "file": "assets/sources/animata/LICENSE.md",
     "repository": "https://github.com/codse/animata",
     "revision": "25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
     "sha256": "ff78804659cbc28380d087cae79c494f243f8ef22b1e2ac5ec119b5de9314f05",
@@ -1144,7 +1144,7 @@
     "modifications": "Original source retained as text. Frame-derived key poses replace async WAAPI and scroll; measured word geometry retained."
   },
   {
-    "file": "upstream/animata/aperture-reveal.css.txt",
+    "file": "assets/sources/animata/aperture-reveal.css.txt",
     "repository": "https://github.com/codse/animata",
     "revision": "25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
     "sha256": "0d387b8b0b587d7034a86914977bdbde1b947f0b7e93fbeff81152bd7272db17",
@@ -1152,7 +1152,7 @@
     "modifications": "Original source retained as text. Frame-derived key poses replace async WAAPI and scroll; measured word geometry retained."
   },
   {
-    "file": "upstream/animata/aperture-reveal.tsx.txt",
+    "file": "assets/sources/animata/aperture-reveal.tsx.txt",
     "repository": "https://github.com/codse/animata",
     "revision": "25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
     "sha256": "09495965e9f8aab960c7b85bec2d14da1762e503b4f3db1400405a61abb97536",
@@ -1160,7 +1160,7 @@
     "modifications": "Original source retained as text. Frame-derived key poses replace async WAAPI and scroll; measured word geometry retained."
   },
   {
-    "file": "upstream/animata/kinetic-center-build.tsx.txt",
+    "file": "assets/sources/animata/kinetic-center-build.tsx.txt",
     "repository": "https://github.com/codse/animata",
     "revision": "25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
     "sha256": "1051a225c59be12888609e94d5133e4bb5648e690f76f84640fcedd0235f2579",
@@ -1168,7 +1168,7 @@
     "modifications": "Original source retained as text. Frame-derived key poses replace async WAAPI and scroll; measured word geometry retained."
   },
   {
-    "file": "upstream/animata/text-animator.tsx.txt",
+    "file": "assets/sources/animata/text-animator.tsx.txt",
     "repository": "https://github.com/codse/animata",
     "revision": "25c27e5a874c60a56dcc1609df3b2c4f5f8456f8",
     "sha256": "9b4ef84e036558371282a79aeafd10c6c4ba9e5e71c1efe6c0bb28ebadfb3ff2",
@@ -1176,7 +1176,7 @@
     "modifications": "Original source retained as text. Frame-derived key poses replace async WAAPI and scroll; measured word geometry retained."
   },
   {
-    "file": "components/web.tsx",
+    "file": "assets/adapters/web.tsx",
     "repository": "https://github.com/paper-design/shaders",
     "revision": "npm:@paper-design/shaders@0.0.82",
     "sha256": "68a56d78214363005dcbfb673e8a6dcd66e508f14adc129a9428e6caacbea0e3",

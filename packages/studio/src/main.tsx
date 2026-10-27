@@ -2588,6 +2588,7 @@ function App() {
               <div>
                 <b>{state.lease?.owner} is editing</b>
                 <small>{state.lease?.label}</small>
+                {project.pipeline&&<small aria-label="Pipeline progress">{project.mode?.toUpperCase()} · {project.pipeline.stage}{project.pipeline.pass?` · ${project.pipeline.pass}`:""}</small>}
                 {activeTouched.length === 0 && (
                   <small>Waiting for this turn’s first project change</small>
                 )}

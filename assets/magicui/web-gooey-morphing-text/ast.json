@@ -1,0 +1,582 @@
+{
+  "format": "clipkit.ast/v1",
+  "sourceHash": "f00a9a31ded1f256c0f8fcbe1bf4f88abca1f5e30269281d412e76617c82e40a",
+  "exports": [
+    "GooeyMorph",
+    "KineticBuild",
+    "Aperture",
+    "PaperMaterial"
+  ],
+  "props": [],
+  "primitives": [
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    },
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    },
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    },
+    {
+      "name": "useVideoConfig",
+      "parameters": []
+    }
+  ],
+  "tokens": [
+    "Inter",
+    "linear-gradient(transparent,#0a0a0bd1)",
+    "#fff",
+    "#fff3df",
+    "#141414",
+    "#ebe9e4",
+    "#141413",
+    "#dfefff"
+  ],
+  "imports": [
+    "react",
+    "remotion",
+    "@paper-design/shaders"
+  ],
+  "outline": [
+    "AbsoluteFill",
+    "div",
+    "span",
+    "svg",
+    "defs",
+    "filter",
+    "feColorMatrix",
+    "AbsoluteFill",
+    "span",
+    "AbsoluteFill",
+    "div",
+    "Img",
+    "div",
+    "div",
+    "span",
+    "span",
+    "span",
+    "div",
+    "span",
+    "AbsoluteFill",
+    "PaperMaterial",
+    "PaperMaterial"
+  ],
+  "symbols": [
+    {
+      "name": "clamp",
+      "file": "assets/adapters/web.tsx",
+      "start": 492,
+      "end": 535,
+      "startLine": 5,
+      "endLine": 5,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "cubic",
+      "file": "assets/adapters/web.tsx",
+      "start": 542,
+      "end": 573,
+      "startLine": 5,
+      "endLine": 5,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "easeInOut",
+      "file": "assets/adapters/web.tsx",
+      "start": 580,
+      "end": 630,
+      "startLine": 5,
+      "endLine": 5,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "media",
+      "file": "assets/adapters/web.tsx",
+      "start": 632,
+      "end": 1188,
+      "startLine": 6,
+      "endLine": 6,
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "name": "GooeyMorph",
+      "file": "assets/adapters/web.tsx",
+      "start": 1196,
+      "end": 2152,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "name": "f",
+      "file": "assets/adapters/web.tsx",
+      "start": 1229,
+      "end": 1248,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "id",
+      "file": "assets/adapters/web.tsx",
+      "start": 1272,
+      "end": 1299,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "texts",
+      "file": "assets/adapters/web.tsx",
+      "start": 1300,
+      "end": 1325,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "period",
+      "file": "assets/adapters/web.tsx",
+      "start": 1326,
+      "end": 1359,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "index",
+      "file": "assets/adapters/web.tsx",
+      "start": 1360,
+      "end": 1399,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "t",
+      "file": "assets/adapters/web.tsx",
+      "start": 1400,
+      "end": 1446,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "inverse",
+      "file": "assets/adapters/web.tsx",
+      "start": 1447,
+      "end": 1458,
+      "startLine": 7,
+      "endLine": 7,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "KineticBuild",
+      "file": "assets/adapters/web.tsx",
+      "start": 2250,
+      "end": 3948,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "name": "f",
+      "file": "assets/adapters/web.tsx",
+      "start": 2285,
+      "end": 2304,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "words",
+      "file": "assets/adapters/web.tsx",
+      "start": 2437,
+      "end": 2462,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "font",
+      "file": "assets/adapters/web.tsx",
+      "start": 2463,
+      "end": 2491,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "live",
+      "file": "assets/adapters/web.tsx",
+      "start": 2517,
+      "end": 2526,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "c",
+      "file": "assets/adapters/web.tsx",
+      "start": 2574,
+      "end": 2626,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "gap",
+      "file": "assets/adapters/web.tsx",
+      "start": 2795,
+      "end": 2804,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "positions",
+      "file": "assets/adapters/web.tsx",
+      "start": 2805,
+      "end": 2996,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "total",
+      "file": "assets/adapters/web.tsx",
+      "start": 2834,
+      "end": 2898,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "cursor",
+      "file": "assets/adapters/web.tsx",
+      "start": 2903,
+      "end": 2918,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "x",
+      "file": "assets/adapters/web.tsx",
+      "start": 2958,
+      "end": 2970,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "firstFrames",
+      "file": "assets/adapters/web.tsx",
+      "start": 3003,
+      "end": 3047,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "push",
+      "file": "assets/adapters/web.tsx",
+      "start": 3048,
+      "end": 3077,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "step",
+      "file": "assets/adapters/web.tsx",
+      "start": 3078,
+      "end": 3158,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "progress",
+      "file": "assets/adapters/web.tsx",
+      "start": 3159,
+      "end": 3239,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "prior",
+      "file": "assets/adapters/web.tsx",
+      "start": 3240,
+      "end": 3261,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "next",
+      "file": "assets/adapters/web.tsx",
+      "start": 3262,
+      "end": 3284,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "incoming",
+      "file": "assets/adapters/web.tsx",
+      "start": 3483,
+      "end": 3500,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "x",
+      "file": "assets/adapters/web.tsx",
+      "start": 3501,
+      "end": 3582,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "opacity",
+      "file": "assets/adapters/web.tsx",
+      "start": 3583,
+      "end": 3610,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "blur",
+      "file": "assets/adapters/web.tsx",
+      "start": 3611,
+      "end": 3671,
+      "startLine": 9,
+      "endLine": 9,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "Aperture",
+      "file": "assets/adapters/web.tsx",
+      "start": 4053,
+      "end": 5354,
+      "startLine": 11,
+      "endLine": 11,
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "name": "f",
+      "file": "assets/adapters/web.tsx",
+      "start": 4084,
+      "end": 4103,
+      "startLine": 11,
+      "endLine": 11,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "u",
+      "file": "assets/adapters/web.tsx",
+      "start": 4104,
+      "end": 4145,
+      "startLine": 11,
+      "endLine": 11,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "e",
+      "file": "assets/adapters/web.tsx",
+      "start": 4146,
+      "end": 4171,
+      "startLine": 11,
+      "endLine": 11,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "q",
+      "file": "assets/adapters/web.tsx",
+      "start": 4172,
+      "end": 4196,
+      "startLine": 11,
+      "endLine": 11,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "words",
+      "file": "assets/adapters/web.tsx",
+      "start": 4197,
+      "end": 4233,
+      "startLine": 11,
+      "endLine": 11,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "textureCache",
+      "file": "assets/adapters/web.tsx",
+      "start": 5361,
+      "end": 5417,
+      "startLine": 12,
+      "endLine": 12,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "texture",
+      "file": "assets/adapters/web.tsx",
+      "start": 5418,
+      "end": 5767,
+      "startLine": 12,
+      "endLine": 12,
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "name": "key",
+      "file": "assets/adapters/web.tsx",
+      "start": 5473,
+      "end": 5486,
+      "startLine": 12,
+      "endLine": 12,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "url",
+      "file": "assets/adapters/web.tsx",
+      "start": 5551,
+      "end": 5629,
+      "startLine": 12,
+      "endLine": 12,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "image",
+      "file": "assets/adapters/web.tsx",
+      "start": 5636,
+      "end": 5653,
+      "startLine": 12,
+      "endLine": 12,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "rgba",
+      "file": "assets/adapters/web.tsx",
+      "start": 5774,
+      "end": 5952,
+      "startLine": 13,
+      "endLine": 13,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "h",
+      "file": "assets/adapters/web.tsx",
+      "start": 5798,
+      "end": 5817,
+      "startLine": 13,
+      "endLine": 13,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "PaperMaterial",
+      "file": "assets/adapters/web.tsx",
+      "start": 5961,
+      "end": 7775,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "FunctionDeclaration"
+    },
+    {
+      "name": "host",
+      "file": "assets/adapters/web.tsx",
+      "start": 5997,
+      "end": 6030,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "shader",
+      "file": "assets/adapters/web.tsx",
+      "start": 6031,
+      "end": 6078,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "f",
+      "file": "assets/adapters/web.tsx",
+      "start": 6079,
+      "end": 6098,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "metal",
+      "file": "assets/adapters/web.tsx",
+      "start": 6192,
+      "end": 6218,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "live",
+      "file": "assets/adapters/web.tsx",
+      "start": 6244,
+      "end": 6253,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "sizing",
+      "file": "assets/adapters/web.tsx",
+      "start": 6318,
+      "end": 6482,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "uniforms",
+      "file": "assets/adapters/web.tsx",
+      "start": 6489,
+      "end": 7133,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "webEntries",
+      "file": "assets/adapters/web.tsx",
+      "start": 7789,
+      "end": 9021,
+      "startLine": 15,
+      "endLine": 15,
+      "kind": "VariableDeclarator"
+    }
+  ],
+  "cost": {
+    "animatedElements": 22,
+    "webgl": false
+  },
+  "unsupported": []
+}

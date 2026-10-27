@@ -1,0 +1,476 @@
+{
+  "format": "clipkit.ast/v1",
+  "sourceHash": "bc57edd0ddc3f91aef8a755f59e018848b3e9ea71064b98506ba504003756717",
+  "exports": [],
+  "props": [
+    {
+      "name": "word",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "frame",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "start",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "typeFrames",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "leaveAt",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "isLast",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "accentMark",
+      "type": "string | null",
+      "required": true
+    },
+    {
+      "name": "word",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "accentMark",
+      "type": "string | null",
+      "required": true
+    },
+    {
+      "name": "frame",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "start",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "leaveAt",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "isLast",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "name": "swapFrames",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "punch",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "rise",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "wordSize",
+      "type": "number",
+      "required": true
+    }
+  ],
+  "primitives": [
+    {
+      "name": "useCurrentFrame",
+      "parameters": []
+    }
+  ],
+  "tokens": [],
+  "imports": [
+    "remotion",
+    "@/schemas",
+    "../../promo/kinetic",
+    "../../promo/timing",
+    "../../promo/words",
+    "../../scene-module"
+  ],
+  "outline": [
+    "span",
+    "span",
+    "span",
+    "span",
+    "span",
+    "span",
+    "KineticLayer",
+    "div",
+    "div",
+    "TypedWord",
+    "div",
+    "PunchedWord",
+    "Composition"
+  ],
+  "symbols": [
+    {
+      "name": "PUNCTUATION",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 412,
+      "end": 438,
+      "startLine": 8,
+      "endLine": 8,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "TYPE_GAP",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 447,
+      "end": 459,
+      "startLine": 10,
+      "endLine": 10,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "markOf",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 468,
+      "end": 537,
+      "startLine": 12,
+      "endLine": 12,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "JUSTIFY",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 546,
+      "end": 624,
+      "startLine": 14,
+      "endLine": 14,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "TypedWord",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 633,
+      "end": 2253,
+      "startLine": 16,
+      "endLine": 71,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "mark",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 909,
+      "end": 928,
+      "startLine": 35,
+      "endLine": 35,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "letters",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 938,
+      "end": 1000,
+      "startLine": 36,
+      "endLine": 36,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "typed",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1010,
+      "end": 1085,
+      "startLine": 37,
+      "endLine": 37,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "deleted",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1095,
+      "end": 1195,
+      "startLine": 38,
+      "endLine": 40,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "shown",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1205,
+      "end": 1265,
+      "startLine": 41,
+      "endLine": 41,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "anchorRight",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1275,
+      "end": 1300,
+      "startLine": 42,
+      "endLine": 42,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "markOpacity",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1310,
+      "end": 1407,
+      "startLine": 43,
+      "endLine": 44,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "at",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1795,
+      "end": 1827,
+      "startLine": 58,
+      "endLine": 58,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "fadeIn",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1845,
+      "end": 1877,
+      "startLine": 59,
+      "endLine": 59,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "fadeOut",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 1895,
+      "end": 1943,
+      "startLine": 60,
+      "endLine": 60,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "PunchedWord",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 2262,
+      "end": 2580,
+      "startLine": 73,
+      "endLine": 84,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "mark",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 2357,
+      "end": 2376,
+      "startLine": 74,
+      "endLine": 74,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "punchMotion",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 2589,
+      "end": 3460,
+      "startLine": 86,
+      "endLine": 114,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "arrive",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 2856,
+      "end": 2924,
+      "startLine": 105,
+      "endLine": 105,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "scale",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 2934,
+      "end": 3016,
+      "startLine": 106,
+      "endLine": 106,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "leave",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3026,
+      "end": 3110,
+      "startLine": 107,
+      "endLine": 107,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "settle",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3120,
+      "end": 3195,
+      "startLine": 108,
+      "endLine": 108,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "lift",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3205,
+      "end": 3294,
+      "startLine": 109,
+      "endLine": 109,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "WordPunch",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3476,
+      "end": 6326,
+      "startLine": 116,
+      "endLine": 210,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "frame",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3713,
+      "end": 3753,
+      "startLine": 135,
+      "endLine": 135,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "words",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3763,
+      "end": 3784,
+      "startLine": 136,
+      "endLine": 136,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "accented",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3794,
+      "end": 3828,
+      "startLine": 137,
+      "endLine": 137,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "accentMark",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3838,
+      "end": 3889,
+      "startLine": 138,
+      "endLine": 138,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "cycle",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 3899,
+      "end": 4009,
+      "startLine": 139,
+      "endLine": 140,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "starts",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4019,
+      "end": 4128,
+      "startLine": 141,
+      "endLine": 143,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "start",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4338,
+      "end": 4368,
+      "startLine": 148,
+      "endLine": 148,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "leaveAt",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4386,
+      "end": 4414,
+      "startLine": 149,
+      "endLine": 149,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "isLast",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4432,
+      "end": 4467,
+      "startLine": 150,
+      "endLine": 150,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "wordSize",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4485,
+      "end": 4524,
+      "startLine": 151,
+      "endLine": 151,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "color",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4542,
+      "end": 4604,
+      "startLine": 152,
+      "endLine": 152,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "frameStyle",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4622,
+      "end": 4891,
+      "startLine": 153,
+      "endLine": 160,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "lettersOut",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 4945,
+      "end": 5003,
+      "startLine": 162,
+      "endLine": 162,
+      "kind": "VariableDeclarator"
+    },
+    {
+      "name": "wordPunchScene",
+      "file": "assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx",
+      "start": 6342,
+      "end": 6761,
+      "startLine": 212,
+      "endLine": 228,
+      "kind": "VariableDeclarator"
+    }
+  ],
+  "cost": {
+    "animatedElements": 13,
+    "webgl": false
+  },
+  "unsupported": []
+}

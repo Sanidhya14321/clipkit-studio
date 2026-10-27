@@ -2,7 +2,7 @@
 
 Twelve actual components are bundled, not stock photographs or a copied gallery application:
 
-- Clip Library c4585582f712294b82faccd4c9ed233308925f9b (MIT): Word Punch, Letter Flip, Ribbon Words, Chunky Type Stack, Coming Soon Flips, Dot Wordmark Reveal, Scene Transition. Selected original scene/helper closure under packages/assets/upstream/cliplibrary. Local font loaders and shared runtime aliases replace application imports.
+- Clip Library c4585582f712294b82faccd4c9ed233308925f9b (MIT): Word Punch, Letter Flip, Ribbon Words, Chunky Type Stack, Coming Soon Flips, Dot Wordmark Reveal, Scene Transition. Selected original scene/helper closure under assets/sources/cliplibrary. Local font loaders and shared runtime aliases replace application imports.
 - Magic UI efe76fc5755eca1142dd4f74c1d6f0ace2887e3c (MIT): Gooey Morphing Text. Retains original paired-blur formula and SVG threshold filter; frame time replaces requestAnimationFrame.
 - Animata 25c27e5a874c60a56dcc1609df3b2c4f5f8456f8 (MIT): Kinetic Center Build and Aperture Reveal. Original source snapshots retained. The adapter measures word widths and translates original reflow/scroll choreography to frame-derived poses.
 - Paper Design Shaders 0.0.82 (Apache-2.0): actual Liquid Metal and Fluted Glass shader implementations, explicit seek time and cached texture preparation.

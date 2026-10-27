@@ -47,6 +47,6 @@
     "node_modules",
     "artifacts",
     "packages/assets/vendor",
-    "packages/assets/upstream"
+    "assets/sources"
   ]
 }

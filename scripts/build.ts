@@ -16,7 +16,7 @@ const distribution=join(root,'artifacts','package');await rm(distribution,{recur
 await cp(join(root,'dist'),join(distribution,'dist'),{recursive:true});
 await cp(join(root,'public'),join(distribution,'public'),{recursive:true});
 for(const name of ['core','assets','render','motion','scenes'])await cp(join(root,'packages',name,'src'),join(distribution,'runtime','packages',name,'src'),{recursive:true});
-await cp(join(root,'packages/assets/components'),join(distribution,'runtime/packages/assets/components'),{recursive:true});await cp(join(root,'packages/assets/upstream'),join(distribution,'runtime/packages/assets/upstream'),{recursive:true});
+await cp(join(root,'packages/assets/components'),join(distribution,'runtime/packages/assets/components'),{recursive:true});
 await cp(join(root,'packages/scenes/compatibility.json'),join(distribution,'runtime/packages/scenes/compatibility.json'));
 await cp(join(root,'packages/motion'),join(distribution,'runtime/packages/motion'),{recursive:true});
 
