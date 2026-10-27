@@ -1,3 +1,4 @@
+import {StoryboardSchema} from '../../core/src/storyboard';
 import {ScenePropsSchema} from '../../scenes/src/contract';
 import {compactToolResult} from './compact';
 import {StorySchema,ChoreographySchema,ReviewSchema} from '../../core/src/video-plan';
@@ -11,6 +12,9 @@ export const toolDefinitions:Record<string,{description:string;shape:Record<stri
   video_run:{description:'Start the managed video pipeline: generation plans story/choreography before producing/reviewing; editing diagnoses an existing passage. Call before acquiring a manual lease, then poll video_status. Nested app turns are rejected.',shape:{mode:z.enum(['generate','edit','review']),review:z.boolean().optional(),reuseDirection:z.boolean().optional(),prompt:z.string(),client:z.enum(['codex','claude']).optional(),durationFrames:z.number().int().positive().optional(),pacing:z.enum(['fast','balanced','slow']).optional(),chapterId:z.string().optional(),commentIds:z.array(z.string()).optional()}},
   video_status:{description:'Read current video stage, result, review and actual per-stage usage. Poll until done, failed or needs-review.',shape:{}},
   video_cancel:{description:'Cancel the managed pipeline and prevent later stage publication.',shape:{}},
+  storyboard_set:{description:'Commit the actual storyboard: independent beats/shots/copy, component versions/props, transitions and sound cues. Preparation only; human approval is separate.',shape:{plan:StoryboardSchema}},
+  storyboard_read:{description:'Read the selected storyboard and creative state.',shape:{scopeId:z.string().optional()}},
+  video_prepare:{description:'Start storyboard and real 3-second motion proof; stops for human approval. Does not replace the accepted timeline.',shape:{prompt:z.string(),durationFrames:z.number().int().positive(),pacing:z.enum(['fast','balanced','slow']).optional(),chapterId:z.string().optional()}},
   video_plan_read:{description:'Read the selected story, exact copy and shot/key-pose choreography; do not load unrelated chapters.',shape:{scopeId:z.string().optional(),offset:z.number().int().nonnegative().optional(),limit:z.number().int().min(1).max(12).optional()}},
   video_outline_set:{description:'Long-form director only: commit audience/promise and continuous chapters before per-chapter production. No scene code in this pass.',shape:{audience:z.string(),promise:z.string(),payoff:z.string(),chapters:z.array(z.object({id:z.string(),title:z.string(),summary:z.string(),copyIntent:z.string(),startFrame:z.number().int(),endFrame:z.number().int()})).max(120)}},
   video_story_set:{description:'Director stage only: commit narrative and copy BEFORE animation/source. Requires 2 territories and continuous frame beats.',shape:{story:StorySchema}},
@@ -50,12 +54,12 @@ export const toolDefinitions:Record<string,{description:string;shape:Record<stri
   voice_generate:{description:'Generate speech for one slot using Fish; incurs provider usage. Only call when requested.',shape:{slotId:z.string(),voiceRef:z.string().optional(),speed:z.number().optional()}},
   voice_mode:{description:'Choose ai, recorded or cloned mode; takes retain truthful provenance.',shape:{slotId:z.string(),mode:z.enum(['ai','recorded','cloned'])}},
   history_list:{description:'Read compact recent revisions.',shape:{limit:z.number().max(30).optional()}},
-  job_status:{description:'Wait up to 15 seconds for an asynchronous job; call again if still running. Check failure before claiming completion.',shape:{jobId:z.string()}},
+  job_status:{description:'Wait up to 45 seconds for completion. Avoid repeated short polling model turns; inspect failure before claiming completion.',shape:{jobId:z.string(),waitMs:z.number().int().min(0).max(45000).optional()}},
   export_start:{description:'Start real export from an immutable revision snapshot; returns a job.',shape:{}},
 };
 Object.assign(toolDefinitions,{
  library_list:{description:'Browse real ready or blocked library resources; pagination is required.',shape:{q:z.string().optional(),kind:z.string().optional(),origin:z.string().optional(),offset:z.number().optional(),limit:z.number().min(1).max(10).default(5)}},
- library_inspect:{description:'Inspect one resource, its actual editing controls, source and usage card before placement.',shape:{assetId:z.string()}},
+ library_inspect:{description:'Inspect one resource, its actual editing controls, source and usage card before placement.',shape:{assetId:z.string(),source:z.boolean().optional()}},
  library_rescan:{description:'Rescan the project assets folder without executing source files.',shape:{}},
  library_import:{description:'Register media without placing it. Returns a processing job.',shape:{path:z.string()}},
  library_place:{description:'Place an independent ready library item at a time. Read its card first.',shape:{assetId:z.string(),at:z.number(),trackId:z.string().optional()}}
@@ -92,7 +96,7 @@ toolDefinitions.footage_candidates.shape.offset=num.int().nonnegative().optional
 toolDefinitions.footage_pack.shape.cursor=num.int().nonnegative().optional();
 toolDefinitions.export_start.shape={preset:z.enum(['vertical-720','vertical-1080','square','landscape']).optional(),quality:z.enum(['draft','standard','high']).optional()};
 export async function serveMcp(invoke:(name:string,args:Record<string,unknown>)=>Promise<unknown>){
-  const server=new McpServer({name:'clipkit',version:'0.4.0'});
+  const server=new McpServer({name:'clipkit',version:'0.5.0'});
   for(const [name,def] of Object.entries(toolDefinitions).filter(([name])=>!toolProfiles[process.env.CLIPKIT_TOOL_PROFILE??'']||toolProfiles[process.env.CLIPKIT_TOOL_PROFILE!].includes(name)))server.registerTool(name,{description:def.description,inputSchema:def.shape,annotations:{readOnlyHint:['project_get','assets_list','asset_card','assets_search','asset_schema','footage_pack','footage_candidates','comments_list','comments_bundle','history_list','job_status'].includes(name),destructiveHint:false,openWorldHint:['voice_generate'].includes(name)}},async(args:Record<string,unknown>)=>{
     try{const value=await invoke(name,args);if(name==='video_review_frames'||name==='motion_reference'){const view=value as any;const {imagePath,...metadata}=view;return {content:[{type:'text' as const,text:JSON.stringify(metadata)},{type:'image' as const,mimeType:'image/png',data:(await readFile(imagePath)).toString('base64')}]};}if(name==='status_working'){const lease=value as {token:string;turnId:string};process.env.CLIPKIT_LEASE=lease.token;process.env.CLIPKIT_TURN=lease.turnId;}if(name==='status_idle'){delete process.env.CLIPKIT_LEASE;delete process.env.CLIPKIT_TURN;}if(name==='footage_view'){const view=value as {path:string;mime:string};return {content:[{type:'image' as const,mimeType:view.mime,data:(await readFile(view.path)).toString('base64')}]};}const json=JSON.stringify(name==='asset_card'?{id:(value as any).id,markdown:(value as any).markdown,sha256:(value as any).sha256}:compactToolResult(value));if(Buffer.byteLength(json)>16000)return {isError:true,content:[{type:'text',text:'CONTEXT_TOO_LARGE: use scene_read metadataOnly then file/startLine/limit, one layer, fewer comments, or a shorter transcript range.'}]};return {content:[{type:'text',text:json}]};}
     catch(e){return {isError:true,content:[{type:'text',text:(e as Error).message.slice(0,1200)}]};}

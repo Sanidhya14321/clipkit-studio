@@ -1,0 +1,242 @@
+import { z } from 'zod';
+import {
+  type AnniversaryLook,
+  anniversaryBeat,
+  anniversaryBeatSchema,
+  anniversaryLogoSchema,
+  anniversaryLookSchema,
+} from '../../anniversary-common';
+import { zColor, zSlider } from '../../control';
+import { defaultMotion, motionSchema, promoMeta } from '../../promo-common';
+import type { ClipMeta } from '../../registry';
+
+export const anniversaryKineticSchema = z.object({
+  beats: z.array(anniversaryBeatSchema).min(1).max(40),
+  logo: anniversaryLogoSchema,
+  look: anniversaryLookSchema,
+  band: z.object({
+    tilt: zSlider({ min: -30, max: 30, step: 0.5 }),
+    edge: zSlider({ min: 0, max: 30 }),
+  }),
+  sparkles: z.object({
+    size: zSlider({ min: 2, max: 40 }),
+    opacity: zSlider({ min: 0, max: 1, step: 0.05 }),
+    speed: zSlider({ min: 0, max: 4, step: 0.05 }),
+  }),
+  chrome: z.object({
+    topStart: zColor(),
+    topEnd: zColor(),
+    middleStart: zColor(),
+    middleEnd: zColor(),
+    bottomStart: zColor(),
+    bottomEnd: zColor(),
+  }),
+  motion: motionSchema,
+});
+
+export type AnniversaryKineticProps = z.infer<typeof anniversaryKineticSchema>;
+
+export type AnniversaryBand = AnniversaryKineticProps['band'];
+
+export type AnniversarySparkles = AnniversaryKineticProps['sparkles'];
+
+export type AnniversaryChrome = AnniversaryKineticProps['chrome'];
+
+const PAPER_INK = '#1d1428';
+
+const look: AnniversaryLook = {
+  showBackdrop: true,
+  ink: '#0d0b14',
+  paper: '#f6efe3',
+  night: '#0e2a2d',
+  dusk: '#2a1736',
+  flash: '#ff6b3d',
+  dim: '#1f1829',
+  muted: '#9d93ae',
+  gradientFrom: '#c8f26b',
+  gradientMid: '#4fe0c0',
+  gradientTo: '#9a84ff',
+  texture: '#9a8bb0',
+  textureShade: '#120e1a',
+  textureContrast: 1.4,
+  textureDrift: 3,
+  bandHeight: 0.31,
+  stroke: '#e9c9a0',
+  strokeWidth: 2,
+  shape: '#2d2340',
+  slant: '#7a5c9e',
+  dust: '#ffe2b8',
+  dustCount: 9,
+  glitchAmount: 1,
+  glitchSeed: 7,
+  drift: 0.05,
+};
+
+export const anniversaryKineticDefaults: AnniversaryKineticProps = {
+  beats: [
+    anniversaryBeat('Ahem...', 0, 'hold', 'ink', { size: 195, glitch: 5, zoom: 0.08 }),
+    anniversaryBeat('Lean in!', 18, 'wave-stack', 'night', {
+      size: 124,
+      tracking: 0.06,
+      glitch: 3,
+      spread: 1,
+    }),
+    anniversaryBeat('We’ve got', 46, 'gradient', 'texture', { size: 170, glitch: 2 }),
+    anniversaryBeat('big news', 57, 'hold', 'texture', {
+      size: 182,
+      tracking: 0.03,
+      glitch: 6,
+      zoom: 0.05,
+      decor: 'outline',
+      decorText: 'news',
+      decorSize: 2200,
+      decorFillAt: 13,
+      decorFill: 5,
+      pulseAt: 21,
+      pulseBlur: 14,
+    }),
+    anniversaryBeat('so good', 84, 'fill-sweep', 'paper', {
+      color: PAPER_INK,
+      size: 178,
+      rate: 1.4,
+      zoom: -0.36,
+    }),
+    anniversaryBeat('to share', 103, 'flash-cut', 'dusk', { size: 180, rate: 7 }),
+    anniversaryBeat('with you', 118, 'drop', 'ink', {
+      size: 168,
+      glitch: 4,
+      rate: 15,
+      zoom: -0.12,
+    }),
+    anniversaryBeat('Look', 148, 'slant-repeat', 'paper', {
+      color: PAPER_INK,
+      size: 215,
+      decor: 'outline',
+      decorText: 'o',
+      decorSize: 2700,
+      decorX: -0.32,
+      decorY: 0.04,
+      glitch: 6,
+    }),
+    anniversaryBeat('Look', 162, 'outline-flicker', 'dusk', { size: 200 }),
+    anniversaryBeat('how far', 178, 'type-on', 'texture', {
+      size: 192,
+      rate: 0.9,
+      glitch: 5,
+      glitchAt: 1,
+    }),
+    anniversaryBeat('we’ve', 195, 'type-on', 'ink', {
+      size: 229,
+      rate: 1,
+      decor: 'outline',
+      decorText: 'we',
+      decorSize: 1500,
+      decorX: -0.25,
+      decorY: 0.05,
+      decorFillAt: 1,
+      decorFill: 1,
+    }),
+    anniversaryBeat('come', 212, 'type-on', 'paper', { color: '#c4532f', size: 245, rate: 1.1 }),
+    anniversaryBeat('and', 223, 'hold', 'ink', { size: 208, pulseAt: 1, pulseBlur: 10 }),
+    anniversaryBeat('still', 230, 'hold', 'ink', { size: 200, zoom: 0.04 }),
+    anniversaryBeat('going', 239, 'triple-slide', 'texture', { size: 220 }),
+    anniversaryBeat('strong', 250, 'triple-stack', 'texture', { size: 190, glitch: 2 }),
+    anniversaryBeat('Turning', 270, 'track-in', 'ink', {
+      size: 156,
+      tracking: 0.02,
+      spread: 0.2,
+      decor: 'outline',
+      decorText: 'T',
+      decorSize: 2600,
+      decorX: -0.3,
+      decorY: 0.04,
+      decorFillAt: 5,
+      decorFill: 2,
+      pulseAt: 10,
+      pulseBlur: 8,
+    }),
+    anniversaryBeat('25', 293, 'hold', 'ink', {
+      size: 400,
+      glitch: 7,
+      decor: 'outline',
+      decorText: '25',
+      decorSize: 2600,
+    }),
+    anniversaryBeat('today!', 304, 'type-on', 'band', { size: 280, rate: 1.2 }),
+    anniversaryBeat('BOLDER.', 323, 'hold', 'ink', { size: 230, tracking: -0.01, spread: 0.1 }),
+    anniversaryBeat('BRIGHTER.', 338, 'tracked-outline', 'band', {
+      size: 105,
+      tracking: 0.04,
+      spread: 0.75,
+    }),
+    anniversaryBeat('KINDER.', 358, 'hold', 'paper', { color: PAPER_INK, size: 230, glitch: 4 }),
+    anniversaryBeat('KINDER.', 367, 'hold', 'band', { size: 230 }),
+    anniversaryBeat('FEARLESS.', 379, 'type-on', 'texture', {
+      size: 128,
+      tracking: 0.08,
+      rate: 0.8,
+      ghost: 0.3,
+      decor: 'outline',
+      decorText: 'FE',
+      decorSize: 1900,
+      decorX: 0.1,
+      pulseAt: 4,
+      pulseBlur: 8,
+    }),
+    anniversaryBeat('FEARLESS.', 392, 'hold', 'ink', {
+      size: 100,
+      tracking: 0.02,
+      glitch: 4,
+      decor: 'outline',
+      decorText: 'EF',
+      decorSize: 1900,
+      decorX: 0.12,
+    }),
+  ],
+  logo: {
+    start: 400,
+    number: '25',
+    ordinal: 'th',
+    caption: 'YEARS OF CRAFT',
+    name: 'Halcyon',
+    since: 'EST. 2001',
+    tagline: 'Design for the long run',
+    background: '#f6efe3',
+    numberColor: '#e2603c',
+    ringColor: '#1d1428',
+    nameColor: '#1f5f5b',
+    initialColor: '#e2603c',
+    taglineColor: '#6b5f78',
+    size: 1.15,
+    blur: 14,
+    blurFrames: 5,
+  },
+  look,
+  band: { tilt: -6, edge: 6 },
+  sparkles: { size: 9, opacity: 0.9, speed: 1 },
+  chrome: {
+    topStart: '#7a7a7a',
+    topEnd: '#c9c9c9',
+    middleStart: '#d9d9d9',
+    middleEnd: '#f4f4f4',
+    bottomStart: '#f6f6f6',
+    bottomEnd: '#9c9c9c',
+  },
+  motion: defaultMotion({ exit: 'none', exitFrames: 12, float: 0 }),
+};
+
+export const anniversaryKineticMeta: ClipMeta = {
+  ...promoMeta,
+  width: 1080,
+  height: 1920,
+  id: 'anniversary-kinetic',
+  title: 'Anniversary Kinetic',
+  description:
+    'Fast anniversary kinetic type: glitchy, wavy, gradient, outlined and stacked words cut between aubergine, deep teal and cream grounds with a slanted texture band, ending on a 25th anniversary seal lockup.',
+  category: 'kinetic-type',
+  tags: ['kinetic', 'headline', 'text', 'typing', 'outline', 'logo', 'texture'],
+  theme: 'dark',
+  source: 'src/compositions/scenes/kinetic-type/anniversary-kinetic.tsx',
+  durationInFrames: 446,
+  posterFrame: 300,
+};

@@ -1,6 +1,7 @@
 /** App turns receive only the tool family needed for that request. External clients default to all. */
 const base=['export_start','project_patch','project_get','item_update','item_split','item_move','item_duplicate','item_delete','comments_list','comments_bundle','comments_resolve','comments_reply','job_status','history_list','scene_read','scene_draft','scene_status','reel_read'];
 export const toolProfiles:Record<string,string[]>={
+ creative:[...base.filter(t=>!['export_start','comments_resolve','comments_reply'].includes(t)),'storyboard_set','storyboard_read','library_list','library_inspect','library_place','motion_read','reel_plan_set','reel_chapter_score_set'],
  outline:['video_outline_set','reel_read','project_get','library_list','footage_pack','motion_read'],
  direction:['video_story_set','video_choreography_set','video_plan_read','motion_reference','motion_search','motion_read','footage_pack','footage_view','library_list'],
  story:['video_story_set','video_plan_read','motion_search','motion_read','footage_pack','library_list'],

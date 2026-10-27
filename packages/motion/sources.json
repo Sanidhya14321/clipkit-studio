@@ -142,5 +142,12 @@
     "sha256": "4f26025952dabf415889098be931f5060bc8df07fcf7c92794161214fe784f28",
     "license": "MIT",
     "modifications": "Original spatial/type/film-strip direction study, not an insertable template. No Video Forge demo pixels bundled."
+  },
+  {
+    "source": "ClipKit original direction rails",
+    "file": "agent-guide.md",
+    "sha256": "dff75d28e8f7a5072e7afadba39cc4081c866809e69aeb75f4192beb0f90b47b",
+    "license": "MIT",
+    "modifications": "Instruction-first creative loop and precise choreography contract; mechanisms linked, no React Bits code copied."
   }
 ]

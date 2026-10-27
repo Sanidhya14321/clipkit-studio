@@ -13,7 +13,6 @@ import {serveMcp} from '../../mcp/src/index.ts';
 import {startServer} from '../../server/src/index.ts';
 import {agentInstructions} from '../../server/src/runner.ts';
 import {MediaService} from '../../server/src/media.ts';
-import {buildAssets} from '../../assets/src/build.ts';
 
 const cliPath=fileURLToPath(import.meta.url);
 const packaged=cliPath.endsWith('.js');
@@ -85,7 +84,7 @@ async function main(){
   if(command==='reel'&&sub==='plan')return output(await invoke('reel_plan_set',{plan:JSON.parse(await readFile(resolve(rest[0]),'utf8'))}));
   if(command==='compat'&&sub==='install'){const file=resolve(rest[0]);const expected=JSON.parse(await readFile(join(installRoot,packaged?'runtime/packages/scenes/compatibility.json':'packages/scenes/compatibility.json'),'utf8'));if(createHash('sha256').update(await readFile(file)).digest('hex')!==expected.sha256)throw Error('Compatibility archive checksum does not match the pinned release');const entries=execFileSync('tar',['-tzf',file],{encoding:'utf8'}).trim().split('\n');if(entries.some(e=>!e.startsWith('0.2.0/')&&e!=='0.2.0'||e.split('/').includes('..')))throw Error('Invalid compatibility archive paths');const destination=join(root,'.clipkit/compat');await mkdir(destination,{recursive:true});execFileSync('tar',['-xzf',file,'-C',destination]);return output({installed:'0.2.0',restart:true});}
   if(command==='library'){if(sub==='list')return output(await invoke('library_list',{q:flags.q,kind:flags.kind,origin:flags.origin,offset:Number(flags.offset??0),limit:Number(flags.limit??20)}));if(sub==='inspect')return output(await invoke('library_inspect',{assetId:rest[0]}));if(sub==='rescan')return output(await invoke('library_rescan'));if(sub==='import')return output(await invoke('library_import',{path:resolve(rest[0])}));if(sub==='place')return output(await invoke('library_place',{assetId:rest[0],at:Number(flags.at??0),trackId:flags.track}));}
-  if(command==='assets'&&sub==='build'){await buildAssets(installRoot,join(root,'.clipkit','assets'));const {refreshPacks}=await import('../../assets/src/packs.ts');return output(await refreshPacks(root));}
+  if(command==='assets'&&sub==='build'){throw Error('assets build is deprecated. Bundled components build with pnpm build; install a reviewed project pack with ck assets install.');}
   if(command==='assets'&&sub==='install')return output(await invoke('assets_install',{path:resolve(rest[0]),trust:flags.trust===true}));
   if(command==='mcp'){await serveMcp(invoke);return;}
   if(command==='assets'&&sub==='list')return output(await invoke('assets_list',{kind:typeof flags.kind==='string'?flags.kind:undefined,tags:typeof flags.tags==='string'?flags.tags.split(','):undefined,mood:typeof flags.mood==='string'?flags.mood:undefined,q:typeof flags.q==='string'?flags.q:undefined,offset:flags.offset?Number(flags.offset):0,limit:flags.limit?Number(flags.limit):5}));

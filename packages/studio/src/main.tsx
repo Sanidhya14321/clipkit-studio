@@ -1,3 +1,4 @@
+import {getProperty,setProperty} from '../../assets/src/property-path';
 import {MotionPanel} from './MotionPanel';
 import {SceneSourcePanel} from './SceneSourcePanel';
 import {FrameSelection,FrameHandles} from './FrameSelection';
@@ -8,7 +9,6 @@ import {LibraryPanel} from './LibraryPanel';
 import {visualFields,audioFields} from '../../assets/src/visual';
 import {useWorkspace} from './workspace';
 import {ActivityPanel} from './ActivityPanel';
-import { AssetDetails, type AssetDetailsData } from "./AssetDetails";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Player, type PlayerRef } from "@remotion/player";
@@ -210,10 +210,7 @@ function trackLanes(items: Item[]) {
 }
 function App() {
   const workspace = useWorkspace();
-  const [assetDetails, setAssetDetails] = useState<AssetDetailsData | null>(
-      null,
-    ),
-    [state, setState] = useState<StudioState | null>(null),
+  const [state, setState] = useState<StudioState | null>(null),
     [token, setToken] = useState(""),
     [connected, setConnected] = useState(false),
     [fatal, setFatal] = useState(""),
@@ -529,7 +526,7 @@ function App() {
     }
   }, [state?.project.rev]);
   useEffect(() => {
-    if (!exportDialog && !compare && !assetDetails) return;
+    if (!exportDialog && !compare) return;
     const previous = document.activeElement as HTMLElement | null;
     const frame = requestAnimationFrame(() =>
       document
@@ -541,7 +538,6 @@ function App() {
         event.preventDefault();
         setExportDialog(false);
         setCompare(false);
-        setAssetDetails(null);
       }
       if (event.key === "Tab") {
         const elements = Array.from(
@@ -566,7 +562,7 @@ function App() {
       window.removeEventListener("keydown", key);
       previous?.focus();
     };
-  }, [exportDialog, compare, !!assetDetails]);
+  }, [exportDialog, compare]);
   const project = state?.project,
     items = project ? allItems(project) : [],
     item = items.find((i) => i.id === selected),
@@ -1247,8 +1243,8 @@ function App() {
     const props = {
       ...current.props,
       ...committedProps.current[item.id],
-      ...delta,
     };
+    for(const [key,value]of Object.entries(delta))Object.assign(props,setProperty(props,key,value));
     committedProps.current[item.id] = props;
     setDraftEdits((drafts) => ({
       ...drafts,
@@ -1340,13 +1336,13 @@ function App() {
       <div className="workspace">
         <aside className="library">
           <div className="panel-heading">
-            <h2>Motion & direction</h2>
+            <h2>Components & direction</h2>
             <button aria-label="Toggle library list view" onClick={()=>workspace.setView(workspace.layout.view==='grid'?'list':'grid')}>{workspace.layout.view==='grid'?'List':'Grid'}</button>
           </div>
           <div className="tabbar">
             {[
-              ["assets", "Motion"],
-              ["skills", "Skills"],
+              ["assets", "Components"],
+              ["skills", "Storyboard"],
               ["footage", "Media"],
               ["transcript", "Transcript"],
             ].map(([id, title]) => (
@@ -1359,7 +1355,7 @@ function App() {
               </button>
             ))}
           </div>
-          {left === "assets" || left === "skills" ? (<MotionPanel op={op} state={state} skills={left==='skills'} selectedId={selected} range={range} onSeek={seek}/>
+          {left === "assets" ? (<LibraryPanel op={op} state={state} token={token} time={time} componentOnly onSelect={id=>{setSelected(id);setRight("inspector");workspace.show("inspector")}}/>) : left === "skills" ? (<MotionPanel op={op} state={state} token={token} selectedId={selected} range={range} onSeek={seek}/>
           ) : left === "footage" ? (
             <div className="panel-scroll">
               <button
@@ -1640,7 +1636,7 @@ function App() {
                   <p>
                     Add an element, import footage,
                     <br />
-                    or describe an original reel in Motion.
+                    or direct an original video from Storyboard.
                   </p>
                   <button disabled={locked} onClick={()=>{setLeft("assets");workspace.show("library");requestAnimationFrame(()=>document.querySelector<HTMLTextAreaElement>('[aria-label="Creative brief"]')?.focus())}}>
                     <Sparkles size={15} />
@@ -1937,7 +1933,7 @@ function App() {
                     <div className="section-label property-section">APPEARANCE</div>
                     {item.type==='clip'&&nativeAssets.some(a=>a.id===item.clipId)&&supportsFont(item.clipId!)&&Boolean(item.props.text)&&<label className="field"><span>Font</span><select aria-label="Font" value={String(item.props.fontFamily??defaultFontFamily(item.clipId!))} onChange={e=>updateProps({fontFamily:e.target.value})}><option>Space Grotesk</option><option>Inter</option></select></label>}
                     {(
-                      (item.clipId?editableFields(item.clipId,assets.find(a=>a.id===item.clipId)?.fields as any[]??[],item.props):undefined) ?? (item.type === "footage" ? visualFields : item.type === "audio" ? audioFields : undefined) ??
+                      (item.clipId?editableFields(item.clipId,assets.find(a=>a.id===item.clipId)?.fields as any[]??[],item.props,(state.assetRegistry?.clips.find(a=>a.id===item.clipId) as any)?.propsSchema):undefined) ?? (item.type === "footage" ? visualFields : item.type === "audio" ? audioFields : undefined) ??
                       Object.keys(item.props).map((key) => ({
                         key,
                         label: key,
@@ -1952,7 +1948,7 @@ function App() {
                           <span>{f.label}</span>
                           <select
                             aria-label={f.label}
-                            value={String(item.props[f.key] ?? f.default ?? "")}
+                            value={String(getProperty(item.props,f.key) ?? f.default ?? "")}
                             onChange={(e) =>
                               updateProps({ [f.key]: e.target.value })
                             }
@@ -1987,7 +1983,7 @@ function App() {
                           <span>{f.label}</span>
                           <select
                             aria-label={f.label}
-                            value={String(item.props[f.key] ?? f.default ?? "")}
+                            value={String(getProperty(item.props,f.key) ?? f.default ?? "")}
                             onChange={(e) =>
                               updateProps({ [f.key]: e.target.value })
                             }
@@ -2007,16 +2003,16 @@ function App() {
                           key={item.id + f.key}
                           label={f.label}
                           type={f.type}
-                          value={item.props[f.key] ?? f.default}
+                          value={getProperty(item.props,f.key) ?? f.default}
                           min={f.min}
                           max={f.max}
                           step={f.step}
                           onPreview={(v) =>
                             previewUpdate({
-                              props: { ...item.props, [f.key]: v },
+                              props: setProperty(item.props,f.key,v),
                             })
                           }
-                          onCommit={(v) => updateProps({ [f.key]: v })}
+                          onCommit={(v) => updateProps({ [f.key]: (f as any).valueType==='boolean'?String(v)==='true':v })}
                         />
                       ),
                     )}
@@ -2918,17 +2914,6 @@ function App() {
           </span>
         </footer>
       </section>
-      {assetDetails && (
-        <AssetDetails
-          asset={assetDetails}
-          locked={locked}
-          onClose={() => setAssetDetails(null)}
-          onAdd={() => {
-            run("assets_add", { clipId: assetDetails.id, at: time });
-            setAssetDetails(null);
-          }}
-        />
-      )}
       {exportDialog && (
         <div className="modal-backdrop">
           <section

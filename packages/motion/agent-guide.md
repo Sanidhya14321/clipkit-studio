@@ -1,12 +1,29 @@
-# ClipKit reel direction
+# Film direction rails — instruction first
 
-Use ClipKit as the sole timeline, preview, and export engine. Video Forge guidance is creative reference; its standalone init/run/provider commands are not used here.
+ClipKit is the sole timeline/renderer. Begin from the viewer's experience, not a component gallery. Actual React/TSX components and original React/CSS/SVG are equally valid implementations. There is no component quota and no compulsory visual reference. Do not add a role or invocation merely to check a box.
 
-1. Establish the promise, evidence, visual thesis, target frames and pacing. Search motion_search; load only the selected mechanism and relevant guide with motion_read.
-2. Write a frame score with shot, reading, transition, accent and audio events using reel_plan_set. Mark essential reading windows protected. Avoid a sequence of headline cards; connect objects, type, masks and camera movement across beats.
-3. Use scene_draft to author original React TSX. A draft has sceneId, name, files (Scene.tsx entry), defaults, fields, propsSchema, durationFrames and optional targetItemIds/baseVersion/range. Every visible editing control must affect the result. Tag elements with data-ck-layer={item.id}, data-ck-path="property" and data-ck-element="stable-name".
-4. Imports are React, Remotion, @clipkit/motion and local CSS/SVG files only. Import CSS as a string and apply it in a scoped style element. All motion uses frame time and seeded randomness. @clipkit/motion supplies phase, key, SplitType, DepthStage, Plane, Wipe and MaterialReveal. Do not use wall clocks, autonomous browser animation, network requests, or private files.
-5. Poll scene_status/job_status until checking and publication finish. A valid draft automatically commits its immutable version and updates localhost. On failure repair the source; the last working version remains available. Read scene_read for the selected instance before changing code. baseVersion prevents overwriting a newer version.
-6. Range comments are end-exclusive frame intervals. Read comments_bundle and edit only the intersecting content. Use range-scoped item_update or scene_draft; do not change content outside the interval. Source clocks must remain continuous through scoped segments.
-7. Human controls and code saves use the same transaction history. Reuse the shared frame score rather than blindly stretching speech or captions. Recompose pacing and protected reading holds to fit the requested duration.
-8. Review moving playback at phone size with sound and muted. Inspect boundary frames, readable evidence, transitions and ending. Export through export_start. Report actual results and limitations; activity logs are not evidence of a visible change.
+## One preparation turn
+
+1. Extract audience, purpose, duration/fps/aspect, exact versus editable copy, footage, measured speech, evidence and brand. Resolve conflicts explicitly; do not truncate dialogue or invent product proof.
+2. State one visual thesis in a sentence: what does the viewer see changing, and why does it express the idea? Choose hierarchy, palette, type family and contrast. Limit simultaneous focal actions; this is a composition decision, not an effect count. Check subject occupancy and negative space at phone size: empty space must direct the eye, not expose an undersized centered poster. A camera zoom ending on the same static stack does not by itself demonstrate a new visual idea. The proof should show the defining transformation or a genuine handoff.
+3. Write narrative beats independently from shots and copy. One sentence may persist across two cuts. Give essential copy an unobstructed reading interval. Fast pacing comes from contrast between travel/accents and stable reads, not constant shaking.
+4. For each shot define 2–4 useful key poses: frame, subject, position, scale and camera orientation. Specify entry → anticipation → main movement → overshoot/settle → readable hold → exit as needed. Use integral end-exclusive ranges, not a list of every frame. For a 30fps three-second proof, explicitly plan the first image, strongest motion, readable pose and boundary at frame 90. Choose timing for this brief rather than applying these stages as a fixed preset.
+5. Define each handoff physically: the outgoing object's edge, velocity, mask, baseline or shape becomes the incoming object's start. Specify coordinate correspondence at the boundary. Avoid a fade/reset between independent posters unless a deliberate cut serves the story.
+6. Choose the implementation LAST. Study only the relevant reference mechanism. React Bits Blur Text suggests staggered soft-to-sharp resolution; Scroll Float suggests depth/parallax driven by normalized progress. Motion's scroll-linked pattern maps progress to several properties. Translate user scroll/pointer progress into authored frame progress; preserve mechanism, not website interaction dependencies. Clip Library provides real code when an existing component fits. New choreography may be authored freely. Do not label an original adaptation as copied upstream code.
+7. Submit storyboard_set, then scene_draft for one actual three-second proof. Expose meaningful text, palette, camera/path and timing controls. Tag elements with data-ck-layer/item.id, data-ck-path and stable data-ck-element. Imports: React, Remotion, @clipkit/motion, optionally @clipkit/components, and local CSS/SVG. No external requests, wall clocks or unseeded randomness. Keep local animation phase continuous through scoped splits. Poll render completion. Check first/last frames and readable holds; a valid render proves technical behavior only.
+8. STOP for the human. Report the exact plan/sample, what was authored versus adopted and measured usage. Release the lease. Do not continue a full film or pronounce aesthetic acceptance.
+
+## After approval or feedback
+
+Resume the exact creative session. Extend the approved composition itself and protect its first 90 frames. A rejected proof gets a bounded new preparation, not a full film. Preserve all attempts and feedback. Final revisions remain proposals until the human keeps them.
+
+Direct exposed-property edits are local validated transactions: no agent call. Choreography changes load only affected source, timing and adjoining boundaries for one invocation. Story redesign returns to the storyboard/proof checkpoint. Long form approves global narrative/style before bounded chapters; never put an hour of source into one prompt.
+
+## Reference mechanisms (not copied component packs)
+
+- React Bits Blur Text: https://reactbits.dev/text-animations/blur-text
+- React Bits Scroll Float: https://reactbits.dev/text-animations/scroll-float
+- Motion scroll-linked choreography: https://motion.dev/docs/react-scroll-animations
+- Actual frame-native Clip Library: https://github.com/meetportal/cliplibrary
+
+Use source within its license. React Bits project application use and component redistribution are different; ClipKit does not redistribute a React Bits pack. Original Video Forge guidance remains available through focused motion_read guides. Do not assume its standalone renderer commands or browser refraction helpers exist here.

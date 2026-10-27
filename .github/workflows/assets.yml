@@ -13,6 +13,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Build pinned component registry
+        run: pnpm exec tsx -e 'import {buildComponents} from "./packages/assets/src/components-build.ts"; buildComponents().catch(e=>{console.error(e);process.exit(1)})'
       - run: pnpm assets:check --check
       - run: pnpm typecheck
       - run: pnpm test

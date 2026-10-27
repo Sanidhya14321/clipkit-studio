@@ -17,3 +17,9 @@ Every export writes a credits JSON sidecar. Demo project delivery excludes provi
 - **Motion Primitives — MIT, commit 120f64f6ca60348e251f929e9c81f11ccbe45eda:** original TextEffect, TextMorph and AnimatedGroup source plus LICENCE.md are retained under packages/motion/upstream. Frame-driven adaptations remove browser Motion state/history, callbacks and autonomous clocks. Original checksums and modifications are recorded in sources.json.
 - **React Bits:** reference only under its current MIT + Commons Clause conditions; no component/ported-component pack, tool or sound is redistributed.
 - **Original ClipKit motion study:** source and rendered reference frames are MIT. They contain original geometry/type, not pixels from the user's Video Forge film or private production captures.
+
+## 0.5 animation sources
+
+Selected Clip Library scene/helper sources are MIT licensed (clawwde), pinned at c4585582f712294b82faccd4c9ed233308925f9b. See packages/assets/upstream/cliplibrary/LICENSE. Magic UI's original morphing-text source is retained under its MIT license at packages/assets/upstream/magicui/LICENSE.md (efe76fc5755eca1142dd4f74c1d6f0ace2887e3c). Animata originals and MIT notice are in packages/assets/upstream/animata (25c27e5a874c60a56dcc1609df3b2c4f5f8456f8). Their frame-clock adaptations are identified separately in packages/assets/components/sources.json.
+
+Actual Paper Design shaders use the pinned @paper-design/shaders 0.0.82 dependency under Apache-2.0; its LICENSE/NOTICE are retained in packages/motion/vendor-notices. Additional original font files and their OFL/Apache notices are preserved together under public/component-fonts; manifest.json records source revisions and checksums. The original notice text governs each font. React Bits code is not redistributed as a component pack.

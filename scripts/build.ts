@@ -1,3 +1,4 @@
+import {buildComponents} from '../packages/assets/src/components-build';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {rename} from 'node:fs/promises';
@@ -6,16 +7,16 @@ import {build} from 'esbuild';
 import {mkdir,cp,readFile,writeFile,chmod,rm} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {checkAssets} from '../packages/assets/src/check.ts';
-import {buildAssets} from '../packages/assets/src/build.ts';
 const root=resolve(import.meta.dirname,'..');
 const cardCheck=await checkAssets(root);if(!cardCheck.passed)throw new Error(cardCheck.errors.join('\n'));
-await buildAssets(root);
+await buildComponents(root);
 await viteBuild({configFile:join(root,'packages/studio/vite.config.ts')});
 await build({entryPoints:[join(root,'packages/cli/src/index.ts')],outfile:join(root,'dist/cli.js'),bundle:true,platform:'node',target:'node22',format:'esm',packages:'external',banner:{js:"import {createRequire as __createRequire} from 'node:module';const require=__createRequire(import.meta.url);"},sourcemap:true});
 const distribution=join(root,'artifacts','package');await rm(distribution,{recursive:true,force:true});await mkdir(join(distribution,'dist'),{recursive:true});
 await cp(join(root,'dist'),join(distribution,'dist'),{recursive:true});
 await cp(join(root,'public'),join(distribution,'public'),{recursive:true});
 for(const name of ['core','assets','render','motion','scenes'])await cp(join(root,'packages',name,'src'),join(distribution,'runtime','packages',name,'src'),{recursive:true});
+await cp(join(root,'packages/assets/components'),join(distribution,'runtime/packages/assets/components'),{recursive:true});await cp(join(root,'packages/assets/upstream'),join(distribution,'runtime/packages/assets/upstream'),{recursive:true});
 await cp(join(root,'packages/scenes/compatibility.json'),join(distribution,'runtime/packages/scenes/compatibility.json'));
 await cp(join(root,'packages/motion'),join(distribution,'runtime/packages/motion'),{recursive:true});
 

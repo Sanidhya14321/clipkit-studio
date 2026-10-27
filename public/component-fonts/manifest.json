@@ -1,0 +1,182 @@
+[
+  {
+    "family": "AmaticSC",
+    "file": "AmaticSC.ttf",
+    "license": "AmaticSC.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/amaticsc/AmaticSC-Bold.ttf",
+    "fileSha256": "d367beadee66efbb657d24d3d8f30f3b60633e9d5c8ded7385541cf775cabb4d",
+    "licenseSha256": "301f77908df2b00141b4dcea50cc1a586c3afcee78843bd811088e8263623f9d"
+  },
+  {
+    "family": "Anton",
+    "file": "Anton.ttf",
+    "license": "Anton.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/anton/Anton-Regular.ttf",
+    "fileSha256": "a4ba3a92350ebb031da0cb47630ac49eb265082ca1bc0450442f4a83ab947cab",
+    "licenseSha256": "ee67e6ee22790b7929f1a3769ca2801d565c64b5a9096942c1adf5596de9c9e4"
+  },
+  {
+    "family": "Antonio",
+    "file": "Antonio.ttf",
+    "license": "Antonio.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/antonio/Antonio%5Bwght%5D.ttf",
+    "fileSha256": "9e95a2258ecdf3e45c72c5bbea1c4cd350e8f7bebc87c9dba53b29b1890b8903",
+    "licenseSha256": "ae9a754b006df720bb6721e7b78c04990df734f87195c6033140fceab60bebf6"
+  },
+  {
+    "family": "Archivo",
+    "file": "Archivo.ttf",
+    "license": "Archivo.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/archivo/Archivo%5Bwdth%2Cwght%5D.ttf",
+    "fileSha256": "0e094a7d3c7c4c25cf1310c4b30014f1dae9332220b1c2c88f4fa996f0b05053",
+    "licenseSha256": "108b4e57c9c796d3d38d0428ca7ee39de47ad93187302718d9b2d8864b9b716b"
+  },
+  {
+    "family": "BodoniModa",
+    "file": "BodoniModa.ttf",
+    "license": "BodoniModa.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/bodonimoda/BodoniModa%5Bopsz%2Cwght%5D.ttf",
+    "fileSha256": "550f5e34ee0a828d7941b1fe9bc58b34e5260d3f33a61532e6d0a0114e79a5cf",
+    "licenseSha256": "931dfe2e0cd3c9443295f5c1d754b8a8403bf060df50c1d5900267ade83d0046"
+  },
+  {
+    "family": "CaveatBrush",
+    "file": "CaveatBrush.ttf",
+    "license": "CaveatBrush.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/caveatbrush/CaveatBrush-Regular.ttf",
+    "fileSha256": "e565bd7bffd895ca64f8d1cb77c816b9b38d9c010246386a07c9648592f6f282",
+    "licenseSha256": "21b54eb0d7513524798a00dfbaf99a02c003a0012a728cc5f0e02d24c50482fb"
+  },
+  {
+    "family": "Inter",
+    "file": "Inter.ttf",
+    "license": "Inter.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/inter/Inter%5Bopsz%2Cwght%5D.ttf",
+    "fileSha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+    "licenseSha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57"
+  },
+  {
+    "family": "InterTight",
+    "file": "InterTight.ttf",
+    "license": "InterTight.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/intertight/InterTight%5Bwght%5D.ttf",
+    "fileSha256": "b81b73dcb64df3c230cabade7df6c5773bf863233f24c9ee51087519f1f88b6f",
+    "licenseSha256": "50240ab035cf1b6b3307940235481d515c4b6de3ab1fa843dbe59e7892cb9d58"
+  },
+  {
+    "family": "Kalam",
+    "file": "Kalam.ttf",
+    "license": "Kalam.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/kalam/Kalam-Bold.ttf",
+    "fileSha256": "2f6576601db015d4f6c08678120277fc8510b98c06e932ce7a6a9cbff4cbdded",
+    "licenseSha256": "f62ef357d3a1c3d27edd35a6e1ba350e8a8d13499797964eeadefbf0b3b15d1f"
+  },
+  {
+    "family": "KaushanScript",
+    "file": "KaushanScript.ttf",
+    "license": "KaushanScript.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/kaushanscript/KaushanScript-Regular.ttf",
+    "fileSha256": "6d8d379d9bba98178bee476d68114c8f83812c18005ecccf679e70f60e03d8f6",
+    "licenseSha256": "3336bf5d4e7eedba48ecb831f37bf676e901c39f2e6a422cceadd9d2ffa55be8"
+  },
+  {
+    "family": "Lexend",
+    "file": "Lexend.ttf",
+    "license": "Lexend.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/lexend/Lexend%5Bwght%5D.ttf",
+    "fileSha256": "3add53e641fbc81da64da4bb254285e2831b52b029527bc0714e2b9610832ee6",
+    "licenseSha256": "5da8505887d0fa7fe963445fd58852707fda34adfeb65af25c99d152bab285bd"
+  },
+  {
+    "family": "LuckiestGuy",
+    "file": "LuckiestGuy.ttf",
+    "license": "LuckiestGuy.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/apache/luckiestguy/LuckiestGuy-Regular.ttf",
+    "fileSha256": "cfbdd68a039f92df51cf3721506af6242e64594c6325fe0bedbeff3fe385d980",
+    "licenseSha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "family": "Onest",
+    "file": "Onest.ttf",
+    "license": "Onest.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/onest/Onest%5Bwght%5D.ttf",
+    "fileSha256": "966c5c29b4755da84b6854d5c21dd4eaa2420225d0e9874de602de176d4a9f31",
+    "licenseSha256": "071195d8806e226faeee60259c28ca67b458227af5195a73f5cfcab06e3003bc"
+  },
+  {
+    "family": "Oswald",
+    "file": "Oswald.ttf",
+    "license": "Oswald.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/oswald/Oswald%5Bwght%5D.ttf",
+    "fileSha256": "5b38c246e255a12f5712d640d56bcced0472466fc68983d2d0410ec0457c2817",
+    "licenseSha256": "0fd731a904b729a4e02eaf5e8ebd06783edd9abe400e8882760160230675b652"
+  },
+  {
+    "family": "PermanentMarker",
+    "file": "PermanentMarker.ttf",
+    "license": "PermanentMarker.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/apache/permanentmarker/PermanentMarker-Regular.ttf",
+    "fileSha256": "28f82c8a7943cb8e9d599f8554da1d4fc75dbcf69b9885ad6c0611d20c6946c5",
+    "licenseSha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "family": "PinyonScript",
+    "file": "PinyonScript.ttf",
+    "license": "PinyonScript.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/pinyonscript/PinyonScript-Regular.ttf",
+    "fileSha256": "4aab130a6ed27f8b8117738c84a5602edf9300cdcc0651a9a65bf96f451ac29a",
+    "licenseSha256": "61d07cb0eaa943943648df2b11d0c2210e772053c192871e13f680b53fe0b77e"
+  },
+  {
+    "family": "PlayfairDisplay",
+    "file": "PlayfairDisplay.ttf",
+    "license": "PlayfairDisplay.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf",
+    "fileSha256": "c40f2293766a503bc70cce9e512ef844a4ccb7cbcde792fe2ea31d191917d8d6",
+    "licenseSha256": "566be814f8e96e93dfa16101331557eb6b5467e9e03f627c0910fe93ca12300e"
+  },
+  {
+    "family": "Poppins",
+    "file": "Poppins.ttf",
+    "license": "Poppins.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/poppins/Poppins-Black.ttf",
+    "fileSha256": "d82aaaf98a9283f9a8edd24e51173337d8eaf09e25cd3d98831f8ec8461748a1",
+    "licenseSha256": "6be04893d770899a015649c7aa3b582f871b272f8747a92b78b17c3e5c8b2573"
+  },
+  {
+    "family": "Quicksand",
+    "file": "Quicksand.ttf",
+    "license": "Quicksand.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/quicksand/Quicksand%5Bwght%5D.ttf",
+    "fileSha256": "39c9b64223561f56aaff6062a6f04063c4fc86809ad6768722c06614d977e1cc",
+    "licenseSha256": "14d28541780d90f6577bb7abcc6f005bf6969614294e75c82abb8758a696ad46"
+  },
+  {
+    "family": "Sora",
+    "file": "Sora.ttf",
+    "license": "Sora.OFL.txt",
+    "revision": "a4c0b21f839d7ac65a7d8b49eb81bddd110774a3",
+    "source": "https://raw.githubusercontent.com/google/fonts/a4c0b21f839d7ac65a7d8b49eb81bddd110774a3/ofl/sora/Sora%5Bwght%5D.ttf",
+    "fileSha256": "84ff7096ae3ec6c8be47d906d1a0ba4de7f2ce78c615275c77301964a316e16c",
+    "licenseSha256": "ba0b9729c9428ba79a0459ab8ec575791b51509dbec213e383d0316d37fec299"
+  }
+]

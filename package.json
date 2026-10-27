@@ -1,7 +1,7 @@
 {
   "name": "clipkit-workspace",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "scripts": {
@@ -13,8 +13,10 @@
     "doctor": "tsx packages/cli/src/index.ts doctor",
     "demo:reset": "tsx packages/cli/src/index.ts demo reset",
     "test:e2e": "playwright test",
-    "assets:check": "node scripts/assets-check.mjs",
-    "assets:verify": "tsx scripts/verify-scenes.ts"
+    "assets:check": "tsx scripts/verify.ts assets",
+    "assets:verify": "tsx scripts/verify.ts components",
+    "verify": "tsx scripts/verify.ts",
+    "benchmark": "tsx scripts/benchmark.ts"
   },
   "dependencies": {
     "@hono/node-server": "2.1.5",

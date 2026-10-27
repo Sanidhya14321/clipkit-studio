@@ -84,3 +84,11 @@ The same check also exposed simultaneous registry rebuilds colliding on generate
 - Long-form generation begins with a continuous chapter outline, followed by bounded chapter production. Planning is not completion of a film.
 - Use MIT Motion Primitives adaptations for actual website-style TSX motion. Keep React Bits as a visual reference under its redistribution restriction. Do not bundle the user's Video Forge production captures.
 - Treat A/B evidence as one observed pair, not proof of universal quality or efficiency. Preserve exact creative prompt, raw usage, initial weak result and original-speed outputs.
+
+## 0.5 candidate: instruction-first creative preparation
+
+Human feedback rejected the initial component-first proof. Component inclusion does not establish visual quality. Generation now starts with story/copy, a visual thesis, shot key poses, reading windows and concrete geometric handoffs; adopted components are optional implementation choices. Original React/CSS/SVG is equally valid. The first invocation renders a real three-second proof and pauses. Human approval resumes the exact session with a fresh lease; Keep revision merges the proposal in one undoable transaction. No critic grants aesthetic acceptance.
+
+Independent beats/shots/copy/components/transitions/audio replace the one-shot-per-phrase contract for new preparation; older data stays readable. Nested control paths retain declared labels. Source-schema updates carry compatible human values and remove obsolete bindings. Job status waits up to 45 seconds for agent calls to reduce repeated model polling. Actual runner usage and incremental estimates remain separate; no token-savings claim is made.
+
+Historical docs/scripts/outputs were hash-verified in the requested external archive. Five durable script entrypoints and current setup/architecture/authoring/workflow/sources/verification documents replace historical clutter. Root project bytes were preserved. This is a candidate implementation, not a visually accepted 0.5 release: the clean same-prompt full-film comparison and human preference gate remain open.

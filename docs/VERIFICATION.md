@@ -1,31 +1,25 @@
-# Current verification: video-first pipeline 0.4.0
+# 0.5 verification status
 
-Verified locally on 27 October 2026. Earlier workspace/library and 0.3 source-authoring reports are historical; see VERIFICATION-0.3.0.md for the previous release.
+This is an implementation candidate, not an aesthetically accepted release.
 
-## Actual film generation and comparison
+Verified locally so far:
 
-- A plain Codex pass and ClipKit pipeline generated real 15-second films from the exact same creative prompt (hash and methodology in VIDEO-AB-COMPARISON.md).
-- Both encoded films have 450 frames, 30 fps, 1080×1920 H.264/AAC and duration within one frame. Their decoded audio hashes match. The side-by-side output is also 450 frames with H.264/AAC.
-- The first pipeline result was weak and remains delivered. The revised director used an original visual composition reference, committed story then choreography, published actual scene code, inspected rendered images, requested a specific repair and passed the repaired sampled frames. No synthetic agent activity or fabricated UI evidence.
-- The plain result remains competitive and faster: 108.4s before export versus 444.0s for the revised reviewed pipeline. This is not a universal superiority or efficiency claim. Production usage is unavailable; reported usage subtotal is explicitly incomplete.
-- Follow-up code fixes deadline handling even on a zero CLI exit, narrows unrelated built-ins and model tool replies, and advertises a complete scalar scene schema. A separate actual Codex capability probe inspected a reference and published a new scene with those unrelated features disabled. The complete A/B pair was not rerun after the final context/deadline/schema changes.
+- Twelve actual components compiled; all twelve moving previews rendered, with repeated representative frame checks.
+- Managed source imported actual Ribbon Words, compiled and rendered successfully.
+- Nested schema validation, independent placement, local edits and exact undo/redo tests pass.
+- Storyboard tests support several shots per beat, copy across cuts and overlapping transitions.
+- Workflow tests cover the human pause, exact-session continuation contract, stale approval and cancellation.
+- 135 regression tests passed after initial cleanup; an additional server contract test passes for proposal isolation, protected proof frames, exact session continuation, concurrent human edits, acceptance and grouped undo.
+- One real Codex preparation produced storyboard/source/sample, released its lease, and left accepted revision 0 untouched. Actual session ID is preserved. The human rejected this first direction; a second preparation kept the same session; further human feedback changed direction to instruction-first, and a new proof is in progress. Full production is not authorized yet.
 
-## Actual editing loop
+First preparation: 164545 ms; reported 397883 input, 4200 output, 339712 cached tokens. The incremental context estimate was 42910 tokens. This is measured overhead, not a demonstrated saving. The payload is being reduced; session reuse alone does not prove optimization.
 
-A real diagnose → edit → visual review turn changed only the accent during `[210,270)` (7–9s at 30fps), kept the immutable source version, and preserved the complete outside signature. The report is edit-loop-verification.json. Automatic agent-attributed comment finalization after review is separately covered by workflow tests.
+Pending: human-approved motion proof; full 15-second continuation; neutral comparison and human preference; footage-led and longer explanatory evaluation; final packed installation/browser regression; final release. Claude/Fish live authentication and hour-long performance remain unverified. A technical pass does not close these acceptance items.
 
-## Automated and local checks
+Historical proof and the better plain-agent baseline are retained in the verified external archive. No unsuccessful attempt is removed from evaluation records.
 
-**128 default tests pass across 17 files.** The default suite covers ordered planning gates, separate editing/review paths, failed gates, cancellation, one repair budget, unreviewed drafts, validated direction reuse, long-form outlining, compact mutation responses, deadline failure, scene contracts, temporal scope, transaction recovery, ownership, undo, source publication and media operations. Typecheck, source inventory and build are required release gates.
+Additional checks: five browser tests passed, including six viewport sizes, range anchors, local property/source edits and undo. Packed 0.5 candidate installed outside the repository, exported a real MP4, restored/exported a legacy project and reported zero dependency-audit findings. The source inventory verifies 211 records.
 
-**Five real-backend browser checks pass.** They cover six laptop/desktop viewports, reachable final controls, drawers, exact saved frame ranges, human source/prop edits, keyboard boundaries, resize persistence/reset and equivalent zoom. Existing deterministic-frame, immutable export and separately archived legacy-renderer evidence remains in the 0.3 report. New motion primitives are frame-driven; this is not an exhaustive cross-machine/per-frame guarantee.
+The instruction-first proof uses original React/SVG rather than a required upstream component. It is a revised attempt with human feedback, not a clean same-prompt A/B victory. Production, footage-led and long-form aesthetic evaluation remain pending.
 
-The source inventory preserves pinned MIT Motion Primitives originals and adaptations, Video Forge guidance, original visual study, Paper notices and fonts. React Bits is reference-only. No rejected stock catalog or private Video Forge production capture is bundled.
-
-## Limits
-
-The critic inspects representative stills and cannot establish every intervening frame, motion feel or audio quality. Human moving playback with sound remains necessary. Long-form outlining and bounded chapter production are implemented, but no hour-long generation/export benchmark is claimed. Claude authentication and Fish live provider acceptance remain unverified.
-
-Exact test/build/install/CI results and source commit accompany the release. Exported editable projects exclude provider keys, live server credentials and agent-workspace configuration.
-
-The outside-repository tarball check passed initialization preservation, the explicit MCP scene schema, native reference-image return, real source compilation, 1080p export, separate compatibility installation/legacy export and an installed dependency audit with zero advisories.
+Final regression: 20 files / 138 tests and TypeScript pass. Your existing root project remains revision 50 with SHA-256 dd5b4e1597d22c3305478fdc4ed0ffb7e0c74dbecb79368343f6bd5d2fad940a. Root studio was restarted with the new backend and twelve components. Historical artifacts/docs/scripts were copied and hash-verified externally; 931784221 bytes of inactive render cache were cleared. Future render caches are outside the checkout.

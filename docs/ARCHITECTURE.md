@@ -1,28 +1,11 @@
-# Shared editing architecture
+# Architecture
 
-```mermaid
-flowchart LR
-  Human[Human editor / voice command] --> Studio[React Studio]
-  Studio -->|Authenticated HTTP + WebSocket| Server[Loopback Hono server]
-  CLI[ck CLI] --> Server
-  Agent[Codex or Claude subprocess] --> MCP[ClipKit MCP tools]
-  MCP --> Server
-  Server --> Lease[Owner lease + request scope]
-  Lease --> Validate[Schema + source bounds + pack validation]
-  Validate --> Transaction[Atomic forward/inverse transaction]
-  Transaction --> Journal[(Append-only journal + snapshot)]
-  Transaction --> Studio
-  Server --> Review[Proposals / human acceptance]
-  Review --> Validate
-  Server --> Media[FFmpeg proxies, cuts, cached audio]
-  Media --> Fish[Optional Fish STT / TTS / private clone]
-  Media --> Whisper[Optional local whisper.cpp]
-  Journal --> Render[Immutable snapshot / Remotion]
-  Render --> MP4[Original-media H.264 + AAC export]
-```
+One project format, journal, owner lease and renderer serve human, CLI and MCP edits. The accepted project is durable JSON; agent drafts use the existing proposal store and immutable scene artifacts. Keeping a revision commits its three-way merge in one undoable transaction. Concurrent unrelated human edits are retained; conflicting changes require review.
 
-The server is the only project writer. A successful patch renews its lease; stale revisions and ended turns are rejected. Human selection constrains anchored agent edits. Three-way merges use stable IDs when reverting historical edits or accepting proposals after unrelated changes. Conflicting changes require review.
+`assets` contains the real component registry, selected source dependency closures and media indexing. `motion` supplies deterministic helpers and focused Video Forge guidance. `scenes` compiles validated TSX in a worker and retains last working versions. `server` coordinates sessions, leases and scoped operations. `studio` renders Components, Storyboard, Properties, Media and frame comments. `render` drives preview/export from the same composition.
 
-External text is untrusted data. Scope checks, protected source paths and explicit human executable-pack trust provide enforcement beyond prompt instructions. This is a local single-user application; it is not a sandbox for arbitrary third-party code. Trusted pack code runs locally only after explicit trust, validation and a pinned content receipt.
+Storyboard version 2 separates narrative beats, overlapping shots, persistent copy intervals, versioned component uses, transitions and audio cues. All boundaries are integral end-exclusive frames. Long work requires consecutive chapters of at most three minutes; later chapters reuse the accepted global direction and load bounded context. Hour-long performance is unverified.
 
-Cloud providers receive requested text/audio. Originals, cached takes and history remain in the local project directory. Browser speech synthesis is temporary preview playback and never silently becomes exported narration.
+Preparation makes one creative invocation, renders 90 real frames, releases the lease and waits for the human. Approval binds plan hash, component versions, sample bytes and base project. Continuation resumes an exact recorded session ID with a fresh lease. Approved prefix content is protected. No automatic aesthetic critic accepts a film.
+
+A range edit preserves outside content and the source animation clock. Executable scene code is reviewed managed project code; static validation is not a security sandbox. Downloaded executable packs still require content-bound trust.

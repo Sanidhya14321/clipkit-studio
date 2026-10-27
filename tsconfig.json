@@ -46,6 +46,7 @@
   "exclude": [
     "node_modules",
     "artifacts",
-    "packages/assets/vendor"
+    "packages/assets/vendor",
+    "packages/assets/upstream"
   ]
 }
