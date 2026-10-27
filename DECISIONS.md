@@ -108,3 +108,7 @@ Installed TypeScript 7 exposes a native compiler rather than the old createSourc
 ## Pipeline update U4
 
 Keep schemaVersion 1 and journal pointer compatibility with an additive migration; infer no mode or defaults during startup. Derive uses a project-local copy, parser-position edits and existing SceneService publication. Root instance rendering already supplies data-ck-layer; derived nodes add path/element tags under that ancestor. Reference-only assets cannot be copied through derive. Unsupported imports/complex props fail with guidance to author a native scene, rather than installing unknown dependencies. Open question: arbitrary upstream layout rewrites remain symbol-level authoring work.
+
+## Pipeline update U5
+
+Add an ordered layer pipeline beside the established creative workflow, retaining its mandatory human proof checkpoint. Resume consumes persisted completed passes, never replays layer operations. Pass patches may edit tracks/provenance and must validate before committing state and layers together. Gates distinguish failure from unmeasured contrast/LUFS; no synthetic claims of perceptual/audio success. Open questions: automatic cut selection is deliberately delegated to existing transcript/candidate operations; without trustworthy word timing, destructive speech edits remain disabled.

@@ -10,3 +10,5 @@ U2: local registered ingestion accepts explicit license evidence/revision, inven
 U3: Babel TypeScript/JSX parser and PostCSS produce symbol offsets, props/defaults, primitives and bounded skeletons. JSON is parsed structurally. GLSL extraction explicitly reports unsupported rather than claiming a parser. Search is ranked and capped; L1/L2/L3/L4 budgets, two-card limits, persisted meter and single justified full-source read are enforced per turn/pass. Verification pending U8.
 
 U4: additive v1 load migration retains pipeline/provenance/layer fields and leaves legacy projects unchanged until edited. Parsed codemods replace literal tokens/defaults and remove selected JSX nodes. Derived output gets local JSON/Zod props schemas and selection paths; publication must pass the existing immutable scene compiler/render verifier before registration. Verification pending U8.
+
+U5: persisted ordered pass state, evidence-based media mode detection, voice-take beat timing, non-destructive base insertion and named deterministic quality gates added. Measurement-dependent checks explicitly return uncertain. Server/CLI wiring and restart/pass atomicity tests follow in U7/U8.
