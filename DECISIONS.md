@@ -104,3 +104,7 @@ Ingestion reads local sources without modifying originals or cloning new librari
 ## Pipeline update U3
 
 Installed TypeScript 7 exposes a native compiler rather than the old createSourceFile API. Use the already resolved MIT Babel parser directly, and MIT PostCSS, as declared runtime dependencies for ingestion/codemods. No model-based parsing. A missing GLSL parser is reported as unsupported; no fake symbol map. Budgets measure returned UTF-8 bytes, not unobservable provider context. Open question: GLSL-specific semantic extraction remains unsupported until a parser is selected.
+
+## Pipeline update U4
+
+Keep schemaVersion 1 and journal pointer compatibility with an additive migration; infer no mode or defaults during startup. Derive uses a project-local copy, parser-position edits and existing SceneService publication. Root instance rendering already supplies data-ck-layer; derived nodes add path/element tags under that ancestor. Reference-only assets cannot be copied through derive. Unsupported imports/complex props fail with guidance to author a native scene, rather than installing unknown dependencies. Open question: arbitrary upstream layout rewrites remain symbol-level authoring work.

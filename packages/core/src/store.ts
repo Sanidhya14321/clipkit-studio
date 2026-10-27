@@ -1,3 +1,4 @@
+import {migrateProject} from './migration';
 import {mkdir,readFile,writeFile,rename,open} from 'node:fs/promises';
 import {join} from 'node:path';
 import jsonPatch, {type Operation} from 'fast-json-patch';
@@ -21,7 +22,7 @@ export class ProjectStore {
   get dir(){return join(this.root,'.clipkit');}
   async load() {
     await mkdir(join(this.dir,'history'),{recursive:true});
-    try {this.project=ProjectSchema.parse(JSON.parse(await readFile(join(this.dir,'project.json'),'utf8')));} catch(e) {if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
+    try {this.project=migrateProject(JSON.parse(await readFile(join(this.dir,'project.json'),'utf8')));} catch(e) {if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
     let journal='';try{journal=await readFile(join(this.dir,'history','journal.jsonl'),'utf8');}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
     const lines=journal.split('\n');
     for(let n=0;n<lines.length;n++){

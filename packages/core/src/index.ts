@@ -1,3 +1,4 @@
+import {PipelineFields,LayerPassSchema} from './pipeline-schema';
 import {StoryboardSchema} from './storyboard';
 import {DirectionPlanSchema} from './video-plan';
 import {z} from 'zod';
@@ -8,6 +9,7 @@ export type Word = z.infer<typeof WordSchema>;
 export const SourceSchema = z.object({id: z.string(), kind: z.enum(['video','audio','image']), path: z.string(), proxyPath: z.string().optional(), audioPath: z.string().optional(), transcriptPath: z.string().optional(), name: z.string(), durationSec: z.number().nonnegative(), width: z.number().optional(), height: z.number().optional(), provenance: z.string().optional()});
 export type Source = z.infer<typeof SourceSchema>;
 export const ItemSchema = z.object({
+  name:z.string().max(200).optional(),purpose:z.string().max(500).optional(),pass:LayerPassSchema.optional(),assetRef:z.string().optional(),z:z.number().int().optional(),
   id: z.string(), type: z.enum(['footage','clip','audio','voice','caption']),
   at: z.number().nonnegative(), dur: z.number().positive().max(36000),
   props: z.record(z.string(), z.unknown()).default({}),
@@ -34,7 +36,7 @@ export type Comment = z.infer<typeof CommentSchema>;
 export const ScoreEventSchema=z.object({id:z.string(),kind:z.enum(['shot','reading','transition','accent','audio']),label:z.string(),startFrame:z.number().int().nonnegative(),endFrame:z.number().int().positive(),mechanism:z.string().optional(),protected:z.boolean().optional()}).refine(e=>e.endFrame>e.startFrame,'Event must have a positive frame range');
 export const ChapterSchema=z.object({id:z.string(),title:z.string(),summary:z.string().max(1500).optional(),startFrame:z.number().int().nonnegative(),endFrame:z.number().int().positive()}).refine(c=>c.endFrame>c.startFrame,'Chapter must have a positive range');
 export const ReelPlanSchema=z.object({chapters:z.array(ChapterSchema).max(120).optional(),durationFrames:z.number().int().min(1).max(108000),pacing:z.enum(['fast','balanced','slow']),direction:z.string().max(4000),score:z.array(ScoreEventSchema).max(2000)}).refine(p=>p.score.every(e=>e.endFrame<=p.durationFrames)&&(p.chapters??[]).every(c=>c.endFrame<=p.durationFrames),'Score or chapter exceeds reel duration').refine(p=>new Set(p.chapters?.map(c=>c.id)).size===(p.chapters?.length??0)&&(p.chapters??[]).every((c,i,all)=>!all.some((other,j)=>j!==i&&c.startFrame<other.endFrame&&c.endFrame>other.startFrame)),'Chapters need unique IDs and nonoverlapping ranges');
-export const ProjectSchema = z.object({videoPlans:z.record(z.string(),StoryboardSchema).optional(),directionPlans:z.record(z.string(),DirectionPlanSchema).optional(),reel:ReelPlanSchema.optional(),schemaVersion:z.literal(1),id:z.string(),name:z.string().min(1).max(200),rev:z.number().int().nonnegative(),settings:z.object({fps:z.number().int().min(1).max(60),width:z.number().int().positive().max(3840),height:z.number().int().positive().max(3840)}),sources:z.record(z.string(),SourceSchema),tracks:z.array(TrackSchema),voiceSlots:z.array(VoiceSlotSchema),comments:z.array(CommentSchema),brand:z.object({colors:z.array(z.string()),fonts:z.array(z.string())}).optional()}).superRefine((p,c)=>{
+export const ProjectSchema = z.object({...PipelineFields,videoPlans:z.record(z.string(),StoryboardSchema).optional(),directionPlans:z.record(z.string(),DirectionPlanSchema).optional(),reel:ReelPlanSchema.optional(),schemaVersion:z.literal(1),id:z.string(),name:z.string().min(1).max(200),rev:z.number().int().nonnegative(),settings:z.object({fps:z.number().int().min(1).max(60),width:z.number().int().positive().max(3840),height:z.number().int().positive().max(3840)}),sources:z.record(z.string(),SourceSchema),tracks:z.array(TrackSchema),voiceSlots:z.array(VoiceSlotSchema),comments:z.array(CommentSchema),brand:z.object({colors:z.array(z.string()),fonts:z.array(z.string())}).optional()}).superRefine((p,c)=>{
   if(p.reel&&p.tracks.some(t=>t.items.some(i=>Math.round((i.at+i.dur)*p.settings.fps)>p.reel!.durationFrames)))c.addIssue({code:'custom',message:'Timeline content exceeds the reel frame budget'});
   const ids = new Set<string>();
   for (const track of p.tracks) for (const item of track.items) {
