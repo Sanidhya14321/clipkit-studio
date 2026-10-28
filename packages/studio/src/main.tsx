@@ -349,7 +349,7 @@ function App() {
     },
     [tell],
   );
-  useEffect(()=>{if(state?.project.brief?.status==='proposed')setBriefOpen(true)},[state?.project.brief?.rev,state?.project.brief?.status]);
+  useEffect(()=>{if(state?.project.brief?.status==='proposed'||state?.project.storyboardCheckpoint?.status==='proposed')setBriefOpen(true)},[state?.project.brief?.rev,state?.project.brief?.status,state?.project.storyboardCheckpoint?.status]);
   useEffect(()=>{if(!state||!token)return;const timer=setTimeout(()=>void op('context_set',{playhead:time,loop:range,selection:selected?{layerId:selected,propertyPath:selectedDetail.current.propPath,label:state.project.tracks.flatMap(t=>t.items).find(i=>i.id===selected)?.name??selected}:null,hovered:hover?.layerId?{layerId:hover.layerId,propertyPath:hover.propPath,elementId:hover.elementId}:null}).catch(()=>{}),250);return()=>clearTimeout(timer)},[time,range,selected,hover?.layerId,hover?.propPath,token]);
   const run = useCallback(
     (name: string, args: Record<string, unknown> = {}) => {
@@ -1243,7 +1243,7 @@ function App() {
   const update = (changes: Partial<Item>) =>
     item && run("item_update", { itemId: item.id, changes });
   const updateProps = (delta: Record<string, unknown>) => {
-    if (!item || locked) return;
+    if (!item || locked || state.layerLocks?.some(lock=>lock.layerIds.includes(item.id))) return;
     const current = stateRef.current?.project.tracks
       .flatMap((t) => t.items)
       .find((candidate) => candidate.id === item.id);
@@ -1906,7 +1906,7 @@ function App() {
                       </small>
                     </div>
                   </div>
-                  <fieldset disabled={locked}>
+                  <fieldset disabled={locked||state.layerLocks?.some(lock=>lock.layerIds.includes(item?.id??''))}>
                     {item.sceneVersion&&<SceneSourcePanel item={item} op={op} locked={locked}/>}
                     <div className="section-label">TIMING</div>
                     <div className="field-row">

@@ -23,3 +23,5 @@ for(const [profile,tools] of Object.entries(toolProfiles)){if(profile!=='review'
 for(const [profile,tools] of Object.entries(toolProfiles)){tools.push('brief_get','brief_diff','context_get','studio_wait');if(['creative','authoring','media','voice','edit','production','scene-edit'].includes(profile))tools.push('brief_propose','brief_wait','brief_set','brief_impact','studio_ask');}
 
 for(const [profile,tools] of Object.entries(toolProfiles)){if(profile!=='review')tools.push('look_list','recipe_search','recipe_card','layout_check','storyboard_get');if(['creative','authoring','production','edit'].includes(profile))tools.push('recipe_apply','variants_make','see_trace');}
+
+for(const profile of ['edit','scene-edit','authoring','media','voice'])toolProfiles[profile].push('lock_layers','unlock_layers','layer_patch');

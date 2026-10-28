@@ -148,3 +148,11 @@ Seven original MIT slot recipes reuse managed SceneService publication, native f
 ## Update 2 U2-5
 
 Voice context is exposed as ck context/MCP clipkit://context, and the browser publishes selection/playhead/hover/range. Studio microphone handling reuses configured Fish STT, falling back to browser speech; native terminal dictation remains separate. Free-form studio voice creates an anchored queued comment rather than incurring an automatic model turn. ck ask supports clicked, typed and microphone answers with bounded waits. App-managed creative stage turns return at checkpoints; external interactive clients may loop on the event cursor after handoff. This avoids relying on an infinite blocking tool or undocumented agent lifecycle. Claude's documented voice command is client-side ([official command reference](https://code.claude.com/docs/zh-CN/commands)); availability/shortcuts are not assumed by the browser. Open question: live microphone/paid provider acceptance cannot be inferred from text-routing tests.
+
+## Update 2 U2-6
+
+Reference matching analyzes local files with ffprobe, threshold scene cuts, a first-frame palette sample and integrated loudness where audio exists. Every statistic states its sampling method; unavailable OCR/caption density remains null. Reference content is never inserted into the film. Storyboard confirmation is a pre-build beat/recipe gate and remains distinct from an actual rendered motion-proof review. Open question: reference OCR and reliable speech-rate extraction require a trustworthy transcript/provider.
+
+## Update 2 U2-7
+
+Layer leases live in runtime state, separate from undoable content and exported secrets. Each edit increments a layer revision monotonically, including undo; stable-ID layer_patch checks expected revisions and retains unrelated human edits. Track/global changes and total duration still require the exclusive global lease. Only isolated native recipe scenes are eligible for alpha render caching; arbitrary authored code can inspect global context and is conservatively left live. Cache keys include layer/asset/tokens/settings and source media identity; VP9-alpha results can be shared by preview and export. Open question: caching arbitrary WebGL/custom scenes needs a stronger isolation contract.

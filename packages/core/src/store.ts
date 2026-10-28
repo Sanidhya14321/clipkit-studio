@@ -2,7 +2,7 @@ import {migrateProject} from './migration';
 import {mkdir,readFile,writeFile,rename,open} from 'node:fs/promises';
 import {join} from 'node:path';
 import jsonPatch, {type Operation} from 'fast-json-patch';
-import {ProjectSchema,emptyProject,allItems,id,type Project,type PatchRequest,type HistoryEntry,type Lease,type JsonPatchOperation} from './index.ts';
+import {ProjectSchema,emptyProject,allItems,id,type Project,type PatchRequest,type HistoryEntry,type Lease,type JsonPatchOperation,type Item} from './index.ts';
 import {mergeRevert,RevertConflict} from './revert.ts';
 
 export class ClipKitError extends Error {
@@ -12,6 +12,10 @@ export class ProjectStore {
   project:Project = emptyProject();
   history:HistoryEntry[]=[];
   lease:Lease|null=null;
+  private layerLeases=new Map<string,Lease&{layerIds:string[]}>();
+  layerLocks(){for(const [token,lease]of this.layerLeases)if(lease.expiresAt<=this.now())this.layerLeases.delete(token);return [...this.layerLeases.values()];}
+  acquireLayers(layerIds:string[],owner:string,label:string){if(this.currentLease())throw new ClipKitError('LOCKED','Structural editing owns the global lease');if(!layerIds.length||layerIds.length>50||new Set(layerIds).size!==layerIds.length)throw new ClipKitError('INVALID_LOCK','Choose 1–50 distinct layers');const items=allItems(this.project);if(layerIds.some(id=>!items.some(i=>i.id===id)))throw new ClipKitError('UNKNOWN_ITEM','Reread the requested layers');if(this.layerLocks().some(l=>l.layerIds.some(id=>layerIds.includes(id))))throw new ClipKitError('LOCKED','A requested layer is already locked');const lease={owner,label,token:id('layers')+id('secret'),turnId:id('turn'),expiresAt:this.now()+this.timeoutMs,layerIds};this.layerLeases.set(lease.token,lease);this.onChange();return {...lease,revs:Object.fromEntries(layerIds.map(id=>[id,items.find(i=>i.id===id)!.rev??0]))};}
+  layerLockState(){return this.layerLocks().map(({token,...lease})=>lease)}
   private chain:Promise<unknown>=Promise.resolve();
   private requests=new Map<string,HistoryEntry>();
   private undoStack:number[]=[];
@@ -45,12 +49,13 @@ export class ProjectStore {
   private serial<T>(fn:()=>Promise<T>):Promise<T>{const result=this.chain.then(fn,fn);this.chain=result.catch(()=>{});return result;}
   private async snapshot(){const tmp=join(this.dir,`project.${process.pid}.tmp`);await writeFile(tmp,JSON.stringify(this.project,null,2));await rename(tmp,join(this.dir,'project.json'));}
   currentLease(){if(this.lease&&this.lease.expiresAt<=this.now()){this.lease=null;this.onChange();}return this.lease;}
-  acquire(owner:string,label:string){if(this.currentLease())throw new ClipKitError('LOCKED','An agent is already editing');this.lease={owner,label,token:id('lease')+id('secret'),turnId:id('turn'),expiresAt:this.now()+this.timeoutMs};this.onChange();return {...this.lease};}
-  heartbeat(token:string){const lease=this.currentLease();if(!lease||lease.token!==token)throw new ClipKitError('LEASE_EXPIRED','This editing lease is no longer valid');lease.expiresAt=this.now()+this.timeoutMs;return {...lease};}
-  release(token:string){if(this.currentLease()?.token!==token)throw new ClipKitError('LEASE_EXPIRED','This editing lease is no longer valid');this.lease=null;this.onChange();}
+  acquire(owner:string,label:string){if(this.currentLease()||this.layerLocks().length)throw new ClipKitError('LOCKED','An agent is already editing');this.lease={owner,label,token:id('lease')+id('secret'),turnId:id('turn'),expiresAt:this.now()+this.timeoutMs};this.onChange();return {...this.lease};}
+  heartbeat(token:string){const lease=this.currentLease()??this.layerLocks().find(l=>l.token===token);if(!lease||lease.token!==token)throw new ClipKitError('LEASE_EXPIRED','This editing lease is no longer valid');lease.expiresAt=this.now()+this.timeoutMs;return {...lease};}
+  release(token:string){this.layerLocks();if(this.layerLeases.has(token)){this.layerLeases.delete(token);this.onChange();return;}if(this.currentLease()?.token!==token)throw new ClipKitError('LEASE_EXPIRED','This editing lease is no longer valid');this.lease=null;this.onChange();}
   guard(actor?:{leaseToken?:string;turnId?:string}){
     const lease=this.currentLease();
-    if(actor?.leaseToken&&(!lease||lease.token!==actor.leaseToken||lease.turnId!==actor.turnId))throw new ClipKitError('LEASE_EXPIRED','The agent turn has ended; reread before editing');
+    const scoped=actor?.leaseToken?this.layerLocks().find(l=>l.token===actor.leaseToken&&l.turnId===actor.turnId):undefined;
+    if(actor?.leaseToken&&!scoped&&(!lease||lease.token!==actor.leaseToken||lease.turnId!==actor.turnId))throw new ClipKitError('LEASE_EXPIRED','The agent turn has ended; reread before editing');
     if(lease&&(!actor?.leaseToken||lease.token!==actor.leaseToken))throw new ClipKitError('LOCKED',`${lease.owner} is editing. Wait or cancel its turn.`,{owner:lease.owner});
   }
   async patch(req:PatchRequest,author:HistoryEntry['author']='human') {return this.serial(()=>this.apply(req,author));}
@@ -67,6 +72,8 @@ export class ProjectStore {
     try {next=ProjectSchema.parse(jsonPatch.applyPatch(structuredClone(this.project),req.ops as Operation[],true,true).newDocument);await this.options.prepare?.(next,this.project);next=ProjectSchema.parse(next);this.validateExtra(next);}
     catch(e){throw new ClipKitError('INVALID_PATCH',(e as Error).message.slice(0,700),{currentRev:this.project.rev});}
     this.guard(req);
+    const activeLocks=this.layerLocks(),scoped=activeLocks.find(l=>l.token===req.leaseToken);if(activeLocks.length){const global=(p:Project)=>({...p,rev:0,tracks:p.tracks.map(t=>({...t,items:t.items.map(i=>i.id)}))});if(JSON.stringify(global(this.project))!==JSON.stringify(global(next)))throw new ClipKitError('LAYER_SCOPE','Structural changes need the global lease');const end=(p:Project)=>Math.max(0,...allItems(p).map(i=>i.at+i.dur));if(Math.abs(end(this.project)-end(next))>1/this.project.settings.fps)throw new ClipKitError('LAYER_SCOPE','Changing total duration needs the global lease');for(const item of allItems(next)){const old=allItems(this.project).find(i=>i.id===item.id)!;if(JSON.stringify(item)!==JSON.stringify(old)){if(scoped&&!scoped.layerIds.includes(item.id))throw new ClipKitError('LAYER_SCOPE','Patch only your locked layers');if(activeLocks.some(l=>l.token!==req.leaseToken&&l.layerIds.includes(item.id)))throw new ClipKitError('LOCKED','This layer belongs to another editor');}}}
+    const oldItems=new Map(allItems(this.project).map(i=>[i.id,i]));for(const item of allItems(next)){const old=oldItems.get(item.id);const semantic=(i:Item)=>{const {rev,...data}=i;return JSON.stringify(data)};if(!old)item.rev=0;else if(semantic(old)!==semantic(item))item.rev=(old.rev??0)+1;else if(old.rev!==undefined)item.rev=old.rev;else delete item.rev;}
     const before=this.project;
     const forward=jsonPatch.compare(before,next) as JsonPatchOperation[];
     const inverse=jsonPatch.compare(next,before) as JsonPatchOperation[];
@@ -79,6 +86,7 @@ export class ProjectStore {
     this.project=next;this.history.push(entry);this.requests.set(req.requestId,entry);this.rebuildStacks(entry);
     await this.snapshot();if(req.leaseToken)this.heartbeat(req.leaseToken);this.onChange();return entry;
   }
+  patchLayers(changes:Array<{id:string;rev:number;changes:Partial<Item>}>,actor:{leaseToken:string;turnId:string},validate:(draft:Project)=>void=()=>{}){return this.serial(async()=>{this.guard(actor);const scoped=this.layerLocks().find(l=>l.token===actor.leaseToken);if(!scoped)throw new ClipKitError('LAYER_SCOPE','Acquire layer locks first');const draft=structuredClone(this.project);for(const change of changes){const item=allItems(draft).find(i=>i.id===change.id);if(!item||!scoped.layerIds.includes(change.id))throw new ClipKitError('LAYER_SCOPE','Layer is not locked by this caller');if((item.rev??0)!==change.rev)throw new ClipKitError('LAYER_REV_CONFLICT','Reread only the changed layer',{layerId:change.id,currentLayerRev:item.rev??0});if(Object.keys(change.changes).some(k=>!['props','name','purpose','at','dur','srcIn','volume','z'].includes(k)))throw new ClipKitError('INVALID_PATCH','Unsupported layer change');Object.assign(item,{...change.changes,...change.changes.props?{props:{...item.props,...change.changes.props}}:{}})}validate(draft);return this.apply({requestId:id('layer-edit'),baseRev:this.project.rev,label:'Patch locked layers',...actor,ops:jsonPatch.compare(this.project,draft) as JsonPatchOperation[]},'agent');});}
   mutate(label:string,fn:(draft:Project)=>void,author:HistoryEntry['author']='human',actor?:{leaseToken?:string;turnId?:string},requestId=id('req')){
     return this.serial(async()=>{this.guard(actor);const draft=structuredClone(this.project);fn(draft);return this.apply({requestId,baseRev:this.project.rev,label,...actor,ops:jsonPatch.compare(this.project,draft) as JsonPatchOperation[]},author);});
   }
