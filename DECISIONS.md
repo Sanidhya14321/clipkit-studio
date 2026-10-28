@@ -140,3 +140,11 @@ Brief impact previews precede explicit field application. A brief diff records c
 ## Update 2 U2-3
 
 Ship four original token looks and transparent pacing.yaml values. Token bindings are resolved by the shared preview/export composition, so changing a look needs no model call or source rewrite. Existing components without explicit bindings preserve their original props. Brand facts override a preset where validated. The safe-area layout solver uses conservative text fitting and reserves collision-free boxes; arbitrary custom scene geometry remains outside its guarantees. Open question: exact font-shaping bounds still require rendered measurement for third-party components.
+
+## Update 2 U2-4
+
+Seven original MIT slot recipes reuse managed SceneService publication, native frame-driven primitives, explicit token bindings and the existing provenance registry. Factual testimonial/stat/product slots must come from supplied evidence; no third-party assets are claimed by these original recipes. Safe-area layout uses conservative text metrics and enforces copy limits; recipe coordinates are generated, not supplied by the agent. Open question: arbitrary imported source still needs adaptation when its props cannot bind to these contracts.
+
+## Update 2 U2-5
+
+Voice context is exposed as ck context/MCP clipkit://context, and the browser publishes selection/playhead/hover/range. Studio microphone handling reuses configured Fish STT, falling back to browser speech; native terminal dictation remains separate. Free-form studio voice creates an anchored queued comment rather than incurring an automatic model turn. ck ask supports clicked, typed and microphone answers with bounded waits. App-managed creative stage turns return at checkpoints; external interactive clients may loop on the event cursor after handoff. This avoids relying on an infinite blocking tool or undocumented agent lifecycle. Claude's documented voice command is client-side ([official command reference](https://code.claude.com/docs/zh-CN/commands)); availability/shortcuts are not assumed by the browser. Open question: live microphone/paid provider acceptance cannot be inferred from text-routing tests.

@@ -705,6 +705,7 @@ function App() {
             );
             return;
           }
+          if(origin==='voice'){tell('Voice comment queued; Apply open or the waiting agent can pick it up.');return;}
           await op("agent_run", {
             client: stateRef.current?.agentClient ?? "codex",
             commentIds: [result.commentId],
@@ -895,6 +896,7 @@ function App() {
   }
   function startCommand() {
     if (locked) return;
+    if(stateRef.current?.provider.fish){commandHeld.current=true;frozenAnchor.current=anchor();void startRecord('command',undefined,true);return;}
     commandHeld.current = true;
     frozenAnchor.current = anchor();
     const Constructor =

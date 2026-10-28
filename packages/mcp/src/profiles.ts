@@ -21,3 +21,5 @@ const retrievalTools=['knowledge_search','knowledge_card','knowledge_skeleton','
 for(const [profile,tools] of Object.entries(toolProfiles)){if(profile!=='review')tools.push(...retrievalTools);if(['creative','production','authoring','media','voice','edit'].includes(profile))tools.push('knowledge_derive','knowledge_instantiate','pipeline_plan','pipeline_base','pipeline_pass','pipeline_resume','pipeline_handoff');}
 
 for(const [profile,tools] of Object.entries(toolProfiles)){tools.push('brief_get','brief_diff','context_get','studio_wait');if(['creative','authoring','media','voice','edit','production','scene-edit'].includes(profile))tools.push('brief_propose','brief_wait','brief_set','brief_impact','studio_ask');}
+
+for(const [profile,tools] of Object.entries(toolProfiles)){if(profile!=='review')tools.push('look_list','recipe_search','recipe_card','layout_check','storyboard_get');if(['creative','authoring','production','edit'].includes(profile))tools.push('recipe_apply','variants_make','see_trace');}

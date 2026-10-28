@@ -1,4 +1,4 @@
-import {Update2Fields,FieldIdSchema} from './brief';
+import {Update2Fields,FieldIdSchema,TokenSchema} from './brief';
 import {PipelineFields,LayerPassSchema} from './pipeline-schema';
 import {StoryboardSchema} from './storyboard';
 import {DirectionPlanSchema} from './video-plan';
@@ -10,7 +10,7 @@ export type Word = z.infer<typeof WordSchema>;
 export const SourceSchema = z.object({id: z.string(), kind: z.enum(['video','audio','image']), path: z.string(), proxyPath: z.string().optional(), audioPath: z.string().optional(), transcriptPath: z.string().optional(), name: z.string(), durationSec: z.number().nonnegative(), width: z.number().optional(), height: z.number().optional(), provenance: z.string().optional()});
 export type Source = z.infer<typeof SourceSchema>;
 export const ItemSchema = z.object({
-  rev:z.number().int().nonnegative().optional(),briefDeps:z.array(FieldIdSchema).max(29).optional(),tokenBindings:z.record(z.string(),z.string().max(100)).optional(),layout:z.object({role:z.string(),x:z.number(),y:z.number(),width:z.number(),height:z.number(),fontSize:z.number().optional()}).optional(),name:z.string().max(200).optional(),purpose:z.string().max(500).optional(),pass:LayerPassSchema.optional(),assetRef:z.string().optional(),z:z.number().int().optional(),
+  tokens:TokenSchema.optional(),rev:z.number().int().nonnegative().optional(),briefDeps:z.array(FieldIdSchema).max(29).optional(),tokenBindings:z.record(z.string(),z.string().max(100)).optional(),layout:z.object({role:z.string(),x:z.number(),y:z.number(),width:z.number(),height:z.number(),fontSize:z.number().optional()}).optional(),name:z.string().max(200).optional(),purpose:z.string().max(500).optional(),pass:LayerPassSchema.optional(),assetRef:z.string().optional(),z:z.number().int().optional(),
   id: z.string(), type: z.enum(['footage','clip','audio','voice','caption']),
   at: z.number().nonnegative(), dur: z.number().positive().max(36000),
   props: z.record(z.string(), z.unknown()).default({}),

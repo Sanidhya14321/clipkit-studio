@@ -1,3 +1,4 @@
+import {directionToolDefinitions} from './direction-tools';
 import {briefToolDefinitions} from './brief-tools';
 import {knowledgeToolDefinitions} from './knowledge-tools';
 import {StoryboardSchema} from '../../core/src/storyboard';
@@ -97,7 +98,7 @@ Object.assign(toolDefinitions,{
 toolDefinitions.footage_candidates.shape.offset=num.int().nonnegative().optional();toolDefinitions.footage_candidates.shape.limit=num.int().min(1).max(30).optional();toolDefinitions.comments_list.shape.offset=num.int().nonnegative().optional();
 toolDefinitions.footage_pack.shape.cursor=num.int().nonnegative().optional();
 toolDefinitions.export_start.shape={preset:z.enum(['vertical-720','vertical-1080','square','landscape']).optional(),quality:z.enum(['draft','standard','high']).optional()};
-Object.assign(toolDefinitions,knowledgeToolDefinitions,briefToolDefinitions);
+Object.assign(toolDefinitions,knowledgeToolDefinitions,briefToolDefinitions,directionToolDefinitions);
 export async function serveMcp(invoke:(name:string,args:Record<string,unknown>)=>Promise<unknown>){
   const server=new McpServer({name:'clipkit',version:'0.5.0'});
   server.registerResource('studio-context','clipkit://context',{mimeType:'application/json',description:'Compact current Studio selection and brief context.'},async uri=>({contents:[{uri:uri.href,mimeType:'application/json',text:JSON.stringify(await invoke('context_get',{}))}]}));
