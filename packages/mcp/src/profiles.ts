@@ -27,3 +27,5 @@ for(const [profile,tools] of Object.entries(toolProfiles)){if(profile!=='review'
 for(const profile of ['edit','scene-edit','authoring','media','voice'])toolProfiles[profile].push('lock_layers','unlock_layers','layer_patch');
 
 for(const profile of ['creative','production','edit','authoring','media','voice'])toolProfiles[profile].push('sound_plan','audio_analyze','see_sheet','see_trace','quality_critic','quality_critic_submit','layer_cache_prepare');
+
+for(const list of Object.values(toolProfiles))for(const tool of ['sources_list','sources_gaps','collections_list','license_report'])if(!list.includes(tool))list.push(tool);

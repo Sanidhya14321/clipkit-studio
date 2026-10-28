@@ -1,3 +1,4 @@
+import {sourceTools} from './source-tools';
 import {studioMetaTools} from './studio-meta-tools';
 import {qualityToolDefinitions} from './quality-tools';
 import {directionToolDefinitions} from './direction-tools';
@@ -62,7 +63,7 @@ export const toolDefinitions:Record<string,{description:string;shape:Record<stri
   job_status:{description:'Wait up to 45 seconds for completion. Avoid repeated short polling model turns; inspect failure before claiming completion.',shape:{jobId:z.string(),waitMs:z.number().int().min(0).max(45000).optional()}},
   export_start:{description:'Start real export from an immutable revision snapshot; returns a job.',shape:{}},
 };
-Object.assign(toolDefinitions,{
+Object.assign(toolDefinitions,sourceTools,{
  library_list:{description:'Browse real ready or blocked library resources; pagination is required.',shape:{q:z.string().optional(),kind:z.string().optional(),origin:z.string().optional(),offset:z.number().optional(),limit:z.number().min(1).max(10).default(5)}},
  library_inspect:{description:'Inspect one resource, its actual editing controls, source and usage card before placement.',shape:{assetId:z.string(),source:z.boolean().optional()}},
  library_rescan:{description:'Rescan the project assets folder without executing source files.',shape:{}},

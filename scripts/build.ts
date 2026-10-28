@@ -21,8 +21,8 @@ await cp(join(root,'packages/scenes/compatibility.json'),join(distribution,'runt
 await cp(join(root,'packages/motion'),join(distribution,'runtime/packages/motion'),{recursive:true});
 
 const manifest=JSON.parse(await readFile(join(root,'package.json'),'utf8'));
-await writeFile(join(distribution,'package.json'),JSON.stringify({name:'clipkit-studio-local',version:manifest.version,description:'Local, revisioned video collaboration for humans and coding agents',type:'module',bin:{ck:'dist/cli.js'},engines:{node:'>=22'},files:['npm-shrinkwrap.json','dist','public','runtime','README.md','LICENSE','THIRD_PARTY_NOTICES.md','docs','assets','DECISIONS.md','.env.example'],dependencies:manifest.dependencies,overrides:manifest.overrides},null,2));
-for(const file of ['README.md','LICENSE','THIRD_PARTY_NOTICES.md','DECISIONS.md','.env.example'])try{await cp(join(root,file),join(distribution,file));}catch{}
+await writeFile(join(distribution,'package.json'),JSON.stringify({name:'clipkit-studio-local',version:manifest.version,description:'Local, revisioned video collaboration for humans and coding agents',type:'module',bin:{ck:'dist/cli.js'},engines:{node:'>=22'},files:['npm-shrinkwrap.json','dist','public','runtime','README.md','LICENSE','THIRD_PARTY_NOTICES.md','docs','assets','DECISIONS.md','sources.yaml','.env.example'],dependencies:manifest.dependencies,overrides:manifest.overrides},null,2));
+for(const file of ['README.md','LICENSE','THIRD_PARTY_NOTICES.md','DECISIONS.md','sources.yaml','.env.example'])try{await cp(join(root,file),join(distribution,file));}catch{}
 await cp(join(root,'docs'),join(distribution,'docs'),{recursive:true});
 await cp(join(root,'assets'),join(distribution,'assets'),{recursive:true});
 await chmod(join(distribution,'dist','cli.js'),0o755);

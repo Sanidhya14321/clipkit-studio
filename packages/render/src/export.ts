@@ -1,3 +1,4 @@
+import {enforceExportLicenses} from '../../assets/src/export-policy';
 import {bundle} from '@remotion/bundler';
 import {renderMedia,selectComposition} from '@remotion/renderer';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
@@ -17,7 +18,7 @@ export async function getRenderBundle(entryPoint?:string){
  return await bundles.get(key)!;
 }
 export async function renderProject({project,root,mediaBaseUrl,assetBaseUrl,accessToken,onProgress,entryPoint,assetDirectory,assetRegistry,preset,quality,frameRange,layerCache}:{layerCache?:Record<string,{url:string;hash:string}>;project:Project;root:string;mediaBaseUrl:string;assetBaseUrl:string;assetRegistry?:AssetRegistry;frameRange?:[number,number];preset?:'portrait'|'landscape'|'square'|{width:number;height:number;crf?:number};quality?:number;accessToken?:string;entryPoint?:string;assetDirectory?:string;onProgress?:(progress:number)=>void}):Promise<{path:string;creditsPath:string}>{
- project=structuredClone(project);const designSize={width:project.settings.width,height:project.settings.height};
+ enforceExportLicenses(project,assetRegistry);project=structuredClone(project);const designSize={width:project.settings.width,height:project.settings.height};
  const presets={portrait:{width:720,height:1280},landscape:{width:1280,height:720},square:{width:1080,height:1080}};const dimensions=typeof preset==='string'?presets[preset]:preset;
  if(dimensions){if(!Number.isInteger(dimensions.width)||!Number.isInteger(dimensions.height)||dimensions.width<64||dimensions.height<64||dimensions.width>3840||dimensions.height>3840||dimensions.width%2||dimensions.height%2)throw new Error('Export dimensions must be even integers between64and3840');project.settings={...project.settings,width:dimensions.width,height:dimensions.height};}
  const crf=quality??(typeof preset==='object'?preset.crf:undefined)??18;if(!Number.isInteger(crf)||crf<0||crf>51)throw new Error('CRF must be0–51');
