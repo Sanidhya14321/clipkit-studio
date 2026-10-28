@@ -10,7 +10,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "Remocn/remocn"
+    "repo": "Remocn/remocn",
+    "enabled": false
   },
   {
     "id": "onda",
@@ -23,7 +24,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "degueba/onda"
+    "repo": "degueba/onda",
+    "enabled": false
   },
   {
     "id": "snapcn",
@@ -36,7 +38,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "shadcn-labs/snapcn"
+    "repo": "shadcn-labs/snapcn",
+    "enabled": false
   },
   {
     "id": "remotion-templates",
@@ -49,7 +52,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "reactvideoeditor/remotion-templates"
+    "repo": "reactvideoeditor/remotion-templates",
+    "enabled": false
   },
   {
     "id": "remotion",
@@ -62,7 +66,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "remotion-dev/remotion"
+    "repo": "remotion-dev/remotion",
+    "enabled": false
   },
   {
     "id": "react-bits",
@@ -75,7 +80,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "DavidHDev/react-bits"
+    "repo": "DavidHDev/react-bits",
+    "enabled": false
   },
   {
     "id": "magicui",
@@ -88,7 +94,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "magicuidesign/magicui"
+    "repo": "magicuidesign/magicui",
+    "enabled": false
   },
   {
     "id": "cult-ui",
@@ -101,7 +108,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "nolly-studio/cult-ui"
+    "repo": "nolly-studio/cult-ui",
+    "enabled": false
   },
   {
     "id": "motion-primitives",
@@ -114,7 +122,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "ibelick/motion-primitives"
+    "repo": "ibelick/motion-primitives",
+    "enabled": false
   },
   {
     "id": "animata",
@@ -127,7 +136,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "codse/animata"
+    "repo": "codse/animata",
+    "enabled": false
   },
   {
     "id": "aceternity-ui",
@@ -139,7 +149,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "eldora-ui",
@@ -151,7 +162,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "hover-dev",
@@ -163,7 +175,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "syntax-ui",
@@ -175,7 +188,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "ui-layout",
@@ -187,7 +201,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "gl-transitions",
@@ -200,7 +215,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "gl-transitions/gl-transitions"
+    "repo": "gl-transitions/gl-transitions",
+    "enabled": false
   },
   {
     "id": "paper-shaders",
@@ -213,7 +229,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "paper-design/shaders"
+    "repo": "paper-design/shaders",
+    "enabled": false
   },
   {
     "id": "color4bg",
@@ -226,7 +243,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "winterx/color4bg.js"
+    "repo": "winterx/color4bg.js",
+    "enabled": false
   },
   {
     "id": "21st-dev",
@@ -238,7 +256,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "remotion-skills",
@@ -251,7 +270,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "remotion-dev/skills"
+    "repo": "remotion-dev/skills",
+    "enabled": false
   },
   {
     "id": "remotion-video-toolkit",
@@ -264,7 +284,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "shreefentsar/remotion-video-toolkit"
+    "repo": "shreefentsar/remotion-video-toolkit",
+    "enabled": false
   },
   {
     "id": "remotion-superpowers",
@@ -277,7 +298,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "DojoCodingLabs/remotion-superpowers"
+    "repo": "DojoCodingLabs/remotion-superpowers",
+    "enabled": false
   },
   {
     "id": "video-shotcraft",
@@ -290,7 +312,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "Vincentwei1021/video-shotcraft"
+    "repo": "Vincentwei1021/video-shotcraft",
+    "enabled": false
   },
   {
     "id": "claude-video-toolkit",
@@ -303,7 +326,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "wilwaldon/Claude-Code-Video-Toolkit"
+    "repo": "wilwaldon/Claude-Code-Video-Toolkit",
+    "enabled": false
   },
   {
     "id": "claude-code-templates",
@@ -316,7 +340,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "davila7/claude-code-templates"
+    "repo": "davila7/claude-code-templates",
+    "enabled": false
   },
   {
     "id": "agent-skills",
@@ -329,7 +354,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "oakoss/agent-skills"
+    "repo": "oakoss/agent-skills",
+    "enabled": false
   },
   {
     "id": "sfx-elements",
@@ -342,7 +368,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "crafter-station/elements"
+    "repo": "crafter-station/elements",
+    "enabled": false
   },
   {
     "id": "google-fonts",
@@ -355,7 +382,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "google/fonts"
+    "repo": "google/fonts",
+    "enabled": false
   },
   {
     "id": "fontsource",
@@ -368,7 +396,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "fontsource/fontsource"
+    "repo": "fontsource/fontsource",
+    "enabled": false
   },
   {
     "id": "cube-lut",
@@ -381,7 +410,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "ssssota/cube-lut.js"
+    "repo": "ssssota/cube-lut.js",
+    "enabled": false
   },
   {
     "id": "lucide",
@@ -394,7 +424,8 @@
     "installMethod": "static-copy",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "lucide-icons/lucide"
+    "repo": "lucide-icons/lucide",
+    "enabled": false
   },
   {
     "id": "gmic-luts",
@@ -406,7 +437,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "q-ddl-luts",
@@ -418,7 +450,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "lottie",
@@ -430,7 +463,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "phosphor-icons",
@@ -442,7 +476,8 @@
     "licenseClass": "unknown",
     "installMethod": "static-copy",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   },
   {
     "id": "awesome-ae",
@@ -455,7 +490,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "inlife/awesome-ae"
+    "repo": "inlife/awesome-ae",
+    "enabled": false
   },
   {
     "id": "effectcraft",
@@ -468,7 +504,8 @@
     "installMethod": "reference",
     "status": "unverified",
     "notes": "Owner seed; no repository, license or count claim verified by this registration.",
-    "repo": "storytold/effectcraft"
+    "repo": "storytold/effectcraft",
+    "enabled": false
   },
   {
     "id": "mixkit",
@@ -480,6 +517,7 @@
     "licenseClass": "unknown",
     "installMethod": "reference",
     "status": "unverified",
-    "notes": "Owner seed; no repository, license or count claim verified by this registration."
+    "notes": "Owner seed; no repository, license or count claim verified by this registration.",
+    "enabled": false
   }
 ]

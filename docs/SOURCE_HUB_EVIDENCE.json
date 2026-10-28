@@ -1,0 +1,105 @@
+{
+  "checkedAt": "2026-10-28T06:26:59.572Z",
+  "method": "Original GitHub metadata and shallow pinned read-only snapshots; no installs/scripts/previews; review/reject sources are not ingested without written owner override.",
+  "sources": [
+    {
+      "id": "remocn",
+      "repo": "Remocn/remocn",
+      "commit": "7aebcbe6514ed9e54e3a4a6786f83f8425a4a9af",
+      "licenseClass": "permissive",
+      "spdx": "MIT",
+      "licensePath": "LICENSE",
+      "licenseHash": "8b4c695b3c71e2c21660429c6efbd084c4c77626a9c98d8224fa501e460a2568",
+      "vet": "review",
+      "reasons": [
+        "Install hook declared (never executed): package.json:postinstall",
+        "Dependencies require review: @base-ui/react, @fontsource/inter, @fontsource/manrope, @fontsource/roboto-mono, @hugeicons/core-free-icons, @hugeicons/react, @modelcontextprotocol/server, @openpanel/nextjs"
+      ],
+      "assets": 0,
+      "facts": {
+        "stars": 1653,
+        "createdAt": "2026-04-07T22:37:41Z",
+        "pushedAt": "2026-10-23T17:24:24Z",
+        "contributors": 5,
+        "fork": false,
+        "sizeKB": 19590
+      },
+      "noExecution": true
+    },
+    {
+      "id": "onda",
+      "repo": "degueba/onda",
+      "commit": "3c814051269597b31fee1603bef7ccfb93d091b6",
+      "licenseClass": "permissive",
+      "spdx": "MIT",
+      "licensePath": "LICENSE",
+      "licenseHash": "892c7afd7978f121a2e28c6836547adbb02c9a322314a748130ddf328ea8dba4",
+      "vet": "review",
+      "reasons": [
+        "AI-directed instructions flagged as data: README.md",
+        "AI-directed instructions flagged as data: docs/README.md",
+        "AI-directed instructions flagged as data: registry/components/fade-out/README.md",
+        "AI-directed instructions flagged as data: registry/components/grain-overlay/README.md",
+        "AI-directed instructions flagged as data: registry/components/highlight/README.md",
+        "AI-directed instructions flagged as data: registry/components/logo-sting/README.md"
+      ],
+      "assets": 0,
+      "facts": {
+        "stars": 30,
+        "createdAt": "2026-05-22T10:19:39Z",
+        "pushedAt": "2026-08-07T00:39:56Z",
+        "contributors": 3,
+        "fork": false,
+        "sizeKB": 4273
+      },
+      "noExecution": true
+    },
+    {
+      "id": "snapcn",
+      "repo": "shadcn-labs/snapcn",
+      "commit": "ee9ed5f0b1417e968b8e62a55ef514ecf149980b",
+      "licenseClass": "permissive",
+      "spdx": "MIT",
+      "licensePath": "LICENSE",
+      "licenseHash": "0a6ef5092c20aa5b0bf3f3507ed3e61a776941c1ddcb7383964575e525b27b6d",
+      "vet": "review",
+      "reasons": [
+        "Install hook declared (never executed): package.json:postinstall",
+        "Dependencies require review: @auth/drizzle-adapter, @base-ui/react, @ip-location-db/geo-whois-asn-country-mmdb, @paper-design/shaders-react, @posthog/cli, @shadcn/react, @uidotdev/usehooks, class-variance-authority"
+      ],
+      "assets": 0,
+      "facts": {
+        "stars": 524,
+        "createdAt": "2026-07-24T01:22:52Z",
+        "pushedAt": "2026-10-27T12:23:13Z",
+        "contributors": 2,
+        "fork": false,
+        "sizeKB": 92199
+      },
+      "noExecution": true
+    },
+    {
+      "id": "remotion-templates",
+      "repo": "reactvideoeditor/remotion-templates",
+      "commit": "6209b724798e48ff395f8df1a6fa2d26082372b5",
+      "licenseClass": "unknown",
+      "spdx": null,
+      "licensePath": null,
+      "licenseHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "vet": "review",
+      "reasons": [
+        "Missing/unrecognized original license"
+      ],
+      "assets": 0,
+      "facts": {
+        "stars": 271,
+        "createdAt": "2024-12-02T04:32:35Z",
+        "pushedAt": "2026-04-21T04:01:10Z",
+        "contributors": 1,
+        "fork": false,
+        "sizeKB": 70
+      },
+      "noExecution": true
+    }
+  ]
+}

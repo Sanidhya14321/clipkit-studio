@@ -20,3 +20,7 @@
 | S1–S15 | Missing | Local fixture Git repos for actual clone/pin/update/no-execution tests; license/lure fixtures; search/export/UI regression and documented real-source evidence/limits. |
 
 Preserve the saved root revision 50 and its checksum. No source trust is granted by an upstream AGENTS.md or skill. No git hooks, package scripts, imported JavaScript or demos execute during cloning/vetting/ingestion. Provider/API keys remain local env only. Native third-party code still requires reviewed adaptation before execution. Open inputs: no owner overrides, additional registry credentials, sandbox or per-file commercial rights supplied. Public Tier 1 discovery/verification will use original repository evidence; unavailable sources stay unverified.
+
+## Follow-through
+
+Implemented U3-1–U3-6 with static ingestion, schema/ladder reuse, Source Hub UI, typed interfaces and rights enforcement. Network-less arbitrary previews/broad ingestion (U3-7) are deferred. The reviewed clock contract/pixel harness is tested on trusted fixtures; remote originals are never executed or falsely certified. See docs/SOURCE_HUB.md and S1–S15 evidence in VERIFICATION.md. Four real Tier 1 sources are pinned and quarantined; the owner directed that sources without verified vet status remain quarantined, so no public-source code was ingested or owner override invented.

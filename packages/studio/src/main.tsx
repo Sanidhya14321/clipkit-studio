@@ -1,3 +1,4 @@
+import {SourcesPanel} from './SourcesPanel';
 import {SystemsPanel} from './SystemsPanel';
 import {VariantsPanel} from './VariantsPanel';
 import {BriefStudioPanel} from './BriefStudio';
@@ -213,6 +214,7 @@ function trackLanes(items: Item[]) {
   return { positions, count: Math.max(1, ends.length) };
 }
 function App() {
+  const [sourcesOpen,setSourcesOpen]=useState(location.pathname==='/sources');
   const [briefOpen,setBriefOpen]=useState(false),[variantsOpen,setVariantsOpen]=useState(true),[systemsOpen,setSystemsOpen]=useState(location.pathname==='/bench');
   const workspace = useWorkspace();
   const [state, setState] = useState<StudioState | null>(null),
@@ -1283,10 +1285,11 @@ function App() {
         const assetId=e.dataTransfer.getData('application/x-clipkit-asset');if(assetId){const lane=(e.target as HTMLElement).closest<HTMLElement>('[data-track-id]');const at=lane?Math.max(0,(e.clientX-lane.getBoundingClientRect().left)/zoom):time;void op('library_place',{assetId,at,...lane?{trackId:lane.dataset.trackId}:{}}).then(result=>{if(result.itemId)setSelected(result.itemId)}).catch(error=>setToast(error instanceof Error?error.message:String(error)));}else void uploadFiles(e.dataTransfer.files);
       }}
     >
+      {sourcesOpen&&<SourcesPanel op={op} project={project} onClose={()=>setSourcesOpen(false)}/>}
       {systemsOpen&&<SystemsPanel state={state} token={token} op={op} onClose={()=>setSystemsOpen(false)}/>}
       {variantsOpen&&<VariantsPanel state={state} token={token} op={op} onClose={()=>setVariantsOpen(false)}/>}
       <BriefStudioPanel project={project} op={op} open={briefOpen} onClose={()=>setBriefOpen(false)} waiting={state.briefStudio?.waiting} question={state.briefStudio?.question} onMic={startCommand} onMicEnd={stopCommand} onQuestionAnswer={answer=>void op('ask_answer',{id:state.briefStudio?.question?.id,answer})}/>
-      <header className="topbar"><button aria-label="Open Studio systems" onClick={()=>setSystemsOpen(true)}>Systems</button>{project.variantSets?.some(s=>!s.picked)&&<button onClick={()=>setVariantsOpen(true)}>Treatments</button>}<button aria-label="Open creative Brief" onClick={()=>setBriefOpen(true)}>Brief</button>
+      <header className="topbar"><button aria-label="Open Source Hub" onClick={()=>setSourcesOpen(true)}>Sources</button><button aria-label="Open Studio systems" onClick={()=>setSystemsOpen(true)}>Systems</button>{project.variantSets?.some(s=>!s.picked)&&<button onClick={()=>setVariantsOpen(true)}>Treatments</button>}<button aria-label="Open creative Brief" onClick={()=>setBriefOpen(true)}>Brief</button>
         <button className="panel-toggle" aria-label="Toggle Library" aria-pressed={['library','both'].includes(workspace.effective)} onClick={()=>workspace.toggle('library')}><FolderOpen size={16}/><span>Library</span></button>
         <button className="panel-toggle" aria-label="Toggle Properties" aria-pressed={['inspector','both'].includes(workspace.effective)} onClick={()=>workspace.toggle('inspector')}><Settings2 size={16}/><span>Properties</span></button>
         <button className="workspace-reset" aria-label="Reset Workspace" onClick={workspace.reset}>Reset Workspace</button>

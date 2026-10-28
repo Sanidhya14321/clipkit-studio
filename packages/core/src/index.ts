@@ -1,4 +1,4 @@
-import {LicenseModeSchema} from './source-policy';
+import {LicenseModeSchema,LicenseClassSchema} from './source-policy';
 import {Update2Fields,FieldIdSchema,TokenSchema} from './brief';
 import {PipelineFields,LayerPassSchema} from './pipeline-schema';
 import {StoryboardSchema} from './storyboard';
@@ -8,7 +8,7 @@ import {z} from 'zod';
 export const id = (prefix = 'id') => `${prefix}_${globalThis.crypto.randomUUID().slice(0, 8)}`;
 export const WordSchema = z.object({text: z.string(), start: z.number().nonnegative(), end: z.number().nonnegative()}).refine(w => w.end >= w.start, 'Word ends before it starts');
 export type Word = z.infer<typeof WordSchema>;
-export const SourceSchema = z.object({id: z.string(), kind: z.enum(['video','audio','image']), path: z.string(), proxyPath: z.string().optional(), audioPath: z.string().optional(), transcriptPath: z.string().optional(), name: z.string(), durationSec: z.number().nonnegative(), width: z.number().optional(), height: z.number().optional(), provenance: z.string().optional()});
+export const SourceSchema = z.object({rights:z.object({license:z.string().min(1).max(200),licenseClass:LicenseClassSchema,attributionText:z.string().max(1800).optional(),declaredBy:z.literal('owner')}).optional(),id: z.string(), kind: z.enum(['video','audio','image']), path: z.string(), proxyPath: z.string().optional(), audioPath: z.string().optional(), transcriptPath: z.string().optional(), name: z.string(), durationSec: z.number().nonnegative(), width: z.number().optional(), height: z.number().optional(), provenance: z.string().optional()});
 export type Source = z.infer<typeof SourceSchema>;
 export const ItemSchema = z.object({
   tokens:TokenSchema.optional(),rev:z.number().int().nonnegative().optional(),briefDeps:z.array(FieldIdSchema).max(30).optional(),tokenBindings:z.record(z.string(),z.string().max(100)).optional(),layout:z.object({role:z.string(),x:z.number(),y:z.number(),width:z.number(),height:z.number(),fontSize:z.number().optional()}).optional(),name:z.string().max(200).optional(),purpose:z.string().max(500).optional(),pass:LayerPassSchema.optional(),assetRef:z.string().optional(),z:z.number().int().optional(),
