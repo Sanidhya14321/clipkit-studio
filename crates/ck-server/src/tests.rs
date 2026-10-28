@@ -3,3 +3,4 @@
 mod api;
 mod fixture;
 mod live;
+mod ops;

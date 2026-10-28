@@ -48,7 +48,20 @@ Release dates are PLACEHOLDER: this headless run could not reach the web (WebFet
 - **Writes** run on `spawn_blocking` (they fsync). A failed save reloads the document from disk; if the reload also fails, the session refuses all calls with E_STORAGE.
 - **Stage gate not wired yet**: agent patches are allowed only in BASE, PASSES and ITERATE, but no pipeline commands exist before Phase 4, so wiring it now would make every Phase 2 agent patch fail. It is wired together with the pipeline commands.
 - **Trust boundary (open)**: callers state `author`/`holder` themselves; any token holder can patch or unlock as either role. Acceptable for one local user; per-role credentials (agent token vs studio token) are an open question for Phase 3, when the plugin and studio get distinct launch paths.
-- Deferred: idle shutdown, refusing a second server while server.json's pid is alive (`ck studio --ensure`, step 3 / Phase 3); redacting paths in 5xx bodies (local, same-user only).
+- Deferred (steps 1-2): idle shutdown, refusing a second server while server.json's pid is alive (`ck studio --ensure`, step 3 / Phase 3); redacting paths in 5xx bodies (local, same-user only).
+
+### Step 3: shared ops and CLI basics
+Crates (latest per `cargo search`/`cargo info` on 2026-10-28; release dates PLACEHOLDER, same headless limit as above):
+| Crate | Version | Notes |
+| --- | --- | --- |
+| clap | 4.6.7 | `derive`; ck-cli only |
+| ureq | 3.5.0 | default features off (no TLS, no gzip); blocking loopback client in ck-server |
+- **Client**: ureq, blocking, because the CLI is sync and the server already owns the async runtime; the MCP twin calls it from `spawn_blocking`. Proxy from the environment off, redirects off (the token header never leaves), 30 s timeout, replies over 64 KB refused as E_OUTPUT_CAP.
+- **Shared ops live in `ck-server::ops`** (thin typed calls through `client`); the CLI and MCP adapt them. The CLI talks to the running studio over HTTP so every write passes the same session gates.
+- **Output caps** (compact JSON bytes): status 4 KB, project summary 16 KB, layer 8 KB, patch 4 KB, lock/unlock 4 KB. Reads over the cap fail with the new code E_OUTPUT_CAP. Writes are already committed when the reply arrives, so their list (`touched` or `locks`) is trimmed to the prefix that fits and `omitted` counts the rest (refusing would make a retry fail as stale). Help text gets 2 KB.
+- **Command names**: spec 6.2 groups `project get --summary, get --layer, patch; lock, unlock`, read as `ck project get`, `ck project patch`, `ck lock`, `ck unlock`. `ck project get` with no flag returns the summary. `--holder` defaults to agent. The patch argument is the full PatchRequest JSON, or `-` for stdin (1 MB limit).
+- **`ck studio`** serves in the foreground on 127.0.0.1 (`--port`, default free port), prints `{url, port}` (never the token) and stops on Ctrl-C or SIGTERM. With no project it creates an empty one (id `project`, named after the folder, mode GENERATE until mode detection in Phase 4). It refuses to start when anything answers on the port in server.json with other than E_SERVER. `--ensure`, `--open`, `--quiet` and background start are Phase 3 (auto-launch); until then the E_SERVER hint names a flag that does not exist yet.
+- **CLI output**: one line of compact JSON on stdout; errors are the CkError JSON on stderr with exit 1; clap usage errors exit 2.
 
 ## Phase 1 (2026-10-28)
 

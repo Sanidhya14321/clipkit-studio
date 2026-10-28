@@ -48,6 +48,9 @@ pub enum ErrorCode {
     /// The local server could not start, or is not running.
     #[serde(rename = "E_SERVER")]
     Server,
+    /// The answer would exceed the command's documented output size cap.
+    #[serde(rename = "E_OUTPUT_CAP")]
+    OutputCap,
 }
 
 impl ErrorCode {
@@ -67,6 +70,7 @@ impl ErrorCode {
         ErrorCode::NotFound,
         ErrorCode::Request,
         ErrorCode::Server,
+        ErrorCode::OutputCap,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -85,6 +89,7 @@ impl ErrorCode {
             ErrorCode::NotFound => "E_NOT_FOUND",
             ErrorCode::Request => "E_REQUEST",
             ErrorCode::Server => "E_SERVER",
+            ErrorCode::OutputCap => "E_OUTPUT_CAP",
         }
     }
 
@@ -109,6 +114,7 @@ impl ErrorCode {
             ErrorCode::NotFound => "Run ck project get --summary to list the current ids.",
             ErrorCode::Request => "Fix the request body or arguments named in the message.",
             ErrorCode::Server => "Run ck studio --ensure to start the server, then retry.",
+            ErrorCode::OutputCap => "Ask for less: read one layer with ck project get --layer.",
         }
     }
 }

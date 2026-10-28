@@ -29,6 +29,10 @@ tower = { version = "0.5.3", features = ["util"] }
 # Same major as axum's ws feature, so the test client adds no second tungstenite.
 tokio-tungstenite = "0.29.0"
 futures-util = { version = "0.3.34", default-features = false, features = ["sink", "std"] }
+ck-server = { path = "crates/ck-server" }
+clap = { version = "4.6.7", features = ["derive"] }
+# Loopback-only client: no TLS, no gzip.
+ureq = { version = "3.5.0", default-features = false }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

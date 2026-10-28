@@ -45,7 +45,7 @@ Command for every test row: `cargo nextest run --workspace` (part of `just check
 | Independent review | PASS | rust-reviewer and spec-checker subagents run on the Phase 1 diff; all med/low correctness findings fixed with regression tests (see PROGRESS.md Phase 1) |
 | Flight recorder folders `.clipkit/trace/`, `.clipkit/cache/` | BLOCKED | Deferred by design to Phases 2+, 5 and 9 (DECISIONS.md, Phase 1) |
 
-## Phase 2: server and studio shell (in progress; steps 1-2, 2026-10-28)
+## Phase 2: server and studio shell (in progress; steps 1-3, 2026-10-28)
 
 Command: `just check` (64 of 64 tests, hooks 41 of 41). ck-server suite run 3 more times in a row: 14 of 14 each before review fixes; 16 of 16 after. Test names below are in `crates/ck-server/src/tests/`.
 
@@ -62,7 +62,11 @@ Command: `just check` (64 of 64 tests, hooks 41 of 41). ck-server suite run 3 mo
 | Stale, protected-field, malformed and oversized patches refused | PASS | `api::stale_patch_is_a_conflict`, `api::protected_field_patch_is_invalid`, `api::malformed_and_oversized_bodies_are_bad_requests` |
 | Failed save rolls memory back to disk | PASS | `api::failed_save_leaves_memory_at_the_stored_state` |
 | WS pushes snapshot on connect, then revision + snapshot after a patch, in under 300 ms (server side) | PASS | `live::serves_ws_events_and_cleans_up` (asserts < 300 ms from patch to both events) |
-| Phase proof: CLI patch visible in the browser in < 300 ms | BLOCKED | Needs CLI (step 3), studio (step 6) and Playwright (step 7) |
+| Step 3: shared ops over the loopback client: status, summary, layer, patch, lock, unlock; errors (E_LOCK_HELD, E_PATCH_STALE, E_NOT_FOUND, E_AUTH) survive the HTTP trip; missing or dead server is E_SERVER | PASS | `ops::reads_status_summary_and_layer`, `ops::patch_lock_unlock_round_trip`, `ops::wrong_token_is_e_auth`, `ops::missing_or_dead_server_is_e_server` |
+| Step 3: output size caps (status 4 KB, summary 16 KB, layer 8 KB, patch 4 KB, lock 4 KB): reads over the cap refused with E_OUTPUT_CAP; write replies trimmed with an `omitted` count; replies over 64 KB refused; non-JSON error bodies map to E_SERVER | PASS | `ops::answers_over_the_cap_are_refused`, `ops::write_replies_over_the_cap_are_trimmed_not_refused`, `ops::non_json_errors_and_oversize_replies_are_mapped`; snapshot `codes_are_stable` extended with E_OUTPUT_CAP |
+| Step 3: CLI `ck studio` (creates the project, prints url + port without the token, refuses a second studio), `ck status`, `ck project get [--summary\|--layer]`, `ck project patch <json\|->`, `ck lock`, `ck unlock`; one line of JSON under each cap; human patch refused while the agent holds the lock; errors as JSON on stderr, exit 1 | PASS | `crates/ck-cli/tests/cli_commands.rs`: `studio_creates_a_project_and_serves_every_command`, `patch_reads_stdin_and_rejects_bad_json`, `commands_without_a_studio_fail_with_e_server`, `bad_arguments_are_usage_errors`; `cli_smoke::no_args_exit_with_short_help` (help cap 2 KB; the Phase 1 256-byte cap still holds for `--version` and usage errors). `just check`: 76 of 76 tests, hooks 41 of 41 |
+| Step 3 review | PASS | rust-reviewer on the step 3 diff; fixed: write replies trimmed instead of refused after commit, redirects off (token never follows), response limit 64 KB, server.json read cause kept, any non-E_SERVER answer counts as a running studio, only BrokenPipe ignored on stdout. Open: E_SERVER hint names `ck studio --ensure`, which arrives in Phase 3 |
+| Phase proof: CLI patch visible in the browser in < 300 ms | BLOCKED | CLI done (step 3); needs studio (step 6) and Playwright (step 7) |
 | Crate release dates at least two weeks old | BLOCKED | Web lookups denied in the headless run; dates PLACEHOLDER in DECISIONS.md |
 | Independent review | PASS | rust-reviewer on the steps 1-2 diff; fixed: 0600 before rename, query token limited to /ws, no session mutex on async workers, degraded mode on failed reload, snapshot only with subscribers, WS message cap. Recorded as open: role trust boundary, second-server check, 5xx path redaction (DECISIONS.md, Phase 2) |
 

@@ -1,8 +1,21 @@
-//! The ck binary. Phase 1: `--version`, a usage line and JSON logging setup.
+//! The ck binary: clap adapters over the shared ops in ck-server. Output is one line of compact
+//! JSON on stdout; failures print the error as JSON on stderr and exit 1.
 
+mod args;
+mod studio;
+
+use std::io::{Read, Write};
 use std::process::ExitCode;
 
-const USAGE: &str = "usage: ck --version  (commands arrive in Phase 2 onward)";
+use ck_core::patch::PatchRequest;
+use ck_core::{CkError, CkResult, ErrorCode};
+use ck_server::api::BODY_LIMIT;
+use ck_server::ops::Ops;
+use ck_server::session::{LockRequest, UnlockRequest};
+use clap::Parser;
+use serde::Serialize;
+
+use args::{Cli, Command, ProjectCommand};
 
 /// JSON log lines to stderr when `CK_LOG` is set (for example `CK_LOG=debug`). Off by default so
 /// command output stays small; fields follow ck_core::log.
@@ -23,14 +36,75 @@ fn init_logging() {
 fn main() -> ExitCode {
     init_logging();
     tracing::debug!(version = env!("CARGO_PKG_VERSION"), "ck start");
-    match std::env::args().nth(1).as_deref() {
-        Some("--version" | "-V") => {
-            println!("ck {}", env!("CARGO_PKG_VERSION"));
-            ExitCode::SUCCESS
+    let cli = Cli::parse();
+    match run(cli) {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            let line = serde_json::to_string(&e).unwrap_or_else(|_| e.to_string());
+            eprintln!("{line}");
+            ExitCode::from(1)
         }
-        _ => {
-            eprintln!("{USAGE}");
-            ExitCode::from(2)
+    }
+}
+
+fn run(cli: Cli) -> CkResult<()> {
+    let root = cli.dir.join(".clipkit");
+    let ops = || Ops::connect(&root);
+    match cli.command {
+        Command::Studio { port } => studio::run(&cli.dir, port),
+        Command::Status => print(&ops()?.status()?),
+        Command::Project(ProjectCommand::Get {
+            layer: Some(id), ..
+        }) => print(&ops()?.layer(&id)?),
+        Command::Project(ProjectCommand::Get { layer: None, .. }) => print(&ops()?.summary()?),
+        Command::Project(ProjectCommand::Patch { patch }) => {
+            let req = read_patch(&patch)?;
+            print(&ops()?.patch(&req)?)
         }
+        Command::Lock { layer_ids, holder } => print(&ops()?.lock(&LockRequest {
+            holder: holder.holder,
+            layer_ids,
+        })?),
+        Command::Unlock { layer_ids, holder } => print(&ops()?.unlock(&UnlockRequest {
+            holder: holder.holder,
+            layer_ids: (!layer_ids.is_empty()).then_some(layer_ids),
+        })?),
+    }
+}
+
+/// The patch argument is the JSON itself, or `-` to read it from stdin.
+fn read_patch(arg: &str) -> CkResult<PatchRequest> {
+    let text = if arg == "-" {
+        let mut s = String::new();
+        std::io::stdin()
+            .take(BODY_LIMIT as u64 + 1)
+            .read_to_string(&mut s)
+            .map_err(|e| request_err(format!("reading stdin: {e}")))?;
+        if s.len() > BODY_LIMIT {
+            return Err(request_err(format!("patch is over {BODY_LIMIT} bytes")));
+        }
+        s
+    } else {
+        arg.to_owned()
+    };
+    serde_json::from_str(&text).map_err(|e| request_err(format!("patch JSON: {e}")))
+}
+
+fn request_err(message: String) -> CkError {
+    CkError::new(ErrorCode::Request, message)
+}
+
+/// One line of compact JSON on stdout.
+pub(crate) fn print<T: Serialize>(value: &T) -> CkResult<()> {
+    let line =
+        serde_json::to_string(value).map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
+    let mut out = std::io::stdout().lock();
+    match writeln!(out, "{line}").and_then(|()| out.flush()) {
+        // A closed pipe (for example `| head`) is not an error worth reporting.
+        Err(e) if e.kind() != std::io::ErrorKind::BrokenPipe => Err(CkError::new(
+            ErrorCode::Server,
+            format!("writing output: {e}"),
+        )),
+        _ => Ok(()),
     }
 }

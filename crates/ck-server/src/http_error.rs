@@ -22,7 +22,7 @@ pub fn status_of(code: ErrorCode) -> StatusCode {
         ErrorCode::LockHeld | ErrorCode::LockNotHeld => StatusCode::LOCKED,
         ErrorCode::PatchInvalid | ErrorCode::Schema => StatusCode::UNPROCESSABLE_ENTITY,
         ErrorCode::Stage | ErrorCode::Retry | ErrorCode::HistoryEmpty => StatusCode::CONFLICT,
-        ErrorCode::Storage | ErrorCode::Migration | ErrorCode::Server => {
+        ErrorCode::Storage | ErrorCode::Migration | ErrorCode::Server | ErrorCode::OutputCap => {
             StatusCode::INTERNAL_SERVER_ERROR
         }
     }

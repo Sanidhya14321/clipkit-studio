@@ -6,10 +6,12 @@
 
 pub mod api;
 pub mod auth;
+pub mod client;
 pub mod clock;
 pub mod event;
 pub mod http_error;
 pub mod info;
+pub mod ops;
 pub mod serve;
 pub mod session;
 pub mod view;

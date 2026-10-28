@@ -27,6 +27,9 @@ const BUS_CAPACITY: usize = 256;
 pub struct PatchResult {
     pub rev: u64,
     pub touched: Vec<String>,
+    /// Touched ids left out of `touched` to keep the reply under its size cap.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub omitted: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -56,6 +59,13 @@ pub struct HeartbeatRequest {
 #[serde(rename_all = "camelCase")]
 pub struct LockResult {
     pub locks: Vec<Lock>,
+    /// Locks left out of `locks` to keep the reply under its size cap.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub omitted: usize,
+}
+
+fn is_zero(n: &usize) -> bool {
+    *n == 0
 }
 
 pub struct Session {
@@ -127,6 +137,7 @@ impl Session {
         Ok(PatchResult {
             rev: rev.rev,
             touched: rev.touched,
+            omitted: 0,
         })
     }
 
@@ -167,6 +178,7 @@ impl Session {
                 .into_iter()
                 .filter(|l| l.holder == holder && l.is_live(now_ms))
                 .collect(),
+            omitted: 0,
         })
     }
 

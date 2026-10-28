@@ -58,5 +58,9 @@ expression: table
   [
     "E_SERVER",
     "Run ck studio --ensure to start the server, then retry."
+  ],
+  [
+    "E_OUTPUT_CAP",
+    "Ask for less: read one layer with ck project get --layer."
   ]
 ]

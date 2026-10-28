@@ -16,6 +16,7 @@ tracing.workspace = true
 tokio.workspace = true
 axum.workspace = true
 getrandom.workspace = true
+ureq.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

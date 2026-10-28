@@ -16,9 +16,27 @@ fn version_prints_and_stays_under_cap() {
     assert!(stdout.len() <= MAX_OUTPUT_BYTES);
 }
 
+/// Help text lists every command, so it gets a larger cap than command output.
+const MAX_HELP_BYTES: usize = 2048;
+
 #[test]
-fn unknown_args_exit_with_usage() {
+fn no_args_exit_with_short_help() {
     let out = Command::new(env!("CARGO_BIN_EXE_ck")).output().unwrap();
+    assert_eq!(out.status.code(), Some(2));
+    let stderr = String::from_utf8(out.stderr).unwrap();
+    assert!(stderr.contains("Usage: ck"));
+    for command in ["studio", "status", "project", "lock", "unlock"] {
+        assert!(stderr.contains(command), "help lists {command}");
+    }
+    assert!(stderr.len() <= MAX_HELP_BYTES, "{} bytes", stderr.len());
+}
+
+#[test]
+fn unknown_command_is_a_short_usage_error() {
+    let out = Command::new(env!("CARGO_BIN_EXE_ck"))
+        .arg("frobnicate")
+        .output()
+        .unwrap();
     assert_eq!(out.status.code(), Some(2));
     assert!(out.stderr.len() <= MAX_OUTPUT_BYTES);
 }
