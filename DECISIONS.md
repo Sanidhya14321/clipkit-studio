@@ -136,3 +136,7 @@ Brief confirmation is durable project metadata, separate from creative acceptanc
 ## Update 2 U2-2
 
 Brief impact previews precede explicit field application. A brief diff records changed fields and dependent layer IDs; unrelated layer JSON stays exact. Pacing changes mark the relevant passes for re-plan rather than silently cutting speech. Looks update project tokens and explicitly bound controls with zero model calls. Waiting, question and context state use a bounded persistent event bridge, with no edit lease held during user input. Open questions: layout measurement for arbitrary authored components still needs actual DOM/render inspection; no generic bounding-box claim is made.
+
+## Update 2 U2-3
+
+Ship four original token looks and transparent pacing.yaml values. Token bindings are resolved by the shared preview/export composition, so changing a look needs no model call or source rewrite. Existing components without explicit bindings preserve their original props. Brand facts override a preset where validated. The safe-area layout solver uses conservative text fitting and reserves collision-free boxes; arbitrary custom scene geometry remains outside its guarantees. Open question: exact font-shaping bounds still require rendered measurement for third-party components.
