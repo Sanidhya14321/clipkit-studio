@@ -264,6 +264,8 @@ function App() {
     [dismissedJobs, setDismissedJobs] = useState<string[]>([]),
     [exportPreset, setExportPreset] = useState("vertical-1080"),
     [exportQuality, setExportQuality] = useState("standard"),
+    [exportFormat, setExportFormat] = useState("mp4"),
+    [exportCache, setExportCache] = useState(false),
     [licenses, setLicenses] = useState<any>(null),
     [compare, setCompare] = useState(false),
     [suggest, setSuggest] = useState(false),
@@ -2950,8 +2952,12 @@ function App() {
               Export original media at revision {project.rev}. Browser preview
               voices are excluded.
             </p>
+            <label className="field"><span>File format</span><select aria-label="Export file format" value={exportFormat} onChange={e=>setExportFormat(e.target.value)}><option value="mp4">MP4 video</option><option value="srt">SRT subtitles</option><option value="otio">OpenTimelineIO editorial timeline</option><option value="bundle">Portable ClipKit bundle</option><option value="remotion">Standalone Remotion project</option></select></label>
+            {exportFormat==='otio'&&<p>Native scenes use missing-media references with source metadata. Render scenes before finishing in an NLE.</p>}
+            {exportFormat==='remotion'&&<p>Includes immutable compiled scenes and a basic media player. Advanced caption and audio mixing controls remain in the ClipKit bundle.</p>}
+            {exportFormat==='mp4'&&<label><input type="checkbox" checked={exportCache} onChange={e=>setExportCache(e.target.checked)}/> Reuse isolated recipe renders</label>}
             <label className="field">
-              <span>Format</span>
+              <span>Video size</span>
               <select
                 aria-label="Export preset"
                 value={exportPreset}
@@ -3017,12 +3023,14 @@ function App() {
                 run("export_start", {
                   preset: exportPreset,
                   quality: exportQuality,
+                  format: exportFormat,
+                  cache: exportCache,
                 });
                 setExportDialog(false);
               }}
             >
               <ArrowDownToLine size={14} />
-              Render video
+              {exportFormat === "mp4" ? "Render video" : "Export file"}
             </button>
           </section>
         </div>

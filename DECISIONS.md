@@ -164,3 +164,7 @@ Sound planning uses existing licensed local resources, restrained event placemen
 ## Update 2 U2-9
 
 Exports add SRT, OTIO, portable ClipKit bundle and a standalone Remotion project with immutable compiled scenes and local media/fonts. MP4 jobs serialize through one queue. OTIO preserves editorial timing and reports generated native scenes as missing-media references with metadata until rendered; FCPXML/EDL are unsupported extra formats. Branches use stable-ID three-way merges and recoverable discarded files; brief confirmation/pass completion writes snapshots. Local taste signals never override explicit values. Open questions: independent NLE reader support and live standalone playback are verified separately; no unsupported interchange fidelity is claimed.
+
+## Update 2 U2-10
+
+The benchmark has ten fixed cases, paired operator imports, randomized human A/B and an explicit local driver executor. Execution receipts hash common evidence, retain argv/logs, enforce fresh outputs/timeouts and measure first preview appearance; exact model/limits and acceptance/provider usage remain declared by drivers and human evaluators. Real-agent comparisons and repeated variance are not fabricated. Replay defaults are compact and paginated; full selected-turn export retains durable patches with source payloads hashed and secret-shaped args redacted. Validation and open W1–W29 evidence are in VERIFICATION.md. Live terminal/physical microphone sessions, final mix certification, independent NLE round-trips and three accepted demos remain explicitly open.

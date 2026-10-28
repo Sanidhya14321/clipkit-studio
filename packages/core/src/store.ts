@@ -1,3 +1,4 @@
+import {isDeepStrictEqual} from 'node:util';
 import {migrateProject} from './migration';
 import {mkdir,readFile,writeFile,rename,open} from 'node:fs/promises';
 import {join} from 'node:path';
@@ -72,14 +73,14 @@ export class ProjectStore {
     try {next=ProjectSchema.parse(jsonPatch.applyPatch(structuredClone(this.project),req.ops as Operation[],true,true).newDocument);await this.options.prepare?.(next,this.project);next=ProjectSchema.parse(next);this.validateExtra(next);}
     catch(e){throw new ClipKitError('INVALID_PATCH',(e as Error).message.slice(0,700),{currentRev:this.project.rev});}
     this.guard(req);
-    const activeLocks=this.layerLocks(),scoped=activeLocks.find(l=>l.token===req.leaseToken);if(activeLocks.length){const global=(p:Project)=>({...p,rev:0,tracks:p.tracks.map(t=>({...t,items:t.items.map(i=>i.id)}))});if(JSON.stringify(global(this.project))!==JSON.stringify(global(next)))throw new ClipKitError('LAYER_SCOPE','Structural changes need the global lease');const end=(p:Project)=>Math.max(0,...allItems(p).map(i=>i.at+i.dur));if(Math.abs(end(this.project)-end(next))>1/this.project.settings.fps)throw new ClipKitError('LAYER_SCOPE','Changing total duration needs the global lease');for(const item of allItems(next)){const old=allItems(this.project).find(i=>i.id===item.id)!;if(JSON.stringify(item)!==JSON.stringify(old)){if(scoped&&!scoped.layerIds.includes(item.id))throw new ClipKitError('LAYER_SCOPE','Patch only your locked layers');if(activeLocks.some(l=>l.token!==req.leaseToken&&l.layerIds.includes(item.id)))throw new ClipKitError('LOCKED','This layer belongs to another editor');}}}
-    const oldItems=new Map(allItems(this.project).map(i=>[i.id,i]));for(const item of allItems(next)){const old=oldItems.get(item.id);const semantic=(i:Item)=>{const {rev,...data}=i;return JSON.stringify(data)};if(!old)item.rev=0;else if(semantic(old)!==semantic(item))item.rev=(old.rev??0)+1;else if(old.rev!==undefined)item.rev=old.rev;else delete item.rev;}
+    const activeLocks=this.layerLocks(),scoped=activeLocks.find(l=>l.token===req.leaseToken);if(activeLocks.length){const global=(p:Project)=>({...p,rev:0,tracks:p.tracks.map(t=>({...t,items:t.items.map(i=>i.id)}))});if(JSON.stringify(global(this.project))!==JSON.stringify(global(next)))throw new ClipKitError('LAYER_SCOPE','Structural changes need the global lease');const end=(p:Project)=>Math.max(0,...allItems(p).map(i=>i.at+i.dur));if(Math.abs(end(this.project)-end(next))>1/this.project.settings.fps)throw new ClipKitError('LAYER_SCOPE','Changing total duration needs the global lease');for(const item of allItems(next)){const old=allItems(this.project).find(i=>i.id===item.id)!;if(!isDeepStrictEqual(item,old)){if(scoped&&!scoped.layerIds.includes(item.id))throw new ClipKitError('LAYER_SCOPE','Patch only your locked layers');if(activeLocks.some(l=>l.token!==req.leaseToken&&l.layerIds.includes(item.id)))throw new ClipKitError('LOCKED','This layer belongs to another editor');}}}
+    const oldItems=new Map(allItems(this.project).map(i=>[i.id,i]));for(const item of allItems(next)){const old=oldItems.get(item.id);const semantic=(i:Item)=>{const {rev,...data}=i;return data};if(!old)item.rev=0;else if(!isDeepStrictEqual(semantic(old),semantic(item)))item.rev=(old.rev??0)+1;else if(old.rev!==undefined)item.rev=old.rev;else delete item.rev;}
     const before=this.project;
     const forward=jsonPatch.compare(before,next) as JsonPatchOperation[];
     const inverse=jsonPatch.compare(next,before) as JsonPatchOperation[];
-    const previous=new Map(allItems(before).map(i=>[i.id,JSON.stringify(i)]));
-    const current=new Map(allItems(next).map(i=>[i.id,JSON.stringify(i)]));
-    const changedItemIds=[...new Set([...previous.keys(),...current.keys()])].filter(k=>previous.get(k)!==current.get(k));
+    const previous=new Map(allItems(before).map(i=>[i.id,i]));
+    const current=new Map(allItems(next).map(i=>[i.id,i]));
+    const changedItemIds=[...new Set([...previous.keys(),...current.keys()])].filter(k=>!isDeepStrictEqual(previous.get(k),current.get(k)));
     next.rev=before.rev+1;
     const entry:HistoryEntry={id:id('tx'),rev:next.rev,baseRev:before.rev,requestId:req.requestId,label:req.label.slice(0,200),author,turnId:req.turnId?(this.options.groupTurnId?.(req.turnId)??req.turnId):undefined,timestamp:new Date(this.now()).toISOString(),ops:forward,inverse,changedItemIds,kind,target};
     const file=await open(join(this.dir,'history','journal.jsonl'),'a');try{await file.write(JSON.stringify(entry)+'\n');await file.sync();}finally{await file.close();}
