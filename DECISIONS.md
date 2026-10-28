@@ -73,6 +73,15 @@ Crates (latest per `cargo search`/`cargo info` on 2026-10-28; release dates PLAC
 - **Outputs**: success is one text block with the exact line the CLI prints on stdout; failure is a tool result with `isError` and the exact CkError JSON the CLI prints on stderr. An unknown tool name is a JSON-RPC invalid-params error. Caps are the CLI's (shared `ck_server::ops`); `project_get` lists the larger of the summary and layer caps.
 - **`ck mcp`** serves stdio until the client closes it; each call finds the studio through `.clipkit/server.json`, so it can start before the studio. Nothing but the protocol goes to stdout.
 
+### Step 5: TS type generation (2026-10-29)
+| Crate | Version | Notes |
+| --- | --- | --- |
+| ts-rs | 12.0.1 | latest per `cargo info` on 2026-10-29; release date PLACEHOLDER (headless run, no web); default `serde-compat` plus `serde-json-impl`; `format` (dprint) left off to keep the build small |
+- **ts-rs over specta**: plain derive that reads the serde attributes already on every type (rename_all, tag, flatten, skip_serializing_if, rename), no runtime registry. API found by compiling: `TS::decl(&Config)`, `Config::new().with_large_int("number")`.
+- **One file**: `studio/src/generated/types.ts`, built by `ck_server::ts_types::render()` from an explicit list (model, API requests/replies, CkError/ErrorCode, Event, JsonValue). Lives in ck-server because it sees both crates. A test (`every_referenced_type_is_declared`) catches a type left off the list.
+- **Integers as `number`**: u64/usize revs, ms and counts are JSON numbers well under 2^53, so `bigint` would mistype them; a test forbids `bigint`.
+- **Patch ops** are `Array<JsonValue>` on the TS side (`#[ts(as = "Vec<Value>")]`); json-patch has no TS impl. A plain comment, not a doc comment, so the JSON Schema (and the MCP snapshot) is unchanged.
+- **Drift check**: the nextest test `generated_types_match_committed_file` compares the committed file with a fresh render, so `just check` and CI fail on drift; `just types` (CK_WRITE_TYPES=1) rewrites it. Server-only types (ServerInfo, history entries, ops caps) are not exported until the studio needs them.
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)

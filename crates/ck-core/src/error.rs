@@ -2,9 +2,10 @@
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 /// Every error the engine can return, as a stable `E_*` code with a one-line hint.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema, TS)]
 pub enum ErrorCode {
     /// The operation is not allowed in the current pipeline stage.
     #[serde(rename = "E_STAGE")]
@@ -126,7 +127,7 @@ impl std::fmt::Display for ErrorCode {
 }
 
 /// The single error type returned across crate boundaries and serialized to the agent.
-#[derive(Debug, Clone, PartialEq, thiserror::Error, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, thiserror::Error, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 #[error("{code}: {message}")]
 pub struct CkError {

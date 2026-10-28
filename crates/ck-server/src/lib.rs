@@ -14,6 +14,7 @@ pub mod info;
 pub mod ops;
 pub mod serve;
 pub mod session;
+pub mod ts_types;
 pub mod view;
 mod ws;
 

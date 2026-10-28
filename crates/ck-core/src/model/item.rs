@@ -2,10 +2,11 @@
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 use super::pipeline::Pass;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub enum TrackKind {
     Video,
@@ -14,7 +15,7 @@ pub enum TrackKind {
     Caption,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Track {
     pub id: String,
@@ -24,7 +25,7 @@ pub struct Track {
 }
 
 /// A layer on a track. Common fields plus one kind-specific body, tagged by `type`.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Item {
     pub id: String,
@@ -47,7 +48,7 @@ pub struct Item {
     pub body: ItemBody,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum ItemBody {
     /// A reference into a source with in and out points. Source media is never modified.
@@ -105,7 +106,7 @@ pub enum ItemBody {
     },
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub enum CaptionFrom {
     Transcript,
@@ -113,7 +114,7 @@ pub enum CaptionFrom {
 }
 
 /// A half-open time range in seconds, `[start, end)`.
-#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 pub struct TimeRange {
     pub start: f64,
     pub end: f64,

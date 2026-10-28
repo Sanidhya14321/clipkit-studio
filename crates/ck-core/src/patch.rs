@@ -10,6 +10,7 @@ use json_patch::Patch;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use ts_rs::TS;
 
 use crate::error::{CkError, CkResult, ErrorCode};
 use crate::model::{Author, Project};
@@ -17,7 +18,7 @@ use crate::model::{Author, Project};
 /// Top-level fields only the engine may change.
 const PROTECTED: &[&str] = &["/rev", "/schemaVersion", "/locks", "/pipeline", "/agent"];
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct PatchRequest {
     /// The project revision the patch was built against.
@@ -25,6 +26,8 @@ pub struct PatchRequest {
     /// Optional per-layer revisions the caller read; any mismatch makes the patch stale.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub layer_revs: BTreeMap<String, u64>,
+    // RFC 6902 operations; plain JSON values on the TS side.
+    #[ts(as = "Vec<Value>")]
     pub ops: Patch,
     pub author: Author,
     #[serde(default)]

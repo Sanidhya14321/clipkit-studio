@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 2
 
 ## Handoff (latest)
-1. Done: Phase 2 step 4. ck-mcp: tool table (status, project_get, project_patch, lock, unlock) over `ck_server::ops`, rmcp 3.8 stdio handler (no macros); `ck mcp` subcommand. Shared e2e helpers moved to `crates/ck-cli/tests/common/`.
-2. Proof: `just check` green (84 tests, hooks 41); tool table snapshot; `mcp_parity.rs` drives `ck mcp` against a real `ck studio` and matches CLI stdout/stderr byte for byte, caps included. Evidence in VERIFICATION.md (Phase 2, step 4 rows).
-3. Open: rmcp 3.8.0 release date unverified (plus clap, ureq, tokio...); MCP lock/unlock require `holder` while the CLI defaults it; E_SERVER hint names `ck studio --ensure` (Phase 3); role trust boundary. See DECISIONS.md, Phase 2.
-4. Next: Phase 2 step 5: TS type generation from the Rust types (ts-rs or specta; verify the crate first), checked for drift in `just check`.
-5. Start: run `scripts/autobuild.sh`, or open a session and continue Phase 2 at step 5 in PROGRESS.md.
+1. Done: Phase 2 step 5. ts-rs 12.0.1 `TS` derive on every wire type; `ck_server::ts_types::render()` writes one file, `studio/src/generated/types.ts`; `just types` regenerates it.
+2. Proof: `just check` green (87 tests, hooks 41); drift test fails on a hand edit (checked); every referenced name declared; no `bigint`. Evidence in VERIFICATION.md (Phase 2, step 5 rows).
+3. Open: ts-rs, rmcp, clap, ureq, tokio... release dates unverified (headless); MCP holder default; E_SERVER hint names `--ensure` (Phase 3); role trust boundary. See DECISIONS.md, Phase 2.
+4. Next: Phase 2 step 6: studio shell (Vite + React + Remotion Player, timeline, inspector, read-only mode, banner, activity feed, ghost cursor) importing `studio/src/generated/types.ts`, embedded with rust-embed. Large: split it (scaffold + embed first, then panels).
+5. Start: run `scripts/autobuild.sh`, or open a session and continue Phase 2 at step 6 in PROGRESS.md.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -21,6 +21,7 @@ PHASE: 2
 - Phase 2 step 3: release dates of clap 4.6.7 and ureq 3.5.0 are unverified (same headless limit); re-check and pin back if under two weeks old.
 - Phase 2 step 3: the E_SERVER hint says `ck studio --ensure`, which Phase 3 adds; until then an agent following it gets a usage error. Keep the hint (it is the shipped wording) or reword before Phase 3 if that slips.
 - Phase 2 step 4: rmcp 3.8.0 release date unverified (same headless limit); re-check and pin back if under two weeks old. MCP `lock`/`unlock` require `holder` while the CLI defaults `--holder agent`; revisit if strict input parity is wanted (DECISIONS.md, step 4).
+- Phase 2 step 5: ts-rs 12.0.1 release date unverified (same headless limit); re-check and pin back if under two weeks old.
 - Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies must be written into package.json by hand and installed with `pnpm install`, with versions that cannot be verified without web access.
 
 ## Roadmap additions: asset supply expansion (2026-10-28)
@@ -53,12 +54,18 @@ Run plan (autonomous run 3): step 4 only.
 - `ck mcp` subcommand serving it on stdio.
 - Tests: insta snapshot of the tool list, per-tool cap table test, e2e parity test driving `ck mcp` over stdio against a real `ck studio` and comparing with CLI output.
 
+Run plan (autonomous run 4): step 5 only.
+- Dep: ts-rs (serde-compat, serde-json-impl); version from `cargo info`, recorded in DECISIONS.md.
+- Derive `TS` on every wire type: ck-core model, PatchRequest, CkError/ErrorCode; ck-server Event, Status, Summary, request/result types. u64/usize map to `number` (JSON numbers, all under 2^53).
+- ck-server `ts_types::render()` joins every declaration into one file, `studio/src/generated/types.ts`.
+- Drift test in nextest (so `just check` and CI fail on drift); `just types` regenerates (CK_WRITE_TYPES=1).
+
 Steps (each ends with `just check`):
 - [x] 1. Deps + ck-server core: session state, event bus, server.json, bind to 127.0.0.1 on a free port.
 - [x] 2. HTTP + WS API with token/Host/Origin guards; refusals tested (E_AUTH, E_LOCK_HELD over HTTP).
 - [x] 3. Shared ops layer + CLI basics: `ck studio` (serve), `ck status`, `ck project get --summary|--layer`, `ck project patch` (spec 6.2 naming), `ck lock`, `ck unlock`; output size caps.
 - [x] 4. MCP twin (rmcp, stdio) for the same ops; schema, size cap and CLI/MCP parity tests.
-- [ ] 5. TS type generation from the Rust types (ts-rs or specta, verified), checked in CI for drift.
+- [x] 5. TS type generation from the Rust types (ts-rs or specta, verified), checked in CI for drift.
 - [ ] 6. Studio shell: Vite + React + Remotion Player preview, timeline, inspector, read-only mode, banner, activity feed, ghost cursor; embedded with rust-embed.
 - [ ] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.
 - [ ] 8. Evidence, reviewers, DECISIONS.md, handoff, commit; mark phase done.

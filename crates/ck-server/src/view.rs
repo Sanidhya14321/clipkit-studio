@@ -5,9 +5,10 @@ use ck_core::model::{AgentState, Lock, Mode, PipelineState, Settings, TrackKind}
 use ck_core::timeline;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 /// `ck status`: where the project and the agent are.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Status {
     pub project_id: String,
@@ -20,7 +21,7 @@ pub struct Status {
 }
 
 /// `ck project get --summary`: ids, kinds and spans per track, no props or text bodies.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Summary {
     pub id: String,
@@ -35,7 +36,7 @@ pub struct Summary {
     pub open_comments: usize,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct TrackSummary {
     pub id: String,
@@ -43,7 +44,7 @@ pub struct TrackSummary {
     pub items: Vec<ItemSummary>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct ItemSummary {
     pub id: String,

@@ -24,6 +24,10 @@ test:
 fmt:
     cargo fmt --all
 
+# Regenerate the studio's TS bindings from the Rust types (`just check` fails on drift).
+types:
+    CK_WRITE_TYPES=1 cargo nextest run -p ck-server --cargo-quiet -E 'test(ts_types)'
+
 # Studio dev server (studio/ is built in Phase 2).
 studio-dev:
     @echo "PLACEHOLDER: studio/ is created in Phase 2 (spec 12)"; exit 1

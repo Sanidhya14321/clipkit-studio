@@ -14,6 +14,7 @@ use ck_core::{CkError, CkResult, Document, ErrorCode, Project};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use tokio::sync::broadcast;
+use ts_rs::TS;
 
 use crate::clock::Clock;
 use crate::event::Event;
@@ -22,7 +23,7 @@ use crate::view::{Status, Summary};
 /// Events buffered per subscriber before it lags (a lagging studio gets a fresh snapshot).
 const BUS_CAPACITY: usize = 256;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct PatchResult {
     pub rev: u64,
@@ -32,14 +33,14 @@ pub struct PatchResult {
     pub omitted: usize,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct LockRequest {
     pub holder: Holder,
     pub layer_ids: Vec<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct UnlockRequest {
     pub holder: Holder,
@@ -48,14 +49,14 @@ pub struct UnlockRequest {
     pub layer_ids: Option<Vec<String>>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct HeartbeatRequest {
     pub holder: Holder,
 }
 
 /// The holder's live locks after a lock call.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct LockResult {
     pub locks: Vec<Lock>,

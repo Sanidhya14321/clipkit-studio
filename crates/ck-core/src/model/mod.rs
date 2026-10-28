@@ -9,6 +9,7 @@ use std::collections::BTreeMap;
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 pub use item::{CaptionFrom, Item, ItemBody, TimeRange, Track, TrackKind};
 pub use meta::{
@@ -20,7 +21,7 @@ pub use pipeline::{AgentState, AgentStatus, Pass, PipelineState, Stage};
 /// Schema version written by this build. Older files are migrated on load (see `migrate`).
 pub const SCHEMA_VERSION: u32 = 1;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub enum Mode {
     Edit,
@@ -28,7 +29,7 @@ pub enum Mode {
     Generate,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Settings {
     pub fps: u32,
@@ -46,7 +47,7 @@ impl Default for Settings {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Project {
     pub schema_version: u32,
