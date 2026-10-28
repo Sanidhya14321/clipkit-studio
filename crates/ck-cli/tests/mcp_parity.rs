@@ -9,7 +9,7 @@ use std::path::Path;
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 
 use ck_server::ops::caps;
-use common::{Background, Studio, add_track, err_line, ok_line};
+use common::{Background, NO_BROWSER, Studio, add_track, err_line, ok_line};
 use serde_json::{Value, json};
 
 /// A `ck mcp` process with an initialized session; killed on drop.
@@ -25,6 +25,7 @@ impl Mcp {
         let mut child = Command::new(env!("CARGO_BIN_EXE_ck"))
             .args(["mcp", "--dir"])
             .arg(dir)
+            .env("BROWSER", NO_BROWSER)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
@@ -277,17 +278,40 @@ fn output_caps_hold_through_mcp() {
 }
 
 #[test]
-fn bad_arguments_and_a_missing_studio_are_tool_errors() {
+fn the_first_tool_call_starts_the_studio() {
     let dir = tempfile::tempdir().unwrap();
     let d = dir.path();
+    let bg = Background::new(d);
     let mut mcp = Mcp::start(d);
 
-    // No studio yet: the same E_SERVER the CLI prints.
-    let down = mcp.err("status", json!({}));
-    assert_eq!(code(&down), "E_SERVER");
-    assert_eq!(down, err_line(d, &["status"]));
+    let status = mcp.ok("status", json!({}), caps::STATUS);
+    assert!(bg.pid().is_some(), "the call left a running studio");
+    assert_eq!(status, ok_line(d, &["status"], caps::STATUS));
+}
 
+#[test]
+fn a_studio_that_cannot_start_is_the_same_tool_error() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _bg = Background::new(d);
+    std::fs::create_dir_all(d.join(".clipkit")).unwrap();
+    std::fs::write(d.join(".clipkit/project.json"), "{not json").unwrap();
+    let mut mcp = Mcp::start(d);
+
+    let down = mcp.err("status", json!({}));
+    assert!(
+        code(&down).as_str().is_some_and(|c| c.starts_with("E_")),
+        "{down}"
+    );
+    assert_eq!(down, err_line(d, &["status"]));
+}
+
+#[test]
+fn bad_arguments_are_tool_errors() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
     let _studio = Studio::start(d);
+    let mut mcp = Mcp::start(d);
     for (name, args) in [
         ("status", json!({ "extra": 1 })),
         ("project_get", json!({ "summary": true, "layer": "a" })),

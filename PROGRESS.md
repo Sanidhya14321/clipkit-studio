@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 3
 
 ## Handoff (latest)
-1. Done: Phase 3 step 1. `ck studio --ensure [--open] [--quiet]` and its MCP twin `studio` live in `ck_server::launch`. Ensure starts a detached `ck studio` (stderr goes to .clipkit/studio.log) under a file lock, and opens `url#token=` once per server through `$BROWSER` or the platform opener.
-2. Proof: ensure takes 16 ms cold and 5 ms warm (budget about 200 ms). Four concurrent calls start one server. The tab opens once per server. Stale server.json files and start failures are handled. MCP and CLI answers are byte-identical. `just check`: 110 of 110 nextest, hooks 41 of 41, studio OK.
-3. Open: the reviewer has not yet run on the Phase 3 diff (planned for step 6). Phase 2 leftovers and earlier items are listed below; the ensure decisions are in DECISIONS.md, Phase 3 step 1.
-4. Next: step 2, where the first ck or MCP call ensures the studio. Ops-using commands would call `launch::ensure` on E_SERVER. Update `bad_arguments_and_a_missing_studio_are_tool_errors`, which expects E_SERVER without a studio. Then step 3, the `ck hook` subcommands.
-5. Start: `just check`. Manual: `cargo run -p ck-cli -- studio --ensure --open --dir <folder>`. Timings: `cargo nextest run -p ck-cli --no-capture -E 'test(ensure_starts_once)'`.
+1. Done: Phase 3 step 2. `launch::connect` makes every ops command and every MCP tool except `studio` start a missing studio with the same locked ensure. The tab opens once on an auto-start, best effort; a missing browser does not fail the call.
+2. Proof: each CLI command and the first MCP call start a studio in an empty folder. A corrupt project gives the same start error in both doors. `just check`: 115 of 115 nextest, hooks 41 of 41, studio OK. Ensure is still 16 ms cold and 5 ms warm.
+3. Open: the reviewer has not yet run on the Phase 3 diff (planned for step 6). Test helpers set BROWSER=true; any new test that can auto-start must do the same. Decisions are in DECISIONS.md, Phase 3 step 2.
+4. Next: step 3, `ck hook prompt|guard|stop|session-end` (spec 6.1). The prompt hook runs ensure with open and quiet only for video prompts or an existing .clipkit, and never blocks a non-video session.
+5. Start: `just check`. Manual: `cargo run -p ck-cli -- status --dir <empty folder>` starts a studio. Timings: `cargo nextest run -p ck-cli --no-capture -E 'test(ensure_starts_once)'`.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -18,7 +18,6 @@ PHASE: 3
 - Lock ids for non-layer content: Phase 1 uses `@project` for project-level fields and track ids for track fields and item order (DECISIONS.md, Phase 1). Revisit if the studio needs finer locks.
 - Phase 2 step 8: direct crate dates are verified on the crates.io API, and tokio, ureq and rmcp are pinned back. The transitive crates cc 1.10.0, find-msvc-tools 0.1.15, libc 0.2.191, rustix 1.1.6, smallvec 1.16.4, uuid 1.29.0 and ureq-proto 0.6.5 are still under two weeks old. In an interactive session run `cargo update -p <name> --precise <older>`, or wait until they age past two weeks.
 - Phase 2/3: any token holder can act as agent or human (author/holder are self-declared). Decide whether the studio and the agent get separate credentials.
-- Phase 2 step 3: the E_SERVER hint says `ck studio --ensure`, which Phase 3 adds; until then an agent following it gets a usage error. Keep the hint (it is the shipped wording) or reword before Phase 3 if that slips.
 - Phase 2 step 4: MCP `lock`/`unlock` require `holder` while the CLI defaults `--holder agent`; revisit if strict input parity is wanted (DECISIONS.md, step 4).
 - Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies are written into package.json by hand and installed with `pnpm install`. Step 6a found the npm registry reachable: versions and dates checked with `pnpm view` (DECISIONS.md, step 6a).
 - Phase 2 step 6a: the CI action majors (pnpm/action-setup@v4, actions/setup-node@v5) are unverified; confirm on the first CI run. CSP was added in step 8.
@@ -39,11 +38,16 @@ Spec: 00, 05 (5.1), 06, 09. Proof: typing a video prompt in Claude Code opens th
 
 Steps:
 - [x] 1. `ck studio --ensure [--open] [--quiet]` and its MCP twin `studio`: idempotent, starts a detached server in the background, opens the browser tab once per server.
-- [ ] 2. First ck or MCP call ensures the studio is running (spec 5.1, agents without hooks).
+- [x] 2. First ck or MCP call ensures the studio is running (spec 5.1, agents without hooks).
 - [ ] 3. `ck hook prompt|guard|stop|session-end` (spec 6.1 hook behavior, fast, never blocks a non-video session).
 - [ ] 4. `plugin/`: manifest, skills (clipkit-video with spec 9.4 text, clipkit-review), clipkit-critic agent, .mcp.json, hooks/hooks.json; format checked against the current plugins reference; structure tests.
 - [ ] 5. `ck init` / `ck uninstall` for Claude Code and Codex (detect, ask, idempotent, no residue); adapters/ texts.
 - [ ] 6. Proof run, reviewer and spec-checker, evidence, phase done.
+
+Run plan (autonomous run 2): step 2 only.
+- ck-server `launch::connect(dir, launcher)`: Ops for the running studio, or ensure one first (the start also opens the tab once, best effort, so hookless agents see it).
+- CLI ops commands and every MCP tool except `studio` go through it; E_SERVER now only means the start failed.
+- Tests: each CLI command and the first MCP call start a studio; a start failure (corrupt project.json) is the same error in both doors; existing E_SERVER tests updated. Test helpers set BROWSER=true so no real browser opens.
 
 Run plan (autonomous run 1): step 1 only.
 - ck-server `launch`: running-server probe (moved from `ck studio`), `ensure` under a file lock: spawn `ck studio` detached (new process group, stderr to .clipkit/studio.log), wait until the new pid answers status, report early exits with the log tail.

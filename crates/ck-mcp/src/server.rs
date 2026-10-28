@@ -5,7 +5,6 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use ck_core::{CkError, CkResult, ErrorCode};
-use ck_server::ops::Ops;
 use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, ContentBlock, Implementation,
     ListToolsResult, PaginatedRequestParams, ServerCapabilities, ServerConfig, Tool,
@@ -95,7 +94,7 @@ impl ServerHandler for CkMcp {
         let root = self.root.clone();
         let outcome = tokio::task::spawn_blocking(move || match name.as_str() {
             "studio" => tools::studio(&root, args),
-            _ => Ops::connect(&root).and_then(|ops| tools::call(&ops, &name, args)),
+            _ => tools::connect(&root).and_then(|ops| tools::call(&ops, &name, args)),
         })
         .await
         .unwrap_or_else(|e| Err(server_err(format!("tool task failed: {e}"))));

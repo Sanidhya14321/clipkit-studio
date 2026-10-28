@@ -227,6 +227,53 @@ fn a_studio_that_cannot_start_reports_its_own_error() {
     assert!(!d.join(".clipkit/server.json").exists());
 }
 
+/// A plain ck command with `$BROWSER` set to `browser`.
+fn ck_with_browser(dir: &Path, browser: &Path, args: &[&str]) -> Output {
+    Command::new(env!("CARGO_BIN_EXE_ck"))
+        .args(args)
+        .arg("--dir")
+        .arg(dir)
+        .env("BROWSER", browser)
+        .output()
+        .unwrap()
+}
+
+#[test]
+fn the_first_command_starts_the_studio_and_opens_its_tab_once() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let bg = Background::new(d);
+    let (browser, log) = fake_browser(d);
+
+    let first = ck_with_browser(d, &browser, &["status"]);
+    assert!(first.status.success(), "{first:?}");
+    assert!(bg.pid().is_some());
+    let opened = wait_lines(&log, 1);
+    assert_eq!(opened.len(), 1);
+    assert!(opened[0].contains("#token="), "{opened:?}");
+
+    // Later calls reuse the server and do not open another tab.
+    for args in [&["status"][..], &["project", "get"], &["heartbeat"]] {
+        assert!(ck_with_browser(d, &browser, args).status.success());
+    }
+    std::thread::sleep(Duration::from_millis(300));
+    assert_eq!(wait_lines(&log, 1), opened);
+}
+
+#[test]
+fn a_missing_browser_does_not_fail_the_first_command() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let bg = Background::new(d);
+    let out = ck_with_browser(d, &d.join("no-such-browser"), &["status"]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    assert!(bg.pid().is_some());
+}
+
 #[test]
 fn open_and_quiet_need_ensure() {
     let dir = tempfile::tempdir().unwrap();

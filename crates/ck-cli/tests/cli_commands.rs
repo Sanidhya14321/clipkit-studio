@@ -7,7 +7,7 @@ use std::process::{Command, Stdio};
 use std::time::{Duration, Instant};
 
 use ck_server::ops::caps;
-use common::{Studio, add_track, ck, err, ok};
+use common::{Background, Studio, add_track, ck, err, ok};
 use serde_json::{Value, json};
 
 #[test]
@@ -107,19 +107,44 @@ fn patch_reads_stdin_and_rejects_bad_json() {
 }
 
 #[test]
-fn commands_without_a_studio_fail_with_e_server() {
-    let dir = tempfile::tempdir().unwrap();
-    for args in [
-        &["status"][..],
-        &["project", "get"],
-        &["lock", "a"],
-        &["unlock"],
-        &["heartbeat"],
+fn every_command_starts_a_missing_studio() {
+    for (args, cap) in [
+        (&["status"][..], caps::STATUS),
+        (&["project", "get"], caps::SUMMARY),
+        (
+            &["project", "patch", &add_track(0, "human", "a")],
+            caps::PATCH,
+        ),
+        (&["lock", "a"], caps::LOCK),
+        (&["unlock"], caps::LOCK),
+        (&["heartbeat"], caps::LOCK),
     ] {
-        let e = err(dir.path(), args);
-        assert_eq!(e["code"], "E_SERVER", "{args:?}");
-        assert!(e["hint"].as_str().is_some_and(|h| h.contains("ck studio")));
+        let dir = tempfile::tempdir().unwrap();
+        let d = dir.path();
+        let bg = Background::new(d);
+        ok(d, args, cap);
+        assert!(bg.pid().is_some(), "{args:?} left a running studio");
+        assert_eq!(
+            ok(d, &["status"], caps::STATUS)["projectId"],
+            "project",
+            "{args:?}"
+        );
     }
+}
+
+#[test]
+fn a_studio_that_cannot_start_fails_the_command_with_its_own_error() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _bg = Background::new(d);
+    std::fs::create_dir_all(d.join(".clipkit")).unwrap();
+    std::fs::write(d.join(".clipkit/project.json"), "{not json").unwrap();
+
+    let e = err(d, &["status"]);
+    let code = e["code"].as_str().unwrap();
+    assert!(code.starts_with("E_"), "{e}");
+    assert!(e["hint"].as_str().is_some_and(|h| !h.is_empty()), "{e}");
+    assert!(!d.join(".clipkit/server.json").exists());
 }
 
 #[test]
@@ -144,7 +169,11 @@ fn studio_stops_by_itself_after_the_idle_time() {
         t0.elapsed()
     );
     assert!(!server_json.exists(), "server.json is removed on idle stop");
-    assert_eq!(err(d, &["status"])["code"], "E_SERVER");
+
+    // The next call starts a fresh studio in the background.
+    let bg = Background::new(d);
+    assert_eq!(ok(d, &["status"], caps::STATUS)["rev"], 0);
+    assert!(bg.pid().is_some_and(|pid| pid != studio.pid()));
 }
 
 #[test]

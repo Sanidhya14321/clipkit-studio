@@ -4,6 +4,12 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 3 (2026-10-29)
 
+### Step 2: the first ck or MCP call ensures the studio
+- **`launch::connect(dir, launcher)`** serves every ops command (`status`, `project get|patch`, `lock`, `unlock`, `heartbeat`) and every MCP tool except `studio`. It probes the recorded server (one extra loopback status call, about 1 ms) and, if none answers, runs the same locked ensure as `ck studio --ensure` with the default idle time and a free port. It probes instead of retrying an op after E_SERVER, so a patch is never sent twice.
+- **The tab opens on an auto-start, best effort**: spec 5.1 says hookless agents "get the same behavior", and the hook passes `--open`. The tab opens only when this call started the server (once per server, the same marker), and a failing or missing browser is logged, not returned: the agent's command must not fail because no browser exists (CI, SSH). A server the user started in the foreground gets no extra tab.
+- **E_SERVER now means the start failed** (or a server died mid-call); the server's own start error is relayed, as for `--ensure`. Commands in a folder with no project create `.clipkit` and an empty project, like `ck studio`. No opt-out flag (the spec asks for none).
+- Tests set `BROWSER=true` in the shared ck helpers so test runs never open a real browser.
+
 ### Step 1: `ck studio --ensure`
 - **Ensure lives in ck-server (`launch`)**, so the CLI and the MCP `studio` tool share it. It spawns this process's own binary (`current_exe`) as `ck studio` in a new process group (Windows: new process group, no window), stdout null, stderr to `.clipkit/studio.log`. It returns once the new pid answers status; measured 16 ms cold, 5 ms warm (spec 5.1 asks about 200 ms). Waiting for the answer instead of returning right after spawn keeps the next ck call from racing the server start.
 - **Concurrent ensures** are serialized with an OS file lock on `.clipkit/launch.lock` (std `File::lock`, Rust 1.89+), so parallel hooks start one server. This narrows, but does not close, the Phase 2 check-then-bind gap for a foreground `ck studio` racing an ensure.

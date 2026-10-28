@@ -151,12 +151,21 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
 /// It needs no running server, so it does not go through `Ops`.
 pub fn studio(root: &Path, args: Value) -> CkResult<String> {
     let req: EnsureRequest = parse(args)?;
-    let dir = root.parent().unwrap_or(Path::new("."));
     json(&launch::ensure(
-        dir,
+        project_dir(root),
         &req,
         &Launcher::current(DEFAULT_IDLE_SECS)?,
     )?)
+}
+
+/// Ops for every other tool; the first call of a session starts the studio (spec 5.1), as the
+/// CLI does.
+pub fn connect(root: &Path) -> CkResult<Ops> {
+    launch::connect(project_dir(root), &Launcher::current(DEFAULT_IDLE_SECS)?)
+}
+
+fn project_dir(root: &Path) -> &Path {
+    root.parent().unwrap_or(Path::new("."))
 }
 
 /// Missing arguments count as an empty object, so `status` can be called bare.

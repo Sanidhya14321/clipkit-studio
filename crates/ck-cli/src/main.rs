@@ -10,8 +10,8 @@ use std::process::ExitCode;
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::api::BODY_LIMIT;
+use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
-use ck_server::ops::Ops;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
@@ -50,7 +50,8 @@ fn main() -> ExitCode {
 
 fn run(cli: Cli) -> CkResult<()> {
     let root = cli.dir.join(".clipkit");
-    let ops = || Ops::connect(&root);
+    // The first call of a session starts the studio (spec 5.1).
+    let ops = || launch::connect(&cli.dir, &Launcher::current(DEFAULT_IDLE_SECS)?);
     match cli.command {
         Command::Studio {
             port,

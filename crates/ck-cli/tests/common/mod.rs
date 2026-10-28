@@ -37,6 +37,10 @@ impl Studio {
         Self { child, started }
     }
 
+    pub fn pid(&self) -> u32 {
+        self.child.id()
+    }
+
     /// Wait up to `limit` for the studio to exit by itself.
     pub fn exit_within(&mut self, limit: Duration) -> Option<ExitStatus> {
         let t0 = Instant::now();
@@ -57,11 +61,15 @@ impl Drop for Studio {
     }
 }
 
+/// A no-op browser, so a command that starts a studio (spec 5.1) never opens a real tab.
+pub const NO_BROWSER: &str = "true";
+
 pub fn ck(dir: &Path, args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_ck"))
         .args(args)
         .arg("--dir")
         .arg(dir)
+        .env("BROWSER", NO_BROWSER)
         .output()
         .unwrap()
 }

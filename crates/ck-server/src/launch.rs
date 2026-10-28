@@ -1,5 +1,6 @@
 //! `ck studio --ensure` (spec 5.1): start the studio in the background if it is not running and
 //! open the browser tab once per server. Idempotent and safe to call from concurrent hooks.
+//! `connect` does the same for every other ck and MCP call.
 
 use std::fs::{File, OpenOptions};
 use std::path::{Path, PathBuf};
@@ -10,6 +11,7 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+use crate::client::Client;
 use crate::info::ServerInfo;
 use crate::ops::{Ops, capped, caps};
 
@@ -68,14 +70,47 @@ impl Launcher {
 /// error, counts as running; only E_SERVER (no server.json, nothing listening) means none.
 pub fn running(root: &Path) -> Option<ServerInfo> {
     let info = ServerInfo::read(root).ok()?;
-    let answers = Ops::new(crate::client::Client::new(&info))
+    let answers = Ops::new(Client::new(&info))
         .status()
         .map_or_else(|e| e.code != ErrorCode::Server, |_| true);
     answers.then_some(info)
 }
 
+/// Ops for the studio serving `dir`, starting one first if none runs (spec 5.1: agents without
+/// hooks get the studio on their first ck or MCP call). A start also opens the tab once; a
+/// missing browser does not fail the call.
+pub fn connect(dir: &Path, launcher: &Launcher) -> CkResult<Ops> {
+    let info = match running(&dir.join(".clipkit")) {
+        Some(info) => info,
+        None => ensure_with(dir, Open::BestEffort, launcher)?.0,
+    };
+    Ok(Ops::new(Client::new(&info)))
+}
+
 /// Make sure a studio serves the project in `dir`, and open its tab once if asked.
 pub fn ensure(dir: &Path, req: &EnsureRequest, launcher: &Launcher) -> CkResult<Ensured> {
+    let open = if req.open { Open::Yes } else { Open::No };
+    let (info, started, opened) = ensure_with(dir, open, launcher)?;
+    let ensured = Ensured {
+        url: info.url,
+        port: info.port,
+        started,
+        opened,
+    };
+    capped("studio", caps::STUDIO, ensured)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Open {
+    No,
+    Yes,
+    /// Open on a fresh start only, ignoring a failing browser.
+    BestEffort,
+}
+
+/// The running or newly started server, whether this call started it, and whether it opened
+/// the tab.
+fn ensure_with(dir: &Path, open: Open, launcher: &Launcher) -> CkResult<(ServerInfo, bool, bool)> {
     let root = dir.join(".clipkit");
     std::fs::create_dir_all(&root).map_err(|e| io_err(&root, e))?;
     // One ensure at a time per project, so concurrent hooks never start two servers.
@@ -92,15 +127,17 @@ pub fn ensure(dir: &Path, req: &EnsureRequest, launcher: &Launcher) -> CkResult<
         Some(info) => (info, false),
         None => (start(dir, &root, launcher)?, true),
     };
-    let opened = req.open && open_once(&root, &info)?;
-    drop(lock);
-    let ensured = Ensured {
-        url: info.url,
-        port: info.port,
-        started,
-        opened,
+    let opened = match open {
+        Open::No => false,
+        Open::Yes => open_once(&root, &info)?,
+        Open::BestEffort if started => open_once(&root, &info).unwrap_or_else(|e| {
+            tracing::warn!(error = %e.message, "could not open the studio tab");
+            false
+        }),
+        Open::BestEffort => false,
     };
-    capped("studio", caps::STUDIO, ensured)
+    drop(lock);
+    Ok((info, started, opened))
 }
 
 /// Spawn `ck studio` detached and wait until it answers.
