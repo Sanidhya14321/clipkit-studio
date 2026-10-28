@@ -336,6 +336,7 @@ function App() {
           headers: {
             "Content-Type": "application/json",
             "X-ClipKit-Token": tokenRef.current,
+            "X-ClipKit-Trace": "ui-"+crypto.randomUUID(),
           },
           body: JSON.stringify(args),
         });
@@ -1286,7 +1287,7 @@ function App() {
       }}
     >
       {sourcesOpen&&<SourcesPanel op={op} project={project} onClose={()=>setSourcesOpen(false)}/>}
-      {systemsOpen&&<SystemsPanel state={state} token={token} op={op} onClose={()=>setSystemsOpen(false)}/>}
+      {systemsOpen&&<SystemsPanel state={state} token={token} op={op} onClose={()=>setSystemsOpen(false)} onVoice={text=>executeCommand(text,anchor(),"voice")}/>}
       {variantsOpen&&<VariantsPanel state={state} token={token} op={op} onClose={()=>setVariantsOpen(false)}/>}
       <BriefStudioPanel project={project} op={op} open={briefOpen} onClose={()=>setBriefOpen(false)} waiting={state.briefStudio?.waiting} question={state.briefStudio?.question} onMic={startCommand} onMicEnd={stopCommand} onQuestionAnswer={answer=>void op('ask_answer',{id:state.briefStudio?.question?.id,answer})}/>
       <header className="topbar"><button aria-label="Open Source Hub" onClick={()=>setSourcesOpen(true)}>Sources</button><button aria-label="Open Studio systems" onClick={()=>setSystemsOpen(true)}>Systems</button>{project.variantSets?.some(s=>!s.picked)&&<button onClick={()=>setVariantsOpen(true)}>Treatments</button>}<button aria-label="Open creative Brief" onClick={()=>setBriefOpen(true)}>Brief</button>

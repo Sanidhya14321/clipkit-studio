@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {FlightRecorder,traceContext,sha,replayTrace,bisectTrace,bundleTrace,reproTrace,traceList} from '../../debug/src/trace';
+import {FlightRecorder,traceContext,registerSecrets,sha,replayTrace,bisectTrace,bundleTrace,reproTrace,traceList} from '../../debug/src/trace';
 import {diagnostic} from '../../debug/src/errors';
 import {doctor as debugDoctor} from '../../debug/src/doctor';
 import {cliFamilies} from '../../debug/src/contracts';
@@ -25,8 +25,9 @@ const cliPath=fileURLToPath(import.meta.url);
 const packaged=cliPath.endsWith('.js');
 const installRoot=packaged?resolve(dirname(cliPath),'..'):resolve(dirname(cliPath),'../../..');
 let args=process.argv.slice(2);const rootIndex=args.indexOf('--root');const root=resolve(rootIndex>=0?args.splice(rootIndex,2)[1]:process.env.CLIPKIT_ROOT??process.cwd());
-const flags:Record<string,string|boolean>={};const positional:string[]=[];const boolFlags=new Set(['summary','open','compact','no-vite','draft','reuse-direction','trust','consent','graphics','all','dry-run','frames','apply','autopilot','cache','critic','contact-sheet','preview','enabled','baseline-clean','allow-guidance','synthetic']);for(let i=0;i<args.length;i++){const value=args[i];if(!value.startsWith('--')){positional.push(value);continue}const key=value.slice(2);if(boolFlags.has(key)){flags[key]=true;continue}if(!args[i+1]||args[i+1].startsWith('--'))throw Error(`--${key} needs a value`);flags[key]=args[++i];if(key==='range'&&args[i+1]&&!args[i+1].startsWith('--')&&/^\d+(?:\.\d+)?$/.test(args[i+1])){flags.end=args[++i];}}args=positional;
+const flags:Record<string,string|boolean>={};const positional:string[]=[];const boolFlags=new Set(['summary','open','compact','no-vite','draft','reuse-direction','trust','consent','graphics','all','dry-run','frames','apply','autopilot','cache','critic','contact-sheet','preview','enabled','baseline-clean','allow-guidance','synthetic','debug-harness']);for(let i=0;i<args.length;i++){const value=args[i];if(!value.startsWith('--')){positional.push(value);continue}const key=value.slice(2);if(boolFlags.has(key)){flags[key]=true;continue}if(!args[i+1]||args[i+1].startsWith('--'))throw Error(`--${key} needs a value`);flags[key]=args[++i];if(key==='range'&&args[i+1]&&!args[i+1].startsWith('--')&&/^\d+(?:\.\d+)?$/.test(args[i+1])){flags.end=args[++i];}}args=positional;
 try{process.loadEnvFile(join(root,'.env'));}catch{/* Optional local provider credentials. */}
+registerSecrets(Object.entries(process.env).filter(([key])=>/TOKEN|SECRET|PASSWORD|API_KEY/.test(key)).map(([,value])=>value??''));
 if(flags['cassette-mode']){if(!['live','record','replay'].includes(String(flags['cassette-mode'])))throw Error('Invalid cassette mode');process.env.CLIPKIT_CASSETTE_MODE=String(flags['cassette-mode']);}if(flags.cassettes)process.env.CLIPKIT_CASSETTE_DIR=resolve(String(flags.cassettes));if(flags.synthetic)process.env.CLIPKIT_SYNTHETIC_FIXTURES='1';
 const cliFlight=new FlightRecorder(root,{runId:'cli-'+Date.now()+'-'+id('call')});
 const callTrace=id('trace');
@@ -69,7 +70,7 @@ async function studio(){
   try{const c=await connection();if((await fetch(c.url+'/api/bootstrap',{signal:AbortSignal.timeout(1000)})).ok){if(flags.open)spawn(process.platform==='darwin'?'open':process.platform==='win32'?'explorer':'xdg-open',[c.url],{stdio:'ignore'}).on('error',()=>{});return output({url:c.url,running:true,attached:true});}}catch{}
   const port=Number(flags.port??process.env.CLIPKIT_PORT??4310);
   const publicDir=join(installRoot,'public');const studioDir=join(installRoot,'dist','studio');
-  const server=await startServer({root,port,cliPath,publicDir,studioDir,renderEntry:packaged?join(installRoot,'runtime','packages','render','src','entry.tsx'):undefined});
+  const server=await startServer({root,port,cliPath,publicDir,studioDir,...flags['debug-harness']?{debug:{synthetic:true},harness:{brief:true,recipes:true,ladder:true,context:true,verification:true}}:{},renderEntry:packaged?join(installRoot,'runtime','packages','render','src','entry.tsx'):undefined});
   let vite:ReturnType<typeof spawn>|undefined;let browserUrl=server.url;
   if(!packaged&&!flags['no-vite']){const require=createRequire(import.meta.url);const viteEntry=join(dirname(require.resolve('vite/package.json')),'bin','vite.js');vite=spawn(process.execPath,[viteEntry,'--config',join(installRoot,'packages/studio/vite.config.ts')],{cwd:installRoot,stdio:'inherit',env:{...process.env,CLIPKIT_SERVER_PORT:String(port)}});browserUrl='http://127.0.0.1:5173';}
   console.log(`\n  ClipKit Studio\n  ${browserUrl}\n  Project: ${root}\n  Ctrl+C to stop.\n`);
@@ -82,7 +83,7 @@ async function doctor(){
 }
 async function main(){
   const [command,sub,...rest]=args;
-  if(!command||command==='help'){console.log('ClipKit Studio\n\n  ck init     Connect your coding agents\n  ck studio   Open the local video editor\n  ck doctor   Check media and voice dependencies\n\nOther commands: assets (ingest/build/validate/search/card/skeleton/slice/source/derive/install/list), taste, pipeline (detect/plan/base/pass/status/resume/handoff), verify, meter, search, schema, project, status, footage, comments, voice, history, export, demo, mcp, brief, context, wait, ask, look, recipe, layout, variants, storyboard, reference, sound, audio, cache, lock, unlock, layer, branch, profile, bench (run/record/execute/pair), replay, sources, collections, license report.');return;}
+  if(!command||command==='help'){console.log('ClipKit Studio\n\n  ck init     Connect your coding agents\n  ck studio   Open the local video editor\n  ck doctor   Check media and voice dependencies\n\nOther commands: assets (ingest/build/validate/search/card/skeleton/slice/source/derive/install/list), taste, pipeline (detect/plan/base/pass/status/resume/handoff), verify, meter, search, schema, project, status, footage, comments, voice, history, export, demo, mcp, brief, context, wait, ask, look, recipe, layout, variants, storyboard, reference, sound, audio, cache, lock, unlock, layer, branch, profile, bench (run/record/execute/pair/matrix/report), replay, sources, collections, license report, uninstall, fixtures generate DIR, eval VIDEO, trace (list/bundle RUN_ID), repro RUN_ID, bisect RUN_ID.');return;}
   if(command==='init')return initialize();
   if(command==='studio')return studio();
   if(command==='doctor'){const report=await debugDoctor({root,baseline:!!flags['baseline-clean'],home:process.env.HOME,port:flags.port?Number(flags.port):undefined,allowGuidance:!!flags['allow-guidance']});output(report);if(!report.ok)process.exitCode=1;return;}
