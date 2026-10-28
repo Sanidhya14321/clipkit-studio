@@ -22,3 +22,23 @@ fn unknown_args_exit_with_usage() {
     assert_eq!(out.status.code(), Some(2));
     assert!(out.stderr.len() <= MAX_OUTPUT_BYTES);
 }
+
+#[test]
+fn logging_is_off_by_default_and_json_when_enabled() {
+    let quiet = Command::new(env!("CARGO_BIN_EXE_ck"))
+        .arg("--version")
+        .env_remove("CK_LOG")
+        .output()
+        .unwrap();
+    assert!(quiet.stderr.is_empty());
+
+    let out = Command::new(env!("CARGO_BIN_EXE_ck"))
+        .arg("--version")
+        .env("CK_LOG", "debug")
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8(out.stderr).unwrap();
+    let line: serde_json::Value = serde_json::from_str(stderr.lines().next().unwrap()).unwrap();
+    assert_eq!(line["message"], "ck start");
+    assert_eq!(line["level"], "DEBUG");
+}

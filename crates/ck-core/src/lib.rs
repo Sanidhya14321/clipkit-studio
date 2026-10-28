@@ -6,8 +6,11 @@ pub mod document;
 pub mod error;
 pub mod history;
 pub mod locks;
+pub mod log;
+pub mod migrate;
 pub mod model;
 pub mod patch;
+pub mod storage;
 pub mod timeline;
 
 pub use document::Document;

@@ -1,0 +1,18 @@
+{
+  "id": "legacy",
+  "name": "Pre-versioning project",
+  "settings": { "fps": 25, "width": 1280, "height": 720 },
+  "mode": "edit",
+  "sources": [
+    { "id": "s1", "kind": "video", "path": "media/talk.mp4", "hash": "h1", "durationSec": 30.0 }
+  ],
+  "tracks": [
+    {
+      "id": "t1",
+      "kind": "video",
+      "items": [
+        { "id": "a", "type": "footage", "src": "s1", "srcIn": 2.0, "srcOut": 10.0, "at": 0.0 }
+      ]
+    }
+  ]
+}
