@@ -1,0 +1,11 @@
+[package]
+name = "ck-eval"
+description = "Output-only evaluator and bench harness."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[lints]
+workspace = true

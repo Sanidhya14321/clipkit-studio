@@ -1,15 +1,29 @@
+# Rust
+/target/
+
+# Node
 node_modules/
 dist/
+playwright-report/
+test-results/
+
+# Generated fixture media (regenerate with `just fixtures`)
+/fixtures/generated/
+
+# Runtime project state created by ck in a working folder
 .clipkit/
+
+# Secrets and local overrides
 .env
 .env.*
 !.env.example
-test-results/
-playwright-report/
-artifacts/
-*.log
-coverage/
-# Compiled component modules are rebuilt from pinned source by pnpm build.
-/public/components/*/registry.js
-# Retained locally for an in-flight pre-normalization proof; not a new-project resource.
-/public/components/bf05db07f04ba523e365c8c371bfc1858ff27bbe6d0b7cf8a450326f3a73c826/
+*.pem
+*.key
+CLAUDE.local.md
+.claude/settings.local.json
+
+# OS and editors
+.DS_Store
+*.swp
+.idea/
+.vscode/

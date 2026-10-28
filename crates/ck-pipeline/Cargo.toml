@@ -1,0 +1,11 @@
+[package]
+name = "ck-pipeline"
+description = "Stage state machine, guardrails, budgets and quality gates."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[lints]
+workspace = true

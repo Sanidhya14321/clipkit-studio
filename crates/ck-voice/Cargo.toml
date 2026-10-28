@@ -1,0 +1,11 @@
+[package]
+name = "ck-voice"
+description = "Fish Audio client, voice cache and loudness normalization."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[lints]
+workspace = true

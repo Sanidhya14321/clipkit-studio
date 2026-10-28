@@ -1,0 +1,11 @@
+[package]
+name = "ck-core"
+description = "Project model, JSON patches, revisions, undo, locks, migrations."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[lints]
+workspace = true

@@ -1,0 +1,11 @@
+[package]
+name = "ck-assets"
+description = "Asset ingestion, cards, catalog, search index, AST extraction and Source Hub."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[lints]
+workspace = true

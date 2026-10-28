@@ -1,3 +1,0 @@
-/** Metadata-only legacy fixtures. Actual compatibility pixels are checked against the separate archive. */
-import {mkdir,writeFile} from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import metadata from './legacy-metadata.json';
-export async function legacyFixture(root:string){const folder=path.join(root,'.clipkit/compat/0.2.0');await mkdir(folder,{recursive:true});const source='/* Metadata fixture: deliberately no executable template pack. */';await writeFile(path.join(folder,'registry.js'),source);await writeFile(path.join(folder,'catalog.json'),JSON.stringify(metadata));await writeFile(path.join(folder,'manifest.json'),JSON.stringify({files:{'registry.js':createHash('sha256').update(source).digest('hex')}}))}

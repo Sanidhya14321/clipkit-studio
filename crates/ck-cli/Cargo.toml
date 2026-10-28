@@ -1,0 +1,15 @@
+[package]
+name = "ck-cli"
+description = "The ck binary: CLI entry point for ClipKit Studio."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "ck"
+path = "src/main.rs"
+
+[lints]
+workspace = true

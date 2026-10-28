@@ -1,0 +1,9 @@
+[profile.default]
+failure-output = "final"
+success-output = "never"
+status-level = "fail"
+final-status-level = "fail"
+
+[profile.ci]
+failure-output = "immediate-final"
+fail-fast = false
