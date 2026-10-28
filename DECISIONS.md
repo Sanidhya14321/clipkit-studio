@@ -156,3 +156,11 @@ Reference matching analyzes local files with ffprobe, threshold scene cuts, a fi
 ## Update 2 U2-7
 
 Layer leases live in runtime state, separate from undoable content and exported secrets. Each edit increments a layer revision monotonically, including undo; stable-ID layer_patch checks expected revisions and retains unrelated human edits. Track/global changes and total duration still require the exclusive global lease. Only isolated native recipe scenes are eligible for alpha render caching; arbitrary authored code can inspect global context and is conservatively left live. Cache keys include layer/asset/tokens/settings and source media identity; VP9-alpha results can be shared by preview and export. Open question: caching arbitrary WebGL/custom scenes needs a stronger isolation contract.
+
+## Update 2 U2-8
+
+Sound planning uses existing licensed local resources, restrained event placements and actual narration ducking; unavailable risers/room tone are explicitly skipped. Audio analysis reports ffmpeg measurements without claiming that per-source measurements certify the full mix. Cheap seeing caps contact sheets at six frames; optional critique is recorded only from cited sampled frames, never fabricated. Native recipe traces are declared controls; arbitrary authored animation remains uncertain. Scene variants override tokens on the selected layer and discard unchosen treatments after human selection. Open question: subjective quality and live sound listening still require human evaluation.
+
+## Update 2 U2-9
+
+Exports add SRT, OTIO, portable ClipKit bundle and a standalone Remotion project with immutable compiled scenes and local media/fonts. MP4 jobs serialize through one queue. OTIO preserves editorial timing and reports generated native scenes as missing-media references with metadata until rendered; FCPXML/EDL are unsupported extra formats. Branches use stable-ID three-way merges and recoverable discarded files; brief confirmation/pass completion writes snapshots. Local taste signals never override explicit values. Open questions: independent NLE reader support and live standalone playback are verified separately; no unsupported interchange fidelity is claimed.
