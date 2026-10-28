@@ -1,0 +1,64 @@
+name: Verification and debug artifacts
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '30 0 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsx -e 'import {buildComponents} from "./packages/assets/src/components-build"; void buildComponents()'
+      - run: pnpm assets:check
+      - run: pnpm typecheck
+      - run: pnpm test --maxWorkers=2
+      - run: pnpm exec tsx scripts/debug-bundles.ts
+        if: failure()
+      - name: Upload sanitized failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fast-debug-evidence
+          path: |
+            test-results/
+            .clipkit/exports/*-trace.zip
+          if-no-files-found: ignore
+  nightly-browser:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: fast
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      - run: pnpm exec playwright test --repeat-each=3
+        env:
+          FISH_API_KEY: ''
+      - run: pnpm exec tsx scripts/debug-bundles.ts
+        if: failure()
+      - name: Upload synthetic browser traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-browser-evidence
+          path: |
+            test-results/
+            playwright-report/
+            .clipkit/e2e-v3-workspace/.clipkit/exports/*-trace.zip
+          if-no-files-found: ignore
