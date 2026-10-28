@@ -6,7 +6,7 @@ kind: react-component
 runtime: derive-only
 license: Apache-2.0 — Paper Design
 deps: []
-cost: medium
+cost: high
 duration: context-dependent
 tags:
   - website

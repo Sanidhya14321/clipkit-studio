@@ -2,6 +2,8 @@
 
 Local video authoring with real animation components, frame comments, reversible human edits and a creative-agent checkpoint.
 
+Asset intelligence and layered pipeline commands: [pipeline guide](docs/PIPELINE.md). Update evidence: [VERIFICATION.md](VERIFICATION.md).
+
 ```sh
 pnpm install
 pnpm build

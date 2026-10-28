@@ -107,7 +107,7 @@ Installed TypeScript 7 exposes a native compiler rather than the old createSourc
 
 ## Pipeline update U4
 
-Keep schemaVersion 1 and journal pointer compatibility with an additive migration; infer no mode or defaults during startup. Derive uses a project-local copy, parser-position edits and existing SceneService publication. Root instance rendering already supplies data-ck-layer; derived nodes add path/element tags under that ancestor. Reference-only assets cannot be copied through derive. Unsupported imports/complex props fail with guidance to author a native scene, rather than installing unknown dependencies. Open question: arbitrary upstream layout rewrites remain symbol-level authoring work.
+Keep schemaVersion 1 and journal pointer compatibility with an additive migration; infer no mode or defaults during startup. Derive uses a project-local copy, parser-position edits and existing SceneService publication. Derived wrappers bind the runtime item ID with data-ck-layer and a declared prop path; derived nodes add path/element tags beneath it. Reference-only assets cannot be copied through derive. Unsupported imports/complex props fail with guidance to author a native scene, rather than installing unknown dependencies. Open question: arbitrary upstream layout rewrites remain symbol-level authoring work.
 
 ## Pipeline update U5
 
@@ -120,3 +120,11 @@ Taste prose is descriptive data with a separate validated constraints.yaml for d
 ## Pipeline update U7
 
 Integrate the pre-existing source/card reorganization as the required baseline for knowledge ingestion; preserve original file hashes/notices and rebuild source paths in the component catalog. Keep unrelated creative-workflow edits in the working tree. TypeScript becomes a runtime dependency so derived components undergo actual static checks, then the existing deterministic render verifier, before publication. The new pass orchestrator uses the same store, lease, proposal and range guards. Existing stock/native/pack commands remain available; the new ladder is the runtime agent path. Open question: a real creative turn still depends on the owner's signed-in client and human approval; fixture runs cannot certify taste.
+
+## Pipeline update U8
+
+Real render verification caught missing scene selection bindings; generated/derived roots now bind the runtime item ID and a declared prop path. Scene publication commits layer/provenance/derived receipts together. Every layer pass runs all deterministic gates before advancing, since an audio pass can also change timing. Resume reports existing current-pass layers and identical derive retries reuse instances. Legacy source previews remain available to humans; agents use justified ladder retrieval.
+
+Bound concurrent regression workers after renderer contention exposed a one-poll timeout assumption; a running job is not a failed job. Retain explicit uncertain results for unmeasured properties and pin them to affected layers. Preserve owner source bytes and existing project revision/checksum. Detailed evidence and outstanding format/provider/aesthetic limitations are in VERIFICATION.md; no full-agent 20k-token or taste-quality claim is made.
+
+Open questions: owner-specific Adobe/LUT/SFX/font libraries and their rights were not supplied beyond existing source receipts. Complex source adapters and actual voice/film evaluation require those inputs; GLSL semantic parsing and new native LUT primitives remain explicitly unsupported.

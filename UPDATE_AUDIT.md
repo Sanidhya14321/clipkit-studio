@@ -30,3 +30,7 @@ Sources of truth: DECISIONS.md; docs/VERIFICATION.md (there was no root VERIFICA
 | §15 safety/rights | exists/partial | Source receipts, pack trust, scoped mutations and data-only prompts exist; preserve these in all additions. |
 
 Open questions: no additional owner Premiere/AE/LUT/SFX/font source list is present beyond documented sources. Use explicitly local stand-ins in tests, no invented rights. Preview feasibility and actual voice loudness require real provider/media evidence. Existing aesthetic acceptance, full production authorization and live Fish/Claude checks remain open; this engineering update does not close them.
+
+## Implementation follow-through
+
+U1–U7 are committed as additive phases. U8 records tests, demos and the precise remaining limits in root VERIFICATION.md. Operator/API examples are in docs/PIPELINE.md. Existing source reorganization was integrated because the new knowledge layer depends on its usage catalog and licensed source receipts. The original root project remains revision 50 with the recorded checksum. Human creative approval remains mandatory.

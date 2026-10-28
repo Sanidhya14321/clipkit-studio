@@ -23,3 +23,5 @@ Additional checks: five browser tests passed, including six viewport sizes, rang
 The instruction-first proof uses original React/SVG rather than a required upstream component. It is a revised attempt with human feedback, not a clean same-prompt A/B victory. Production, footage-led and long-form aesthetic evaluation remain pending.
 
 Final regression: 20 files / 138 tests and TypeScript pass. Your existing root project remains revision 50 with SHA-256 dd5b4e1597d22c3305478fdc4ed0ffb7e0c74dbecb79368343f6bd5d2fad940a. Root studio was restarted with the new backend and twelve components. Historical artifacts/docs/scripts were copied and hash-verified externally; 931784221 bytes of inactive render cache were cleared. Future render caches are outside the checkout.
+
+Pipeline-update engineering evidence (28 October 2026) is tracked separately in [the root verification report](../VERIFICATION.md). Its fixture/render/browser passes do not close the human aesthetic, live provider or actual-agent budget acceptance items above.

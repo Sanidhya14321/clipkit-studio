@@ -9,6 +9,7 @@ export const knowledgeToolDefinitions:Record<string,{description:string;shape:Re
  knowledge_skeleton:{description:`L2: parsed props, animation primitives, tokens and symbol map within 600 estimated tokens. ${data}`,shape:id},
  knowledge_slice:{description:`L3: one exact symbol or 1-based inclusive range within 800 estimated tokens. ${data}`,shape:{...id,symbol:z.string().optional(),file:z.string().optional(),start:z.number().int().positive().optional(),end:z.number().int().positive().optional()}},
  knowledge_source:{description:`L4: explicit full-source exception; once per turn, requires one-line justification and is metered. ${data}`,shape:{...id,file:z.string().optional(),justification:z.string().min(1).max(240)}},
+ knowledge_instantiate:{description:'Cheapest adaptation: place a registered component with changed props and recorded provenance; read its card first.',shape:{...id,...rev,at:z.number().nonnegative().optional(),name:z.string().optional(),props:z.record(z.string(),z.unknown()),adaptations:z.array(z.string().min(1)).min(1).max(20)}},
  knowledge_derive:{description:'Codemod an asset into a local managed scene, render/check it, register schema and provenance. Reference-only assets require native authoring.',shape:{...id,...rev,plan:DerivePlanSchema}},
  knowledge_build:{description:'Offline maintenance: rebuild knowledge from the existing licensed usage catalog and parse changed code. Does not replace packs.',shape:{}},
  knowledge_validate:{description:'Validate generated knowledge cards, rights, source paths and AST receipts.',shape:{}},
@@ -22,6 +23,7 @@ export const knowledgeToolDefinitions:Record<string,{description:string;shape:Re
  pipeline_status:{description:'Read compact persisted stage/pass and next unfinished pass.',shape:{}},
  pipeline_resume:{description:'Resume from persisted checkpoints without replaying completed pass patches.',shape:{}},
  pipeline_handoff:{description:'Run all quality gates, pin uncertainties, enter handoff. Release the lease separately with status_idle.',shape:rev},
+ quality_frames:{description:'Only for uncertain quality gates: render at most four low-resolution frames stitched into one image. Does not prove audio or moving-film quality.',shape:{}},
  quality_verify:{description:'Deterministic named checks; measurement-dependent audio/contrast/bounds checks are explicitly uncertain.',shape:{gate:z.enum(['schema','timeline','text','typography','captions','audio','performance','variety','provenance']).optional()}},
  retrieval_meter:{description:'Print estimated retrieval tokens by L0–L4 and pass, with full-source justifications; not actual provider context.',shape:{all:z.boolean().optional()}},
 };

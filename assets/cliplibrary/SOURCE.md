@@ -1,3 +1,14 @@
 # cliplibrary
 
-See docs/SOURCES.md and packages/assets/components/sources.json for per-file licenses, pinned revisions and runtime adaptation. Original files remain in assets/sources; never overwrite them.
+Generated registration for existing owner sources. Original files are read-only.
+Runtime: cards declare direct/derive-only/reference-only; code is never executed by indexing.
+Install: no implicit packages; use existing managed scene compilation or explicit reviewed pack trust.
+License terms and evidence: docs/SOURCES.md, packages/assets/components/sources.json and preserved assets/sources LICENSE files; Paper license/NOTICE is in packages/motion/vendor-notices. References grant no additional rights.
+
+- cliplib-word-punch: MIT — Clip Library / clawwde; revision c4585582f712294b82faccd4c9ed233308925f9b; https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/word-punch.tsx; original assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/word-punch.tsx
+- cliplib-letter-flip: MIT — Clip Library / clawwde; revision c4585582f712294b82faccd4c9ed233308925f9b; https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/text-reveals/letter-flip.tsx; original assets/sources/cliplibrary/src/compositions/scenes/text-reveals/letter-flip.tsx
+- cliplib-ribbon-words: MIT — Clip Library / clawwde; revision c4585582f712294b82faccd4c9ed233308925f9b; https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/ribbon-words.tsx; original assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/ribbon-words.tsx
+- cliplib-chunky-type-stack: MIT — Clip Library / clawwde; revision c4585582f712294b82faccd4c9ed233308925f9b; https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx; original assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/chunky-type-stack.tsx
+- cliplib-coming-soon-flips: MIT — Clip Library / clawwde; revision c4585582f712294b82faccd4c9ed233308925f9b; https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx; original assets/sources/cliplibrary/src/compositions/scenes/kinetic-type/coming-soon-flips.tsx
+- cliplib-dot-wordmark-reveal: MIT — Clip Library / clawwde; revision c4585582f712294b82faccd4c9ed233308925f9b; https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/brand/dot-wordmark-reveal.tsx; original assets/sources/cliplibrary/src/compositions/scenes/brand/dot-wordmark-reveal.tsx
+- cliplib-scene-transition: MIT — Clip Library / clawwde; revision c4585582f712294b82faccd4c9ed233308925f9b; https://github.com/meetportal/cliplibrary/blob/c4585582f712294b82faccd4c9ed233308925f9b/src/compositions/scenes/transitions/scene-transition.tsx; original assets/sources/cliplibrary/src/compositions/scenes/transitions/scene-transition.tsx

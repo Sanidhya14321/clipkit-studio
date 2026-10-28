@@ -17,5 +17,5 @@ export const toolProfiles:Record<string,string[]>={
 };
 export function chooseToolProfile(prompt:string,context:any){if(/\b(narration|clon(?:e|ing)|voice|speech)\b/i.test(prompt))return 'voice';if(/\b(transcript|interview|filler|silence|footage|talking.head)\b/i.test(prompt))return 'media';if(context?.layers?.some((i:any)=>i.sceneVersion)&&!/^\s*(create|generate|build)\b/i.test(prompt))return 'scene-edit';return 'authoring'}
 
-const retrievalTools=['knowledge_search','knowledge_card','knowledge_skeleton','knowledge_slice','knowledge_source','taste_search','taste_read','pipeline_detect','pipeline_status','quality_verify','retrieval_meter'];
-for(const [profile,tools] of Object.entries(toolProfiles)){if(profile!=='review')tools.push(...retrievalTools);if(['creative','production','authoring','media','voice','edit'].includes(profile))tools.push('knowledge_derive','pipeline_plan','pipeline_base','pipeline_pass','pipeline_resume','pipeline_handoff');}
+const retrievalTools=['knowledge_search','knowledge_card','knowledge_skeleton','knowledge_slice','knowledge_source','taste_search','taste_read','pipeline_detect','pipeline_status','quality_verify','quality_frames','retrieval_meter'];
+for(const [profile,tools] of Object.entries(toolProfiles)){if(profile!=='review')tools.push(...retrievalTools);if(['creative','production','authoring','media','voice','edit'].includes(profile))tools.push('knowledge_derive','knowledge_instantiate','pipeline_plan','pipeline_base','pipeline_pass','pipeline_resume','pipeline_handoff');}
