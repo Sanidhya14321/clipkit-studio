@@ -32,8 +32,10 @@ impl Project {
 
         let mut ids = HashSet::new();
         let mut unique = |kind: &str, id: &str| {
-            if id.is_empty() || !ids.insert(id.to_owned()) {
-                Err(fail(format!("{kind} id {id:?} is empty or not unique")))
+            if id.is_empty() || id.starts_with('@') || !ids.insert(id.to_owned()) {
+                Err(fail(format!(
+                    "{kind} id {id:?} is empty, starts with '@' or is not unique"
+                )))
             } else {
                 Ok(())
             }

@@ -51,6 +51,23 @@ Crates checked on crates.io on 2026-10-28. Each is re-verified when its phase st
 - Locks live in the project (spec 3.2) and carry holder (agent or human), heartbeat and ttl.
 - Undo and redo are new revisions (approved by the owner); default lock ttl 30 s (approved).
 
+### Engine choices (Phase 1)
+- **Content vs engine state**: diffs and undo work on project content with `rev`, item `rev`, `locks`, `pipeline` and `agent` removed. Patches may not touch those fields (E_PATCH_INVALID); the engine sets them.
+- **Lock ids beyond layers**: the spec locks "touched layers" but is silent on non-layer content. Simplest safe rule: an item id when the item is added, removed, changed or moved to another track; a track id when the track's fields or the relative order of its items change; `@project` for any other content (settings, brief, sources, voice slots, comments, tokens, plan). Ids may not start with `@`. The agent must hold every touched id; humans are refused on agent-held ids. (Found by the Phase 1 rust-reviewer: without this, agent edits outside items skipped the lock gate.)
+- **Locks on ids that do not exist yet** are allowed, so the agent can lock a layer before adding it. Lock changes are not revisions; they are saved inside project.json.
+- **A patch that changes nothing** is refused (E_PATCH_INVALID) so history holds no empty revisions.
+- **Stale patches** are refused whenever `baseRev` is behind (no automatic rebase); the error lists items changed since `baseRev` plus any `layerRevs` mismatches.
+- **Storage**: `history/base.json` is the replay starting point; history must run contiguously from base rev + 1 to the project rev, and each file name must equal the rev inside. Temp files are `.<name>.tmp-<pid>` and only those are removed on load.
+- **Log field names** are camelCase as spec 10.4 writes them (traceId, runId, turnId, layerId, plus layerIds for multi-layer events). `ck` logs JSON to stderr only when `CK_LOG` is set.
+- **Stage machine**: VERIFY may send work back to any pass; ITERATE always returns to VERIFY; leaving BRIEF needs a confirmed or auto brief. Operation-to-stage table in `ck-pipeline/src/stage.rs`.
+- **Retry gate**: a call is the op name plus its arguments with keys sorted; refused after 2 failures, reset by a success.
+
+### Autonomous build loop (2026-10-28)
+- `scripts/autobuild.sh` (owner-supplied) runs `claude -p` sessions with `scripts/autobuild-prompt.md`. It reads `STATUS:` and `PHASE:` from the top of PROGRESS.md.
+- Checked against the installed CLI (2.1.312): `-p`, `--output-format`, `--permission-mode` are documented in `claude --help`; `--max-turns` is not listed there but is accepted (an unknown flag errors with "unknown option", this one does not).
+- The prompt file is the owner's text plus a short "Loop contract" section: keep the STATUS/PHASE lines current, skip the phase-runner approval wait in autonomous runs, and recover an interrupted run's uncommitted changes first.
+- `--permission-mode acceptEdits` approves file edits only; Bash runs only what `.claude/settings.json` allows, and anything else is denied in `-p` mode rather than prompting. Widening the allow list (for example git log/show/rev-parse, ls, wc, jq) and updating CLAUDE.md and the phase-runner skill for autonomous mode are left to the owner: the session's permission classifier blocked these as self-modification.
+
 ## Phase 0 (2026-10-28)
 
 ### Repository

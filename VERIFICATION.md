@@ -22,6 +22,29 @@ Every item has a status (PASS, FAIL, BLOCKED) and evidence. No PASS without evid
 | Fixtures generator produces media and ground truth | BLOCKED | ffmpeg not installed locally (`just fixtures` exits 1 with "ffmpeg not found"); CI `fixtures` job covers it once pushed |
 | Hooks fire inside a live Claude Code session | PASS | During Phase 0 the live guard-bash hook blocked a heredoc writing `.gitignore` (a false positive, fixed and covered by a regression case in tests/hooks/run.sh) |
 
+## Phase 1: core (2026-10-28, Rust 1.99.1, cargo-nextest 0.9.150)
+
+Command for every test row: `cargo nextest run --workspace` (part of `just check`). Five consecutive full runs: 48 of 48 passed each time (logs in `target/evidence/phase1-run-1..5.txt`, local only).
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| Stable error codes with hints | PASS | `error::tests::codes_are_stable` (insta snapshot), `display_matches_serde` |
+| Project model (spec 3.2) serializes camelCase, round-trips, schema pinned | PASS | `model::tests::sample_is_valid_and_round_trips`, `item_body_is_tagged_and_camel_case`, `json_schema_is_stable`, proptest `clip_items_round_trip` |
+| Schema gate rejects bad projects | PASS | `model::tests::validation_rejects_bad_projects`, `patch::tests::protected_fields_and_bad_patches_are_refused` |
+| Timeline math (frames, spans, overlaps) | PASS | `timeline::tests::*` incl. proptests `frames_round_trip`, `back_to_back_items_never_overlap`, `overlap_set_ignores_item_order` (checked against brute force) |
+| Revision gate: stale patches refused naming only changed layers | PASS | `patch::tests::stale_patch_lists_only_changed_layers` |
+| Engine-owned fields cannot be patched; item revs cannot be forged | PASS | `patch::tests::protected_fields_and_bad_patches_are_refused`, `whole_item_replace_cannot_forge_revs` |
+| Undo/redo are revisioned and match linear-undo semantics | PASS | proptest `document::tests::edits_undo_redo_match_reference` (random edit/undo/redo sequences vs reference model; revs +1 each; refused patches change nothing) |
+| Lock gate: agent needs locks, human refused while agent holds, expiry | PASS | `document::tests::agent_needs_locks_and_human_is_refused_while_agent_holds`, `agent_cannot_edit_project_or_track_content_without_a_lock`, `locks::tests::*`, proptest `lock_invariants_hold` |
+| Atomic storage, crash leftovers, corruption, replay | PASS | `storage::tests::save_load_round_trip_and_replay`, `leftover_temp_files_are_removed_and_ignored`, `corruption_is_reported_with_storage_code`, `revision_file_must_match_its_name_and_never_be_overwritten`, `missing_history_is_detected`, `project_behind_history_is_detected`, `only_our_temp_files_are_removed` |
+| Migrations: older projects keep loading | PASS | `ck-core::migrations every_fixture_version_loads` (tests/fixtures/projects/v0-unversioned.json), `migrate::tests::*` |
+| Stage machine and stage gate (E_STAGE with next-step hint, brief-auto exception) | PASS | `stage::tests::every_transition_is_allowed_or_refused_with_hint` (exhaustive), `unconfirmed_brief_blocks_planning_unless_auto`, `patch_before_base_is_refused_with_next_step` |
+| Retry gate | PASS | `retry::tests::third_identical_failing_call_is_refused`, `success_resets_the_count` |
+| JSON logs carry standard fields; secrets redacted | PASS | `log::tests::json_lines_carry_standard_fields_and_redact_secrets`, `ck-cli::cli_smoke logging_is_off_by_default_and_json_when_enabled` |
+| CLI output under size cap | PASS | `ck-cli::cli_smoke version_prints_and_stays_under_cap` |
+| Independent review | PASS | rust-reviewer and spec-checker subagents run on the Phase 1 diff; all med/low correctness findings fixed with regression tests (see PROGRESS.md Phase 1) |
+| Flight recorder folders `.clipkit/trace/`, `.clipkit/cache/` | BLOCKED | Deferred by design to Phases 2+, 5 and 9 (DECISIONS.md, Phase 1) |
+
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 
 | Item | Status | Evidence |

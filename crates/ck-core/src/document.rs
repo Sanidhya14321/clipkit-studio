@@ -124,7 +124,7 @@ impl Document {
             rev = rev.rev,
             author = ?rev.author,
             kind = ?rev.kind,
-            layer_ids = ?rev.touched,
+            layerIds = ?rev.touched,
             "revision committed"
         );
         self.project = project;

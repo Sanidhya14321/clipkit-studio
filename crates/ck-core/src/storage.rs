@@ -67,6 +67,13 @@ impl Store {
             let path = self.revision_path(rev.rev);
             if !path.exists() {
                 write_json(&path, rev)?;
+            } else if read_json(&path)?
+                != serde_json::to_value(rev).map_err(|e| io_err(&path, e))?
+            {
+                return Err(io_err(
+                    &path,
+                    "a different revision is already stored under this number",
+                ));
             }
         }
         write_json(&self.project_path(), doc.project())
@@ -77,14 +84,18 @@ impl Store {
         self.remove_temp_files()?;
         let project = migrate(read_json(&self.project_path())?)?;
         let history = self.read_history()?;
-        if let Some(last) = history.last()
-            && last.rev != project.rev
-        {
+        let base_rev = self.base_rev()?;
+        let (first, last) = match (history.first(), history.last()) {
+            (Some(f), Some(l)) => (Some(f.rev), l.rev),
+            _ => (None, base_rev),
+        };
+        if first.is_some_and(|f| Some(f) != base_rev.checked_add(1)) || last != project.rev {
             return Err(io_err(
                 &self.project_path(),
                 format!(
-                    "project is at rev {} but history ends at rev {}",
-                    project.rev, last.rev
+                    "history covers revs {}..={last} from base rev {base_rev}, but the project is at rev {}",
+                    first.unwrap_or(base_rev),
+                    project.rev
                 ),
             )
             .with_hint("Run ck replay to rebuild the project from history."));
@@ -114,6 +125,18 @@ impl Store {
         }
     }
 
+    /// Revision of `history/base.json`, or 0 when there is no base (a store created elsewhere).
+    fn base_rev(&self) -> CkResult<u64> {
+        let path = self.history_dir().join("base.json");
+        if !path.exists() {
+            return Ok(0);
+        }
+        Ok(read_json(&path)?
+            .get("rev")
+            .and_then(Value::as_u64)
+            .unwrap_or(0))
+    }
+
     fn revision_path(&self, rev: u64) -> PathBuf {
         self.history_dir().join(format!("{rev:08}.json"))
     }
@@ -123,20 +146,24 @@ impl Store {
         let mut revs = Vec::new();
         for entry in fs::read_dir(&dir).map_err(|e| io_err(&dir, e))? {
             let path = entry.map_err(|e| io_err(&dir, e))?.path();
-            let is_rev = path
+            let number = path
                 .file_stem()
                 .and_then(|s| s.to_str())
-                .is_some_and(|s| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()))
-                && path.extension().is_some_and(|e| e == "json");
-            if is_rev {
+                .filter(|s| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()))
+                .and_then(|s| s.parse::<u64>().ok())
+                .filter(|_| path.extension().is_some_and(|e| e == "json"));
+            if let Some(number) = number {
                 let rev: Revision = serde_json::from_value(read_json(&path)?)
                     .map_err(|e| io_err(&path, format!("not a revision: {e}")))?;
+                if rev.rev != number {
+                    return Err(io_err(&path, format!("file holds rev {}", rev.rev)));
+                }
                 revs.push(rev);
             }
         }
         revs.sort_by_key(|r| r.rev);
         for (i, r) in revs.iter().enumerate() {
-            if i > 0 && r.rev != revs[i - 1].rev + 1 {
+            if i > 0 && Some(r.rev) != revs[i - 1].rev.checked_add(1) {
                 return Err(io_err(
                     &dir,
                     format!("history has a gap before rev {}", r.rev),
@@ -156,7 +183,7 @@ impl Store {
                 if path
                     .file_name()
                     .and_then(|n| n.to_str())
-                    .is_some_and(|n| n.contains(TMP_MARKER))
+                    .is_some_and(is_temp_name)
                 {
                     fs::remove_file(&path).map_err(|e| io_err(&path, e))?;
                 }
@@ -164,6 +191,14 @@ impl Store {
         }
         Ok(())
     }
+}
+
+/// Temp files we create look like `.<name>.tmp-<pid>`; nothing else is ever removed.
+fn is_temp_name(name: &str) -> bool {
+    name.starts_with('.')
+        && name.rsplit_once(TMP_MARKER).is_some_and(|(stem, pid)| {
+            stem.len() > 1 && !pid.is_empty() && pid.bytes().all(|b| b.is_ascii_digit())
+        })
 }
 
 fn read_json(path: &Path) -> CkResult<Value> {
@@ -289,6 +324,62 @@ mod tests {
         fs::remove_file(dir.path().join("history/00000002.json")).unwrap();
         let err = store.load().unwrap_err();
         assert!(err.message.contains("gap"), "{err}");
+    }
+
+    #[test]
+    fn revision_file_must_match_its_name_and_never_be_overwritten() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = Store::new(dir.path());
+        store.init(&crate::model::tests::sample()).unwrap();
+        let doc = edited_doc();
+        store.save(&doc).unwrap();
+        // A file named for rev 2 that holds rev 3.
+        fs::copy(
+            dir.path().join("history/00000003.json"),
+            dir.path().join("history/00000002.json"),
+        )
+        .unwrap();
+        assert!(
+            store
+                .load()
+                .unwrap_err()
+                .message
+                .contains("file holds rev 3")
+        );
+        // save refuses to keep a different revision under an existing number.
+        assert_eq!(store.save(&doc).unwrap_err().code, ErrorCode::Storage);
+    }
+
+    #[test]
+    fn missing_history_is_detected() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = Store::new(dir.path());
+        store.init(&crate::model::tests::sample()).unwrap();
+        let doc = edited_doc();
+        store.save(&doc).unwrap();
+        // Lose the whole history: the project is at rev 4 but nothing covers it.
+        for rev in doc.history() {
+            fs::remove_file(store.revision_path(rev.rev)).unwrap();
+        }
+        assert_eq!(store.load().unwrap_err().code, ErrorCode::Storage);
+        // Lose only the first revision: history must start right after the base.
+        store.save(&doc).unwrap();
+        fs::remove_file(store.revision_path(1)).unwrap();
+        assert_eq!(store.load().unwrap_err().code, ErrorCode::Storage);
+    }
+
+    #[test]
+    fn only_our_temp_files_are_removed() {
+        assert!(is_temp_name(".project.json.tmp-1234"));
+        for name in [
+            "notes.tmp-1",
+            ".tmp-12",
+            ".x.tmp-",
+            ".x.tmp-12a",
+            "project.json",
+        ] {
+            assert!(!is_temp_name(name), "{name}");
+        }
     }
 
     #[test]

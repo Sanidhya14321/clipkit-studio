@@ -56,6 +56,41 @@ fn agent_needs_locks_and_human_is_refused_while_agent_holds() {
 }
 
 #[test]
+fn agent_cannot_edit_project_or_track_content_without_a_lock() {
+    use crate::patch::PROJECT_LAYER;
+    let mut doc = Document::new(sample());
+    let fps = |d: &Document, who| {
+        edit(
+            d,
+            who,
+            json!([{"op": "replace", "path": "/settings/fps", "value": 25}]),
+        )
+    };
+    let err = doc.patch(&fps(&doc, Author::Agent), 0).unwrap_err();
+    assert_eq!(
+        (err.code, err.layer_ids.clone()),
+        (ErrorCode::LockNotHeld, vec![PROJECT_LAYER.to_owned()])
+    );
+    let reorder = edit(
+        &doc,
+        Author::Agent,
+        json!([{"op": "move", "from": "/tracks/1/items/1", "path": "/tracks/1/items/0"}]),
+    );
+    assert_eq!(
+        doc.patch(&reorder, 0).unwrap_err().layer_ids,
+        vec!["t2".to_owned()]
+    );
+
+    doc.acquire(Holder::Agent, &[PROJECT_LAYER.to_owned()], 0)
+        .unwrap();
+    assert_eq!(
+        doc.patch(&fps(&doc, Author::Human), 1).unwrap_err().code,
+        ErrorCode::LockHeld
+    );
+    doc.patch(&fps(&doc, Author::Agent), 2).unwrap();
+}
+
+#[test]
 fn empty_history_errors() {
     let mut doc = Document::new(sample());
     assert_eq!(

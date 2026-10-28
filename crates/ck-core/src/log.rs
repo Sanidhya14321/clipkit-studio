@@ -7,12 +7,14 @@ use serde::{Serialize, Serializer};
 
 /// Field names every call, patch, lock change, render and provider call carries where they apply.
 pub mod fields {
-    pub const TRACE_ID: &str = "trace_id";
-    pub const RUN_ID: &str = "run_id";
-    pub const TURN_ID: &str = "turn_id";
+    pub const TRACE_ID: &str = "traceId";
+    pub const RUN_ID: &str = "runId";
+    pub const TURN_ID: &str = "turnId";
     pub const STAGE: &str = "stage";
     pub const PASS: &str = "pass";
-    pub const LAYER_ID: &str = "layer_id";
+    pub const LAYER_ID: &str = "layerId";
+    /// For events about several layers at once.
+    pub const LAYER_IDS: &str = "layerIds";
     pub const REV: &str = "rev";
 }
 
@@ -27,9 +29,9 @@ pub fn op_span(
 ) -> tracing::Span {
     tracing::info_span!(
         "ck_op",
-        trace_id = trace_id,
-        run_id = run_id,
-        turn_id = turn_id,
+        traceId = trace_id,
+        runId = run_id,
+        turnId = turn_id,
         stage = stage,
         pass = pass.unwrap_or("")
     )
@@ -135,7 +137,7 @@ mod tests {
             .find(|l| l["message"] == "revision committed")
             .unwrap();
         assert_eq!(commit[fields::REV], 1);
-        assert!(commit["layer_ids"].as_str().unwrap().contains('b'));
+        assert!(commit[fields::LAYER_IDS].as_str().unwrap().contains('b'));
         for name in [
             fields::TRACE_ID,
             fields::RUN_ID,

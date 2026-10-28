@@ -80,7 +80,10 @@ pub fn apply(project: &Project, req: &PatchRequest) -> CkResult<Applied> {
 
     // Engine bookkeeping: bump the project rev and stamp touched items; keep other items' revs.
     let old_revs: BTreeMap<&str, u64> = project.items().map(|i| (i.id.as_str(), i.rev)).collect();
-    next.rev = project.rev + 1;
+    next.rev = project
+        .rev
+        .checked_add(1)
+        .ok_or_else(|| CkError::new(ErrorCode::PatchInvalid, "revision counter overflow"))?;
     for track in &mut next.tracks {
         for item in &mut track.items {
             item.rev = if touched.binary_search(&item.id).is_ok() {
@@ -161,7 +164,7 @@ fn check_protected(ops: &Patch) -> CkResult<()> {
 }
 
 fn to_value(project: &Project) -> CkResult<Value> {
-    serde_json::to_value(project).map_err(|e| CkError::new(ErrorCode::Schema, e.to_string()))
+    json(project)
 }
 
 /// The project without engine-owned fields. Removing keys never shifts array indices,
@@ -185,27 +188,81 @@ pub(crate) fn content(full: &Value) -> Value {
     v
 }
 
-/// Ids of items whose content differs between `a` and `b` (added, removed or changed).
+/// Lock id that stands for project-level content (settings, brief, sources, voice slots,
+/// comments, tokens, plan). Layer and track ids may not start with `@`.
+pub const PROJECT_LAYER: &str = "@project";
+
+/// What a patch touched, as lock ids: items added, removed, changed or moved to another track;
+/// tracks whose own fields or item order changed; and `PROJECT_LAYER` when any other content changed.
+/// Sorted. Every content change produces at least one id, so the lock gate always applies.
 fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
-    let index = |p: &Project| -> CkResult<BTreeMap<String, Value>> {
-        p.items()
-            .map(|i| {
-                let mut v = serde_json::to_value(i)
-                    .map_err(|e| CkError::new(ErrorCode::Schema, e.to_string()))?;
+    let items = |p: &Project| -> CkResult<BTreeMap<String, Value>> {
+        let mut out = BTreeMap::new();
+        for t in &p.tracks {
+            for i in &t.items {
+                let mut v = json(i)?;
                 if let Some(o) = v.as_object_mut() {
                     o.remove("rev");
+                    o.insert("@track".into(), Value::String(t.id.clone()));
                 }
-                Ok((i.id.clone(), v))
-            })
+                out.insert(i.id.clone(), v);
+            }
+        }
+        Ok(out)
+    };
+    let tracks = |p: &Project| -> BTreeMap<String, Value> {
+        p.tracks
+            .iter()
+            .map(|t| (t.id.clone(), serde_json::json!({ "kind": t.kind })))
             .collect()
     };
-    let (ia, ib) = (index(a)?, index(b)?);
-    let ids: BTreeSet<&String> = ia.keys().chain(ib.keys()).collect();
-    Ok(ids
-        .into_iter()
-        .filter(|id| ia.get(*id) != ib.get(*id))
-        .cloned()
-        .collect())
+    let rest = |p: &Project| -> CkResult<Value> {
+        let mut v = content(&json(p)?);
+        if let Some(o) = v.as_object_mut() {
+            o.remove("tracks");
+        }
+        Ok(v)
+    };
+
+    let mut touched: BTreeSet<String> = BTreeSet::new();
+    let (ia, ib) = (items(a)?, items(b)?);
+    touched.extend(
+        ia.keys()
+            .chain(ib.keys())
+            .filter(|id| ia.get(*id) != ib.get(*id))
+            .cloned(),
+    );
+    let (ta, tb) = (tracks(a), tracks(b));
+    touched.extend(
+        ta.keys()
+            .chain(tb.keys())
+            .filter(|id| ta.get(*id) != tb.get(*id))
+            .cloned(),
+    );
+    // Reordering items inside a track changes no item, so it counts against the track.
+    for t in &b.tracks {
+        let Some(old) = a.tracks.iter().find(|o| o.id == t.id) else {
+            continue;
+        };
+        let common = |x: &crate::model::Track, y: &crate::model::Track| -> Vec<String> {
+            x.items
+                .iter()
+                .filter(|i| y.items.iter().any(|j| j.id == i.id))
+                .map(|i| i.id.clone())
+                .collect()
+        };
+        if common(old, t) != common(t, old) {
+            touched.insert(t.id.clone());
+        }
+    }
+    if rest(a)? != rest(b)? {
+        touched.insert(PROJECT_LAYER.to_owned());
+    }
+    Ok(touched.into_iter().collect())
+}
+
+fn json<T: Serialize>(v: &T) -> CkResult<Value> {
+    serde_json::to_value(v).map_err(|e| CkError::new(ErrorCode::Schema, e.to_string()))
 }
 
 #[cfg(test)]
@@ -316,6 +373,44 @@ mod tests {
             let err = apply(&p, &req(0, ops.clone())).unwrap_err();
             assert_eq!(err.code, code, "{ops}");
         }
+    }
+
+    #[test]
+    fn touched_covers_tracks_moves_order_and_project_content() {
+        let p = sample();
+        let touched = |ops: Value| apply(&p, &req(0, ops)).unwrap().touched;
+        let ids = |v: &[&str]| v.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>();
+        assert_eq!(
+            touched(json!([{"op": "replace", "path": "/settings/fps", "value": 25}])),
+            ids(&[PROJECT_LAYER])
+        );
+        assert_eq!(
+            touched(json!([{"op": "replace", "path": "/tracks/1/kind", "value": "video"}])),
+            ids(&["t2"])
+        );
+        // Moving an unchanged item to another track touches the item.
+        assert_eq!(
+            touched(
+                json!([{"op": "move", "from": "/tracks/1/items/0", "path": "/tracks/0/items/-"}])
+            ),
+            ids(&["b"])
+        );
+        // Reordering inside a track touches the track.
+        assert_eq!(
+            touched(
+                json!([{"op": "move", "from": "/tracks/1/items/1", "path": "/tracks/1/items/0"}])
+            ),
+            ids(&["t2"])
+        );
+        let bad = apply(
+            &p,
+            &req(
+                0,
+                json!([{"op": "replace", "path": "/tracks/0/id", "value": "@x"}]),
+            ),
+        )
+        .unwrap_err();
+        assert_eq!(bad.code, ErrorCode::Schema);
     }
 
     #[test]
