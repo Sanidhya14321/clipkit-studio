@@ -1,35 +1,7 @@
-// Live studio state. The server is the source of truth: the project comes only from `snapshot`
-// events, locks from `locks` events, and `revision` events say what the last patch touched.
+// Live studio state: events from the server's WebSocket folded by the pure reducer in state.ts.
 import { useEffect, useState } from "react";
 import { subscribe } from "./api";
-import type { Event, Lock, Project } from "./generated/types";
-
-export type Revision = Extract<Event, { type: "revision" }>;
-
-export interface StudioState {
-  connected: boolean;
-  project: Project | null;
-  locks: Lock[];
-  lastRevision: Revision | null;
-}
-
-const initial: StudioState = {
-  connected: false,
-  project: null,
-  locks: [],
-  lastRevision: null,
-};
-
-export function reduce(state: StudioState, event: Event): StudioState {
-  switch (event.type) {
-    case "snapshot":
-      return { ...state, project: event.project };
-    case "locks":
-      return { ...state, locks: event.locks };
-    case "revision":
-      return { ...state, lastRevision: event };
-  }
-}
+import { initial, reduce, type StudioState } from "./state";
 
 export function useStudio(token: string): StudioState {
   const [state, setState] = useState<StudioState>(initial);
@@ -43,4 +15,14 @@ export function useStudio(token: string): StudioState {
     [token],
   );
   return state;
+}
+
+/** Wall clock in ms, refreshed every `everyMs` so lock expiry shows without a new event. */
+export function useNow(everyMs = 1000): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), everyMs);
+    return () => clearInterval(id);
+  }, [everyMs]);
+  return now;
 }

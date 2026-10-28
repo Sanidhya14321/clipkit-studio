@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 2
 
 ## Handoff (latest)
-1. Done: Phase 2 step 6a. studio/ scaffold (Vite 8, React 19.3, Remotion Player 4.0.535, TS 7 strict): token from `#token=`, WS live state from snapshots, Player preview with `data-ck-layer` boxes; ck-server serves `studio/dist` via rust-embed as the router fallback.
-2. Proof: `just check` green (96 tests, hooks 41, studio prettier + tsc); 9 static-serving tests; live `ck studio` served the real build and WS snapshot (VERIFICATION.md, step 6a rows).
-3. Open: browser rendering unchecked until Playwright (step 7); rust-embed 8.13.0 date and CI action majors unverified; no CSP yet; plus earlier items (DECISIONS.md, Phase 2).
-4. Next: Phase 2 step 6b: panels: timeline, inspector, read-only mode (disable edits while agent locks; server refusal already exists), banner, activity feed, ghost cursor; edits sent as patches via `request()` in studio/src/api.ts.
-5. Start: run `scripts/autobuild.sh`, or continue Phase 2 at step 6b; `just studio-build` then `cargo run -p ck-cli -- studio --dir <folder>` and open `url#token=<server.json token>`.
+1. Done: Phase 2 step 6b. The studio has a banner, a timeline (select, flash, ghost cursor), an inspector (name, purpose, timing edits sent as human patches) with read-only mode on agent-locked layers, and an activity feed. The pure logic lives in `studio/src/state.ts` with `node --test` tests.
+2. Proof: `just check` green (96 nextest, hooks 41, studio prettier + tsc + 10 unit tests). In the live check, the studio's own patch got E_LOCK_HELD (423) while the agent held the layer and landed after unlock (VERIFICATION.md, step 6b rows).
+3. Open: panels not yet seen in a browser (Playwright, step 7). Stop button, per-step token usage and the global structural lock are deferred (DECISIONS.md, step 6b). No CSP yet. Plus the earlier items.
+4. Next: Phase 2 step 7: Playwright e2e (CLI patch visible in under 300 ms; human edit refused while the agent holds the lock, checked in the DOM via `data-ck-readonly`/disabled input and via the refused API call). Then step 8: reviewers, spec-checker, phase done.
+5. Start: run `scripts/autobuild.sh`, or continue Phase 2 at step 7. `just studio-build`, then `cargo run -p ck-cli -- studio --dir <folder>`, then open `url#token=<server.json token>`. `target/live-check/panels.mjs` shows the API-level flow.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -23,7 +23,8 @@ PHASE: 2
 - Phase 2 step 4: rmcp 3.8.0 release date unverified (same headless limit); re-check and pin back if under two weeks old. MCP `lock`/`unlock` require `holder` while the CLI defaults `--holder agent`; revisit if strict input parity is wanted (DECISIONS.md, step 4).
 - Phase 2 step 5: ts-rs 12.0.1 release date unverified (same headless limit); re-check and pin back if under two weeks old.
 - Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies are written into package.json by hand and installed with `pnpm install`. Step 6a found the npm registry reachable: versions and dates checked with `pnpm view` (DECISIONS.md, step 6a).
-- Phase 2 step 6a: rust-embed 8.13.0 release date and the CI action majors (pnpm/action-setup@v4, actions/setup-node@v5) unverified; confirm on the first CI run. No CSP on the studio page yet (Remotion inline styles); decide in 6b.
+- Phase 2 step 6a: rust-embed 8.13.0 release date and the CI action majors (pnpm/action-setup@v4, actions/setup-node@v5) unverified; confirm on the first CI run. No CSP on the studio page yet (Remotion inline styles); still open after 6b, decide in step 8 or Phase 3.
+- Phase 2 step 6b: spec 5.2's Stop button needs cooperative cancel through the event bus (no route yet). Spec 5.3's global lock for structural changes has no lock id in ck-core. Both are deferred (DECISIONS.md, step 6b); confirm Phase 3 and Phase 6 pick them up.
 
 ## Roadmap additions: asset supply expansion (2026-10-28)
 
@@ -67,15 +68,21 @@ Run plan (autonomous run 5): step 6a only (step 6 split: 6a scaffold + embed, 6b
 - ck-server: rust-embed serves `studio/dist` (SPA fallback to index.html, no token for static files, site guard still applies); a clear "studio not built" page when dist is empty.
 - just: `studio-build`, `studio-dev`; tests: static serving via a fake asset table, guard still applies, real build served by `ck studio` checked once.
 
+Run plan (autonomous run 6): step 6b only.
+- Pure studio logic in `studio/src/state.ts` (event reducer, activity feed, flash, live agent locks, editability, human patch builder) with `node --test` unit tests (Node 24 strips types; `@types/node` devDep), wired into `just studio-check`.
+- Panels: banner (agent status, stage/pass, label; "agent stopped" when its locks expired), activity feed (one line per revision), timeline (tracks, items by span, select, flash on touch, ghost cursor on agent-active/locked layers), inspector (name, purpose, timing; edits sent as JSON patches with baseRev/layerRevs, author human).
+- Read-only: inspector controls disabled on agent-locked layers; server refusal (E_LOCK_HELD) shown inline. Canvas outline + flash via Player inputProps (composition stays pure).
+- Out of scope (recorded): Stop button (needs cooperative cancel, Phase 3), token usage per step (meter, later), global structural lock (core has none yet).
+
 Steps (each ends with `just check`):
 - [x] 1. Deps + ck-server core: session state, event bus, server.json, bind to 127.0.0.1 on a free port.
 - [x] 2. HTTP + WS API with token/Host/Origin guards; refusals tested (E_AUTH, E_LOCK_HELD over HTTP).
 - [x] 3. Shared ops layer + CLI basics: `ck studio` (serve), `ck status`, `ck project get --summary|--layer`, `ck project patch` (spec 6.2 naming), `ck lock`, `ck unlock`; output size caps.
 - [x] 4. MCP twin (rmcp, stdio) for the same ops; schema, size cap and CLI/MCP parity tests.
 - [x] 5. TS type generation from the Rust types (ts-rs or specta, verified), checked in CI for drift.
-- [ ] 6. Studio shell: Vite + React + Remotion Player preview, timeline, inspector, read-only mode, banner, activity feed, ghost cursor; embedded with rust-embed.
+- [x] 6. Studio shell: Vite + React + Remotion Player preview, timeline, inspector, read-only mode, banner, activity feed, ghost cursor; embedded with rust-embed.
   - [x] 6a. Scaffold, live project state over WS, Player preview, rust-embed serving, `just studio-build|studio-dev|studio-check`.
-  - [ ] 6b. Panels: timeline, inspector, read-only mode, banner, activity feed, ghost cursor.
+  - [x] 6b. Panels: timeline, inspector, read-only mode, banner, activity feed, ghost cursor.
 - [ ] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.
 - [ ] 8. Evidence, reviewers, DECISIONS.md, handoff, commit; mark phase done.
 

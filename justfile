@@ -12,11 +12,12 @@ check:
     tests/hooks/run.sh
     just studio-check
 
-# Studio: prettier check and strict typecheck (installs locked deps if missing).
+# Studio: prettier check, strict typecheck and unit tests (installs locked deps if missing).
 studio-check:
     [ -d studio/node_modules ] || pnpm --dir studio install --frozen-lockfile --silent
     pnpm --dir studio --silent format:check
     pnpm --dir studio --silent typecheck
+    pnpm --dir studio --silent test
 
 # Build the studio into studio/dist (embedded by ck; debug builds read it from disk).
 studio-build:

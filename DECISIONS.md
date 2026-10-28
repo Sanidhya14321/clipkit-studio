@@ -101,7 +101,19 @@ npm versions: newest stable release at least two weeks old per `pnpm view <pkg> 
 - **Live state from snapshots only**: the studio's project comes from `snapshot` events (sent on connect and after each change); no separate initial fetch. Item timing in TS (`studio/src/timeline.ts`) mirrors `ck_core::timeline::span`; the Player duration is at least one frame.
 - **Preview shell**: the composition draws each visible layer as a labelled box with `data-ck-layer`; media from proxies and component clips arrive with their phases.
 - **Checks**: `just check` now ends with `just studio-check` (prettier check + `tsc --noEmit`, strict); CI installs pnpm (`pnpm/action-setup@v4`, from `packageManager`) and Node 24 (`actions/setup-node@v5`); those action majors are unverified (headless).
-- TypeScript 7 (native) typechecks; Vite bundles the config itself, so `vite.config.ts` is outside the tsconfig and no `@types/node` is needed.
+- TypeScript 7 (native) typechecks; Vite bundles the config itself, so `vite.config.ts` is outside the tsconfig and no `@types/node` is needed (step 6b adds it for the unit tests).
+
+### Step 6b: studio panels (2026-10-29)
+| Package | Version | Released |
+| --- | --- | --- |
+| @types/node | 24.19.2 | 2026-10-09 (newest 24.x at least two weeks old, `pnpm view`) |
+- **Unit tests with `node --test`**, no test framework dependency: Node 24 strips types, so pure modules (`studio/src/state.ts`) run as-is. Such modules use only `import type` for other studio files (erased), and tests import them with the `.ts` extension (`allowImportingTsExtensions`, fine under `noEmit`). `pnpm test` runs from `just studio-check`.
+- **Lock liveness in the browser** uses the browser's `Date.now()` against `heartbeatAtMs + ttlMs`. The server runs on the same machine with the same wall clock, and a 1 s ticker re-evaluates expiry. The server stays the authority; the UI only disables controls.
+- **Read-only scope** matches the server's lock gate exactly: a layer's controls are disabled while the agent holds a live lock on that layer id. Spec 5.3's global lock for structural changes has no lock id in ck-core yet, so the UI has none either (revisit with Phase 6 layer locks).
+- **Edits** are single `replace` ops on name, purpose, `at` and clip `dur`, sent with `baseRev` and the layer's `layerRevs`, so an edit built on an old view is E_PATCH_STALE instead of overwriting. The schema-driven props inspector, drag, trim and split are Phase 6 (spec 5.4).
+- **Banner**: shows status, stage or pass name, and the agent's label. Shows "agent stopped" when the agent had locks and all of them lapsed without a release (spec 5.3 crash safety). The model has no agent name yet, so it says "Agent".
+- **Ghost cursor and outline** mark the agent's live locked layers plus `agent.activeLayers` (while not idle), on the timeline and on the canvas. The canvas gets them through Player `inputProps`, so the composition stays a pure function of its props. Touched layers flash for 600 ms; timeline items move with a 200 ms CSS transition (watch mode is UI only).
+- **Not in 6b**: the Stop button (needs cooperative cancel through the event bus; Phase 3 brings agent events), token usage per feed line (the meter arrives later), CSP (still open).
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)

@@ -23,11 +23,226 @@ body {
   border-bottom: 1px solid #27272a;
 }
 
-.studio-preview {
+.banner {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  background: #1e293b;
+  border-bottom: 1px solid #27272a;
+}
+
+.banner[data-ck-agent="working"] {
+  background: #422006;
+}
+
+.banner[data-ck-agent="stopped"] {
+  background: #450a0a;
+}
+
+.banner-who {
+  font-weight: 600;
+}
+
+.banner-status {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.studio-body {
   flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 20rem;
+  grid-template-rows: 1fr auto;
+}
+
+.studio-preview {
   min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
+
+.studio-side {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-left: 1px solid #27272a;
+}
+
+.panel {
+  padding: 0.75rem 1rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+.muted {
+  opacity: 0.6;
+  margin: 0 0 0.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.field input {
+  font: inherit;
+  padding: 0.3rem 0.4rem;
+  background: #27272a;
+  color: inherit;
+  border: 1px solid #3f3f46;
+  border-radius: 4px;
+}
+
+.field input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.readonly-note {
+  color: #facc15;
+  font-size: 0.85rem;
+}
+
+.error {
+  color: #f87171;
+  font-size: 0.85rem;
+}
+
+.feed {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border-top: 1px solid #27272a;
+}
+
+.feed ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.feed li {
+  padding: 0.2rem 0;
+}
+
+.feed-rev,
+.feed-author {
+  opacity: 0.6;
+}
+
+.timeline {
+  grid-column: 1;
+  border-top: 1px solid #27272a;
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.track-label {
+  width: 5rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-lane {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  background: #202024;
+  border-radius: 4px;
+}
+
+.item {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  min-width: 4px;
+  padding: 0 0.4rem;
+  font: inherit;
+  font-size: 0.75rem;
+  color: #fff;
+  text-align: left;
+  white-space: nowrap;
+  overflow: visible;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  /* Watch mode: patch arrivals animate in the UI only (spec 5.2). */
+  transition:
+    left 200ms ease-out,
+    width 200ms ease-out;
+}
+
+.item.kind-video {
+  background: #2d4a6b;
+}
+
+.item.kind-overlay {
+  background: #5a3d6b;
+}
+
+.item.kind-audio {
+  background: #2f5d46;
+}
+
+.item.kind-caption {
+  background: #6b5a2d;
+}
+
+.item[data-ck-selected="true"] {
+  border-color: #fff;
+}
+
+.item[data-ck-agent="true"] {
+  outline: 2px dashed #facc15;
+  outline-offset: 1px;
+}
+
+.ghost-cursor {
+  position: absolute;
+  top: -0.9rem;
+  left: -0.3rem;
+  color: #facc15;
+  font-size: 0.7rem;
+  pointer-events: none;
+}
+
+.flash {
+  animation: ck-flash 600ms ease-out;
+}
+
+@keyframes ck-flash {
+  from {
+    box-shadow: 0 0 0 4px #fde047;
+  }
+  to {
+    box-shadow: 0 0 0 0 transparent;
+  }
 }
