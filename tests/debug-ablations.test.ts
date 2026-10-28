@@ -18,3 +18,16 @@ it('changes actual module behavior only in explicitly selected ablation servers'
   }finally{await server.close();await rm(root,{recursive:true,force:true});}
  }
 },30000);
+
+it('allows repeated full-source retrieval only when C3 disables the ladder gate',async()=>{
+ const {RetrievalMeter}=await import('../packages/assets/src/retrieval');
+ const root=await mkdtemp(path.join(tmpdir(),'ck-c3-'));
+ try{const meter=await new RetrievalMeter(path.join(root,'meter.json')).load();
+  const normal={turn:'normal',pass:'planning',totalBudget:100};
+  await meter.record('L4','source',normal,'Inspect the synthetic implementation');
+  await expect(meter.record('L4','source',normal,'Inspect another synthetic implementation')).rejects.toThrow('only once');
+  const disabled={turn:'ablation',pass:'planning',totalBudget:1,unlimitedFullSource:!armFlags('C3').ladder};
+  await meter.record('L4','source',disabled,'Inspect the synthetic implementation');
+  await expect(meter.record('L4','source',disabled,'Inspect another synthetic implementation')).resolves.toBeGreaterThan(0);
+ }finally{await rm(root,{recursive:true,force:true});}
+});

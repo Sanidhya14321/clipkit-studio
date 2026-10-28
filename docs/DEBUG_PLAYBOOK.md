@@ -38,7 +38,7 @@ ZIPs include only bounded JSON, JSONL and documentation files. They exclude medi
 
 | Code | Likely cause | First step |
 | --- | --- | --- |
-| E_ENV | Missing binary, unavailable port, disk or credentials | `ck doctor` |
+| E_ENV | Missing binary, unavailable port, disk, credentials or provider quota | `ck doctor` |
 | E_SCHEMA | Invalid command or project input | Check CLI/MCP input schema and rejected field |
 | E_PATCH_INVALID | Invalid patch or replay hash | Inspect rejected operations / recorded patches |
 | E_PATCH_STALE | Revision conflict | Read current affected layer revisions |

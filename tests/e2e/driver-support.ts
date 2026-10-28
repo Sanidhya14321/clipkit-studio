@@ -1,3 +1,4 @@
+import {redact} from '../../packages/debug/src/trace';
 import type {Page,TestInfo} from '@playwright/test';
 import {appendFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
@@ -5,7 +6,7 @@ export async function recordDriver(page:Page,info:TestInfo){
  const folder=info.outputPath('driver');
  await mkdir(folder,{recursive:true});
  const log=(event:unknown)=>void appendFile(path.join(folder,'events.jsonl'),JSON.stringify(event)+'\n');
- page.on('console',message=>log({type:'console',level:message.type(),bytes:message.text().length}));
+ page.on('console',message=>log({type:'console',level:message.type(),bytes:message.text().length,detail:redact(message.text())}));
  page.on('requestfinished',request=>{
   if(request.url().includes('/api/op/'))log({type:'request',operation:new URL(request.url()).pathname,method:request.method(),traceId:request.headers()['x-clipkit-trace']??null});
  });

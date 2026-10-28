@@ -210,3 +210,17 @@ The official `remotion-dev/skills` pin `30d4553ecd46fbc5212fd0ff006ae43af522158b
 V-5 setup corrections before valid comparisons: the real three-turn Codex preflight established that resume reports cumulative session token totals (13,661 → 27,347 → 41,058 input), so the runner records the latest cumulative total once. Interrupted sessions retain partial known usage but exclude it from comparative token statistics. Codex also automatically seeds 49 built-in system-skill files in a fresh home; the baseline now accepts only their exact CLI-0.162.1 content hashes, independently matched by a fresh no-tools preflight. Modified defaults and any extra skill still fail; an after-run file check catches later contamination. Earlier misclassified attempts remain under preflight-invalid-builtin-seeding and are excluded.
 
 Evaluator fairness review also removed an implicit 1080p requirement from S1–S3: their supplied facts request 16:9, not a resolution. Aspect is evaluated equally at any resolution; S4 preserves the explicit starter dimensions. This corrects an undocumented format preference before valid measurements, without changing the request, model, time budget or visual acceptance targets.
+
+
+## Update 4 V-6 / V-7 / V-8
+
+Actual experiment source revision is 0885a9c. Preserve all 36 slots: four deadline-censored valid attempts, twenty account-usage refusals and twelve unverified A1 blocks. No complete usage/cost or quality-win claim is supportable. The published report and explicit NO_GO gate distinguish scheduled slots, valid attempts and measured complete sessions. Provider-wide failure now prevents further launches; existing experiments cannot be silently mixed with new runs.
+
+Default diagnostic redaction covers owner copy and source-file payloads, while keeping SHA metadata and typed source/confidence enums. ZIP export first verifies original logs, then recomputes patches/hashes over anonymized revisions. Actual failed Studio trace extraction replay validates nine revisions locally; independent reproduction remains open. CLI/MCP request trace correlation and revision headers are checked through a real child CLI.
+
+Native browser trace archives capture credential headers by design, so the default driver uses sanitized logs/screenshots instead. Earlier expired local capabilities were removed with audited before/after hashes rather than retained as a raw secret backup. Global lease registration and legacy-token-shape redaction cover embedded capability strings. Original result metrics and revision histories are preserved. Fast and nightly CI upload bounded redacted diagnostic ZIPs; successful hosted execution remains separate evidence.
+
+Remaining full-scope gaps are explicit in VERIFICATION.md: exhaustive legacy output/parity contracts, dedicated S5–S15 real-agent drivers, full independent rendered evaluation, real/live/human fixtures/acceptance and cross-matrix work. These are not waived by passing local fixture checks.
+
+
+V-8 startup fix: ProjectStore must not rewrite an unchanged saved file solely because schema parsing reordered keys. Save on missing snapshot, journal recovery or actual data change; preserve existing bytes otherwise. The current owner revision-51 bytes were recovered exactly from the retained snapshot plus its journal, with the original checksum and equal data, and are preserved. This is distinct from restoring an older film snapshot.

@@ -27,7 +27,8 @@ export class ProjectStore {
   get dir(){return join(this.root,'.clipkit');}
   async load() {
     await mkdir(join(this.dir,'history'),{recursive:true});
-    try {this.project=migrateProject(JSON.parse(await readFile(join(this.dir,'project.json'),'utf8')));} catch(e) {if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
+    let savedSnapshot:string|undefined;
+    try {savedSnapshot=await readFile(join(this.dir,'project.json'),'utf8');this.project=migrateProject(JSON.parse(savedSnapshot));} catch(e) {if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
     let journal='';try{journal=await readFile(join(this.dir,'history','journal.jsonl'),'utf8');}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
     const lines=journal.split('\n');
     for(let n=0;n<lines.length;n++){
@@ -39,7 +40,7 @@ export class ProjectStore {
     }
     if(this.project.rev>this.history.length)throw new ClipKitError('CORRUPT_HISTORY','Snapshot is ahead of its journal');
     this.validateExtra(this.project);
-    await this.snapshot();
+    if(savedSnapshot===undefined||!isDeepStrictEqual(JSON.parse(savedSnapshot),this.project))await this.snapshot();
     return this;
   }
   private rebuildStacks(h:HistoryEntry){
