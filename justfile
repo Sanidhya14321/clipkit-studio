@@ -10,6 +10,18 @@ check:
     cargo clippy --workspace --all-targets --message-format short --quiet -- -D warnings
     cargo nextest run --workspace --no-tests=pass --cargo-quiet
     tests/hooks/run.sh
+    just studio-check
+
+# Studio: prettier check and strict typecheck (installs locked deps if missing).
+studio-check:
+    [ -d studio/node_modules ] || pnpm --dir studio install --frozen-lockfile --silent
+    pnpm --dir studio --silent format:check
+    pnpm --dir studio --silent typecheck
+
+# Build the studio into studio/dist (embedded by ck; debug builds read it from disk).
+studio-build:
+    [ -d studio/node_modules ] || pnpm --dir studio install --frozen-lockfile --silent
+    pnpm --dir studio --silent build
 
 # Format check plus clippy and unit tests of changed crates only (used by the Stop hook).
 check-fast:
@@ -28,9 +40,10 @@ fmt:
 types:
     CK_WRITE_TYPES=1 cargo nextest run -p ck-server --cargo-quiet -E 'test(ts_types)'
 
-# Studio dev server (studio/ is built in Phase 2).
+# Studio dev server with hot reload, proxying /api and /ws to the `ck studio` running here.
+# Open the printed Vite URL with `#token=<token from .clipkit/server.json>`.
 studio-dev:
-    @echo "PLACEHOLDER: studio/ is created in Phase 2 (spec 12)"; exit 1
+    CK_PORT="$(jq -r .port .clipkit/server.json)" pnpm --dir studio dev
 
 # Playwright browser tests (Phase 2 onward).
 e2e:

@@ -38,6 +38,8 @@ ck-mcp = { path = "crates/ck-mcp" }
 # TS bindings for the studio; serde attributes are honoured (serde-compat is default).
 ts-rs = { version = "12.0.1", features = ["serde-json-impl"] }
 rmcp = { version = "3.8.0", default-features = false, features = ["server", "transport-io"] }
+# Built studio (studio/dist) inside the binary; content types are mapped by hand, no mime_guess.
+rust-embed = { version = "8.13.0", default-features = false }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

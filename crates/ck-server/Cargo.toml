@@ -18,6 +18,7 @@ tokio.workspace = true
 axum.workspace = true
 getrandom.workspace = true
 ureq.workspace = true
+rust-embed.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

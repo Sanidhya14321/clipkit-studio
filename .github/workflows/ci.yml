@@ -30,6 +30,13 @@ jobs:
         with:
           tool: just,cargo-nextest
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq jq
+      # `just check` includes the studio typecheck and prettier check.
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: studio/package.json
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
       - run: just check
 
   fixtures:

@@ -4,6 +4,7 @@ use std::sync::Arc;
 
 use axum::extract::rejection::JsonRejection;
 use axum::extract::{DefaultBodyLimit, Query, State};
+use axum::http::{Method, Uri};
 use axum::routing::{get, post};
 use axum::{Json, Router, middleware};
 use ck_core::patch::PatchRequest;
@@ -14,6 +15,7 @@ use serde::de::DeserializeOwned;
 use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
+use crate::studio::{self, Assets};
 use crate::ws;
 
 /// Largest accepted request body. Patches are small; whole projects never travel inbound.
@@ -21,8 +23,14 @@ pub const BODY_LIMIT: usize = 1024 * 1024;
 
 type ApiResult = Result<Json<serde_json::Value>, ApiError>;
 
-/// The full router: `/api/*` and `/ws` need the token; everything passes the site guard.
+/// The full router: `/api/*` and `/ws` need the token; everything passes the site guard; other
+/// paths serve the embedded studio.
 pub fn router(session: Arc<Session>, guard: Guard) -> Router {
+    router_with_assets(session, guard, studio::embedded)
+}
+
+/// [`router`] with the studio files from `assets` (tests pass a fake build).
+pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -> Router {
     let api = Router::new()
         .route("/api/status", get(status))
         .route("/api/project", get(project))
@@ -37,6 +45,7 @@ pub fn router(session: Arc<Session>, guard: Guard) -> Router {
         ));
     Router::new()
         .merge(api)
+        .fallback(move |method: Method, uri: Uri| studio::serve(assets, method, uri))
         .layer(DefaultBodyLimit::max(BODY_LIMIT))
         .layer(middleware::from_fn_with_state(guard, auth::site_guard))
         .with_state(session)

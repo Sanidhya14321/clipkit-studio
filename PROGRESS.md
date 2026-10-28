@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 2
 
 ## Handoff (latest)
-1. Done: Phase 2 step 5. ts-rs 12.0.1 `TS` derive on every wire type; `ck_server::ts_types::render()` writes one file, `studio/src/generated/types.ts`; `just types` regenerates it.
-2. Proof: `just check` green (87 tests, hooks 41); drift test fails on a hand edit (checked); every referenced name declared; no `bigint`. Evidence in VERIFICATION.md (Phase 2, step 5 rows).
-3. Open: ts-rs, rmcp, clap, ureq, tokio... release dates unverified (headless); MCP holder default; E_SERVER hint names `--ensure` (Phase 3); role trust boundary. See DECISIONS.md, Phase 2.
-4. Next: Phase 2 step 6: studio shell (Vite + React + Remotion Player, timeline, inspector, read-only mode, banner, activity feed, ghost cursor) importing `studio/src/generated/types.ts`, embedded with rust-embed. Large: split it (scaffold + embed first, then panels).
-5. Start: run `scripts/autobuild.sh`, or open a session and continue Phase 2 at step 6 in PROGRESS.md.
+1. Done: Phase 2 step 6a. studio/ scaffold (Vite 8, React 19.3, Remotion Player 4.0.535, TS 7 strict): token from `#token=`, WS live state from snapshots, Player preview with `data-ck-layer` boxes; ck-server serves `studio/dist` via rust-embed as the router fallback.
+2. Proof: `just check` green (96 tests, hooks 41, studio prettier + tsc); 9 static-serving tests; live `ck studio` served the real build and WS snapshot (VERIFICATION.md, step 6a rows).
+3. Open: browser rendering unchecked until Playwright (step 7); rust-embed 8.13.0 date and CI action majors unverified; no CSP yet; plus earlier items (DECISIONS.md, Phase 2).
+4. Next: Phase 2 step 6b: panels: timeline, inspector, read-only mode (disable edits while agent locks; server refusal already exists), banner, activity feed, ghost cursor; edits sent as patches via `request()` in studio/src/api.ts.
+5. Start: run `scripts/autobuild.sh`, or continue Phase 2 at step 6b; `just studio-build` then `cargo run -p ck-cli -- studio --dir <folder>` and open `url#token=<server.json token>`.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -22,7 +22,8 @@ PHASE: 2
 - Phase 2 step 3: the E_SERVER hint says `ck studio --ensure`, which Phase 3 adds; until then an agent following it gets a usage error. Keep the hint (it is the shipped wording) or reword before Phase 3 if that slips.
 - Phase 2 step 4: rmcp 3.8.0 release date unverified (same headless limit); re-check and pin back if under two weeks old. MCP `lock`/`unlock` require `holder` while the CLI defaults `--holder agent`; revisit if strict input parity is wanted (DECISIONS.md, step 4).
 - Phase 2 step 5: ts-rs 12.0.1 release date unverified (same headless limit); re-check and pin back if under two weeks old.
-- Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies must be written into package.json by hand and installed with `pnpm install`, with versions that cannot be verified without web access.
+- Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies are written into package.json by hand and installed with `pnpm install`. Step 6a found the npm registry reachable: versions and dates checked with `pnpm view` (DECISIONS.md, step 6a).
+- Phase 2 step 6a: rust-embed 8.13.0 release date and the CI action majors (pnpm/action-setup@v4, actions/setup-node@v5) unverified; confirm on the first CI run. No CSP on the studio page yet (Remotion inline styles); decide in 6b.
 
 ## Roadmap additions: asset supply expansion (2026-10-28)
 
@@ -60,6 +61,12 @@ Run plan (autonomous run 4): step 5 only.
 - ck-server `ts_types::render()` joins every declaration into one file, `studio/src/generated/types.ts`.
 - Drift test in nextest (so `just check` and CI fail on drift); `just types` regenerates (CK_WRITE_TYPES=1).
 
+Run plan (autonomous run 5): step 6a only (step 6 split: 6a scaffold + embed, 6b panels).
+- npm deps (react, vite, remotion, @remotion/player, typescript, prettier) written into studio/package.json by hand; versions and release dates from `pnpm view`, recorded in DECISIONS.md.
+- studio: token from the URL fragment, API/WS client, live project state from `snapshot` events, Remotion Player preview whose composition is a pure function of the project (items carry `data-ck-layer`).
+- ck-server: rust-embed serves `studio/dist` (SPA fallback to index.html, no token for static files, site guard still applies); a clear "studio not built" page when dist is empty.
+- just: `studio-build`, `studio-dev`; tests: static serving via a fake asset table, guard still applies, real build served by `ck studio` checked once.
+
 Steps (each ends with `just check`):
 - [x] 1. Deps + ck-server core: session state, event bus, server.json, bind to 127.0.0.1 on a free port.
 - [x] 2. HTTP + WS API with token/Host/Origin guards; refusals tested (E_AUTH, E_LOCK_HELD over HTTP).
@@ -67,6 +74,8 @@ Steps (each ends with `just check`):
 - [x] 4. MCP twin (rmcp, stdio) for the same ops; schema, size cap and CLI/MCP parity tests.
 - [x] 5. TS type generation from the Rust types (ts-rs or specta, verified), checked in CI for drift.
 - [ ] 6. Studio shell: Vite + React + Remotion Player preview, timeline, inspector, read-only mode, banner, activity feed, ghost cursor; embedded with rust-embed.
+  - [x] 6a. Scaffold, live project state over WS, Player preview, rust-embed serving, `just studio-build|studio-dev|studio-check`.
+  - [ ] 6b. Panels: timeline, inspector, read-only mode, banner, activity feed, ghost cursor.
 - [ ] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.
 - [ ] 8. Evidence, reviewers, DECISIONS.md, handoff, commit; mark phase done.
 

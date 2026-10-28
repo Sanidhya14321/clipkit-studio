@@ -82,6 +82,26 @@ Crates (latest per `cargo search`/`cargo info` on 2026-10-28; release dates PLAC
 - **Integers as `number`**: u64/usize revs, ms and counts are JSON numbers well under 2^53, so `bigint` would mistype them; a test forbids `bigint`.
 - **Patch ops** are `Array<JsonValue>` on the TS side (`#[ts(as = "Vec<Value>")]`); json-patch has no TS impl. A plain comment, not a doc comment, so the JSON Schema (and the MCP snapshot) is unchanged.
 - **Drift check**: the nextest test `generated_types_match_committed_file` compares the committed file with a fresh render, so `just check` and CI fail on drift; `just types` (CK_WRITE_TYPES=1) rewrites it. Server-only types (ServerInfo, history entries, ops caps) are not exported until the studio needs them.
+
+### Step 6a: studio scaffold and embedding (2026-10-29)
+npm versions: newest stable release at least two weeks old per `pnpm view <pkg> time` (registry reachable in this run), written into `studio/package.json` by hand (`pnpm add` is denied headless) and installed with `pnpm install`; `pnpm-lock.yaml` committed.
+| Package | Version | Released |
+| --- | --- | --- |
+| react, react-dom | 19.3.1 | 2026-10-14 |
+| @types/react, @types/react-dom | 19.3.0 | 2026-09-09 |
+| remotion, @remotion/player | 4.0.535 | 2026-10-12 |
+| vite | 8.3.4 | 2026-10-08 |
+| @vitejs/plugin-react | 6.1.2 | 2026-10-05 |
+| typescript | 7.0.2 | 2026-07-08 |
+| prettier | 3.9.10 | 2026-10-10 |
+| rust-embed (crate) | 8.13.0 | latest per `cargo info`; release date PLACEHOLDER (cargo shows none; web and the cargo index cache outside the repo were not reachable) |
+- **Token handoff**: the studio reads the token from the URL fragment (`#token=...`, never sent to the server), keeps it in sessionStorage and strips it from the address bar. `ck studio` still never prints the token; Phase 3's `--open` opens `url#token=...` from server.json. Until then a human (or the step 7 Playwright test) builds that link from server.json.
+- **Static files need no token** (no project data in them) but pass the site guard (Host, Origin). Paths without an extension fall back to index.html; missing files with an extension, `..` segments, unknown `/api/*` paths are E_NOT_FOUND JSON; non-GET/HEAD is 405. Hashed `assets/*` are cached immutable, index.html `no-cache`; every file gets `nosniff` and `no-referrer`. No CSP yet: Remotion's inline styles would need `style-src 'unsafe-inline'`; revisit when the panels land.
+- **rust-embed** with `allow_missing`, so ck builds before the studio does (a page then says to run `just studio-build`). Debug builds read `studio/dist` from disk; release builds embed it, so build the studio before `cargo build --release`. Content types are a small hand map, not mime_guess.
+- **Live state from snapshots only**: the studio's project comes from `snapshot` events (sent on connect and after each change); no separate initial fetch. Item timing in TS (`studio/src/timeline.ts`) mirrors `ck_core::timeline::span`; the Player duration is at least one frame.
+- **Preview shell**: the composition draws each visible layer as a labelled box with `data-ck-layer`; media from proxies and component clips arrive with their phases.
+- **Checks**: `just check` now ends with `just studio-check` (prettier check + `tsc --noEmit`, strict); CI installs pnpm (`pnpm/action-setup@v4`, from `packageManager`) and Node 24 (`actions/setup-node@v5`); those action majors are unverified (headless).
+- TypeScript 7 (native) typechecks; Vite bundles the config itself, so `vite.config.ts` is outside the tsconfig and no `@types/node` is needed.
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)
