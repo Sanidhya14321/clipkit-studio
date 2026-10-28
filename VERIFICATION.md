@@ -21,3 +21,15 @@ Every item has a status (PASS, FAIL, BLOCKED) and evidence. No PASS without evid
 | CI runs green on GitHub | BLOCKED | Not pushed yet; runs on the first push or PR |
 | Fixtures generator produces media and ground truth | BLOCKED | ffmpeg not installed locally (`just fixtures` exits 1 with "ffmpeg not found"); CI `fixtures` job covers it once pushed |
 | Hooks fire inside a live Claude Code session | PASS | During Phase 0 the live guard-bash hook blocked a heredoc writing `.gitignore` (a false positive, fixed and covered by a regression case in tests/hooks/run.sh) |
+
+## Asset supply expansion checks (spec 14.7, added 2026-10-28)
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| Local transcription works with no network | BLOCKED | Not implemented; Phase 5 |
+| VAD candidates match fixture ground truth within tolerance | BLOCKED | Not implemented; Phase 5 (fixtures/generated/ground-truth.json tones.silences) |
+| Scene detection finds the fixture scene changes | BLOCKED | Not implemented; Phase 5 (ground-truth.json scenes.changesAtSec) |
+| Loudness gates use the ffmpeg meter | BLOCKED | Not implemented; Phase 5 and 9 |
+| A restricted fixture (LYGIA or BBC style) is blocked in commercial-safe mode | BLOCKED | Not implemented; Phase 8 |
+| An unresolved or unverified source never appears in search | BLOCKED | Not implemented; Phase 8. Today all 63 sources.yaml entries are unverified and disabled: `jq '[.[]|select(.enabled or .status!="unverified")]|length' sources.yaml` -> 0 |
+| No Python dependency added to the install | BLOCKED | Install does not exist yet (Phase 3). Today: no Python package manifest in the repo; Python appears only as the dev-time `scripts/split-spec.py` |

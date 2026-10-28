@@ -3,9 +3,17 @@
 ## Handoff (latest)
 1. Done: Phase 0 setup; Phase 1 steps 1-3 (deps, error codes, project model with validation). Workspace skeleton (9 crates, no logic), CLAUDE.md, spec split + INDEX.md, 8 skills, 4 subagents, 4 hooks + settings, justfile, CI, fixtures generator.
 2. Proof: `just check` green locally (fmt, clippy, 2 tests, 41 hook payload tests); see VERIFICATION.md.
-3. Open: fixtures generator not run locally (ffmpeg missing; `sudo apt install ffmpeg`, then `just fixtures`); CI not yet run (nothing pushed).
+3. Open: asset expansion recorded (spec 14, sources.yaml, roadmap) with open questions in DECISIONS.md; fixtures generator not run locally (ffmpeg missing; `sudo apt install ffmpeg`, then `just fixtures`); CI not yet run (nothing pushed).
 4. Next: Phase 1 step 4 (timeline math), then patches, history, storage, migrations, locks, stage machine, logging.
 5. Start: `/clear`, then the Phase 1 message from docs/spec/13-kickoff.md ("Use the phase-runner skill for Phase 1 ...").
+
+## Roadmap additions: asset supply expansion (2026-10-28)
+
+Spec 14. Implementation stays in the phases below; no finished phase is reopened (only Phase 0 is finished, and it has no affected items).
+- Phase 5 (edit slice): local whisper transcription (whisper-rs), Silero VAD via ONNX, ffmpeg scene detection as a second cut-candidate signal, ffmpeg ebur128/loudnorm loudness gates and export presets.
+- Phase 8 (assets at scale): wave 2 ingestion (RenderComp Free, cliphou.se, RemotionUI, Remotion Bits, Kenney, Tabler, Simple Icons, IWLTBAP free LUTs) and Pixabay; frame-clock adapter with determinism tests BEFORE any wrappable card (GSAP, Motion, Origin UI, Launch UI); LYGIA and BBC-style restricted fixtures for license mode; site-license snapshots, custom-license and trademark notes.
+- Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
+- Phase 10 (stretch): Demucs opt-in sidecar.
 
 ## Phase 1: core (2026-10-28) - approved, in progress (steps 1-3 done)
 

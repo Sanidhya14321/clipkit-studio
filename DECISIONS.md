@@ -2,6 +2,31 @@
 
 Newest first within each section. Each entry: what, why, and the source when it is a verified fact.
 
+## Asset supply expansion (2026-10-28, owner update)
+
+Source: docs/sources/asset-expansion-catalog.md, treated as third-party data. Spec: docs/spec/14-asset-expansion.md.
+
+### Routes for the catalog's Python tools (single Rust binary, no Python runtime)
+Crates checked on crates.io on 2026-10-28. Each is re-verified when its phase starts; nothing is added to Cargo.toml yet.
+- **Transcription (faster-whisper)**: `whisper-rs` 0.16.0 (2026-03-12, Unlicense; repo moved to codeberg.org/tazz4843/whisper-rs) binding whisper.cpp (MIT). Builds whisper.cpp from C++ source, so the build needs a C++ toolchain and cmake. The binary stays single; the ggml model file is downloaded on first use, pinned per project and cached. Local whisper is the default, Fish Audio STT the cloud option. Model weight license to be read at Phase 5.
+- **VAD (Silero)**: `ort` has no stable 2.0 release; candidates are 2.0.0-rc.14 (2026-10-12) or rc.13 (2026-07-28); rc.15 (2026-10-19) is too new. MIT OR Apache-2.0, MSRV 1.92. Open point for Phase 5: ort downloads ONNX Runtime binaries at build time; confirm it links statically into `ck`, or evaluate a pure-Rust ONNX runtime (for example tract) instead. `voice_activity_detector` 0.2.1 was rejected: non-standard license and pinned to ort rc.10.
+- **Scene detection (PySceneDetect)**: ffmpeg scene score (`scdet` filter or `select='gt(scene,T)'` with `showinfo`) from ck-media. No new crate.
+- **Loudness (pyloudnorm)**: ffmpeg `ebur128` to measure and two-pass `loudnorm` to normalize, for every gate and export preset, so measurement and normalization share one meter. The `ebur128` crate (0.1.10, 2024-10-26, MIT; 0.1.11 from 2026-10-26 is too new) is kept as an optional in-process cross-check in tests only.
+- **Onset and beat (librosa)**: deferred. `aubio` and `aubio-rs` were last released in 2021; `beat-detector` 0.1.2 is tiny and unmaintained. Revisit in Phase 9; until then pacing uses taste rules.
+- **Stems (Demucs)**: deferred to Phase 10 as an optional opt-in sidecar, off by default, never in the interactive path, stems cached by source hash. The sidecar's runtime is an open question, because it must not add Python to the default install.
+- JavaScript tools stay on the TypeScript side: tesseract.js, remotion-qa and audio-bed-check in the evaluator and CI (Phase 9, after license checks); wavesurfer.js, culori and opentype.js in the studio (Phase 9).
+
+### sources.yaml
+- Restored unchanged from `codex-archive` (38 entries; JSON is valid YAML), then extended. Existing entries are untouched except the `remotion` line, which gains a `packages` list.
+- 14 `@remotion/*` packages confirmed on npm (4.0.539) were added to the `remotion` line. `@remotion/claude-code-plugin` and `@remotion/codex-plugin` were named by the catalog but return 404 on npm, so they were not added.
+- 25 new entries: `status: unverified`, `enabled: false`, `licenseClass: unknown`, plus the claimed license in `license`, `wave`, `phase`, `homepage` for site sources and `licenseNote` for custom, site, CC BY, trademark and paid-tier notes.
+- Repos left null where the catalog gives none or hedges: remotionui, remotion-bits, cliphouse, remotion-qa, audio-bed-check, origin-ui (two candidate orgs), kenney-audio, iwltbap-luts, pixabay-media.
+- Kind and tier come from the catalog's prose because its YAML companion was not supplied.
+- Pixabay is in wave 1, but ingesting it needs the Phase 8 vetting pipeline, so its phase is 8.
+
+### Spec folder
+- `docs/spec/14-asset-expansion.md` is an owner-requested addition. The guard-edits hook blocks Write and Edit under `docs/spec/` by design, so it was written through the shell at the owner's explicit request. `split-spec.py` only rewrites files 00 to 13.
+
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)

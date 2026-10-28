@@ -1,6 +1,7 @@
 # Spec index
 
 The spec is `docs/MASTER_PROMPT.md`, split one file per section by `scripts/split-spec.py`.
+File 14 is an owner-requested addition, not generated.
 Read this index, then only the files your phase needs. Never edit files in this folder.
 
 | File | Summary | Phases |
@@ -19,6 +20,7 @@ Read this index, then only the files your phase needs. Never edit files in this 
 | [11-claude-code-setup.md](11-claude-code-setup.md) | Build-time Claude Code setup: CLAUDE.md, spec split, skills, subagents, hooks, permissions | 0 |
 | [12-phases.md](12-phases.md) | Build phases 0 to 10, cut line, definition of done | all |
 | [13-kickoff.md](13-kickoff.md) | Kickoff and per-phase messages to paste into a session | 0 |
+| [14-asset-expansion.md](14-asset-expansion.md) | Owner addition: asset expansion catalog entries (all unverified), Rust/ffmpeg routes for Python tools, waves to phases, checks | 5, 8, 9, 10 |
 
 ## Phase to files
 
@@ -27,9 +29,9 @@ Read this index, then only the files your phase needs. Never edit files in this 
 - Phase 2, server and studio shell: 00, 01, 02, 03, 05, 06 (6.2)
 - Phase 3, plugin and auto-launch: 00, 05 (5.1), 06, 09
 - Phase 4, generate slice: 00, 04 (4.3), 07, 08 (8.1, 8.5), 09
-- Phase 5, edit slice: 00, 08 (8.2), 10 (10.2)
+- Phase 5, edit slice: 00, 08 (8.2), 10 (10.2), 14 (14.5)
 - Phase 6, interaction slice: 00, 05, 08 (8.4)
 - Phase 7, voice slice: 00, 06 (6.4), 08 (8.3)
-- Phase 8, assets at scale: 00, 07, 09
-- Phase 9, polish and proof: 00, 02 (2.3), 08 (8.6), 10
-- Phase 10, stretch: 00, 12
+- Phase 8, assets at scale: 00, 07, 09, 14
+- Phase 9, polish and proof: 00, 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7)
+- Phase 10, stretch: 00, 12, 14 (Demucs)
