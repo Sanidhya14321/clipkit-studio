@@ -15,7 +15,7 @@ export async function getRenderBundle(entryPoint?:string){
  const entry=entryPoint??fileURLToPath(new URL('./entry.tsx',import.meta.url));
  const entryDirectory=path.dirname(entry);
  const key=entry;
- if(!bundles.has(key))bundles.set(key,bundle({entryPoint:entry,webpackOverride:config=>({...config,cache:config.cache&&typeof config.cache==='object'?{...config.cache,cacheDirectory:path.join(process.env.XDG_CACHE_HOME??path.join(homedir(),'.cache'),'clipkit','webpack')}:config.cache,resolve:{...config.resolve,alias:{...config.resolve?.alias,'@clipkit/core':path.resolve(entryDirectory,'../../core/src/index.ts'),'@clipkit/assets':path.resolve(entryDirectory,'../../assets/src/index.ts')}}})}).catch(error=>{bundles.delete(key);throw error;}));
+ if(!bundles.has(key))bundles.set(key,bundle({entryPoint:entry,webpackOverride:config=>({...config,cache:config.cache&&typeof config.cache==='object'?{...config.cache,cacheDirectory:process.env.CLIPKIT_RENDER_CACHE_DIR??path.join(process.env.XDG_CACHE_HOME??path.join(homedir(),'.cache'),'clipkit','webpack')}:config.cache,resolve:{...config.resolve,alias:{...config.resolve?.alias,'@clipkit/core':path.resolve(entryDirectory,'../../core/src/index.ts'),'@clipkit/assets':path.resolve(entryDirectory,'../../assets/src/index.ts')}}})}).catch(error=>{bundles.delete(key);throw error;}));
  return await bundles.get(key)!;
 }
 export async function renderProject({project,root,mediaBaseUrl,assetBaseUrl,accessToken,onProgress,entryPoint,assetDirectory,assetRegistry,preset,quality,frameRange,layerCache}:{layerCache?:Record<string,{url:string;hash:string}>;project:Project;root:string;mediaBaseUrl:string;assetBaseUrl:string;assetRegistry?:AssetRegistry;frameRange?:[number,number];preset?:'portrait'|'landscape'|'square'|{width:number;height:number;crf?:number};quality?:number;accessToken?:string;entryPoint?:string;assetDirectory?:string;onProgress?:(progress:number)=>void}):Promise<{path:string;creditsPath:string}>{
@@ -33,3 +33,5 @@ export async function renderProject({project,root,mediaBaseUrl,assetBaseUrl,acce
  await writeFile(creditsPath,JSON.stringify({projectId:project.id,revision:project.rev,projectHash:createHash('sha256').update(JSON.stringify(project)).digest('hex'),renderedAt:new Date().toISOString(),settings:project.settings,crf,licenses},null,2),{flag:'wx'});
  debugEvent('render.end',{component:'render',rev:project.rev,duration:Date.now()-renderStarted,resultCode:'OK'});return {path:output,creditsPath};
 }
+
+export function clearRenderBundleCache(){bundles.clear()}

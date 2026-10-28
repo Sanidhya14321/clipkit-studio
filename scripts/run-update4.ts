@@ -1,0 +1,2 @@
+import {readFile,mkdir,writeFile} from 'node:fs/promises';import path from 'node:path';import {runAgentMatrix} from '../packages/debug/src/agent-bench';
+const root=process.cwd(),config=JSON.parse(await readFile(path.join(root,'bench/update4.json'),'utf8'));config.fixtures=path.resolve(root,config.fixtures);const out=path.join(root,'.clipkit/update4/results');await mkdir(out,{recursive:true});await writeFile(path.join(out,'frozen-protocol.json'),JSON.stringify(config,null,2));await runAgentMatrix(config,{root,out,onProgress:e=>process.stdout.write(JSON.stringify(e)+'\n')});
