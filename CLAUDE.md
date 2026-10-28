@@ -43,7 +43,9 @@ Other folders: `studio/` (Phase 2), `render-worker/` (Phase 9), `plugin/` and `a
 
 ## Working rules
 - One phase per session. Use the phase-runner skill; read only the spec files the phase needs.
-- Plan first in PROGRESS.md and wait for approval before code.
+- Plan first in PROGRESS.md and wait for approval before code (autonomous runs follow
+  scripts/autobuild-prompt.md and do not wait for approval; interactive sessions still plan
+  first and wait).
 - Update PROGRESS.md at the end of every task.
 - Never edit `docs/spec/` or `docs/MASTER_PROMPT.md` (a hook blocks it). Record deviations in DECISIONS.md.
 - Never add features the spec does not ask for. Never invent assets, licenses, keys, benchmarks or

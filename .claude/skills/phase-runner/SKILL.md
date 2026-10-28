@@ -11,7 +11,9 @@ One phase per session. Keep context small: read only what the step needs.
 1. Read `PROGRESS.md` (the handoff at the top) and `docs/spec/INDEX.md`.
 2. Use the spec-lookup skill to read only this phase's spec files (spec 12 lists the phases).
 3. Write a short plan in PROGRESS.md under the phase heading: steps, crates touched, tests,
-   the phase's proof from spec 12. Wait for the human to approve before writing code.
+   the phase's proof from spec 12. Wait for the human to approve before writing code
+   (autonomous runs follow scripts/autobuild-prompt.md and do not wait for approval;
+   interactive sessions still plan first and wait).
 
 ## Build loop (repeat per step)
 1. Implement one small step in small files.

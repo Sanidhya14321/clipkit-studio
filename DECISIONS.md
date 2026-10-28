@@ -66,7 +66,7 @@ Crates checked on crates.io on 2026-10-28. Each is re-verified when its phase st
 - `scripts/autobuild.sh` (owner-supplied) runs `claude -p` sessions with `scripts/autobuild-prompt.md`. It reads `STATUS:` and `PHASE:` from the top of PROGRESS.md.
 - Checked against the installed CLI (2.1.312): `-p`, `--output-format`, `--permission-mode` are documented in `claude --help`; `--max-turns` is not listed there but is accepted (an unknown flag errors with "unknown option", this one does not).
 - The prompt file is the owner's text plus a short "Loop contract" section: keep the STATUS/PHASE lines current, skip the phase-runner approval wait in autonomous runs, and recover an interrupted run's uncommitted changes first.
-- `--permission-mode acceptEdits` approves file edits only; Bash runs only what `.claude/settings.json` allows, and anything else is denied in `-p` mode rather than prompting. Widening the allow list (for example git log/show/rev-parse, ls, wc, jq) and updating CLAUDE.md and the phase-runner skill for autonomous mode are left to the owner: the session's permission classifier blocked these as self-modification.
+- `--permission-mode acceptEdits` approves file edits only; Bash runs only what `.claude/settings.json` allows, and anything else is denied in `-p` mode rather than prompting. The owner approved adding git log/show/rev-parse, ls, wc and jq to the allow list (git status/diff were already there) and the autonomous-mode note in CLAUDE.md and the phase-runner skill. git push, dependency installs (`cargo add/install/update`, `pnpm add`, `npm install`, `npx`) stay "ask", which headless runs treat as denied; `.env` reads stay denied.
 
 ## Phase 0 (2026-10-28)
 

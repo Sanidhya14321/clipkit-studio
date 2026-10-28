@@ -15,7 +15,13 @@
       "Bash(git commit *)",
       "Bash(./fixtures/generate.sh *)",
       "Bash(./scripts/check-fast.sh)",
-      "Bash(./tests/hooks/run.sh)"
+      "Bash(./tests/hooks/run.sh)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git rev-parse *)",
+      "Bash(ls *)",
+      "Bash(wc *)",
+      "Bash(jq *)"
     ],
     "ask": [
       "Bash(git push *)",
