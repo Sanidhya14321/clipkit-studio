@@ -11,7 +11,7 @@ use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::api::BODY_LIMIT;
 use ck_server::ops::Ops;
-use ck_server::session::{LockRequest, UnlockRequest};
+use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
 
@@ -51,7 +51,7 @@ fn run(cli: Cli) -> CkResult<()> {
     let root = cli.dir.join(".clipkit");
     let ops = || Ops::connect(&root);
     match cli.command {
-        Command::Studio { port } => studio::run(&cli.dir, port),
+        Command::Studio { port, idle } => studio::run(&cli.dir, port, idle),
         Command::Mcp => mcp(root),
         Command::Status => print(&ops()?.status()?),
         Command::Project(ProjectCommand::Get {
@@ -69,6 +69,9 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Unlock { layer_ids, holder } => print(&ops()?.unlock(&UnlockRequest {
             holder: holder.holder,
             layer_ids: (!layer_ids.is_empty()).then_some(layer_ids),
+        })?),
+        Command::Heartbeat { holder } => print(&ops()?.heartbeat(&HeartbeatRequest {
+            holder: holder.holder,
         })?),
     }
 }

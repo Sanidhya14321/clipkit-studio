@@ -21,6 +21,8 @@ ureq.workspace = true
 rust-embed.workspace = true
 
 [dev-dependencies]
+# Paused time for the idle shutdown tests.
+tokio = { workspace = true, features = ["test-util"] }
 tempfile.workspace = true
 insta.workspace = true
 tower.workspace = true

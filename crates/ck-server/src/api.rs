@@ -14,6 +14,7 @@ use serde::de::DeserializeOwned;
 
 use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
+use crate::idle;
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
 use crate::ws;
@@ -39,6 +40,8 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/unlock", post(unlock))
         .route("/api/heartbeat", post(heartbeat))
         .route("/ws", get(ws::upgrade))
+        // Runs after the token check, so only authorized calls keep the server alive.
+        .layer(middleware::from_fn_with_state(session.clone(), idle::touch))
         .layer(middleware::from_fn_with_state(
             guard.clone(),
             auth::token_guard,

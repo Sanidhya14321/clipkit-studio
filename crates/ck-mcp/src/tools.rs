@@ -5,7 +5,7 @@
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::ops::{Ops, caps};
-use ck_server::session::{LockRequest, UnlockRequest};
+use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -74,6 +74,12 @@ pub fn specs() -> Vec<ToolSpec> {
             "Release layers (all of the holder's locks when layerIds is omitted).",
             caps::LOCK,
         ),
+        spec::<HeartbeatRequest>(
+            "heartbeat",
+            "ck heartbeat",
+            "Renew the holder's live locks so they do not expire; returns them.",
+            caps::LOCK,
+        ),
     ]
 }
 
@@ -83,7 +89,9 @@ fn spec<T: JsonSchema>(
     description: &'static str,
     cap: usize,
 ) -> ToolSpec {
-    let mut input_schema = serde_json::to_value(schemars::schema_for!(T)).unwrap_or_default();
+    // Serializing a schemars schema does not fail; fall back to the widest valid shape anyway.
+    let mut input_schema = serde_json::to_value(schemars::schema_for!(T))
+        .unwrap_or_else(|_| serde_json::json!({ "type": "object" }));
     if let Value::Object(map) = &mut input_schema {
         // MCP clients only need the shape; the draft URI and title are noise in the tool list.
         map.remove("$schema");
@@ -123,6 +131,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "project_patch" => json(&ops.patch(&parse(args)?)?),
         "lock" => json(&ops.lock(&parse(args)?)?),
         "unlock" => json(&ops.unlock(&parse(args)?)?),
+        "heartbeat" => json(&ops.heartbeat(&parse(args)?)?),
         other => Err(request_err(format!("no tool named {other:?}"))),
     }
 }

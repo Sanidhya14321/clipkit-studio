@@ -27,6 +27,9 @@ pub enum Command {
         /// Port to bind; 0 picks a free one.
         #[arg(long, default_value_t = 0)]
         port: u16,
+        /// Stop after this many seconds with no API call and no open studio tab; 0 never stops.
+        #[arg(long, default_value_t = ck_server::idle::DEFAULT_IDLE_SECS)]
+        idle: u64,
     },
     /// Serve the same operations as MCP tools on stdio (spec 6.2).
     Mcp,
@@ -45,6 +48,11 @@ pub enum Command {
     /// Release layers (all of the holder's locks when no ids are given).
     Unlock {
         layer_ids: Vec<String>,
+        #[command(flatten)]
+        holder: HolderArg,
+    },
+    /// Renew the holder's live locks so they do not expire.
+    Heartbeat {
         #[command(flatten)]
         holder: HolderArg,
     },

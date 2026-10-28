@@ -9,7 +9,7 @@ use crate::client::{Client, RESPONSE_LIMIT};
 use crate::info::ServerInfo;
 use crate::ops::{Ops, capped, caps, trimmed};
 use crate::serve::Server;
-use crate::session::{LockRequest, PatchResult, UnlockRequest};
+use crate::session::{HeartbeatRequest, LockRequest, PatchResult, UnlockRequest};
 
 /// A running server on its own runtime; dropping it stops the server.
 struct Live {
@@ -112,6 +112,32 @@ fn patch_lock_unlock_round_trip() {
         })
         .unwrap();
     assert!(released.locks.is_empty());
+    assert!(ops.status().unwrap().locks.is_empty());
+}
+
+#[test]
+fn heartbeat_keeps_locks_past_their_ttl() {
+    let live = Live::start();
+    let ops = live.ops();
+    let agent = HeartbeatRequest {
+        holder: Holder::Agent,
+    };
+
+    let ttl = ops.lock(&lock(Holder::Agent, &["title"])).unwrap().locks[0].ttl_ms;
+    live.f.clock.advance(ttl - 1);
+    let renewed = ops.heartbeat(&agent).unwrap();
+    assert_eq!(renewed.locks.len(), 1);
+    assert_eq!(renewed.locks[0].heartbeat_at_ms, ttl - 1);
+
+    // Past the first TTL but inside the renewed one: still held, the human is still refused.
+    live.f.clock.advance(ttl - 1);
+    assert_eq!(ops.status().unwrap().locks.len(), 1);
+    let human = serde_json::from_value(rename(0, "human", "Mine")).unwrap();
+    assert_eq!(ops.patch(&human).unwrap_err().code, ErrorCode::LockHeld);
+
+    // Without another heartbeat the lock lapses and a late heartbeat brings nothing back.
+    live.f.clock.advance(2);
+    assert!(ops.heartbeat(&agent).unwrap().locks.is_empty());
     assert!(ops.status().unwrap().locks.is_empty());
 }
 

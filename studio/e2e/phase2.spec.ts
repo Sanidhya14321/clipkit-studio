@@ -6,11 +6,28 @@ import { fieldPatch } from "../src/state";
 import { addTitleOps, expect, test, type Studio } from "./fixture";
 
 const PATCH_BUDGET_MS = 300;
+/** Spec 1.2: the studio opens in under 3 s on a warm machine. */
+const OPEN_BUDGET_MS = 3000;
 
+/** Opens the studio, records CSP violations in the page, and returns the time to a live view. */
 async function open(page: Page, studio: Studio) {
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    (window as unknown as { ckCsp: string[] }).ckCsp = seen;
+    document.addEventListener("securitypolicyviolation", (e) =>
+      seen.push(`${e.violatedDirective} ${e.blockedURI}`),
+    );
+  });
+  const started = Date.now();
   await page.goto(`${studio.url}#token=${studio.token}`);
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
   await expect(page.locator("[data-ck-timeline]")).toBeVisible();
+  return Date.now() - started;
+}
+
+/** CSP violations reported in the page so far (the server sends a strict policy). */
+function cspViolations(page: Page) {
+  return page.evaluate(() => (window as unknown as { ckCsp: string[] }).ckCsp);
 }
 
 /** Adds the "title" clip as the agent would: lock, patch through the CLI, keep the lock. */
@@ -53,7 +70,9 @@ test("a CLI patch appears in the timeline and the preview in under 300 ms", asyn
   page,
   studio,
 }) => {
-  await open(page, studio);
+  const openMs = await open(page, studio);
+  console.log(`open: ${openMs} ms`);
+  expect(openMs).toBeLessThan(OPEN_BUDGET_MS);
   await studio.ck("lock", "t1", "title");
   const { rev } = (await studio.ck("status")) as { rev: number };
 
@@ -134,6 +153,8 @@ test("a CLI patch appears in the timeline and the preview in under 300 ms", asyn
     "data-ck-agent",
     "idle",
   );
+  // The Player preview and the panels run under the server's CSP without violations.
+  expect(await cspViolations(page)).toEqual([]);
 });
 
 test("human edits are refused while the agent holds the lock, then land after unlock", async ({
@@ -189,4 +210,5 @@ test("human edits are refused while the agent holds the lock, then land after un
       }
     ).name,
   ).toBe("Mine");
+  expect(await cspViolations(page)).toEqual([]);
 });

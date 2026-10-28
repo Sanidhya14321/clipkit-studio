@@ -125,6 +125,23 @@ npm versions: newest stable release at least two weeks old per `pnpm view <pkg> 
 - **Server refusal from the page**: the refused patch is sent with `fetch` inside the page (studio Origin, session token from sessionStorage), built with the studio's own `fieldPatch`, so it is the same request the inspector would send.
 - **`just e2e` is not part of `just check`** (CLAUDE.md lists it separately; it needs a browser and a build). Not yet in CI: adding a job needs the Playwright browser cache and is left for step 8 or Phase 3.
 - **Banner** is checked only in the idle state: `/agent` is read-only to patches and no command sets it until Phase 3.
+
+### Step 8: wrap-up (2026-10-29)
+- **Release dates checked** against the crates.io API (`https://crates.io/api/v1/crates/<name>/<version>`, fetched with node) for every registry crate in the lock graph (204). Direct crates under two weeks old on 2026-10-29 were pinned back with `=` to the newest release on or before 2026-10-15:
+
+| Crate | Was | Now | Released |
+| --- | --- | --- | --- |
+| tokio | 1.54.1 (2026-10-21) | 1.53.2 | 2026-10-03 (1.54.0 is yanked) |
+| ureq | 3.5.0 (2026-10-21) | 3.4.2 | 2026-09-13 (3.4.3 is also 2026-10-21) |
+| rmcp | 3.8.0 (2026-10-26) | 3.5.1 | 2026-10-05 (3.6.0 and 3.7.0 are also newer than 2026-10-15) |
+
+  The other direct crates are old enough: axum 0.8.9 (2026-04-14), getrandom 0.4.3 (2026-06-17), tower 0.5.3 (2026-01-12), tokio-tungstenite 0.29.0 (2026-03-17), futures-util 0.3.34 (2026-08-11), clap 4.6.7 (2026-09-14), ts-rs 12.0.1 (2026-01-31), rust-embed 8.13.0 (2026-10-07). The step 1 to 6a PLACEHOLDER dates above are replaced by these. Still too new, all transitive: cc 1.10.0, find-msvc-tools 0.1.15, libc 0.2.191, rustix 1.1.6, smallvec 1.16.4, uuid 1.29.0, ureq-proto 0.6.5 (2026-10-16 to 2026-10-27). Pinning them needs `cargo update --precise`, which headless runs cannot use (it is on the ask list). Open question.
+- **Idle shutdown (spec 5.1)**: `ck studio --idle <seconds>`, default 1800 (30 min), 0 never stops. Activity means a token-authorized API or `/ws` call; static files and refused calls do not count, so a stray local request cannot keep the server alive. An open WebSocket (a studio tab) holds the server up, and closing it restarts the count. On idle the server stops gracefully and removes `server.json`. `idle::Activity` is runtime state, not a wire type, so it has no serde/JsonSchema derives. Time is tokio's monotonic clock (tests pause it), not the session's wall clock.
+- **`ck heartbeat` and MCP `heartbeat`**: the route existed without a CLI or MCP twin, so an agent could not renew its locks. Same input as the HTTP body (`holder`, CLI default agent) and the same 4 KB cap and trimming as lock/unlock.
+- **CSP**: every studio file response carries `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'` plus `X-Frame-Options: DENY`. Inline styles are needed by React and Remotion `style` attributes; no `unsafe-eval` or inline scripts. The e2e suite records `securitypolicyviolation` events and requires none. The first run caught a `media-src data:` violation from the Player, so `data:` is allowed for media.
+- **CI e2e job** added to `.github/workflows/ci.yml`: install studio deps, `playwright install --with-deps chromium`, `just e2e`. No browser cache yet (simplest option). It is unverified until the first push.
+- **Studio open time (spec 1.2, under 3 s)** is measured in the e2e: from `page.goto` to the connected timeline.
+- **Not changed (review findings recorded as open)**: status/summary reads over the cap are refused instead of paged; heartbeat and no-op unlock still fsync and publish; `--holder human` is accepted from CLI/MCP (role trust boundary, already open); the second-studio check has a check-then-bind gap; no cap on concurrent WebSockets; `trimmed` can still refuse if the fixed fields alone exceed the cap (not reachable with today's fields).
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)

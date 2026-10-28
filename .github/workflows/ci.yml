@@ -39,6 +39,27 @@ jobs:
           node-version: 24
       - run: just check
 
+  e2e:
+    name: studio e2e (Playwright, Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - run: rustup show active-toolchain
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: studio/package.json
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: pnpm --dir studio install --frozen-lockfile
+      - run: pnpm --dir studio exec playwright install --with-deps chromium
+      - run: just e2e
+
   fixtures:
     name: fixtures generator
     runs-on: ubuntu-latest

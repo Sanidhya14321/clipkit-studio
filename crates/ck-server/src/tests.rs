@@ -2,6 +2,7 @@
 
 mod api;
 mod fixture;
+mod idle;
 mod live;
 mod ops;
 mod studio;

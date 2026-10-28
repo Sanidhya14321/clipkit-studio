@@ -354,5 +354,31 @@ expression: specs()
       ],
       "type": "object"
     }
+  },
+  {
+    "name": "heartbeat",
+    "command": "ck heartbeat",
+    "description": "Renew the holder's live locks so they do not expire; returns them.",
+    "cap": 4096,
+    "inputSchema": {
+      "$defs": {
+        "Holder": {
+          "enum": [
+            "agent",
+            "human"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "holder": {
+          "$ref": "#/$defs/Holder"
+        }
+      },
+      "required": [
+        "holder"
+      ],
+      "type": "object"
+    }
   }
 ]

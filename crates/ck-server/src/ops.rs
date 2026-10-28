@@ -9,7 +9,7 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use serde::Serialize;
 
 use crate::client::Client;
-use crate::session::{LockRequest, LockResult, PatchResult, UnlockRequest};
+use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
 
 /// Documented output size caps in bytes of compact JSON (spec 9.1). A read over its cap is
@@ -70,6 +70,12 @@ impl Ops {
     /// `unlock`: release some or all of the holder's locks.
     pub fn unlock(&self, req: &UnlockRequest) -> CkResult<LockResult> {
         trimmed("unlock", caps::LOCK, self.client.post("/api/unlock", req)?)
+    }
+
+    /// `heartbeat`: renew every live lock of the holder; returns them.
+    pub fn heartbeat(&self, req: &HeartbeatRequest) -> CkResult<LockResult> {
+        let reply = self.client.post("/api/heartbeat", req)?;
+        trimmed("heartbeat", caps::LOCK, reply)
     }
 }
 

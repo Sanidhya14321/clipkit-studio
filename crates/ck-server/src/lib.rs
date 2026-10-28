@@ -10,6 +10,7 @@ pub mod client;
 pub mod clock;
 pub mod event;
 pub mod http_error;
+pub mod idle;
 pub mod info;
 pub mod ops;
 pub mod serve;

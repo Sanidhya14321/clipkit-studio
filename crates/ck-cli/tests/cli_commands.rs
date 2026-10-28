@@ -4,6 +4,7 @@
 mod common;
 
 use std::process::{Command, Stdio};
+use std::time::{Duration, Instant};
 
 use ck_server::ops::caps;
 use common::{Studio, add_track, ck, err, ok};
@@ -113,11 +114,37 @@ fn commands_without_a_studio_fail_with_e_server() {
         &["project", "get"],
         &["lock", "a"],
         &["unlock"],
+        &["heartbeat"],
     ] {
         let e = err(dir.path(), args);
         assert_eq!(e["code"], "E_SERVER", "{args:?}");
         assert!(e["hint"].as_str().is_some_and(|h| h.contains("ck studio")));
     }
+}
+
+#[test]
+fn studio_stops_by_itself_after_the_idle_time() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let t0 = Instant::now();
+    let mut studio = Studio::start_with(d, &["--idle", "1"]);
+    let server_json = d.join(".clipkit/server.json");
+    assert!(server_json.exists());
+
+    // A call half-way through restarts the count.
+    std::thread::sleep(Duration::from_millis(600));
+    ok(d, &["status"], caps::STATUS);
+    let called = t0.elapsed();
+
+    let status = studio.exit_within(Duration::from_secs(10));
+    assert!(status.is_some_and(|s| s.success()), "{status:?}");
+    assert!(
+        t0.elapsed() >= called + Duration::from_secs(1),
+        "stopped {:?} after start, call at {called:?}",
+        t0.elapsed()
+    );
+    assert!(!server_json.exists(), "server.json is removed on idle stop");
+    assert_eq!(err(d, &["status"])["code"], "E_SERVER");
 }
 
 #[test]

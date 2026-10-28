@@ -18,6 +18,7 @@ use ts_rs::TS;
 
 use crate::clock::Clock;
 use crate::event::Event;
+use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
 /// Events buffered per subscriber before it lags (a lagging studio gets a fresh snapshot).
@@ -76,6 +77,7 @@ pub struct Session {
     clock: Arc<dyn Clock>,
     /// Set when a failed save could not be undone by reloading; every call then fails.
     degraded: AtomicBool,
+    activity: Arc<Activity>,
 }
 
 impl Session {
@@ -90,6 +92,7 @@ impl Session {
             events,
             clock,
             degraded: AtomicBool::new(false),
+            activity: Arc::default(),
         })
     }
 
@@ -98,6 +101,11 @@ impl Session {
     pub fn subscribe(&self) -> CkResult<(Event, broadcast::Receiver<Event>)> {
         let rx = self.events.subscribe();
         Ok((snapshot(&*self.doc()?), rx))
+    }
+
+    /// Activity for idle shutdown (spec 5.1).
+    pub fn activity(&self) -> &Arc<Activity> {
+        &self.activity
     }
 
     pub fn now_ms(&self) -> u64 {

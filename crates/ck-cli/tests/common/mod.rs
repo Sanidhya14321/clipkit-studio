@@ -3,7 +3,8 @@
 
 use std::io::{BufRead, BufReader};
 use std::path::Path;
-use std::process::{Child, Command, Output, Stdio};
+use std::process::{Child, Command, ExitStatus, Output, Stdio};
+use std::time::{Duration, Instant};
 
 use serde_json::{Value, json};
 
@@ -15,9 +16,15 @@ pub struct Studio {
 
 impl Studio {
     pub fn start(dir: &Path) -> Self {
+        Self::start_with(dir, &[])
+    }
+
+    /// `ck studio` with extra arguments (for example `--idle 1`).
+    pub fn start_with(dir: &Path, extra: &[&str]) -> Self {
         let mut child = Command::new(env!("CARGO_BIN_EXE_ck"))
             .args(["studio", "--dir"])
             .arg(dir)
+            .args(extra)
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
             .spawn()
@@ -28,6 +35,18 @@ impl Studio {
             .unwrap();
         let started = serde_json::from_str(&line).unwrap();
         Self { child, started }
+    }
+
+    /// Wait up to `limit` for the studio to exit by itself.
+    pub fn exit_within(&mut self, limit: Duration) -> Option<ExitStatus> {
+        let t0 = Instant::now();
+        while t0.elapsed() < limit {
+            if let Some(status) = self.child.try_wait().unwrap() {
+                return Some(status);
+            }
+            std::thread::sleep(Duration::from_millis(20));
+        }
+        None
     }
 }
 

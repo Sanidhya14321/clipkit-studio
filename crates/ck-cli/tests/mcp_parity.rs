@@ -213,6 +213,17 @@ fn every_tool_answers_like_its_cli_twin() {
         err_line(d, &["project", "patch", &human.to_string()])
     );
 
+    let mcp_beat = mcp.ok("heartbeat", json!({ "holder": "agent" }), caps::LOCK);
+    let cli_beat = ok_line(d, &["heartbeat"], caps::LOCK);
+    assert_eq!(without_times(&mcp_beat), without_times(&cli_beat));
+    assert_eq!(
+        serde_json::from_str::<Value>(&cli_beat).unwrap()["locks"]
+            .as_array()
+            .unwrap()
+            .len(),
+        2
+    );
+
     let mcp_unlock = mcp.ok(
         "unlock",
         json!({ "holder": "agent", "layerIds": ["intro"] }),
@@ -283,6 +294,7 @@ fn bad_arguments_and_a_missing_studio_are_tool_errors() {
         ("project_patch", json!({ "baseRev": "zero" })),
         ("lock", json!({ "holder": "robot", "layerIds": ["a"] })),
         ("unlock", json!({})),
+        ("heartbeat", json!({ "holder": "robot" })),
     ] {
         let e = mcp.err(name, args);
         assert_eq!(code(&e), "E_REQUEST", "{name}: {e}");

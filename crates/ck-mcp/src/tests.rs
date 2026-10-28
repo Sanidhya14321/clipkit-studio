@@ -35,6 +35,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("project_patch", caps::PATCH),
         ("lock", caps::LOCK),
         ("unlock", caps::LOCK),
+        ("heartbeat", caps::LOCK),
     ];
     let table: Vec<(&str, usize)> = specs().iter().map(|s| (s.name, s.cap)).collect();
     assert_eq!(table, expected);

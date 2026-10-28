@@ -87,8 +87,21 @@ fn file_response(data: Cow<'static, [u8]>, file: &str) -> Response {
         header::REFERRER_POLICY,
         HeaderValue::from_static("no-referrer"),
     );
+    headers.insert(
+        header::CONTENT_SECURITY_POLICY,
+        HeaderValue::from_static(CSP),
+    );
+    headers.insert(header::X_FRAME_OPTIONS, HeaderValue::from_static("DENY"));
     resp
 }
+
+/// Studio page policy: only our own scripts and our own server (API and `/ws`); no framing.
+/// Inline styles stay allowed because React and Remotion set `style` attributes; the Player
+/// loads `data:` media (seen as a media-src violation in the e2e run), so media allows `data:`.
+pub const CSP: &str = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; \
+    img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; \
+    connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; \
+    form-action 'self'; frame-ancestors 'none'";
 
 fn not_found(path: &str) -> Response {
     let err = CkError::new(

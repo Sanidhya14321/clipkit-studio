@@ -1,14 +1,14 @@
 # Progress
 
 STATUS: RUNNING
-PHASE: 2
+PHASE: 3
 
 ## Handoff (latest)
-1. Done: Phase 2 step 7. Playwright e2e (`studio/e2e/`, @playwright/test 1.64.1, Chromium) runs a real `ck studio` per test on a fresh temp project and drives it with the real `ck` CLI. `just e2e` builds ck and the studio, then runs the tests.
-2. Proof: both phase proofs PASS. A CLI patch shows in the timeline and preview 11 to 26 ms after the CLI spawn (budget 300 ms). While the agent holds the lock the inspector is read-only, its inputs are disabled, and the studio's own patch gets 423 E_LOCK_HELD; after unlock a UI edit lands. Results: `just e2e` 2 of 2, 20 of 20 on repeat, `just check` green (96 nextest, hooks 41, studio 10).
-3. Open: e2e is not in CI yet. The banner is checked only when idle, because `/agent` is read-only until Phase 3. Stop button, the global structural lock and the CSP are still deferred. Plus the earlier items.
-4. Next: Phase 2 step 8. Run rust-reviewer on the phase diff and spec-checker on Phase 2, decide on CSP and the CI e2e job, finish VERIFICATION.md (version-date rows), tick the phase done and set `PHASE: 3`.
-5. Start: `just check`, `just e2e` (one-time `pnpm --dir studio exec playwright install chromium`). Manual: `just studio-build`, `cargo run -p ck-cli -- studio --dir <folder>`, open `url#token=<server.json token>`.
+1. Done: Phase 2 (server and studio shell) is complete. Step 8 pinned tokio, ureq and rmcp back to releases at least two weeks old (dates checked on the crates.io API). It also added `ck heartbeat` with its MCP twin, idle shutdown (`ck studio --idle`, default 30 min), a strict CSP with `X-Frame-Options: DENY` on the studio, a CI e2e job, and an e2e check that the studio opens in under 3 s.
+2. Proof: a CLI patch shows in the browser in 11 ms (budget 300 ms). Human edits are refused while the agent holds the lock (423 E_LOCK_HELD, read-only inspector). The studio opens in 253 ms (budget 3 s) with no CSP violations. `just check`: 103 of 103 nextest, hooks 41 of 41, studio 10 of 10. `just e2e`: 2 of 2, and 20 of 20 on repeat.
+3. Open: seven transitive crates are under two weeks old (pinning them needs `cargo update --precise`). CI (including the new e2e job) has not run because nothing is pushed. Stop button and the global structural lock are deferred. Reviewer leftovers are listed in DECISIONS.md, step 8. Plus the earlier items below.
+4. Next: Phase 3 (plugin and auto-launch, spec 12): the Claude Code plugin with skill, MCP registration and hooks; `ck studio --ensure` (the E_SERVER hint already names it); `ck init`/uninstall for Claude Code and Codex. Read spec 06 (6.1, 6.3) and 05 (5.1); write the plan and steps first.
+5. Start: `just check`, `just e2e` (one-time `pnpm --dir studio exec playwright install chromium`). Manual: `just studio-build`, `cargo run -p ck-cli -- studio --dir <folder>`, then open `url#token=<token from server.json>`.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -16,16 +16,14 @@ PHASE: 2
 - Pixabay is wave 1 but placed in Phase 8 because ingesting it needs the vetting pipeline.
 - `@remotion/whisper-web` and `@remotion/effects` declare UNLICENSED and `@remotion/animation-utils` declares no license; vetting must read the real terms.
 - Lock ids for non-layer content: Phase 1 uses `@project` for project-level fields and track ids for track fields and item order (DECISIONS.md, Phase 1). Revisit if the studio needs finer locks.
-- Phase 2: release dates of tokio 1.54.1, axum 0.8.9, getrandom 0.4.3, tower 0.5.3, tokio-tungstenite 0.29.0, futures-util 0.3.34 are unverified (headless runs cannot reach the web; the researcher and web-fetch subagents were denied). Re-check in an interactive session and pin back any release under two weeks old.
+- Phase 2 step 8: direct crate dates are verified on the crates.io API, and tokio, ureq and rmcp are pinned back. The transitive crates cc 1.10.0, find-msvc-tools 0.1.15, libc 0.2.191, rustix 1.1.6, smallvec 1.16.4, uuid 1.29.0 and ureq-proto 0.6.5 are still under two weeks old. In an interactive session run `cargo update -p <name> --precise <older>`, or wait until they age past two weeks.
 - Phase 2/3: any token holder can act as agent or human (author/holder are self-declared). Decide whether the studio and the agent get separate credentials.
-- Phase 2 step 3: release dates of clap 4.6.7 and ureq 3.5.0 are unverified (same headless limit); re-check and pin back if under two weeks old.
 - Phase 2 step 3: the E_SERVER hint says `ck studio --ensure`, which Phase 3 adds; until then an agent following it gets a usage error. Keep the hint (it is the shipped wording) or reword before Phase 3 if that slips.
-- Phase 2 step 4: rmcp 3.8.0 release date unverified (same headless limit); re-check and pin back if under two weeks old. MCP `lock`/`unlock` require `holder` while the CLI defaults `--holder agent`; revisit if strict input parity is wanted (DECISIONS.md, step 4).
-- Phase 2 step 5: ts-rs 12.0.1 release date unverified (same headless limit); re-check and pin back if under two weeks old.
+- Phase 2 step 4: MCP `lock`/`unlock` require `holder` while the CLI defaults `--holder agent`; revisit if strict input parity is wanted (DECISIONS.md, step 4).
 - Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies are written into package.json by hand and installed with `pnpm install`. Step 6a found the npm registry reachable: versions and dates checked with `pnpm view` (DECISIONS.md, step 6a).
-- Phase 2 step 6a: rust-embed 8.13.0 release date and the CI action majors (pnpm/action-setup@v4, actions/setup-node@v5) unverified; confirm on the first CI run. No CSP on the studio page yet (Remotion inline styles); still open after 6b, decide in step 8 or Phase 3.
+- Phase 2 step 6a: the CI action majors (pnpm/action-setup@v4, actions/setup-node@v5) are unverified; confirm on the first CI run. CSP was added in step 8.
 - Phase 2 step 6b: spec 5.2's Stop button needs cooperative cancel through the event bus (no route yet). Spec 5.3's global lock for structural changes has no lock id in ck-core. Both are deferred (DECISIONS.md, step 6b); confirm Phase 3 and Phase 6 pick them up.
-- Phase 2 step 7: the Playwright e2e suite is not in CI yet (it needs a Chromium download or cache in the workflow). Decide in step 8.
+- Phase 2 step 8: the CI `e2e` job (Playwright Chromium, no cache) is unverified until the first push. Reviewer leftovers: status/summary reads over the cap are refused instead of paged; a no-op heartbeat or unlock still fsyncs and publishes; no cap on concurrent WebSockets; the second-studio check has a check-then-bind gap.
 
 ## Roadmap additions: asset supply expansion (2026-10-28)
 
@@ -35,7 +33,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 2: server and studio shell (2026-10-28) - IN PROGRESS
+## Phase 2: server and studio shell (2026-10-28) - DONE
 
 Spec: 00, 01, 02, 03, 05, 06 (6.2). Proof: a CLI patch appears in the browser in under 300 ms and human edits are refused while locked.
 
@@ -82,6 +80,12 @@ Run plan (autonomous run 7): step 7 only.
 - Test 2: `ck lock` as agent; the inspector shows `data-ck-readonly=true` with disabled inputs; the studio's own patch request is refused with 423 E_LOCK_HELD; after `ck unlock` the edit lands.
 - `just e2e` builds ck and the studio, then runs Playwright; evidence in VERIFICATION.md.
 
+Run plan (autonomous run 8): step 8 only (phase wrap-up).
+- Release dates for the unverified Phase 2 crates from the crates.io API (node fetch); pin back any under two weeks old.
+- rust-reviewer on the Phase 2 diff (4f9a064..HEAD) and spec-checker on Phase 2; fix real gaps, record the rest as open.
+- Decide CSP and the CI e2e job (simplest option that fits the spec; DECISIONS.md).
+- VERIFICATION.md Phase 2 final rows, `just check` + `just e2e` green, tick step 8, `PHASE: 3`, handoff, commit.
+
 Steps (each ends with `just check`):
 - [x] 1. Deps + ck-server core: session state, event bus, server.json, bind to 127.0.0.1 on a free port.
 - [x] 2. HTTP + WS API with token/Host/Origin guards; refusals tested (E_AUTH, E_LOCK_HELD over HTTP).
@@ -92,7 +96,7 @@ Steps (each ends with `just check`):
   - [x] 6a. Scaffold, live project state over WS, Player preview, rust-embed serving, `just studio-build|studio-dev|studio-check`.
   - [x] 6b. Panels: timeline, inspector, read-only mode, banner, activity feed, ghost cursor.
 - [x] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.
-- [ ] 8. Evidence, reviewers, DECISIONS.md, handoff, commit; mark phase done.
+- [x] 8. Evidence, reviewers, DECISIONS.md, handoff, commit; mark phase done. Review follow-ups: `ck heartbeat` + MCP twin, idle shutdown (spec 5.1), CSP + X-Frame-Options, CI e2e job, open-time check (spec 1.2), crate pins.
 
 ## Phase 1: core (2026-10-28) - DONE
 

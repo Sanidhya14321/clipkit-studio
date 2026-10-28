@@ -41,6 +41,7 @@ async fn stream(
     first: Event,
     mut rx: tokio::sync::broadcast::Receiver<Event>,
 ) {
+    let _open = session.activity().connection();
     if send(&mut socket, &first).await.is_err() {
         return;
     }

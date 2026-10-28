@@ -56,6 +56,19 @@ async fn index_is_served_without_a_token() {
     assert_eq!(headers["content-type"], "text/html; charset=utf-8");
     assert_eq!(headers["cache-control"], "no-cache");
     assert_eq!(headers["x-content-type-options"], "nosniff");
+    assert_eq!(headers["x-frame-options"], "DENY");
+    let csp = headers["content-security-policy"].to_str().unwrap();
+    assert_eq!(csp, crate::studio::CSP);
+    for directive in [
+        "default-src 'self'",
+        "script-src 'self';",
+        "connect-src 'self'",
+        "object-src 'none'",
+        "frame-ancestors 'none'",
+    ] {
+        assert!(csp.contains(directive), "{directive}");
+    }
+    assert!(!csp.contains("unsafe-eval"));
     assert!(body.contains("id=root"));
 }
 

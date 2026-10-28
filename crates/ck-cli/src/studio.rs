@@ -2,6 +2,7 @@
 
 use std::path::Path;
 use std::sync::Arc;
+use std::time::Duration;
 
 use ck_core::model::Mode;
 use ck_core::storage::Store;
@@ -17,7 +18,7 @@ struct Started {
     port: u16,
 }
 
-pub fn run(dir: &Path, port: u16) -> CkResult<()> {
+pub fn run(dir: &Path, port: u16, idle_secs: u64) -> CkResult<()> {
     let root = dir.join(".clipkit");
     // Anything that answers on the recorded port, even with an error, counts as running; only
     // E_SERVER (no server.json, nothing listening) means the way is clear.
@@ -37,6 +38,10 @@ pub fn run(dir: &Path, port: u16) -> CkResult<()> {
         store.init(&new_project(dir))?;
     }
     let session = Arc::new(Session::open(&root, Arc::new(SystemClock))?);
+    let idle = session
+        .activity()
+        .clone()
+        .until_idle(Duration::from_secs(idle_secs));
     let rt = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
@@ -48,7 +53,7 @@ pub fn run(dir: &Path, port: u16) -> CkResult<()> {
             url: info.url.clone(),
             port: info.port,
         })?;
-        server.run(shutdown()).await
+        server.run(shutdown(idle)).await
     })
 }
 
@@ -62,8 +67,15 @@ fn new_project(dir: &Path) -> Project {
     Project::new("project", name, Mode::Generate)
 }
 
-/// Ctrl-C, or SIGTERM on unix.
-async fn shutdown() {
+/// Idle timeout, Ctrl-C, or SIGTERM on unix.
+async fn shutdown(idle: impl Future<Output = ()>) {
+    tokio::select! {
+        _ = idle => tracing::info!("idle timeout, stopping"),
+        _ = signal() => {}
+    }
+}
+
+async fn signal() {
     #[cfg(unix)]
     {
         use tokio::signal::unix::{SignalKind, signal};
