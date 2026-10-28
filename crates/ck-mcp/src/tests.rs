@@ -30,6 +30,7 @@ fn every_tool_is_named_after_its_cli_twin() {
 #[test]
 fn every_tool_has_an_object_schema_and_its_cli_cap() {
     let expected = [
+        ("studio", caps::STUDIO),
         ("status", caps::STATUS),
         ("project_get", caps::SUMMARY.max(caps::LAYER)),
         ("project_patch", caps::PATCH),

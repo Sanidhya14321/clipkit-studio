@@ -93,6 +93,21 @@ Command: `just check` (64 of 64 tests, hooks 41 of 41). ck-server suite run 3 mo
 | Step 8: e2e in CI | BLOCKED | `e2e` job added to `.github/workflows/ci.yml` (Playwright Chromium with deps, `just e2e`); not pushed, so it has never run on GitHub |
 | Phase 2 final run | PASS | 2026-10-29 `just check`: 103 of 103 nextest, hooks 41 of 41, studio prettier, `tsc --noEmit` and 10 of 10 unit tests; `just e2e` 2 of 2 |
 
+## Phase 3: plugin and auto-launch (2026-10-29, in progress)
+
+Tests in `crates/ck-cli/tests/cli_ensure.rs` and `mcp_parity.rs` unless named otherwise.
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| Step 1: `ck studio --ensure` starts a detached studio, then is idempotent | PASS | `ensure_starts_once_then_reuses_the_running_studio`: started true then false on the same port, `ck status` answers, server stops on SIGTERM and removes server.json |
+| Step 1: ensure returns within about 200 ms (spec 5.1) | PASS | Same test with `--no-capture`, three runs on 2026-10-29 (debug ck): cold 16.0, 15.5, 15.6 ms; warm 4.9, 4.9, 5.1 ms. Test bounds are 3 s and 1 s for loaded CI |
+| Step 1: concurrent ensures start one server | PASS | `concurrent_ensures_start_exactly_one_studio` (4 parallel calls, one `started: true`, one port) |
+| Step 1: `--open` opens the tab once per server, token only in the opener argument | PASS | `open_opens_the_tab_once_per_server` (fake `$BROWSER` records `url#token=`; second call opens nothing; a restarted server opens once with a new token); ensure output has no token |
+| Step 1: `--quiet` prints nothing; `--open`/`--quiet` need `--ensure` | PASS | `ensure_starts_once_then_reuses_the_running_studio`, `open_and_quiet_need_ensure` |
+| Step 1: stale server.json and start failures | PASS | `ensure_replaces_a_stale_server_json`; `a_studio_that_cannot_start_reports_its_own_error` (taken port: the child's E_SERVER "cannot bind" is relayed, no server.json left) |
+| Step 1: MCP twin `studio`, schema, cap, parity | PASS | `studio_tool_ensures_like_ck_studio_ensure` (MCP starts the server; then MCP and CLI answer byte for byte the same), `bad_arguments_and_a_missing_studio_are_tool_errors`, ck-mcp `tool_table_snapshot` and `every_tool_has_an_object_schema_and_its_cli_cap` |
+| Step 1 run | PASS | 2026-10-29 `just check`: 110 of 110 nextest, hooks 41 of 41, studio prettier, typecheck and unit tests |
+
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 
 | Item | Status | Evidence |

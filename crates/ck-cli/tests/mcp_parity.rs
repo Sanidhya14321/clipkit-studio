@@ -9,7 +9,7 @@ use std::path::Path;
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 
 use ck_server::ops::caps;
-use common::{Studio, add_track, err_line, ok_line};
+use common::{Background, Studio, add_track, err_line, ok_line};
 use serde_json::{Value, json};
 
 /// A `ck mcp` process with an initialized session; killed on drop.
@@ -295,8 +295,33 @@ fn bad_arguments_and_a_missing_studio_are_tool_errors() {
         ("lock", json!({ "holder": "robot", "layerIds": ["a"] })),
         ("unlock", json!({})),
         ("heartbeat", json!({ "holder": "robot" })),
+        ("studio", json!({ "open": "yes" })),
     ] {
         let e = mcp.err(name, args);
         assert_eq!(code(&e), "E_REQUEST", "{name}: {e}");
     }
+}
+
+#[test]
+fn studio_tool_ensures_like_ck_studio_ensure() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _bg = Background::new(d);
+    let mut mcp = Mcp::start(d);
+
+    // No studio: the tool starts one in the background.
+    let started: Value = serde_json::from_str(&mcp.ok("studio", json!({}), caps::STUDIO)).unwrap();
+    assert_eq!(
+        (&started["started"], &started["opened"]),
+        (&json!(true), &json!(false))
+    );
+
+    // Running: both doors answer byte for byte the same.
+    let cli = ok_line(d, &["studio", "--ensure"], caps::STUDIO);
+    assert_eq!(mcp.ok("studio", Value::Null, caps::STUDIO), cli);
+    let cli: Value = serde_json::from_str(&cli).unwrap();
+    assert_eq!(
+        (&cli["started"], &cli["port"]),
+        (&json!(false), &started["port"])
+    );
 }

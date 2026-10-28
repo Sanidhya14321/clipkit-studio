@@ -22,7 +22,8 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
-    /// Serve the project and the studio on 127.0.0.1 until interrupted.
+    /// Serve the project and the studio on 127.0.0.1 until interrupted, or with --ensure start
+    /// it in the background if it is not running.
     Studio {
         /// Port to bind; 0 picks a free one.
         #[arg(long, default_value_t = 0)]
@@ -30,6 +31,15 @@ pub enum Command {
         /// Stop after this many seconds with no API call and no open studio tab; 0 never stops.
         #[arg(long, default_value_t = ck_server::idle::DEFAULT_IDLE_SECS)]
         idle: u64,
+        /// Return at once: start the studio in the background unless it is already running.
+        #[arg(long)]
+        ensure: bool,
+        /// With --ensure: open the studio in the browser, once per server.
+        #[arg(long, requires = "ensure")]
+        open: bool,
+        /// With --ensure: print nothing on success.
+        #[arg(long, requires = "ensure")]
+        quiet: bool,
     },
     /// Serve the same operations as MCP tools on stdio (spec 6.2).
     Mcp,

@@ -115,3 +115,39 @@ pub fn add_track(base_rev: u64, author: &str, name: &str) -> String {
     })
     .to_string()
 }
+
+/// A studio started in the background by `ck studio --ensure`; stopped on drop through the pid
+/// in its server.json (SIGTERM, the same path as Ctrl-C).
+pub struct Background {
+    root: std::path::PathBuf,
+}
+
+impl Background {
+    pub fn new(dir: &Path) -> Self {
+        Self {
+            root: dir.join(".clipkit"),
+        }
+    }
+
+    pub fn pid(&self) -> Option<u32> {
+        let text = std::fs::read_to_string(self.root.join("server.json")).ok()?;
+        let info: Value = serde_json::from_str(&text).ok()?;
+        info["pid"].as_u64().and_then(|p| u32::try_from(p).ok())
+    }
+
+    /// Stop the server and wait until it removed its server.json.
+    pub fn stop(&self) {
+        let Some(pid) = self.pid() else { return };
+        let _ = Command::new("kill").arg(pid.to_string()).status();
+        let t0 = Instant::now();
+        while self.root.join("server.json").exists() && t0.elapsed() < Duration::from_secs(10) {
+            std::thread::sleep(Duration::from_millis(20));
+        }
+    }
+}
+
+impl Drop for Background {
+    fn drop(&mut self) {
+        self.stop();
+    }
+}

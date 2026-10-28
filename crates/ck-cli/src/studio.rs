@@ -7,7 +7,7 @@ use std::time::Duration;
 use ck_core::model::Mode;
 use ck_core::storage::Store;
 use ck_core::{CkError, CkResult, ErrorCode, Project};
-use ck_server::ops::Ops;
+use ck_server::launch;
 use ck_server::{Server, Session, SystemClock};
 use serde::Serialize;
 
@@ -20,13 +20,7 @@ struct Started {
 
 pub fn run(dir: &Path, port: u16, idle_secs: u64) -> CkResult<()> {
     let root = dir.join(".clipkit");
-    // Anything that answers on the recorded port, even with an error, counts as running; only
-    // E_SERVER (no server.json, nothing listening) means the way is clear.
-    if let Ok(ops) = Ops::connect(&root)
-        && ops
-            .status()
-            .map_or_else(|e| e.code != ErrorCode::Server, |_| true)
-    {
+    if launch::running(&root).is_some() {
         return Err(CkError::new(
             ErrorCode::Server,
             "a studio is already serving this project",

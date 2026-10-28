@@ -20,6 +20,7 @@ pub mod caps {
     pub const LAYER: usize = 8 * 1024;
     pub const PATCH: usize = 4 * 1024;
     pub const LOCK: usize = 4 * 1024;
+    pub const STUDIO: usize = 1024;
 }
 
 pub struct Ops {

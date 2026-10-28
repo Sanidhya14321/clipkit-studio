@@ -93,8 +93,9 @@ impl ServerHandler for CkMcp {
         }
         let args = request.arguments.map_or(Value::Null, Value::Object);
         let root = self.root.clone();
-        let outcome = tokio::task::spawn_blocking(move || {
-            Ops::connect(&root).and_then(|ops| tools::call(&ops, &name, args))
+        let outcome = tokio::task::spawn_blocking(move || match name.as_str() {
+            "studio" => tools::studio(&root, args),
+            _ => Ops::connect(&root).and_then(|ops| tools::call(&ops, &name, args)),
         })
         .await
         .unwrap_or_else(|e| Err(server_err(format!("tool task failed: {e}"))));

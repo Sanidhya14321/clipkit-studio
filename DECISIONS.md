@@ -2,6 +2,16 @@
 
 Newest first within each section. Each entry: what, why, and the source when it is a verified fact.
 
+## Phase 3 (2026-10-29)
+
+### Step 1: `ck studio --ensure`
+- **Ensure lives in ck-server (`launch`)**, so the CLI and the MCP `studio` tool share it. It spawns this process's own binary (`current_exe`) as `ck studio` in a new process group (Windows: new process group, no window), stdout null, stderr to `.clipkit/studio.log`. It returns once the new pid answers status; measured 16 ms cold, 5 ms warm (spec 5.1 asks about 200 ms). Waiting for the answer instead of returning right after spawn keeps the next ck call from racing the server start.
+- **Concurrent ensures** are serialized with an OS file lock on `.clipkit/launch.lock` (std `File::lock`, Rust 1.89+), so parallel hooks start one server. This narrows, but does not close, the Phase 2 check-then-bind gap for a foreground `ck studio` racing an ensure.
+- **"Once per session" = once per server**: `.clipkit/opened` records `pid:port` of the server whose tab was opened; a restarted server opens a tab again. No WebSocket-presence check (status has no tab count; adding one would change the generated types for little gain).
+- **Opener**: `$BROWSER` (first `:`-separated entry, run as a program with the URL as one argument, never a shell), else `xdg-open` / `open` / `rundll32 url.dll,FileProtocolHandler`. `$BROWSER` is the usual convention and the test seam (a fake script records the URL). The token travels only in the opener's argument, never on stdout.
+- **MCP twin**: tool `studio` (input `{open}`) always ensures, since an MCP call cannot serve in the foreground. `--quiet` has no MCP equivalent (a tool must return a result). Output cap `caps::STUDIO` = 1024 bytes.
+- Without `--quiet` ensure prints `{url, port, started, opened}`; `--open` and `--quiet` require `--ensure` (usage error otherwise).
+
 ## Asset supply expansion (2026-10-28, owner update)
 
 Source: docs/sources/asset-expansion-catalog.md, treated as third-party data. Spec: docs/spec/14-asset-expansion.md.

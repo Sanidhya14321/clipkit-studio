@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 3
 
 ## Handoff (latest)
-1. Done: Phase 2 (server and studio shell) is complete. Step 8 pinned tokio, ureq and rmcp back to releases at least two weeks old (dates checked on the crates.io API). It also added `ck heartbeat` with its MCP twin, idle shutdown (`ck studio --idle`, default 30 min), a strict CSP with `X-Frame-Options: DENY` on the studio, a CI e2e job, and an e2e check that the studio opens in under 3 s.
-2. Proof: a CLI patch shows in the browser in 11 ms (budget 300 ms). Human edits are refused while the agent holds the lock (423 E_LOCK_HELD, read-only inspector). The studio opens in 253 ms (budget 3 s) with no CSP violations. `just check`: 103 of 103 nextest, hooks 41 of 41, studio 10 of 10. `just e2e`: 2 of 2, and 20 of 20 on repeat.
-3. Open: seven transitive crates are under two weeks old (pinning them needs `cargo update --precise`). CI (including the new e2e job) has not run because nothing is pushed. Stop button and the global structural lock are deferred. Reviewer leftovers are listed in DECISIONS.md, step 8. Plus the earlier items below.
-4. Next: Phase 3 (plugin and auto-launch, spec 12): the Claude Code plugin with skill, MCP registration and hooks; `ck studio --ensure` (the E_SERVER hint already names it); `ck init`/uninstall for Claude Code and Codex. Read spec 06 (6.1, 6.3) and 05 (5.1); write the plan and steps first.
-5. Start: `just check`, `just e2e` (one-time `pnpm --dir studio exec playwright install chromium`). Manual: `just studio-build`, `cargo run -p ck-cli -- studio --dir <folder>`, then open `url#token=<token from server.json>`.
+1. Done: Phase 3 step 1. `ck studio --ensure [--open] [--quiet]` and its MCP twin `studio` live in `ck_server::launch`. Ensure starts a detached `ck studio` (stderr goes to .clipkit/studio.log) under a file lock, and opens `url#token=` once per server through `$BROWSER` or the platform opener.
+2. Proof: ensure takes 16 ms cold and 5 ms warm (budget about 200 ms). Four concurrent calls start one server. The tab opens once per server. Stale server.json files and start failures are handled. MCP and CLI answers are byte-identical. `just check`: 110 of 110 nextest, hooks 41 of 41, studio OK.
+3. Open: the reviewer has not yet run on the Phase 3 diff (planned for step 6). Phase 2 leftovers and earlier items are listed below; the ensure decisions are in DECISIONS.md, Phase 3 step 1.
+4. Next: step 2, where the first ck or MCP call ensures the studio. Ops-using commands would call `launch::ensure` on E_SERVER. Update `bad_arguments_and_a_missing_studio_are_tool_errors`, which expects E_SERVER without a studio. Then step 3, the `ck hook` subcommands.
+5. Start: `just check`. Manual: `cargo run -p ck-cli -- studio --ensure --open --dir <folder>`. Timings: `cargo nextest run -p ck-cli --no-capture -E 'test(ensure_starts_once)'`.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -32,6 +32,24 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 8 (assets at scale): wave 2 ingestion (RenderComp Free, cliphou.se, RemotionUI, Remotion Bits, Kenney, Tabler, Simple Icons, IWLTBAP free LUTs) and Pixabay; frame-clock adapter with determinism tests BEFORE any wrappable card (GSAP, Motion, Origin UI, Launch UI); LYGIA and BBC-style restricted fixtures for license mode; site-license snapshots, custom-license and trademark notes.
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
+
+## Phase 3: plugin and auto-launch (2026-10-29)
+
+Spec: 00, 05 (5.1), 06, 09. Proof: typing a video prompt in Claude Code opens the studio and the agent can patch a layer while the user watches.
+
+Steps:
+- [x] 1. `ck studio --ensure [--open] [--quiet]` and its MCP twin `studio`: idempotent, starts a detached server in the background, opens the browser tab once per server.
+- [ ] 2. First ck or MCP call ensures the studio is running (spec 5.1, agents without hooks).
+- [ ] 3. `ck hook prompt|guard|stop|session-end` (spec 6.1 hook behavior, fast, never blocks a non-video session).
+- [ ] 4. `plugin/`: manifest, skills (clipkit-video with spec 9.4 text, clipkit-review), clipkit-critic agent, .mcp.json, hooks/hooks.json; format checked against the current plugins reference; structure tests.
+- [ ] 5. `ck init` / `ck uninstall` for Claude Code and Codex (detect, ask, idempotent, no residue); adapters/ texts.
+- [ ] 6. Proof run, reviewer and spec-checker, evidence, phase done.
+
+Run plan (autonomous run 1): step 1 only.
+- ck-server `launch`: running-server probe (moved from `ck studio`), `ensure` under a file lock: spawn `ck studio` detached (new process group, stderr to .clipkit/studio.log), wait until the new pid answers status, report early exits with the log tail.
+- `--open`: open `url#token=` with `$BROWSER` or the platform opener once per server (marker .clipkit/opened); `--quiet` prints nothing.
+- MCP `studio` tool ({open}) runs the same ensure; tool table, caps and snapshot updated.
+- Tests: CLI e2e (start, idempotent second call, open once via a fake `$BROWSER`, quiet, stale server.json, early-exit error), MCP parity for `studio`.
 
 ## Phase 2: server and studio shell (2026-10-28) - DONE
 

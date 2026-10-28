@@ -10,6 +10,7 @@ use std::process::ExitCode;
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::api::BODY_LIMIT;
+use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::Ops;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
@@ -51,7 +52,21 @@ fn run(cli: Cli) -> CkResult<()> {
     let root = cli.dir.join(".clipkit");
     let ops = || Ops::connect(&root);
     match cli.command {
-        Command::Studio { port, idle } => studio::run(&cli.dir, port, idle),
+        Command::Studio {
+            port,
+            idle,
+            ensure: true,
+            open,
+            quiet,
+        } => {
+            let launcher = Launcher {
+                port,
+                ..Launcher::current(idle)?
+            };
+            let ensured = launch::ensure(&cli.dir, &EnsureRequest { open }, &launcher)?;
+            if quiet { Ok(()) } else { print(&ensured) }
+        }
+        Command::Studio { port, idle, .. } => studio::run(&cli.dir, port, idle),
         Command::Mcp => mcp(root),
         Command::Status => print(&ops()?.status()?),
         Command::Project(ProjectCommand::Get {

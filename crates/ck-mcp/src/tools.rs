@@ -2,8 +2,12 @@
 //! command path joined with `_` (`ck project get` is `project_get`), the input is the JSON the
 //! command takes, and the output is the one line of compact JSON the command prints.
 
+use std::path::Path;
+
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
+use ck_server::idle::DEFAULT_IDLE_SECS;
+use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
@@ -43,6 +47,13 @@ pub struct ToolSpec {
 /// Every tool, in CLI help order.
 pub fn specs() -> Vec<ToolSpec> {
     vec![
+        spec::<EnsureRequest>(
+            "studio",
+            "ck studio",
+            "Start the studio in the background unless it is running (ck studio --ensure); \
+             `open` opens its browser tab once.",
+            caps::STUDIO,
+        ),
         spec::<StatusArgs>(
             "status",
             "ck status",
@@ -134,6 +145,18 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "heartbeat" => json(&ops.heartbeat(&parse(args)?)?),
         other => Err(request_err(format!("no tool named {other:?}"))),
     }
+}
+
+/// The `studio` tool: `ck studio --ensure` for the project whose `.clipkit` folder is `root`.
+/// It needs no running server, so it does not go through `Ops`.
+pub fn studio(root: &Path, args: Value) -> CkResult<String> {
+    let req: EnsureRequest = parse(args)?;
+    let dir = root.parent().unwrap_or(Path::new("."));
+    json(&launch::ensure(
+        dir,
+        &req,
+        &Launcher::current(DEFAULT_IDLE_SECS)?,
+    )?)
 }
 
 /// Missing arguments count as an empty object, so `status` can be called bare.

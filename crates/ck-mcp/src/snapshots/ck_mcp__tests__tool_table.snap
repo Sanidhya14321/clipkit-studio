@@ -4,6 +4,24 @@ expression: specs()
 ---
 [
   {
+    "name": "studio",
+    "command": "ck studio",
+    "description": "Start the studio in the background unless it is running (ck studio --ensure); `open` opens its browser tab once.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "description": "`studio` (MCP) / `ck studio --ensure` input.",
+      "properties": {
+        "open": {
+          "default": false,
+          "description": "Open the studio in the browser, once per server.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "status",
     "command": "ck status",
     "description": "Project rev, mode, pipeline stage, agent state and live locks.",
