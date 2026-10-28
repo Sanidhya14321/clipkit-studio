@@ -1,3 +1,9 @@
-//! Project model, JSON patches, revisions, undo, locks, migrations.
+//! Project model, JSON patches, revisions, undo, locks, storage and migrations.
 //!
-//! Phase 0 skeleton: no product logic yet.
+//! Pure and synchronous: no async, no network. Every public type is serde + JsonSchema.
+
+pub mod error;
+pub mod model;
+
+pub use error::{CkError, CkResult, ErrorCode};
+pub use model::Project;

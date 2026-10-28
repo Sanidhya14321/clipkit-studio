@@ -2,6 +2,30 @@
 
 Newest first within each section. Each entry: what, why, and the source when it is a verified fact.
 
+## Phase 1 (2026-10-28)
+
+### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)
+| Crate | Version | Released | Notes |
+| --- | --- | --- | --- |
+| serde | 1.0.229 | 2026-07-18 | `derive` |
+| serde_json | 1.0.154 | 2026-10-11 | `float_roundtrip`: without it a proptest found f64 values that change by one ULP across save and load |
+| json-patch | 4.2.0 | 2026-04-30 | `schemars` feature (depends on schemars 1.x) so patch ops derive JsonSchema |
+| schemars | 1.2.3 | 2026-10-12 | |
+| thiserror | 2.0.21 | 2026-09-23 | |
+| tracing | 0.1.44 | 2025-12-18 | |
+| tracing-subscriber | 0.3.23 | 2026-03-13 | `json`, `env-filter`; ck-cli only |
+| proptest | 1.12.0 | 2026-10-10 | dev |
+| insta | 1.49.0 | 2026-10-03 | dev, `json` |
+| tempfile | 3.27.0 | 2026-03-11 | dev |
+
+### Model choices where spec 3.2 is silent
+- Items are a common struct plus a body tagged by `type` (footage, clip, voice, audio, caption); `rev` per item is engine-set.
+- Footage and audio `src` are source ids and are checked against `sources`. Caption `ref` names a source or voice slot.
+- `plan`, `derived` and `branches` stay untyped JSON until Phases 4, 8 and 9 define them.
+- Voice slot status values: empty, pending, ready, failed. Brief `effort` and `licenseMode` are strings until their phases.
+- Locks live in the project (spec 3.2) and carry holder (agent or human), heartbeat and ttl.
+- Undo and redo are new revisions (approved by the owner); default lock ttl 30 s (approved).
+
 ## Phase 0 (2026-10-28)
 
 ### Repository

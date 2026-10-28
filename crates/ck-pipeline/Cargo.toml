@@ -7,5 +7,13 @@ rust-version.workspace = true
 license.workspace = true
 publish = false
 
+[dependencies]
+ck-core.workspace = true
+serde.workspace = true
+schemars.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+
 [lints]
 workspace = true

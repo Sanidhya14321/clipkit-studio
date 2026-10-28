@@ -1,0 +1,943 @@
+---
+source: crates/ck-core/src/model/tests.rs
+expression: "schemars::schema_for!(Project)"
+---
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Project",
+  "type": "object",
+  "properties": {
+    "agent": {
+      "$ref": "#/$defs/AgentState",
+      "default": {
+        "activeLayers": [],
+        "label": "",
+        "status": "idle"
+      }
+    },
+    "assetsUsed": {
+      "description": "Asset ids referenced by layers.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
+    },
+    "branches": {
+      "description": "Branches. Typed when Phase 9 defines them.",
+      "type": "array",
+      "default": [],
+      "items": true
+    },
+    "brief": {
+      "$ref": "#/$defs/Brief",
+      "default": {
+        "checkpoints": [],
+        "fields": {},
+        "status": "proposed"
+      }
+    },
+    "comments": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Comment"
+      }
+    },
+    "derived": {
+      "description": "Derived components. Typed when Phase 8 defines them.",
+      "type": "array",
+      "default": [],
+      "items": true
+    },
+    "id": {
+      "type": "string"
+    },
+    "locks": {
+      "description": "Engine-managed; patches may not touch it.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Lock"
+      }
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode"
+    },
+    "name": {
+      "type": "string"
+    },
+    "pipeline": {
+      "$ref": "#/$defs/PipelineState",
+      "default": {
+        "stage": "boot"
+      }
+    },
+    "plan": {
+      "description": "Plan written in the PLAN stage. Typed when Phase 4 defines it.",
+      "default": null
+    },
+    "rev": {
+      "description": "Project revision. Set by the engine, never by patches.",
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "settings": {
+      "$ref": "#/$defs/Settings"
+    },
+    "sources": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Source"
+      }
+    },
+    "tokens": {
+      "description": "Design tokens by name.",
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "tracks": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Track"
+      }
+    },
+    "voiceSlots": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/VoiceSlot"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "rev",
+    "settings",
+    "mode"
+  ],
+  "$defs": {
+    "AgentState": {
+      "type": "object",
+      "properties": {
+        "activeLayers": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "label": {
+          "description": "Plain-words label of what the agent is doing (activity feed).",
+          "type": "string",
+          "default": ""
+        },
+        "status": {
+          "$ref": "#/$defs/AgentStatus"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "AgentStatus": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "waiting",
+        "working"
+      ]
+    },
+    "Anchor": {
+      "description": "Where a comment points: a time range, a layer, a property and/or a point on the frame.",
+      "type": "object",
+      "properties": {
+        "layerId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "point": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Point"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "propPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tEnd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "tStart": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "Author": {
+      "type": "string",
+      "enum": [
+        "human",
+        "agent",
+        "voice"
+      ]
+    },
+    "Brief": {
+      "type": "object",
+      "properties": {
+        "checkpoints": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "effort": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fields": {
+          "description": "Field name (audience, pacing, platform, look, voice, ...) to value.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/BriefField"
+          },
+          "default": {}
+        },
+        "licenseMode": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/BriefStatus",
+          "default": "proposed"
+        }
+      }
+    },
+    "BriefField": {
+      "type": "object",
+      "properties": {
+        "confidence": {
+          "description": "0.0 to 1.0.",
+          "type": "number",
+          "format": "double"
+        },
+        "source": {
+          "$ref": "#/$defs/BriefSource"
+        },
+        "value": true
+      },
+      "required": [
+        "value",
+        "source",
+        "confidence"
+      ]
+    },
+    "BriefSource": {
+      "type": "string",
+      "enum": [
+        "inferred",
+        "default",
+        "profile",
+        "reference",
+        "user"
+      ]
+    },
+    "BriefStatus": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "proposed",
+            "confirmed"
+          ]
+        },
+        {
+          "description": "The user asked for no questions or autopilot is on; shown afterwards as an editable card.",
+          "type": "string",
+          "const": "auto"
+        }
+      ]
+    },
+    "CaptionFrom": {
+      "type": "string",
+      "enum": [
+        "transcript",
+        "voice"
+      ]
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "anchor": {
+          "$ref": "#/$defs/Anchor",
+          "default": {}
+        },
+        "author": {
+          "$ref": "#/$defs/Author"
+        },
+        "createdRev": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "id": {
+          "type": "string"
+        },
+        "replies": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Reply"
+          }
+        },
+        "resolvedRev": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "status": {
+          "$ref": "#/$defs/CommentStatus",
+          "default": "open"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "author",
+        "text",
+        "createdRev"
+      ]
+    },
+    "CommentStatus": {
+      "type": "string",
+      "enum": [
+        "open",
+        "working",
+        "resolved"
+      ]
+    },
+    "Holder": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "human"
+      ]
+    },
+    "Item": {
+      "description": "A layer on a track. Common fields plus one kind-specific body, tagged by `type`.",
+      "type": "object",
+      "properties": {
+        "assetRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "briefDeps": {
+          "description": "Brief field names this layer depends on (drives re-planning when the brief changes).",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "pass": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pass"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purpose": {
+          "description": "Why this layer exists, in a few words (shown to the user and the agent).",
+          "type": "string",
+          "default": ""
+        },
+        "rev": {
+          "description": "Project revision that last touched this layer. Set by the engine, never by patches.",
+          "type": "integer",
+          "format": "uint64",
+          "default": 0,
+          "minimum": 0
+        }
+      },
+      "oneOf": [
+        {
+          "description": "A reference into a source with in and out points. Source media is never modified.",
+          "type": "object",
+          "properties": {
+            "at": {
+              "type": "number",
+              "format": "double"
+            },
+            "speed": {
+              "type": "number",
+              "format": "double",
+              "default": 1.0
+            },
+            "src": {
+              "description": "Source id.",
+              "type": "string"
+            },
+            "srcIn": {
+              "type": "number",
+              "format": "double"
+            },
+            "srcOut": {
+              "type": "number",
+              "format": "double"
+            },
+            "type": {
+              "type": "string",
+              "const": "footage"
+            },
+            "volume": {
+              "type": "number",
+              "format": "double",
+              "default": 1.0
+            }
+          },
+          "required": [
+            "type",
+            "src",
+            "srcIn",
+            "srcOut",
+            "at"
+          ]
+        },
+        {
+          "description": "A component clip (native, recipe-expanded or derived).",
+          "type": "object",
+          "properties": {
+            "at": {
+              "type": "number",
+              "format": "double"
+            },
+            "clipId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "derivedId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "dur": {
+              "type": "number",
+              "format": "double"
+            },
+            "props": {
+              "default": null
+            },
+            "type": {
+              "type": "string",
+              "const": "clip"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur"
+          ]
+        },
+        {
+          "description": "A voice slot placed on the timeline; its duration comes from the slot's active take.",
+          "type": "object",
+          "properties": {
+            "at": {
+              "type": "number",
+              "format": "double"
+            },
+            "slotId": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "voice"
+            }
+          },
+          "required": [
+            "type",
+            "slotId",
+            "at"
+          ]
+        },
+        {
+          "description": "Music or effects: source ranges laid end to end from `at`.",
+          "type": "object",
+          "properties": {
+            "at": {
+              "type": "number",
+              "format": "double"
+            },
+            "duck": {
+              "description": "Duck under voice.",
+              "type": "boolean",
+              "default": false
+            },
+            "ranges": {
+              "type": "array",
+              "default": [],
+              "items": {
+                "$ref": "#/$defs/TimeRange"
+              }
+            },
+            "src": {
+              "description": "Source id.",
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "audio"
+            },
+            "volume": {
+              "type": "number",
+              "format": "double",
+              "default": 1.0
+            }
+          },
+          "required": [
+            "type",
+            "src",
+            "at"
+          ]
+        },
+        {
+          "description": "Captions generated from a transcript or a voice slot.",
+          "type": "object",
+          "properties": {
+            "from": {
+              "$ref": "#/$defs/CaptionFrom"
+            },
+            "ref": {
+              "description": "Id of the source or voice slot the words come from.",
+              "type": "string"
+            },
+            "style": {
+              "description": "Caption style id (resolved against the project's tokens).",
+              "type": "string",
+              "default": ""
+            },
+            "type": {
+              "type": "string",
+              "const": "caption"
+            }
+          },
+          "required": [
+            "type",
+            "from",
+            "ref"
+          ]
+        }
+      ],
+      "required": [
+        "id"
+      ]
+    },
+    "Lock": {
+      "description": "A lock on one layer. Expires when no heartbeat arrives within `ttl_ms`.",
+      "type": "object",
+      "properties": {
+        "acquiredAtMs": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "heartbeatAtMs": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "holder": {
+          "$ref": "#/$defs/Holder"
+        },
+        "layerId": {
+          "type": "string"
+        },
+        "ttlMs": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "layerId",
+        "holder",
+        "acquiredAtMs",
+        "heartbeatAtMs",
+        "ttlMs"
+      ]
+    },
+    "Mode": {
+      "type": "string",
+      "enum": [
+        "edit",
+        "hybrid",
+        "generate"
+      ]
+    },
+    "Pass": {
+      "description": "Passes inside the PASSES stage, in order (spec 4.1).",
+      "type": "string",
+      "enum": [
+        "structure",
+        "audio",
+        "text",
+        "graphicsMotion",
+        "transitions",
+        "look",
+        "polish"
+      ]
+    },
+    "PipelineState": {
+      "type": "object",
+      "properties": {
+        "lastCompletedPass": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pass"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pass": {
+          "description": "Current pass while `stage` is `passes`.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pass"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stage": {
+          "$ref": "#/$defs/Stage"
+        }
+      },
+      "required": [
+        "stage"
+      ]
+    },
+    "Point": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number",
+          "format": "double"
+        },
+        "y": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ]
+    },
+    "Reply": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/$defs/Author"
+        },
+        "rev": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "author",
+        "text",
+        "rev"
+      ]
+    },
+    "Settings": {
+      "type": "object",
+      "properties": {
+        "fps": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "fps",
+        "width",
+        "height"
+      ]
+    },
+    "Source": {
+      "type": "object",
+      "properties": {
+        "durationSec": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "hash": {
+          "description": "Content hash of the original media.",
+          "type": "string",
+          "default": ""
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "path": {
+          "type": "string"
+        },
+        "proxyPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "transcriptPath": {
+          "description": "Word-level transcript on disk (never inlined into the project).",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "path"
+      ]
+    },
+    "SourceKind": {
+      "type": "string",
+      "enum": [
+        "video",
+        "audio",
+        "image"
+      ]
+    },
+    "Stage": {
+      "description": "Pipeline stages in order (spec 4.1).",
+      "type": "string",
+      "enum": [
+        "boot",
+        "detect",
+        "brief",
+        "plan",
+        "base",
+        "passes",
+        "verify",
+        "handoff",
+        "iterate"
+      ]
+    },
+    "TimeRange": {
+      "description": "A half-open time range in seconds, `[start, end)`.",
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "number",
+          "format": "double"
+        },
+        "start": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ]
+    },
+    "Track": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Item"
+          }
+        },
+        "kind": {
+          "$ref": "#/$defs/TrackKind"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ]
+    },
+    "TrackKind": {
+      "type": "string",
+      "enum": [
+        "video",
+        "overlay",
+        "audio",
+        "caption"
+      ]
+    },
+    "VoiceMode": {
+      "type": "string",
+      "enum": [
+        "ai",
+        "recorded",
+        "cloned"
+      ]
+    },
+    "VoiceSlot": {
+      "type": "object",
+      "properties": {
+        "activeTake": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/VoiceMode"
+        },
+        "status": {
+          "$ref": "#/$defs/VoiceSlotStatus",
+          "default": "empty"
+        },
+        "takes": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/VoiceTake"
+          }
+        },
+        "targetWindow": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeRange"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "voiceRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "mode"
+      ]
+    },
+    "VoiceSlotStatus": {
+      "type": "string",
+      "enum": [
+        "empty",
+        "pending",
+        "ready",
+        "failed"
+      ]
+    },
+    "VoiceTake": {
+      "type": "object",
+      "properties": {
+        "durationSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "durationSec"
+      ]
+    }
+  }
+}

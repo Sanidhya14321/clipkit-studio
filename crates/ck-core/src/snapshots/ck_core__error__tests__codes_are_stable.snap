@@ -1,0 +1,46 @@
+---
+source: crates/ck-core/src/error.rs
+expression: table
+---
+[
+  [
+    "E_STAGE",
+    "Run the next allowed step named in the message, then retry."
+  ],
+  [
+    "E_RETRY",
+    "Stop retrying: read the previous error and change the call."
+  ],
+  [
+    "E_LOCK_HELD",
+    "Wait until the holder releases the layer or the lock expires."
+  ],
+  [
+    "E_LOCK_NOT_HELD",
+    "Acquire the lock for the listed layers before patching."
+  ],
+  [
+    "E_PATCH_STALE",
+    "Re-read only the listed layers, rebuild the patch on the current rev."
+  ],
+  [
+    "E_PATCH_INVALID",
+    "Fix the patch operations; rev, schemaVersion and locks are read-only."
+  ],
+  [
+    "E_SCHEMA",
+    "Fix the field named in the message so the project validates."
+  ],
+  [
+    "E_HISTORY_EMPTY",
+    "There is nothing to undo or redo."
+  ],
+  [
+    "E_STORAGE",
+    "Check the path, permissions and free disk space, then retry."
+  ],
+  [
+    "E_MIGRATION",
+    "Upgrade ck: this project was written by a newer version."
+  ]
+]
