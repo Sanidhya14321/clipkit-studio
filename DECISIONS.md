@@ -132,3 +132,7 @@ Open questions: owner-specific Adobe/LUT/SFX/font libraries and their rights wer
 ## Update 2 U2-1
 
 Brief confirmation is durable project metadata, separate from creative acceptance and paid provider consent. Optional additive v1 fields preserve old snapshots without inference on load. Agent results are compact summaries, not the full form. Waiting uses bounded HTTP/MCP long polls and releases the caller's global lease; default Codex MCP tool timeout is 60 seconds, so each wait caps at 45 seconds ([official MCP documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)). The fetched CLI docs do not establish one universal dictation shortcut; no browser-to-terminal STT API is assumed. Open question: microphone/provider behavior requires live permission and credentials.
+
+## Update 2 U2-2
+
+Brief impact previews precede explicit field application. A brief diff records changed fields and dependent layer IDs; unrelated layer JSON stays exact. Pacing changes mark the relevant passes for re-plan rather than silently cutting speech. Looks update project tokens and explicitly bound controls with zero model calls. Waiting, question and context state use a bounded persistent event bridge, with no edit lease held during user input. Open questions: layout measurement for arbitrary authored components still needs actual DOM/render inspection; no generic bounding-box claim is made.

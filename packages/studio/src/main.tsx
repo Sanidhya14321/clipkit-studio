@@ -1,3 +1,5 @@
+import {BriefStudioPanel} from './BriefStudio';
+import './brief.css';
 import {getProperty,setProperty} from '../../assets/src/property-path';
 import {MotionPanel} from './MotionPanel';
 import {SceneSourcePanel} from './SceneSourcePanel';
@@ -209,6 +211,7 @@ function trackLanes(items: Item[]) {
   return { positions, count: Math.max(1, ends.length) };
 }
 function App() {
+  const [briefOpen,setBriefOpen]=useState(false);
   const workspace = useWorkspace();
   const [state, setState] = useState<StudioState | null>(null),
     [token, setToken] = useState(""),
@@ -346,6 +349,8 @@ function App() {
     },
     [tell],
   );
+  useEffect(()=>{if(state?.project.brief?.status==='proposed')setBriefOpen(true)},[state?.project.brief?.rev,state?.project.brief?.status]);
+  useEffect(()=>{if(!state||!token)return;const timer=setTimeout(()=>void op('context_set',{playhead:time,loop:range,selection:selected?{layerId:selected,propertyPath:selectedDetail.current.propPath,label:state.project.tracks.flatMap(t=>t.items).find(i=>i.id===selected)?.name??selected}:null,hovered:hover?.layerId?{layerId:hover.layerId,propertyPath:hover.propPath,elementId:hover.elementId}:null}).catch(()=>{}),250);return()=>clearTimeout(timer)},[time,range,selected,hover?.layerId,hover?.propPath,token]);
   const run = useCallback(
     (name: string, args: Record<string, unknown> = {}) => {
       if (stateRef.current?.lease && name !== "agent_cancel") {
@@ -667,6 +672,7 @@ function App() {
     origin: "human" | "voice" = "human",
     confidence = 1,
   ) {
+    if(origin==='voice'&&(stateRef.current?.briefStudio?.question&&!stateRef.current.briefStudio.question.answer||stateRef.current?.project.brief?.status==='proposed')){void op('brief_voice',{text,apply:true}).then(result=>{if(!result?.mapped&&result?.text)tell('Please choose a brief field or type your answer.');else tell('Voice answer received')}).catch(()=>{});return;}
     const intent = routeVoice(text, confidence);
     const voiceArgs = { author: origin };
     setHeard({
@@ -1271,7 +1277,8 @@ function App() {
         const assetId=e.dataTransfer.getData('application/x-clipkit-asset');if(assetId){const lane=(e.target as HTMLElement).closest<HTMLElement>('[data-track-id]');const at=lane?Math.max(0,(e.clientX-lane.getBoundingClientRect().left)/zoom):time;void op('library_place',{assetId,at,...lane?{trackId:lane.dataset.trackId}:{}}).then(result=>{if(result.itemId)setSelected(result.itemId)}).catch(error=>setToast(error instanceof Error?error.message:String(error)));}else void uploadFiles(e.dataTransfer.files);
       }}
     >
-      <header className="topbar">
+      <BriefStudioPanel project={project} op={op} open={briefOpen} onClose={()=>setBriefOpen(false)} waiting={state.briefStudio?.waiting} question={state.briefStudio?.question} onMic={startCommand} onMicEnd={stopCommand} onQuestionAnswer={answer=>void op('ask_answer',{id:state.briefStudio?.question?.id,answer})}/>
+      <header className="topbar"><button aria-label="Open creative Brief" onClick={()=>setBriefOpen(true)}>Brief</button>
         <button className="panel-toggle" aria-label="Toggle Library" aria-pressed={['library','both'].includes(workspace.effective)} onClick={()=>workspace.toggle('library')}><FolderOpen size={16}/><span>Library</span></button>
         <button className="panel-toggle" aria-label="Toggle Properties" aria-pressed={['inspector','both'].includes(workspace.effective)} onClick={()=>workspace.toggle('inspector')}><Settings2 size={16}/><span>Properties</span></button>
         <button className="workspace-reset" aria-label="Reset Workspace" onClick={workspace.reset}>Reset Workspace</button>
@@ -2582,6 +2589,7 @@ function App() {
               </div>
             )}
           </div>
+          {state.briefStudio?.waiting&&!locked&&<div className="lease-banner" role="status">Waiting for your brief or answer · Studio is editable</div>}
           {locked && (
             <div className="lease-banner">
               <LoaderCircle size={15} className="spin" />
