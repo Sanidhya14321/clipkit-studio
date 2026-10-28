@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import {toolkitInstructions} from '../../mcp/src/toolkit-tools';
+import {readDiskScene,sourceHashes} from '../../scenes/src/disk';
 import {FlightRecorder,traceContext,registerSecrets,sha,replayTrace,bisectTrace,bundleTrace,reproTrace,traceList} from '../../debug/src/trace';
 import {diagnostic} from '../../debug/src/errors';
 import {doctor as debugDoctor} from '../../debug/src/doctor';
@@ -25,7 +27,7 @@ const cliPath=fileURLToPath(import.meta.url);
 const packaged=cliPath.endsWith('.js');
 const installRoot=packaged?resolve(dirname(cliPath),'..'):resolve(dirname(cliPath),'../../..');
 let args=process.argv.slice(2);const rootIndex=args.indexOf('--root');const root=resolve(rootIndex>=0?args.splice(rootIndex,2)[1]:process.env.CLIPKIT_ROOT??process.cwd());
-const flags:Record<string,string|boolean>={};const positional:string[]=[];const boolFlags=new Set(['summary','open','compact','no-vite','draft','reuse-direction','trust','consent','graphics','all','dry-run','frames','apply','autopilot','cache','critic','contact-sheet','preview','enabled','baseline-clean','allow-guidance','synthetic','debug-harness']);for(let i=0;i<args.length;i++){const value=args[i];if(!value.startsWith('--')){positional.push(value);continue}const key=value.slice(2);if(boolFlags.has(key)){flags[key]=true;continue}if(!args[i+1]||args[i+1].startsWith('--'))throw Error(`--${key} needs a value`);flags[key]=args[++i];if(key==='range'&&args[i+1]&&!args[i+1].startsWith('--')&&/^\d+(?:\.\d+)?$/.test(args[i+1])){flags.end=args[++i];}}args=positional;
+const flags:Record<string,string|boolean>={};const positional:string[]=[];const boolFlags=new Set(['source','summary','open','compact','no-vite','draft','reuse-direction','trust','consent','graphics','all','dry-run','frames','apply','autopilot','cache','critic','contact-sheet','preview','enabled','baseline-clean','allow-guidance','synthetic','debug-harness']);for(let i=0;i<args.length;i++){const value=args[i];if(!value.startsWith('--')){positional.push(value);continue}const key=value.slice(2);if(boolFlags.has(key)){flags[key]=true;continue}if(!args[i+1]||args[i+1].startsWith('--'))throw Error(`--${key} needs a value`);flags[key]=args[++i];if(key==='range'&&args[i+1]&&!args[i+1].startsWith('--')&&/^\d+(?:\.\d+)?$/.test(args[i+1])){flags.end=args[++i];}}args=positional;
 try{process.loadEnvFile(join(root,'.env'));}catch{/* Optional local provider credentials. */}
 registerSecrets(Object.entries(process.env).filter(([key])=>/TOKEN|SECRET|PASSWORD|API_KEY/.test(key)).map(([,value])=>value??''));
 if(flags['cassette-mode']){if(!['live','record','replay'].includes(String(flags['cassette-mode'])))throw Error('Invalid cassette mode');process.env.CLIPKIT_CASSETTE_MODE=String(flags['cassette-mode']);}if(flags.cassettes)process.env.CLIPKIT_CASSETTE_DIR=resolve(String(flags.cassettes));if(flags.synthetic)process.env.CLIPKIT_SYNTHETIC_FIXTURES='1';
@@ -44,7 +46,7 @@ const output=(value:unknown)=>{const serialized=JSON.stringify(value,null,2);pro
 async function managedText(path:string,start:string,end:string,content:string){let old='';try{old=await readFile(path,'utf8');}catch{}const block=`${start}\n${content.trim()}\n${end}`;const first=old.indexOf(start),last=old.indexOf(end);const next=first>=0&&last>=first?old.slice(0,first)+block+old.slice(last+end.length):`${old.trimEnd()}${old.trim()?'\n\n':''}${block}\n`;await mkdir(dirname(path),{recursive:true});await writeFile(path,next);}
 async function initialize(){
   const commandArgs=packaged?[cliPath,'mcp']:['--import',fileURLToPath(import.meta.resolve('tsx')),cliPath,'mcp'];
-  const mcpConfig={command:process.execPath,args:commandArgs,env:{CLIPKIT_ROOT:root}};
+  const mcpConfig={command:process.execPath,args:commandArgs,env:{CLIPKIT_ROOT:root,CLIPKIT_TOOL_PROFILE:'toolkit'}};
   const optional=async(path:string)=>{try{return await readFile(path,'utf8')}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;return ''}};
   const priorCodex=await optional(join(root,'.codex/config.toml'));const priorAgents=await optional(join(root,'AGENTS.md'));
   if(/\[mcp_servers\.clipkit(?:\]|\.)/.test(priorCodex)&&!priorCodex.includes('# clipkit:start'))throw new Error('An unmanaged ClipKit server exists in .codex/config.toml; merge or rename it before ck init. Existing files were preserved.');
@@ -54,13 +56,13 @@ async function initialize(){
   if(existing&&!owned)throw new Error('An unmanaged clipkit entry exists in .mcp.json; merge or rename it before ck init. Existing files were preserved.');
   const cursorPath=join(root,'.cursor/rules/clipkit.mdc');const priorCursor=await optional(cursorPath);if(priorCursor&&!priorCursor.includes('<!-- clipkit:start -->'))throw new Error('An unmanaged .cursor/rules/clipkit.mdc exists; rename it before ck init. Existing files were preserved.');
   await mkdir(join(root,'scenes'),{recursive:true});await mkdir(join(root,'.clipkit'),{recursive:true});try{await access(join(root,'.clipkit','project.json'));}catch{await new ProjectStore(root).load();}
-  await managedText(join(root,'AGENTS.md'),'<!-- clipkit:start -->','<!-- clipkit:end -->',agentInstructions);
+  await managedText(join(root,'AGENTS.md'),'<!-- clipkit:start -->','<!-- clipkit:end -->',toolkitInstructions);
   mcp.mcpServers={...mcp.mcpServers,clipkit:mcpConfig};await writeFile(join(root,'.mcp.json'),JSON.stringify(mcp,null,2)+'\n');
-  const config=`[mcp_servers.clipkit]\ncommand = ${JSON.stringify(process.execPath)}\nargs = ${JSON.stringify(commandArgs)}\ndefault_tools_approval_mode = "approve"\n[mcp_servers.clipkit.env]\nCLIPKIT_ROOT = ${JSON.stringify(root)}`;
+  const config=`[mcp_servers.clipkit]\ncommand = ${JSON.stringify(process.execPath)}\nargs = ${JSON.stringify(commandArgs)}\ndefault_tools_approval_mode = "approve"\n[mcp_servers.clipkit.env]\nCLIPKIT_ROOT = ${JSON.stringify(root)}\nCLIPKIT_TOOL_PROFILE = "toolkit"`;
   await managedText(join(root,'.codex','config.toml'),'# clipkit:start','# clipkit:end',config);
-  const skill=join(root,'.claude','skills','clipkit');await mkdir(skill,{recursive:true});await writeFile(join(skill,'SKILL.md'),`---\nname: clipkit\ndescription: Edit the local ClipKit video timeline with precise revisioned patches.\n---\n${agentInstructions}`);
+  const skill=join(root,'.claude','skills','clipkit');await mkdir(skill,{recursive:true});await writeFile(join(skill,'SKILL.md'),`---\nname: clipkit\ndescription: Edit the local ClipKit video timeline with precise revisioned patches.\n---\n${toolkitInstructions}`);
   if(!priorCursor.startsWith('---')){await mkdir(dirname(cursorPath),{recursive:true});await writeFile(cursorPath,'---\ndescription: Edit the shared ClipKit timeline through revisioned MCP tools.\nalwaysApply: true\n---\n'+priorCursor);}
-  await managedText(cursorPath,'<!-- clipkit:start -->','<!-- clipkit:end -->',agentInstructions);
+  await managedText(cursorPath,'<!-- clipkit:start -->','<!-- clipkit:end -->',toolkitInstructions);
   await writeFile(join(root,'.clipkit/adapters.json'),JSON.stringify({mcpConfig}));
   await mkdir(join(root,'assets'),{recursive:true});try{await writeFile(join(root,'assets/README.md'),'# Project assets\n\nAdd media or reviewed pack sources here, then select Library → Rescan. Raw source files are never automatically executed.\n',{flag:'wx'});}catch(error){if((error as NodeJS.ErrnoException).code!=='EEXIST')throw error;}
   await doctor();
@@ -83,7 +85,7 @@ async function doctor(){
 }
 async function main(){
   const [command,sub,...rest]=args;
-  if(!command||command==='help'){console.log('ClipKit Studio\n\n  ck init     Connect your coding agents\n  ck studio   Open the local video editor\n  ck doctor   Check media and voice dependencies\n\nOther commands: assets (ingest/build/validate/search/card/skeleton/slice/source/derive/install/list), taste, pipeline (detect/plan/base/pass/status/resume/handoff), verify, meter, search, schema, project, status, footage, comments, voice, history, export, demo, mcp, brief, context, wait, ask, look, recipe, layout, variants, storyboard, reference, sound, audio, cache, lock, unlock, layer, branch, profile, bench (run/record/execute/pair/matrix/report), replay, sources, collections, license report, uninstall, fixtures generate DIR, eval VIDEO, trace (list/bundle RUN_ID), repro RUN_ID, bisect RUN_ID.');return;}
+  if(!command||command==='help'){console.log('ClipKit toolkit\n\n  ck project open / context / sync SCENE\n  ck component search QUERY / add ID --scene SCENE / refresh\n  ck resource add PATH\n  ck render / source bundle / job JOB_ID\n  ck property set ITEM PATH JSON\n\n  ck init     Connect your coding agents\n  ck studio   Open the local video editor\n  ck doctor   Check media and voice dependencies\n\nOther commands: assets (ingest/build/validate/search/card/skeleton/slice/source/derive/install/list), taste, pipeline (detect/plan/base/pass/status/resume/handoff), verify, meter, search, schema, project, status, footage, comments, voice, history, export, demo, mcp, brief, context, wait, ask, look, recipe, layout, variants, storyboard, reference, sound, audio, cache, lock, unlock, layer, branch, profile, bench (run/record/execute/pair/matrix/report), replay, sources, collections, license report, uninstall, fixtures generate DIR, eval VIDEO, trace (list/bundle RUN_ID), repro RUN_ID, bisect RUN_ID.');return;}
   if(command==='init')return initialize();
   if(command==='studio')return studio();
   if(command==='doctor'){const report=await debugDoctor({root,baseline:!!flags['baseline-clean'],home:process.env.HOME,port:flags.port?Number(flags.port):undefined,allowGuidance:!!flags['allow-guidance']});output(report);if(!report.ok)process.exitCode=1;return;}
@@ -137,6 +139,24 @@ async function main(){
   if(command==='verify')return output(await invoke(flags.critic?'quality_critic':flags.frames?'quality_frames':'quality_verify',{gate:sub}));
   if(command==='meter')return output(await invoke('retrieval_meter',{all:!!flags.all}));
   if(command==='assets'&&sub==='install')return output(await invoke('assets_install',{path:resolve(rest[0]),trust:flags.trust===true}));
+  if(command==='project'&&sub==='open')return output(await invoke('project_open',flags.width?{settings:{width:Number(flags.width),height:Number(flags.height),fps:Number(flags.fps??30)},baseRev:flags.rev?Number(flags.rev):undefined}:{}));
+  if(command==='project'&&sub==='context')return output(await invoke('project_context',{itemId:flags.item}));
+  if(command==='project'&&sub==='sync'){
+    const draft=await readDiskScene(root,rest[0]);const hashes=sourceHashes(draft.files);let previous:any={};try{previous=JSON.parse(await readFile(join(root,'.clipkit/sync',rest[0]+'.json'),'utf8'))}catch{}
+    const files=Object.fromEntries(Object.entries(draft.files).filter(([name])=>!draft.baseVersion||previous.files?.[name]!==hashes[name]));
+    let result:any=await invoke('project_sync',{sceneId:rest[0],baseVersion:draft.baseVersion,manifest:{...draft,files:Object.fromEntries(Object.keys(draft.files).map(name=>[name,'']))},files});
+    while(['queued','running'].includes(result.status))result=await invoke('job_status',{jobId:result.id,waitMs:45000});
+    if(result.status!=='done')throw Error(result.error??'Scene sync failed');
+    await mkdir(join(root,'.clipkit/sync'),{recursive:true});await writeFile(join(root,'.clipkit/sync',rest[0]+'.json'),JSON.stringify({files:hashes,version:result.result.version}));
+    return output(result.result);
+  }
+  if(command==='component')return output(await invoke(sub==='refresh'?'component_search':'component_'+sub,{refresh:sub==='refresh',id:rest[0],sceneId:flags.scene,adapterFile:flags.file,query:rest.join(' '),source:!!flags.source,status:flags.status,limit:Number(flags.limit??5)}));
+  if(command==='resource'&&sub==='add'){
+    const file=resolve(rest[0]),bytes=await readFile(file),form=new FormData();form.set('file',new File([bytes],file.split('/').at(-1)!));const {url,token}=await connection();const response=await fetch(url+'/api/resources',{method:'POST',headers:{'X-ClipKit-Token':token},body:form});const body=await response.json();if(!response.ok)throw Error(JSON.stringify(body));return output(body);
+  }
+  if(command==='property'&&sub==='set')return output(await invoke('property_patch',{itemId:rest[0],path:rest[1],value:JSON.parse(rest[2]),...flags.expected?{expected:JSON.parse(String(flags.expected))}:{}}));
+  if(command==='render')return output(await invoke('render',{width:flags.width?Number(flags.width):undefined,height:flags.height?Number(flags.height):undefined,fps:flags.fps?Number(flags.fps):undefined,audio:flags.audio,crf:flags.crf?Number(flags.crf):undefined,range:flags.range?{startFrame:Number(flags.range),endFrame:Number(flags.end)}:undefined}));
+  if(command==='source'&&sub==='bundle')return output(await invoke('source_bundle'));
   if(command==='mcp'){await serveMcp(invoke);return;}
   if(command==='assets'&&sub==='list')return output(await invoke('assets_list',{kind:typeof flags.kind==='string'?flags.kind:undefined,tags:typeof flags.tags==='string'?flags.tags.split(','):undefined,mood:typeof flags.mood==='string'?flags.mood:undefined,q:typeof flags.q==='string'?flags.q:undefined,offset:flags.offset?Number(flags.offset):0,limit:flags.limit?Number(flags.limit):5}));
   if(command==='assets'&&sub==='card')return output(await invoke('knowledge_card',{id:rest[0]}));

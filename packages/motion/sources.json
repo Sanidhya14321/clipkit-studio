@@ -71,9 +71,9 @@
     "original": "motion/index.tsx",
     "file": "src/index.tsx",
     "originalSha256": "a9aad0e92c439cfc4af038ab9fad27dfe5b51ae57d8a38c53563cba8d9fc180f",
-    "sha256": "12b302d433d4e6e6a74680e8218c1c4f3e1c39d1b14d0d4c0c9f3f51f55164a7",
+    "sha256": "8bf626817abe8e7303307c5bdce2bc78b57b1b80547323a13051b13453e1e316",
     "license": "MIT; Paper runtime separately Apache-2.0",
-    "modifications": "Selected frame math, split type, perspective planes and wipe; omitted experimental optics/blur, standalone renderer and GSAP. Added frame-seeked material adapter."
+    "modifications": "Selected frame math, split type, perspective planes and wipe; omitted experimental optics/blur, standalone renderer and GSAP. Added frame-seeked material adapter. Added resourceUrl/useResourceFont exports for binary-free resource transport; upstream motion helpers retained."
   },
   {
     "source": "https://github.com/ibelick/motion-primitives",

@@ -29,3 +29,7 @@ for(const profile of ['edit','scene-edit','authoring','media','voice'])toolProfi
 for(const profile of ['creative','production','edit','authoring','media','voice'])toolProfiles[profile].push('sound_plan','audio_analyze','see_sheet','see_trace','quality_critic','quality_critic_submit','layer_cache_prepare');
 
 for(const list of Object.values(toolProfiles))for(const tool of ['sources_list','sources_gaps','collections_list','license_report'])if(!list.includes(tool))list.push(tool);
+
+// Assigned after legacy profile expansion so the toolkit stays genuinely small.
+export const toolkitProfile=['project_open','project_context','project_sync','component_search','component_inspect','component_add','component_validate','resource_import','property_patch','render','source_bundle','job_status'];
+toolProfiles.toolkit=toolkitProfile;

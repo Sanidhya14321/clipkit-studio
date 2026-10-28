@@ -1,3 +1,4 @@
+import {ComponentDiscovery} from './ComponentDiscovery';
 import {SourcesPanel} from './SourcesPanel';
 import {SystemsPanel} from './SystemsPanel';
 import {VariantsPanel} from './VariantsPanel';
@@ -1361,6 +1362,7 @@ function App() {
           <div className="tabbar">
             {[
               ["assets", "Components"],
+              ["discover", "Web effects"],
               ["skills", "Storyboard"],
               ["footage", "Media"],
               ["transcript", "Transcript"],
@@ -1374,7 +1376,7 @@ function App() {
               </button>
             ))}
           </div>
-          {left === "assets" ? (<LibraryPanel op={op} state={state} token={token} time={time} componentOnly onSelect={id=>{setSelected(id);setRight("inspector");workspace.show("inspector")}}/>) : left === "skills" ? (<MotionPanel op={op} state={state} token={token} selectedId={selected} range={range} onSeek={seek}/>
+          {left === "discover" ? (<ComponentDiscovery op={op} sceneId={state.project.tracks.flatMap(t=>t.items).find(i=>i.id===selected)?.sceneId??"film"}/>) : left === "assets" ? (<LibraryPanel op={op} state={state} token={token} time={time} componentOnly onSelect={id=>{setSelected(id);setRight("inspector");workspace.show("inspector")}}/>) : left === "skills" ? (<MotionPanel op={op} state={state} token={token} selectedId={selected} range={range} onSeek={seek}/>
           ) : left === "footage" ? (
             <div className="panel-scroll">
               <button
@@ -1655,13 +1657,13 @@ function App() {
                   <p>
                     Add an element, import footage,
                     <br />
-                    or direct an original video from Storyboard.
+                    or ask your connected coding agent to create a film.
                   </p>
-                  <button disabled={locked} onClick={()=>{setLeft("assets");workspace.show("library");requestAnimationFrame(()=>document.querySelector<HTMLTextAreaElement>('[aria-label="Creative brief"]')?.focus())}}>
+                  <button disabled={locked} onClick={()=>{setLeft("discover");workspace.show("library")}}>
                     <Sparkles size={15} />
-                    Create a reel
+                    Browse web effects
                   </button>
-                  <small>Original scenes · shared frame score</small>
+                  <small>Agent-directed films · editable source</small>
                 </div>
               )}
               {selectionBox && selected && (

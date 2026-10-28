@@ -1,28 +1,32 @@
-# ClipKit Studio 0.5
+# ClipKit: web components → editable films
 
-Local video authoring with real animation components, frame comments, reversible human edits and a creative-agent checkpoint.
-
-Asset intelligence and layered pipeline commands: [pipeline guide](docs/PIPELINE.md). Update evidence: [VERIFICATION.md](VERIFICATION.md).
+Give Claude, Codex, or another coding agent a searchable visual vocabulary and reliable local video tools. The host agent directs the film; ClipKit finds and adapts actual React/CSS/GSAP/shader effects, previews them in Studio, and exports native video plus editable source.
 
 ```sh
 pnpm install
-pnpm build
 pnpm dev
+# In another terminal, with your project selected through --root:
+pnpm ck project open --width 1080 --height 1920 --fps 30
+pnpm ck component search "gooey typography morph"
+pnpm ck component add web-gooey-morphing-text --scene film
+# Author scenes/film/Scene.tsx and scene.json, then:
+pnpm ck project sync film
+pnpm ck render --audio silent
+pnpm ck op job_status '{"jobId":"JOB_ID","waitMs":45000}'
 ```
 
-Node 24 and a signed-in Codex CLI are required for live authoring. Remotion is pinned to 4.0.538. Agent turns use gpt-6.1-sol at medium effort. A provider key is optional for Fish voice features; those live integrations remain unverified.
+`ck init` installs compact host-agent instructions and the twelve-tool MCP profile for Codex, Claude Code and Cursor. It does not start another model. Studio provides optional preview, frame comments, property controls and undo. Generation runs through to export unless you ask for a checkpoint.
 
-Open **Components** to preview and insert actual Clip Library, Magic UI, Animata and Paper Shader implementations. Open **Storyboard** to prepare a film: the first turn creates a storyboard and a real three-second sample. Human approval resumes the exact agent session. Completed work remains a proposal until **Keep revision**. Direct property edits require no agent call.
+**Discover → select → adapt → compose → inspect → export.** A pinned metadata index covers 774 discovered source files; search ranks visual intent with local BM25; sources include React Bits, Magic UI, Motion Primitives, Animata, Paper Shaders, selected Codrops demos and the existing Clip Library components. Entries clearly distinguish ready adapters from source needing frame-clock adaptation. Selected source and dependency closures are fetched on demand; successful adaptations are cached by their source, dependency and runtime versions.
+
+Fonts and media stay as files: `ck resource add /path/to/font.ttf` uploads directly and returns a resource ID. `ck project sync film` sends changed source only. `ck property set ITEM headline '"New headline"'` updates a declared value without regenerating code. Export uses the native project size unless you explicitly select another size/FPS/audio mode.
+
+See [toolkit authoring](docs/TOOLKIT.md) for the manifest, source adaptation and editing contracts. [Earlier workflows](docs/WORKFLOW.md) remain available through the legacy CLI/API and `CLIPKIT_TOOL_PROFILE=legacy`; storyboard approval, seven-pass pipelines and nested agents are not prerequisites for the toolkit.
 
 ```sh
-pnpm verify                 # source inventory, typecheck, unit/integration contracts
-pnpm verify components      # render all 12 components and regenerate moving previews
-pnpm verify scenes          # real scene, scoped-edit and recovery checks
-pnpm verify browser         # responsive browser checks
-pnpm verify install         # packed installation and export outside the repository
-pnpm benchmark attempt-name # preserved 15-second preparation; review in printed studio URL
+pnpm typecheck
+pnpm test
+pnpm exec tsx scripts/build-toolkit-film.ts   # isolated 24-second real-component film
 ```
 
-Build/package, verification, benchmark, compatibility and publication scan are the five scripts under `scripts/`. Runtime projects and history live in `.clipkit/`; imported media stays separate from Components. Do not delete `.clipkit` to clear caches. Webpack caches now live under your OS cache directory.
-
-Current status and limitations: [verification](docs/VERIFICATION.md). Contracts: [architecture](docs/ARCHITECTURE.md), [authoring](docs/AUTHORING.md), [workflow](docs/WORKFLOW.md), [sources](docs/SOURCES.md).
+Remotion is pinned to 4.0.538. Node 24, Chromium and FFmpeg are used for local rendering. Model clients are needed only for agent-directed authoring. Existing user projects and immutable scenes retain their formats; the new disk-scene manifest is backward compatible. No visual-quality or token-saving claim follows solely from technical tests. Historical comparison evidence remains in [VIDEO_COMPARISON.md](docs/VIDEO_COMPARISON.md).

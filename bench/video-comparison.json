@@ -1,0 +1,28 @@
+{
+  "agent": "codex",
+  "model": "gpt-6.1-sol",
+  "arms": ["A0", "B"],
+  "scenarios": ["S1"],
+  "repetitions": 3,
+  "timeoutMs": 600000,
+  "tokenLimit": 3000000,
+  "providerMode": "replay",
+  "network": "shared",
+  "isolation": "bubblewrap",
+  "retries": 0,
+  "fixtures": ".clipkit/update4/fixtures",
+  "comparison": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration": 15,
+    "title": "Launch clear ideas.",
+    "supportingText": "From brief to motion.",
+    "cta": "Make your next clip.",
+    "palette": ["#112233", "#ffffff", "#55ccaa"],
+    "font": "Inter",
+    "safeAreaFraction": 0.08,
+    "audio": "none",
+    "order": [["A0", "B"], ["B", "A0"], ["A0", "B"]]
+  }
+}

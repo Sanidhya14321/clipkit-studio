@@ -1,0 +1,36 @@
+[
+  {
+    "id": "codrops-repeat-text",
+    "name": "Text Repetition Effect",
+    "repository": "codrops/TextRepetitionEffect",
+    "sourcePath": "src/js/demo1/repeatTextScrollFx.js",
+    "preview": "https://tympanus.net/Development/TextRepetitionEffect/",
+    "mechanism": "Layered repeated typography expands through staggered GSAP transforms.",
+    "useWhen": "Layered repeated typography expands through staggered GSAP transforms.",
+    "tags": [
+      "type",
+      "text",
+      "repeat",
+      "layers",
+      "expansion",
+      "editorial"
+    ],
+    "clock": "gsap",
+    "status": "needs-adaptation",
+    "cost": "low",
+    "license": "MIT",
+    "revision": "fabaafe0124e7bdf66906c6214f00800f5575c4c",
+    "files": [
+      "src/js/demo1/repeatTextScrollFx.js",
+      "src/js/utils.js"
+    ],
+    "sourceDirectory": "assets/sources/codrops-repeat",
+    "sourceHash": "87fa8ceaa98f65ba399b84d45da0315c9341bb35c957ff637061bf77be2e6c25",
+    "licensePath": "assets/sources/codrops-repeat/LICENSE.txt",
+    "adaptation": "Retain JSX/CSS/shader/timeline mechanism. Replace browser clock/input with explicit frame progress. Validate arbitrary seeking before marking ready.",
+    "imports": [
+      "gsap"
+    ],
+    "distribution": "Preserve source notices"
+  }
+]

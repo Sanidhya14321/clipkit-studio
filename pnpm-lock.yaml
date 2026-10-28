@@ -27,6 +27,9 @@ importers:
       '@remotion/bundler':
         specifier: 4.0.538
         version: 4.0.538(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@remotion/gsap':
+        specifier: 4.0.538
+        version: 4.0.538(gsap@3.15.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@remotion/media':
         specifier: 4.0.538
         version: 4.0.538(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -48,6 +51,9 @@ importers:
       ffmpeg-static:
         specifier: 5.3.0
         version: 5.3.0(supports-color@8.1.1)
+      gsap:
+        specifier: 3.15.0
+        version: 3.15.0
       hono:
         specifier: 4.13.14
         version: 4.13.14
@@ -601,6 +607,13 @@ packages:
 
   '@remotion/elevenlabs@4.0.538':
     resolution: {integrity: sha512-K06HrD+dKz25i31sRbxniNzIjGgzPEeiLLwmCyuVZuat+PQ9stb5EmIuWue/n++YnisT4bgFt6QNyoSdQEbByw==}
+
+  '@remotion/gsap@4.0.538':
+    resolution: {integrity: sha512-nUBvABLDLH25eFgYx0/SK+HjqsCRHXBljtY9kXva6Wt98PVCSH/eGgSKPuQMZ+kf0kbceoSwwEdQQg9dXdSEYg==}
+    peerDependencies:
+      gsap: '>=3.12.0 <4'
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   '@remotion/licensing@4.0.538':
     resolution: {integrity: sha512-vm8mpeZCowrn0OI/Y7KRmeAVuXiK6ylj0xk0utMbwlsLNB3ywLg3nyO0H4pD+a7fDn9FId3y283xFkJ6XymtfQ==}
@@ -1427,6 +1440,9 @@ packages:
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
+
+  gsap@3.15.0:
+    resolution: {integrity: sha512-dMW4CWBTUK1AEEDeZc1g4xpPGIrSf9fJF960qbTZmN/QwZIWY5wgliS6JWl9/25fpTGJrMRtSjGtOmPnfjZB+A==}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -2586,6 +2602,13 @@ snapshots:
       '@remotion/captions': 4.0.538
       zod: 4.6.7
 
+  '@remotion/gsap@4.0.538(gsap@3.15.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      gsap: 3.15.0
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      remotion: 4.0.538(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+
   '@remotion/licensing@4.0.538': {}
 
   '@remotion/lottie@4.0.538(lottie-web@5.13.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
@@ -3412,6 +3435,8 @@ snapshots:
   gopd@1.2.0: {}
 
   graceful-fs@4.2.11: {}
+
+  gsap@3.15.0: {}
 
   has-flag@4.0.0: {}
 
