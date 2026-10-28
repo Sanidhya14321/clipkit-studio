@@ -16,7 +16,6 @@ PHASE: 2
 - Pixabay is wave 1 but placed in Phase 8 because ingesting it needs the vetting pipeline.
 - `@remotion/whisper-web` and `@remotion/effects` declare UNLICENSED and `@remotion/animation-utils` declares no license; vetting must read the real terms.
 - Lock ids for non-layer content: Phase 1 uses `@project` for project-level fields and track ids for track fields and item order (DECISIONS.md, Phase 1). Revisit if the studio needs finer locks.
-- ffmpeg is not installed on the dev machine (`sudo apt install ffmpeg`), so `just fixtures` is unverified locally.
 - Phase 2: release dates of tokio 1.54.1, axum 0.8.9, getrandom 0.4.3, tower 0.5.3, tokio-tungstenite 0.29.0, futures-util 0.3.34 are unverified (headless runs cannot reach the web; the researcher and web-fetch subagents were denied). Re-check in an interactive session and pin back any release under two weeks old.
 - Phase 2/3: any token holder can act as agent or human (author/holder are self-declared). Decide whether the studio and the agent get separate credentials.
 - Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies must be written into package.json by hand and installed with `pnpm install`, with versions that cannot be verified without web access.
@@ -88,4 +87,4 @@ Plan (approved by the owner before building):
 - [x] justfile: check, check-fast, test, fmt, studio-dev, e2e, fixtures, bench, split-spec.
 - [x] CI: .github/workflows/ci.yml (fast suite + fixtures job).
 - [x] Fixtures generator: fixtures/generate.sh -> fixtures/generated/ with ground-truth.json.
-- [ ] Run the fixtures generator locally (BLOCKED: ffmpeg not installed).
+- [x] Run the fixtures generator locally (ffmpeg 8.0.1, 2026-10-28).

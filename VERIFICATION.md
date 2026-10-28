@@ -19,7 +19,7 @@ Every item has a status (PASS, FAIL, BLOCKED) and evidence. No PASS without evid
 | Every skill and agent has frontmatter with a description | PASS | frontmatter check loop over .claude/skills/*/SKILL.md and .claude/agents/*.md |
 | CI workflow parses | PASS | `python3 -c "yaml.safe_load(...)"` on .github/workflows/ci.yml |
 | CI runs green on GitHub | BLOCKED | Not pushed yet; runs on the first push or PR |
-| Fixtures generator produces media and ground truth | BLOCKED | ffmpeg not installed locally (`just fixtures` exits 1 with "ffmpeg not found"); CI `fixtures` job covers it once pushed |
+| Fixtures generator produces media and ground truth | PASS | 2026-10-28, ffmpeg 8.0.1: `just fixtures` -> "wrote 11 files ... (counter overlay: true)", ffprobe duration checks inside the script pass; frame at 1.5 s reads "frame 45" and "00:00:01:15". Fixed a pipefail bug that had silently disabled the overlay. |
 | Hooks fire inside a live Claude Code session | PASS | During Phase 0 the live guard-bash hook blocked a heredoc writing `.gitignore` (a false positive, fixed and covered by a regression case in tests/hooks/run.sh) |
 
 ## Phase 1: core (2026-10-28, Rust 1.99.1, cargo-nextest 0.9.150)

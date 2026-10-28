@@ -30,7 +30,9 @@ X264=(-c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -g "$FPS" -threads 
 # 1. Frame counter and timecode video (overlay needs ffmpeg built with drawtext).
 counter_filter="null"
 overlay=false
-if "$FFMPEG" -hide_banner -filters 2>/dev/null | grep -q ' drawtext '; then
+# Capture first: with pipefail, `ffmpeg | grep -q` fails when grep exits early (SIGPIPE).
+filters="$("$FFMPEG" -hide_banner -filters 2>/dev/null || true)"
+if grep -q ' drawtext ' <<<"$filters"; then
   counter_filter="drawtext=text='frame %{frame_num}':x=40:y=40:fontsize=48:fontcolor=white:box=1:boxcolor=black,"
   counter_filter+="drawtext=timecode='00\:00\:00\:00':rate=$FPS:x=40:y=110:fontsize=48:fontcolor=white:box=1:boxcolor=black"
   overlay=true

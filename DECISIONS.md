@@ -99,7 +99,7 @@ Release dates are PLACEHOLDER: this headless run could not reach the web (WebFet
 ### Repository
 - **Reuse the existing GitHub repo** (`Sanidhya14321/clipkit-studio`, local folder `Hackcbs-Project`)
   at the owner's request, to keep contributors. The previous Codex-built TypeScript implementation is
-  preserved on the local branch `codex-archive` (commit `1cc3aff`, including all of its uncommitted
+  preserved on the branch `codex-archive` (commit `a53a030`, pushed to GitHub until all phases are done; including all of its uncommitted
   work) and removed from `main`. Its untracked, gitignored leftovers (`.clipkit/`, `node_modules/`,
   `artifacts/`, build output, about 5 GB) were moved to `~/Desktop/clipkit-codex-leftovers/`, not deleted.
 - Kept `LICENSE` (MIT, "ClipKit Studio contributors").
