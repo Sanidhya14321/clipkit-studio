@@ -52,6 +52,7 @@ fn run(cli: Cli) -> CkResult<()> {
     let ops = || Ops::connect(&root);
     match cli.command {
         Command::Studio { port } => studio::run(&cli.dir, port),
+        Command::Mcp => mcp(root),
         Command::Status => print(&ops()?.status()?),
         Command::Project(ProjectCommand::Get {
             layer: Some(id), ..
@@ -70,6 +71,15 @@ fn run(cli: Cli) -> CkResult<()> {
             layer_ids: (!layer_ids.is_empty()).then_some(layer_ids),
         })?),
     }
+}
+
+/// `ck mcp`: stdout carries the protocol, so nothing else is printed there.
+fn mcp(root: std::path::PathBuf) -> CkResult<()> {
+    let rt = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .map_err(|e| CkError::new(ErrorCode::Server, format!("no async runtime: {e}")))?;
+    rt.block_on(ck_mcp::CkMcp::new(root).serve_stdio())
 }
 
 /// The patch argument is the JSON itself, or `-` to read it from stdin.

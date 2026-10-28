@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 2
 
 ## Handoff (latest)
-1. Done: Phase 2 step 3. `ck-server::client` (ureq loopback client via server.json) and `ck-server::ops` (status, summary, layer, patch, lock, unlock with output caps, new E_OUTPUT_CAP); clap CLI: `ck studio`, `ck status`, `ck project get [--summary|--layer]`, `ck project patch <json|->`, `ck lock`, `ck unlock`.
-2. Proof: `just check` green (76 tests, hooks 41); 7 ops tests against a live server and 4 CLI end-to-end tests driving a real `ck studio`. Evidence in VERIFICATION.md (Phase 2, step 3 rows).
-3. Open: crate release dates unverified (clap, ureq added); E_SERVER hint names `ck studio --ensure` (Phase 3); role trust boundary; stage gate waits for Phase 4. See DECISIONS.md, Phase 2.
-4. Next: Phase 2 step 4: MCP twin (rmcp, stdio) in ck-mcp calling `ck_server::ops` (from spawn_blocking), same names/inputs/outputs; schema snapshot, size cap and CLI/MCP parity tests; `ck mcp` subcommand to serve it.
-5. Start: run `scripts/autobuild.sh`, or open a session and continue Phase 2 at step 4 in PROGRESS.md.
+1. Done: Phase 2 step 4. ck-mcp: tool table (status, project_get, project_patch, lock, unlock) over `ck_server::ops`, rmcp 3.8 stdio handler (no macros); `ck mcp` subcommand. Shared e2e helpers moved to `crates/ck-cli/tests/common/`.
+2. Proof: `just check` green (84 tests, hooks 41); tool table snapshot; `mcp_parity.rs` drives `ck mcp` against a real `ck studio` and matches CLI stdout/stderr byte for byte, caps included. Evidence in VERIFICATION.md (Phase 2, step 4 rows).
+3. Open: rmcp 3.8.0 release date unverified (plus clap, ureq, tokio...); MCP lock/unlock require `holder` while the CLI defaults it; E_SERVER hint names `ck studio --ensure` (Phase 3); role trust boundary. See DECISIONS.md, Phase 2.
+4. Next: Phase 2 step 5: TS type generation from the Rust types (ts-rs or specta; verify the crate first), checked for drift in `just check`.
+5. Start: run `scripts/autobuild.sh`, or open a session and continue Phase 2 at step 5 in PROGRESS.md.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -20,6 +20,7 @@ PHASE: 2
 - Phase 2/3: any token holder can act as agent or human (author/holder are self-declared). Decide whether the studio and the agent get separate credentials.
 - Phase 2 step 3: release dates of clap 4.6.7 and ureq 3.5.0 are unverified (same headless limit); re-check and pin back if under two weeks old.
 - Phase 2 step 3: the E_SERVER hint says `ck studio --ensure`, which Phase 3 adds; until then an agent following it gets a usage error. Keep the hint (it is the shipped wording) or reword before Phase 3 if that slips.
+- Phase 2 step 4: rmcp 3.8.0 release date unverified (same headless limit); re-check and pin back if under two weeks old. MCP `lock`/`unlock` require `holder` while the CLI defaults `--holder agent`; revisit if strict input parity is wanted (DECISIONS.md, step 4).
 - Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies must be written into package.json by hand and installed with `pnpm install`, with versions that cannot be verified without web access.
 
 ## Roadmap additions: asset supply expansion (2026-10-28)
@@ -46,11 +47,17 @@ Run plan (autonomous run 2): step 3 only.
 - ck-cli (clap): `ck studio [--port]` (creates an empty project if none), `ck status`, `ck project get --summary|--layer`, `ck project patch <json|->`, `ck lock`, `ck unlock`; compact JSON out, CkError JSON + exit 1 on failure.
 - Tests: ops against a live server (each op, error mapping, missing server), cap tests, CLI end-to-end against `ck studio` in a temp dir.
 
+Run plan (autonomous run 3): step 4 only.
+- Dep: rmcp (server, transport-io) in ck-mcp; version from `cargo info`, recorded in DECISIONS.md.
+- ck-mcp: tool table (status, project_get, project_patch, lock, unlock) with JSON Schema inputs from the Rust request types; each call runs `ck_server::ops` in spawn_blocking and returns the same compact JSON the CLI prints (errors: CkError JSON, isError).
+- `ck mcp` subcommand serving it on stdio.
+- Tests: insta snapshot of the tool list, per-tool cap table test, e2e parity test driving `ck mcp` over stdio against a real `ck studio` and comparing with CLI output.
+
 Steps (each ends with `just check`):
 - [x] 1. Deps + ck-server core: session state, event bus, server.json, bind to 127.0.0.1 on a free port.
 - [x] 2. HTTP + WS API with token/Host/Origin guards; refusals tested (E_AUTH, E_LOCK_HELD over HTTP).
 - [x] 3. Shared ops layer + CLI basics: `ck studio` (serve), `ck status`, `ck project get --summary|--layer`, `ck project patch` (spec 6.2 naming), `ck lock`, `ck unlock`; output size caps.
-- [ ] 4. MCP twin (rmcp, stdio) for the same ops; schema, size cap and CLI/MCP parity tests.
+- [x] 4. MCP twin (rmcp, stdio) for the same ops; schema, size cap and CLI/MCP parity tests.
 - [ ] 5. TS type generation from the Rust types (ts-rs or specta, verified), checked in CI for drift.
 - [ ] 6. Studio shell: Vite + React + Remotion Player preview, timeline, inspector, read-only mode, banner, activity feed, ghost cursor; embedded with rust-embed.
 - [ ] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.

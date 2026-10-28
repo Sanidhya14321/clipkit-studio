@@ -1,0 +1,358 @@
+---
+source: crates/ck-mcp/src/tests.rs
+expression: specs()
+---
+[
+  {
+    "name": "status",
+    "command": "ck status",
+    "description": "Project rev, mode, pipeline stage, agent state and live locks.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "description": "`status` takes no input.",
+      "type": "object"
+    }
+  },
+  {
+    "name": "project_get",
+    "command": "ck project get",
+    "description": "The project summary (ids, kinds and spans per track), or one layer in full with `layer`.",
+    "cap": 16384,
+    "inputSchema": {
+      "additionalProperties": false,
+      "description": "`project get`: the summary (default) or one layer in full.",
+      "properties": {
+        "layer": {
+          "description": "One layer by id.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "default": false,
+          "description": "Ids, kinds and spans per track (the default).",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "project_patch",
+    "command": "ck project patch",
+    "description": "Apply an RFC 6902 patch at baseRev. Lock the layers first.",
+    "cap": 4096,
+    "inputSchema": {
+      "$defs": {
+        "AddOperation": {
+          "description": "JSON Patch 'add' operation representation",
+          "properties": {
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Value to add to the target location."
+            }
+          },
+          "required": [
+            "path",
+            "value"
+          ],
+          "type": "object"
+        },
+        "Author": {
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ],
+          "type": "string"
+        },
+        "CopyOperation": {
+          "description": "JSON Patch 'copy' operation representation",
+          "properties": {
+            "from": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nto copy value from.",
+              "type": "string"
+            },
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "from",
+            "path"
+          ],
+          "type": "object"
+        },
+        "MoveOperation": {
+          "description": "JSON Patch 'move' operation representation",
+          "properties": {
+            "from": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nto move value from.",
+              "type": "string"
+            },
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "from",
+            "path"
+          ],
+          "type": "object"
+        },
+        "Patch": {
+          "description": "Representation of JSON Patch (list of patch operations)",
+          "items": {
+            "$ref": "#/$defs/PatchOperation"
+          },
+          "type": "array"
+        },
+        "PatchOperation": {
+          "description": "JSON Patch single patch operation",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AddOperation",
+              "description": "'add' operation",
+              "properties": {
+                "op": {
+                  "const": "add",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/$defs/RemoveOperation",
+              "description": "'remove' operation",
+              "properties": {
+                "op": {
+                  "const": "remove",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/$defs/ReplaceOperation",
+              "description": "'replace' operation",
+              "properties": {
+                "op": {
+                  "const": "replace",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/$defs/MoveOperation",
+              "description": "'move' operation",
+              "properties": {
+                "op": {
+                  "const": "move",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/$defs/CopyOperation",
+              "description": "'copy' operation",
+              "properties": {
+                "op": {
+                  "const": "copy",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/$defs/TestOperation",
+              "description": "'test' operation",
+              "properties": {
+                "op": {
+                  "const": "test",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "RemoveOperation": {
+          "description": "JSON Patch 'remove' operation representation",
+          "properties": {
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "type": "object"
+        },
+        "ReplaceOperation": {
+          "description": "JSON Patch 'replace' operation representation",
+          "properties": {
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Value to replace with."
+            }
+          },
+          "required": [
+            "path",
+            "value"
+          ],
+          "type": "object"
+        },
+        "TestOperation": {
+          "description": "JSON Patch 'test' operation representation",
+          "properties": {
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Value to test against."
+            }
+          },
+          "required": [
+            "path",
+            "value"
+          ],
+          "type": "object"
+        }
+      },
+      "properties": {
+        "author": {
+          "$ref": "#/$defs/Author"
+        },
+        "baseRev": {
+          "description": "The project revision the patch was built against.",
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "label": {
+          "default": "",
+          "type": "string"
+        },
+        "layerRevs": {
+          "additionalProperties": {
+            "format": "uint64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "description": "Optional per-layer revisions the caller read; any mismatch makes the patch stale.",
+          "type": "object"
+        },
+        "ops": {
+          "$ref": "#/$defs/Patch"
+        }
+      },
+      "required": [
+        "baseRev",
+        "ops",
+        "author"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "lock",
+    "command": "ck lock",
+    "description": "Lock layers before touching them; returns the holder's live locks.",
+    "cap": 4096,
+    "inputSchema": {
+      "$defs": {
+        "Holder": {
+          "enum": [
+            "agent",
+            "human"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "holder": {
+          "$ref": "#/$defs/Holder"
+        },
+        "layerIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "holder",
+        "layerIds"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "unlock",
+    "command": "ck unlock",
+    "description": "Release layers (all of the holder's locks when layerIds is omitted).",
+    "cap": 4096,
+    "inputSchema": {
+      "$defs": {
+        "Holder": {
+          "enum": [
+            "agent",
+            "human"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "holder": {
+          "$ref": "#/$defs/Holder"
+        },
+        "layerIds": {
+          "description": "Layers to release; omitted means every lock of the holder.",
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "holder"
+      ],
+      "type": "object"
+    }
+  }
+]

@@ -33,6 +33,9 @@ ck-server = { path = "crates/ck-server" }
 clap = { version = "4.6.7", features = ["derive"] }
 # Loopback-only client: no TLS, no gzip.
 ureq = { version = "3.5.0", default-features = false }
+ck-mcp = { path = "crates/ck-mcp" }
+# MCP server over stdio only; no HTTP transports, no auth.
+rmcp = { version = "3.8.0", default-features = false, features = ["server", "transport-io"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

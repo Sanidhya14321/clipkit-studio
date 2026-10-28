@@ -63,6 +63,16 @@ Crates (latest per `cargo search`/`cargo info` on 2026-10-28; release dates PLAC
 - **`ck studio`** serves in the foreground on 127.0.0.1 (`--port`, default free port), prints `{url, port}` (never the token) and stops on Ctrl-C or SIGTERM. With no project it creates an empty one (id `project`, named after the folder, mode GENERATE until mode detection in Phase 4). It refuses to start when anything answers on the port in server.json with other than E_SERVER. `--ensure`, `--open`, `--quiet` and background start are Phase 3 (auto-launch); until then the E_SERVER hint names a flag that does not exist yet.
 - **CLI output**: one line of compact JSON on stdout; errors are the CkError JSON on stderr with exit 1; clap usage errors exit 2.
 
+### Step 4: MCP twin (2026-10-29)
+| Crate | Version | Notes |
+| --- | --- | --- |
+| rmcp | 3.8.0 | latest per `cargo info` on 2026-10-29; release date PLACEHOLDER (web lookups denied in the headless run, researcher subagent included); default features off, `server` + `transport-io` only (no HTTP, no auth) |
+- **Handler without macros**: `ServerHandler` is implemented by hand over a plain tool table in `ck-mcp::tools` (name, CLI twin, description, cap, input schema from schemars), so the table is testable without rmcp and the macros' API churn does not matter. rmcp 3.x names found by compiling: `CallToolRequestParams`, `PaginatedRequestParams`, `CallToolResponse` (from `CallToolResult`), `ContentBlock`, `ServerConfig` (non-exhaustive, built by field assignment).
+- **Tool names**: the CLI command path joined with `_` (`ck project get` is `project_get`), because MCP tool names allow only letters, digits, `_` and `-`. Inputs are the same JSON the HTTP API takes (`PatchRequest`, `LockRequest`, `UnlockRequest`); `project_get` takes `{summary?, layer?}` and refuses both (E_REQUEST), like clap's conflict. Unknown fields are refused for `status` and `project_get`.
+- **Holder**: MCP `lock`/`unlock` require `holder` (the request type's schema), while the CLI defaults `--holder` to agent. Kept: an explicit holder in a machine call is safer than a default; outputs are identical.
+- **Outputs**: success is one text block with the exact line the CLI prints on stdout; failure is a tool result with `isError` and the exact CkError JSON the CLI prints on stderr. An unknown tool name is a JSON-RPC invalid-params error. Caps are the CLI's (shared `ck_server::ops`); `project_get` lists the larger of the summary and layer caps.
+- **`ck mcp`** serves stdio until the client closes it; each call finds the studio through `.clipkit/server.json`, so it can start before the studio. Nothing but the protocol goes to stdout.
+
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)

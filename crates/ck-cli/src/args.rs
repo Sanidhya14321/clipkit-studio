@@ -28,6 +28,8 @@ pub enum Command {
         #[arg(long, default_value_t = 0)]
         port: u16,
     },
+    /// Serve the same operations as MCP tools on stdio (spec 6.2).
+    Mcp,
     /// Project rev, mode, pipeline stage, agent state and live locks.
     Status,
     /// Read or change the project.
