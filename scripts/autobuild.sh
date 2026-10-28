@@ -18,11 +18,16 @@ for i in $(seq 1 "$MAX_RUNS"); do
     --permission-mode acceptEdits \
     > ".autobuild/run-$i.json" 2> ".autobuild/run-$i.err"
 
-  just check > ".autobuild/check-$i.log" 2>&1 || echo "check failed after run $i" >> .autobuild/alerts.log
+  check_ok=1
+  just check > ".autobuild/check-$i.log" 2>&1 || { check_ok=0; echo "check failed after run $i" >> .autobuild/alerts.log; }
   if [ "$(git rev-parse HEAD)" = "$head_before" ]; then
     no_progress=$((no_progress+1))
   else
     no_progress=0
+    # Publish green progress to GitHub. Plain push only, never forced; the agent itself never pushes.
+    if [ "${PUSH:-1}" = 1 ] && [ "$check_ok" = 1 ]; then
+      git push origin HEAD:main > ".autobuild/push-$i.log" 2>&1 || echo "push failed after run $i" >> .autobuild/alerts.log
+    fi
   fi
   [ "$no_progress" -ge "$MAX_NO_PROGRESS" ] && { echo "No commits in $no_progress runs"; break; }
   if [ "$PAUSE_AFTER_PHASE" = 1 ] && [ "$(grep -m1 '^PHASE:' PROGRESS.md)" != "$phase_before" ]; then

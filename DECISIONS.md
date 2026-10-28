@@ -86,6 +86,9 @@ Release dates are PLACEHOLDER: this headless run could not reach the web (WebFet
 - **Retry gate**: a call is the op name plus its arguments with keys sorted; refused after 2 failures, reset by a success.
 
 ### Autonomous build loop (2026-10-28)
+- Commits and PRs carry no Claude attribution (owner request): `.claude/settings.json` sets `attribution.commit` and `attribution.pr` to "" (the `attribution` key replaces the deprecated `includeCoAuthoredBy`; code.claude.com settings reference).
+- `scripts/autobuild.sh` pushes `main` to origin after a run that made a commit and passed `just check` (plain push, never forced; `PUSH=0` turns it off). The agent never pushes.
+- Dry run (MAX_RUNS=1, 2026-10-28): success, 1 commit (Phase 2 steps 1-2), `just check` green, 30 permission denials: 18 WebFetch + 1 WebSearch (crate version lookups; no allow rule), 11 Bash (paths outside the repo, curl, shell loops, python3/sed edits, cd-prefixed compounds). The run reported 102 turns with `--max-turns 80`, so the flag may not cap turns as expected.
 - `scripts/autobuild.sh` (owner-supplied) runs `claude -p` sessions with `scripts/autobuild-prompt.md`. It reads `STATUS:` and `PHASE:` from the top of PROGRESS.md.
 - Checked against the installed CLI (2.1.312): `-p`, `--output-format`, `--permission-mode` are documented in `claude --help`; `--max-turns` is not listed there but is accepted (an unknown flag errors with "unknown option", this one does not).
 - The prompt file is the owner's text plus a short "Loop contract" section: keep the STATUS/PHASE lines current, skip the phase-runner approval wait in autonomous runs, and recover an interrupted run's uncommitted changes first.
