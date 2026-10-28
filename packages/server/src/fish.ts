@@ -1,3 +1,4 @@
+import {providerTransport} from '../../debug/src/cassettes';
 import {readFile} from 'node:fs/promises';
 import {basename} from 'node:path';
 import type {Word} from '../../core/src/index.ts';
@@ -19,7 +20,7 @@ export function parseWhisperTranscript(value:unknown){
  const text=data.transcription.map(segment=>String(segment.text??'').trim()).join(' ').trim();return {...parseTranscript({text,segments}),provider:'whisper.cpp'};
 }
 export class FishClient {
-  constructor(private token=process.env.FISH_API_KEY, private transport:typeof fetch=fetch) {}
+  constructor(private token=process.env.FISH_API_KEY, private transport:typeof fetch=fetch) {this.transport=providerTransport(transport)}
   get enabled(){return Boolean(this.token);}
   private async request(path:string,init:RequestInit={},model?:string,timeoutMs=180000){
     if(!this.token) throw new Error('FISH_API_KEY is missing. Add it to .env and restart the studio.');

@@ -1,3 +1,4 @@
+import {debugEvent} from '../../debug/src/trace';
 import {readFileSync,constants} from 'node:fs';
 import {spawn} from 'node:child_process';
 import {createHash} from 'node:crypto';
@@ -9,9 +10,9 @@ import {id,timelineWords,type Project,type Word,type VoiceMode,type Job,type Sou
 import {FishClient,parseWhisperTranscript,parseTranscript} from './fish.ts';
 
 export const run = (binary:string,args:string[],allowFailure=false):Promise<string> => new Promise((res,rej)=>{
- const child=spawn(binary,args,{stdio:['ignore','pipe','pipe']});let out='';let err='';
+ const started=Date.now();debugEvent('ffmpeg.start',{component:'media',binary:basename(binary),argumentCount:args.length});const child=spawn(binary,args,{stdio:['ignore','pipe','pipe']});let out='';let err='';
  child.stdout.on('data',d=>{out+=d;});child.stderr.on('data',d=>{err+=d;if(err.length>200000)err=err.slice(-200000);});
- child.on('error',()=>rej(new Error(`${basename(binary)} is unavailable`)));child.on('close',code=>code===0||allowFailure?res(out+err):rej(new Error(`${basename(binary)} failed: ${err.slice(-1500)}`)));
+ child.on('error',()=>rej(new Error(`${basename(binary)} is unavailable`)));child.on('close',code=>{debugEvent('ffmpeg.end',{component:'media',binary:basename(binary),duration:Date.now()-started,resultCode:code===0?'OK':'E_MEDIA_PROBE'});code===0||allowFailure?res(out+err):rej(new Error(`${basename(binary)} failed: ${err.slice(-1500)}`))});
 });
 export async function ffmpegBinary(){try{await run('ffmpeg',['-version']);return 'ffmpeg';}catch{if(ffmpegStatic){await access(ffmpegStatic);return ffmpegStatic;}throw new Error('FFmpeg unavailable. Install ffmpeg or reinstall ffmpeg-static.');}}
 export async function ffprobeBinary(){try{await run('ffprobe',['-version']);return 'ffprobe';}catch{const binary=RenderInternals.getExecutablePath({type:'ffprobe',indent:false,logLevel:'error',binariesDirectory:null});await run(binary,['-version']);return binary;}}
@@ -23,10 +24,10 @@ export async function probe(path:string){
  }
 }
 type CloneRecord={id:string;sampleSourceId:string;status:'processing'|'ready'|'failed';visibility:'private';verified:boolean;error?:string};
-export type MediaOptions={root:string;commit:(label:string,mutate:(draft:Project)=>void)=>Promise<unknown>;getProject:()=>Project;getTranscripts:()=>Record<string,Word[]>;setTranscript:(sourceId:string,words:Word[])=>void;job:(kind:string,label:string,work:(update:(progress:number,label?:string)=>void)=>Promise<Record<string,unknown>>)=>Job;token?:string};
+export type MediaOptions={root:string;commit:(label:string,mutate:(draft:Project)=>void)=>Promise<unknown>;getProject:()=>Project;getTranscripts:()=>Record<string,Word[]>;setTranscript:(sourceId:string,words:Word[])=>void;job:(kind:string,label:string,work:(update:(progress:number,label?:string)=>void)=>Promise<Record<string,unknown>>)=>Job;token?:string;transport?:typeof fetch};
 export class MediaService {
  private fish:FishClient; private cloneWrites:Promise<unknown>=Promise.resolve();private cloneInFlight=new Map<string,Promise<Record<string,unknown>>>();private silences:Record<string,Array<{start:number;end:number}>>={};
- constructor(private o:MediaOptions){this.fish=new FishClient(o.token);}
+ constructor(private o:MediaOptions){this.fish=new FishClient(o.token,o.transport);}
  private abs(path:string){return isAbsolute(path)?path:resolve(this.o.root,path);}
  private async dir(){await mkdir(join(this.o.root,'.clipkit','media'),{recursive:true});return join(this.o.root,'.clipkit','media');}
  private rel(path:string){return relative(this.o.root,path);}
