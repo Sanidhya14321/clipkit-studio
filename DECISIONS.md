@@ -128,3 +128,7 @@ Real render verification caught missing scene selection bindings; generated/deri
 Bound concurrent regression workers after renderer contention exposed a one-poll timeout assumption; a running job is not a failed job. Retain explicit uncertain results for unmeasured properties and pin them to affected layers. Preserve owner source bytes and existing project revision/checksum. Detailed evidence and outstanding format/provider/aesthetic limitations are in VERIFICATION.md; no full-agent 20k-token or taste-quality claim is made.
 
 Open questions: owner-specific Adobe/LUT/SFX/font libraries and their rights were not supplied beyond existing source receipts. Complex source adapters and actual voice/film evaluation require those inputs; GLSL semantic parsing and new native LUT primitives remain explicitly unsupported.
+
+## Update 2 U2-1
+
+Brief confirmation is durable project metadata, separate from creative acceptance and paid provider consent. Optional additive v1 fields preserve old snapshots without inference on load. Agent results are compact summaries, not the full form. Waiting uses bounded HTTP/MCP long polls and releases the caller's global lease; default Codex MCP tool timeout is 60 seconds, so each wait caps at 45 seconds ([official MCP documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)). The fetched CLI docs do not establish one universal dictation shortcut; no browser-to-terminal STT API is assumed. Open question: microphone/provider behavior requires live permission and credentials.
