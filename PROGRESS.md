@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 2
 
 ## Handoff (latest)
-1. Done: Phase 1 core. ck-core (error codes, model + validation, timeline, patch engine, history with undo/redo, locks, atomic storage, migrations, logging) and ck-pipeline (stage machine, stage and retry gates).
-2. Proof: `just check` green; 48 tests pass 5 of 5 runs; review findings fixed with regression tests. Evidence in VERIFICATION.md.
-3. Open: see Open questions below. ffmpeg is not installed locally, so the fixtures generator has not run here; CI has not run (nothing pushed).
-4. Next: Phase 2 (server and studio shell). Read spec 00, 01, 02, 03, 05, 06 (6.2) and plan in PROGRESS.md.
-5. Start: run `scripts/autobuild.sh` for unattended runs, or `/clear` and paste the Phase 2 message from docs/spec/13-kickoff.md.
+1. Done: Phase 2 steps 1-2. ck-server: Session (document + store + event bus), server.json (port, token, 0600), Host/Origin/token guards, HTTP API (status, project views, patch, lock, unlock, heartbeat) and `/ws` push.
+2. Proof: `just check` green (64 tests, hooks 41); 16 ck-server tests, including human edit refused while locked and WS events < 300 ms server side. Evidence in VERIFICATION.md (Phase 2).
+3. Open: crate release dates unverified (no web in headless runs); role trust boundary (callers state author/holder); stage gate wiring waits for Phase 4 pipeline commands. See DECISIONS.md, Phase 2.
+4. Next: Phase 2 step 3: shared ops + CLI basics (`ck studio`, `ck status`, `ck project get`, `ck patch`, `ck lock`, `ck unlock`) talking to the server via server.json; needs clap and an HTTP client (verify versions).
+5. Start: run `scripts/autobuild.sh`, or open a session and continue Phase 2 at step 3 in PROGRESS.md.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -17,6 +17,9 @@ PHASE: 2
 - `@remotion/whisper-web` and `@remotion/effects` declare UNLICENSED and `@remotion/animation-utils` declares no license; vetting must read the real terms.
 - Lock ids for non-layer content: Phase 1 uses `@project` for project-level fields and track ids for track fields and item order (DECISIONS.md, Phase 1). Revisit if the studio needs finer locks.
 - ffmpeg is not installed on the dev machine (`sudo apt install ffmpeg`), so `just fixtures` is unverified locally.
+- Phase 2: release dates of tokio 1.54.1, axum 0.8.9, getrandom 0.4.3, tower 0.5.3, tokio-tungstenite 0.29.0, futures-util 0.3.34 are unverified (headless runs cannot reach the web; the researcher and web-fetch subagents were denied). Re-check in an interactive session and pin back any release under two weeks old.
+- Phase 2/3: any token holder can act as agent or human (author/holder are self-declared). Decide whether the studio and the agent get separate credentials.
+- Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies must be written into package.json by hand and installed with `pnpm install`, with versions that cannot be verified without web access.
 
 ## Roadmap additions: asset supply expansion (2026-10-28)
 
@@ -25,6 +28,26 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 8 (assets at scale): wave 2 ingestion (RenderComp Free, cliphou.se, RemotionUI, Remotion Bits, Kenney, Tabler, Simple Icons, IWLTBAP free LUTs) and Pixabay; frame-clock adapter with determinism tests BEFORE any wrappable card (GSAP, Motion, Origin UI, Launch UI); LYGIA and BBC-style restricted fixtures for license mode; site-license snapshots, custom-license and trademark notes.
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
+
+## Phase 2: server and studio shell (2026-10-28) - IN PROGRESS
+
+Spec: 00, 01, 02, 03, 05, 06 (6.2). Proof: a CLI patch appears in the browser in under 300 ms and human edits are refused while locked.
+
+Run plan (autonomous run 1): steps 1 and 2 only.
+- Verify tokio/axum/tower versions (researcher), record in DECISIONS.md.
+- ck-server: `Session` (Store + Document behind a mutex, injectable clock), event bus (broadcast), server.json (port + token, 127.0.0.1 free port).
+- HTTP API (status, project summary/layer, patch, lock, unlock, heartbeat) and `/ws` push; token, Host and Origin checks; body limit.
+- Tests: oneshot router tests for every route and refusal, a real-socket WS test that a patch event arrives.
+
+Steps (each ends with `just check`):
+- [x] 1. Deps + ck-server core: session state, event bus, server.json, bind to 127.0.0.1 on a free port.
+- [x] 2. HTTP + WS API with token/Host/Origin guards; refusals tested (E_AUTH, E_LOCK_HELD over HTTP).
+- [ ] 3. Shared ops layer + CLI basics: `ck studio` (serve), `ck status`, `ck project get --summary|--layer`, `ck patch`, `ck lock`, `ck unlock`; output size caps.
+- [ ] 4. MCP twin (rmcp, stdio) for the same ops; schema, size cap and CLI/MCP parity tests.
+- [ ] 5. TS type generation from the Rust types (ts-rs or specta, verified), checked in CI for drift.
+- [ ] 6. Studio shell: Vite + React + Remotion Player preview, timeline, inspector, read-only mode, banner, activity feed, ghost cursor; embedded with rust-embed.
+- [ ] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.
+- [ ] 8. Evidence, reviewers, DECISIONS.md, handoff, commit; mark phase done.
 
 ## Phase 1: core (2026-10-28) - DONE
 

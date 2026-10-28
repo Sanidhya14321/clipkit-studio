@@ -42,5 +42,21 @@ expression: table
   [
     "E_MIGRATION",
     "Upgrade ck: this project was written by a newer version."
+  ],
+  [
+    "E_AUTH",
+    "Use the token from .clipkit/server.json and a localhost origin."
+  ],
+  [
+    "E_NOT_FOUND",
+    "Run ck project get --summary to list the current ids."
+  ],
+  [
+    "E_REQUEST",
+    "Fix the request body or arguments named in the message."
+  ],
+  [
+    "E_SERVER",
+    "Run ck studio --ensure to start the server, then retry."
   ]
 ]

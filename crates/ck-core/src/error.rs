@@ -36,6 +36,18 @@ pub enum ErrorCode {
     /// The project file is from an unsupported schema version.
     #[serde(rename = "E_MIGRATION")]
     Migration,
+    /// The request lacked a valid session token or came from a foreign Host or Origin.
+    #[serde(rename = "E_AUTH")]
+    Auth,
+    /// The requested layer, track or resource does not exist.
+    #[serde(rename = "E_NOT_FOUND")]
+    NotFound,
+    /// The request body or arguments are malformed or too large.
+    #[serde(rename = "E_REQUEST")]
+    Request,
+    /// The local server could not start, or is not running.
+    #[serde(rename = "E_SERVER")]
+    Server,
 }
 
 impl ErrorCode {
@@ -51,6 +63,10 @@ impl ErrorCode {
         ErrorCode::HistoryEmpty,
         ErrorCode::Storage,
         ErrorCode::Migration,
+        ErrorCode::Auth,
+        ErrorCode::NotFound,
+        ErrorCode::Request,
+        ErrorCode::Server,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -65,6 +81,10 @@ impl ErrorCode {
             ErrorCode::HistoryEmpty => "E_HISTORY_EMPTY",
             ErrorCode::Storage => "E_STORAGE",
             ErrorCode::Migration => "E_MIGRATION",
+            ErrorCode::Auth => "E_AUTH",
+            ErrorCode::NotFound => "E_NOT_FOUND",
+            ErrorCode::Request => "E_REQUEST",
+            ErrorCode::Server => "E_SERVER",
         }
     }
 
@@ -85,6 +105,10 @@ impl ErrorCode {
             ErrorCode::HistoryEmpty => "There is nothing to undo or redo.",
             ErrorCode::Storage => "Check the path, permissions and free disk space, then retry.",
             ErrorCode::Migration => "Upgrade ck: this project was written by a newer version.",
+            ErrorCode::Auth => "Use the token from .clipkit/server.json and a localhost origin.",
+            ErrorCode::NotFound => "Run ck project get --summary to list the current ids.",
+            ErrorCode::Request => "Fix the request body or arguments named in the message.",
+            ErrorCode::Server => "Run ck studio --ensure to start the server, then retry.",
         }
     }
 }

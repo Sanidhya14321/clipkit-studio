@@ -45,6 +45,27 @@ Command for every test row: `cargo nextest run --workspace` (part of `just check
 | Independent review | PASS | rust-reviewer and spec-checker subagents run on the Phase 1 diff; all med/low correctness findings fixed with regression tests (see PROGRESS.md Phase 1) |
 | Flight recorder folders `.clipkit/trace/`, `.clipkit/cache/` | BLOCKED | Deferred by design to Phases 2+, 5 and 9 (DECISIONS.md, Phase 1) |
 
+## Phase 2: server and studio shell (in progress; steps 1-2, 2026-10-28)
+
+Command: `just check` (64 of 64 tests, hooks 41 of 41). ck-server suite run 3 more times in a row: 14 of 14 each before review fixes; 16 of 16 after. Test names below are in `crates/ck-server/src/tests/`.
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| New error codes E_AUTH, E_NOT_FOUND, E_REQUEST, E_SERVER pinned; every code maps to an HTTP error status | PASS | `ck-core error::tests::codes_are_stable` (snapshot extended), `api::every_error_code_maps_to_an_error_status` |
+| Server binds 127.0.0.1 on a free port; server.json has port + 64-char token, mode 0600, removed on shutdown | PASS | `live::serves_ws_events_and_cleans_up` |
+| Missing/wrong token refused (API and /ws handshake); query token only on /ws | PASS | `api::missing_or_wrong_token_is_refused`, `api::token_in_query_only_counts_for_ws`, `live::serves_ws_events_and_cleans_up` |
+| Foreign Host (DNS rebinding) and foreign Origin refused, even with the token, on every route | PASS | `api::foreign_host_is_refused_even_with_token`, `api::origin_must_be_this_server`, `api::unknown_route_still_checks_host` |
+| Status, project summary, layer and full views; unknown layer E_NOT_FOUND | PASS | `api::status_with_token`, `api::project_views` |
+| Agent patch needs its lock; result stored on disk with locks | PASS | `api::agent_patch_needs_its_lock_and_is_stored` |
+| Human edits refused (E_LOCK_HELD, nothing applied) while the agent holds the layer; lock cannot be stolen; allowed after unlock | PASS | `api::human_edit_is_refused_while_agent_holds_the_layer` |
+| Heartbeat keeps a lock; expiry after the timeout frees the layer | PASS | `api::expired_agent_lock_frees_the_layer` (fake clock) |
+| Stale, protected-field, malformed and oversized patches refused | PASS | `api::stale_patch_is_a_conflict`, `api::protected_field_patch_is_invalid`, `api::malformed_and_oversized_bodies_are_bad_requests` |
+| Failed save rolls memory back to disk | PASS | `api::failed_save_leaves_memory_at_the_stored_state` |
+| WS pushes snapshot on connect, then revision + snapshot after a patch, in under 300 ms (server side) | PASS | `live::serves_ws_events_and_cleans_up` (asserts < 300 ms from patch to both events) |
+| Phase proof: CLI patch visible in the browser in < 300 ms | BLOCKED | Needs CLI (step 3), studio (step 6) and Playwright (step 7) |
+| Crate release dates at least two weeks old | BLOCKED | Web lookups denied in the headless run; dates PLACEHOLDER in DECISIONS.md |
+| Independent review | PASS | rust-reviewer on the steps 1-2 diff; fixed: 0600 before rename, query token limited to /ws, no session mutex on async workers, degraded mode on failed reload, snapshot only with subscribers, WS message cap. Recorded as open: role trust boundary, second-server check, 5xx path redaction (DECISIONS.md, Phase 2) |
+
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 
 | Item | Status | Evidence |

@@ -27,6 +27,29 @@ Crates checked on crates.io on 2026-10-28. Each is re-verified when its phase st
 ### Spec folder
 - `docs/spec/14-asset-expansion.md` is an owner-requested addition. The guard-edits hook blocks Write and Edit under `docs/spec/` by design, so it was written through the shell at the owner's explicit request. `split-spec.py` only rewrites files 00 to 13.
 
+## Phase 2 (2026-10-28)
+
+### Crate versions (latest on crates.io per `cargo search` on 2026-10-28)
+Release dates are PLACEHOLDER: this headless run could not reach the web (WebFetch and the researcher's tools were denied), so the two-week-age rule is unverified. Open question: re-check dates and pin back if any is too new.
+| Crate | Version | Notes |
+| --- | --- | --- |
+| tokio | 1.54.1 | rt-multi-thread, macros, net, sync, time, signal |
+| axum | 0.8.9 | default features off; http1, json, query, tokio, ws |
+| getrandom | 0.4.3 | session token from the OS generator (`getrandom::fill`) |
+| tower | 0.5.3 | dev, `util` for `oneshot` |
+| tokio-tungstenite | 0.29.0 | dev; same major as axum's ws dependency (0.30.0 is newest) |
+| futures-util | 0.3.34 | dev |
+
+### Server choices (steps 1 and 2)
+- **New error codes**: E_AUTH (token, Host or Origin refused), E_NOT_FOUND, E_REQUEST (malformed or oversized body), E_SERVER (bind, task or state failures). Added to the pinned list; existing codes unchanged.
+- **Guards**: every route checks Host is `127.0.0.1:<port>` or `localhost:<port>` (DNS rebinding) and Origin, when present, is this server (cross-site). `/api/*` and `/ws` need the token: header `x-ck-token`; the `token` query parameter counts only on `/ws` (browsers cannot set WebSocket headers), so API tokens stay out of URLs.
+- **server.json** holds port, token, pid and URL; written via a 0600 temp file and rename, removed on shutdown only if it still describes this server.
+- **Events**: `snapshot` (whole project, on connect and after each change, only built when a subscriber exists), `revision` (rev, author, label, touched) and `locks`. The studio renders from snapshots; diffs over the wire can come later if size demands it.
+- **Writes** run on `spawn_blocking` (they fsync). A failed save reloads the document from disk; if the reload also fails, the session refuses all calls with E_STORAGE.
+- **Stage gate not wired yet**: agent patches are allowed only in BASE, PASSES and ITERATE, but no pipeline commands exist before Phase 4, so wiring it now would make every Phase 2 agent patch fail. It is wired together with the pipeline commands.
+- **Trust boundary (open)**: callers state `author`/`holder` themselves; any token holder can patch or unlock as either role. Acceptable for one local user; per-role credentials (agent token vs studio token) are an open question for Phase 3, when the plugin and studio get distinct launch paths.
+- Deferred: idle shutdown, refusing a second server while server.json's pid is alive (`ck studio --ensure`, step 3 / Phase 3); redacting paths in 5xx bodies (local, same-user only).
+
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)
