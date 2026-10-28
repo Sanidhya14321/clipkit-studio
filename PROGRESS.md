@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 2
 
 ## Handoff (latest)
-1. Done: Phase 2 step 6b. The studio has a banner, a timeline (select, flash, ghost cursor), an inspector (name, purpose, timing edits sent as human patches) with read-only mode on agent-locked layers, and an activity feed. The pure logic lives in `studio/src/state.ts` with `node --test` tests.
-2. Proof: `just check` green (96 nextest, hooks 41, studio prettier + tsc + 10 unit tests). In the live check, the studio's own patch got E_LOCK_HELD (423) while the agent held the layer and landed after unlock (VERIFICATION.md, step 6b rows).
-3. Open: panels not yet seen in a browser (Playwright, step 7). Stop button, per-step token usage and the global structural lock are deferred (DECISIONS.md, step 6b). No CSP yet. Plus the earlier items.
-4. Next: Phase 2 step 7: Playwright e2e (CLI patch visible in under 300 ms; human edit refused while the agent holds the lock, checked in the DOM via `data-ck-readonly`/disabled input and via the refused API call). Then step 8: reviewers, spec-checker, phase done.
-5. Start: run `scripts/autobuild.sh`, or continue Phase 2 at step 7. `just studio-build`, then `cargo run -p ck-cli -- studio --dir <folder>`, then open `url#token=<server.json token>`. `target/live-check/panels.mjs` shows the API-level flow.
+1. Done: Phase 2 step 7. Playwright e2e (`studio/e2e/`, @playwright/test 1.64.1, Chromium) runs a real `ck studio` per test on a fresh temp project and drives it with the real `ck` CLI. `just e2e` builds ck and the studio, then runs the tests.
+2. Proof: both phase proofs PASS. A CLI patch shows in the timeline and preview 11 to 26 ms after the CLI spawn (budget 300 ms). While the agent holds the lock the inspector is read-only, its inputs are disabled, and the studio's own patch gets 423 E_LOCK_HELD; after unlock a UI edit lands. Results: `just e2e` 2 of 2, 20 of 20 on repeat, `just check` green (96 nextest, hooks 41, studio 10).
+3. Open: e2e is not in CI yet. The banner is checked only when idle, because `/agent` is read-only until Phase 3. Stop button, the global structural lock and the CSP are still deferred. Plus the earlier items.
+4. Next: Phase 2 step 8. Run rust-reviewer on the phase diff and spec-checker on Phase 2, decide on CSP and the CI e2e job, finish VERIFICATION.md (version-date rows), tick the phase done and set `PHASE: 3`.
+5. Start: `just check`, `just e2e` (one-time `pnpm --dir studio exec playwright install chromium`). Manual: `just studio-build`, `cargo run -p ck-cli -- studio --dir <folder>`, open `url#token=<server.json token>`.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -25,6 +25,7 @@ PHASE: 2
 - Phase 2 studio (step 6): `pnpm add` is denied in headless runs; dependencies are written into package.json by hand and installed with `pnpm install`. Step 6a found the npm registry reachable: versions and dates checked with `pnpm view` (DECISIONS.md, step 6a).
 - Phase 2 step 6a: rust-embed 8.13.0 release date and the CI action majors (pnpm/action-setup@v4, actions/setup-node@v5) unverified; confirm on the first CI run. No CSP on the studio page yet (Remotion inline styles); still open after 6b, decide in step 8 or Phase 3.
 - Phase 2 step 6b: spec 5.2's Stop button needs cooperative cancel through the event bus (no route yet). Spec 5.3's global lock for structural changes has no lock id in ck-core. Both are deferred (DECISIONS.md, step 6b); confirm Phase 3 and Phase 6 pick them up.
+- Phase 2 step 7: the Playwright e2e suite is not in CI yet (it needs a Chromium download or cache in the workflow). Decide in step 8.
 
 ## Roadmap additions: asset supply expansion (2026-10-28)
 
@@ -74,6 +75,13 @@ Run plan (autonomous run 6): step 6b only.
 - Read-only: inspector controls disabled on agent-locked layers; server refusal (E_LOCK_HELD) shown inline. Canvas outline + flash via Player inputProps (composition stays pure).
 - Out of scope (recorded): Stop button (needs cooperative cancel, Phase 3), token usage per step (meter, later), global structural lock (core has none yet).
 
+Run plan (autonomous run 7): step 7 only.
+- Dep: @playwright/test 1.64.1 (released 2026-10-14, checked with `pnpm view`) as a studio devDep; Chromium only, installed with `pnpm exec playwright install chromium`.
+- Fixture per test: a fresh temp dir, `target/debug/ck studio --dir <tmp>` spawned, server.json read for port + token, the page opened at `url#token=`.
+- Test 1: `ck project patch` (the real CLI) adds a track and layer; a MutationObserver in the page timestamps the layer's arrival; assert under 300 ms from the CLI spawn.
+- Test 2: `ck lock` as agent; the inspector shows `data-ck-readonly=true` with disabled inputs; the studio's own patch request is refused with 423 E_LOCK_HELD; after `ck unlock` the edit lands.
+- `just e2e` builds ck and the studio, then runs Playwright; evidence in VERIFICATION.md.
+
 Steps (each ends with `just check`):
 - [x] 1. Deps + ck-server core: session state, event bus, server.json, bind to 127.0.0.1 on a free port.
 - [x] 2. HTTP + WS API with token/Host/Origin guards; refusals tested (E_AUTH, E_LOCK_HELD over HTTP).
@@ -83,7 +91,7 @@ Steps (each ends with `just check`):
 - [x] 6. Studio shell: Vite + React + Remotion Player preview, timeline, inspector, read-only mode, banner, activity feed, ghost cursor; embedded with rust-embed.
   - [x] 6a. Scaffold, live project state over WS, Player preview, rust-embed serving, `just studio-build|studio-dev|studio-check`.
   - [x] 6b. Panels: timeline, inspector, read-only mode, banner, activity feed, ghost cursor.
-- [ ] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.
+- [x] 7. Playwright e2e: CLI patch visible in under 300 ms; human edit refused while the agent holds the lock.
 - [ ] 8. Evidence, reviewers, DECISIONS.md, handoff, commit; mark phase done.
 
 ## Phase 1: core (2026-10-28) - DONE

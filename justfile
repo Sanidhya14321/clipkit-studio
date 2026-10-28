@@ -46,9 +46,11 @@ types:
 studio-dev:
     CK_PORT="$(jq -r .port .clipkit/server.json)" pnpm --dir studio dev
 
-# Playwright browser tests (Phase 2 onward).
-e2e:
-    @echo "PLACEHOLDER: Playwright e2e suite arrives in Phase 2 (spec 10.1)"; exit 1
+# Playwright browser tests against a real `ck studio` per test (spec 10.1). Needs Chromium once:
+# `pnpm --dir studio exec playwright install chromium`.
+e2e: studio-build
+    cargo build -p ck-cli --quiet
+    pnpm --dir studio --silent e2e
 
 # Generate synthetic fixture media and ground truth into fixtures/generated/.
 fixtures out="fixtures/generated":

@@ -114,6 +114,17 @@ npm versions: newest stable release at least two weeks old per `pnpm view <pkg> 
 - **Banner**: shows status, stage or pass name, and the agent's label. Shows "agent stopped" when the agent had locks and all of them lapsed without a release (spec 5.3 crash safety). The model has no agent name yet, so it says "Agent".
 - **Ghost cursor and outline** mark the agent's live locked layers plus `agent.activeLayers` (while not idle), on the timeline and on the canvas. The canvas gets them through Player `inputProps`, so the composition stays a pure function of its props. Touched layers flash for 600 ms; timeline items move with a 200 ms CSS transition (watch mode is UI only).
 - **Not in 6b**: the Stop button (needs cooperative cancel through the event bus; Phase 3 brings agent events), token usage per feed line (the meter arrives later), CSP (still open).
+
+### Step 7: Playwright e2e (2026-10-29)
+| Package | Version | Released |
+| --- | --- | --- |
+| @playwright/test | 1.64.1 | 2026-10-14 (newest stable at least two weeks old, `pnpm view`) |
+- **Chromium only** for now (`pnpm --dir studio exec playwright install chromium`, one time). The studio targets a local desktop browser; more engines can be added as Playwright projects later.
+- **One real `ck studio` per test** on a fresh temp folder (`studio/e2e/fixture.ts`), driven by the real debug `ck` binary (`CK_BIN` overrides). No fixture project is copied: Phase 2 has none, and the test builds its layer through `ck project patch`, which is itself the thing under test. Tests are independent, so they run in parallel.
+- **Latency measurement**: from just before the CLI process spawn to the layer node appearing in the page (MutationObserver, `Date.now()` on the same machine). This is an upper bound on the patch-to-preview time because it includes process startup.
+- **Server refusal from the page**: the refused patch is sent with `fetch` inside the page (studio Origin, session token from sessionStorage), built with the studio's own `fieldPatch`, so it is the same request the inspector would send.
+- **`just e2e` is not part of `just check`** (CLAUDE.md lists it separately; it needs a browser and a build). Not yet in CI: adding a job needs the Playwright browser cache and is left for step 8 or Phase 3.
+- **Banner** is checked only in the idle state: `/agent` is read-only to patches and no command sets it until Phase 3.
 ## Phase 1 (2026-10-28)
 
 ### Crate versions (crates.io release dates checked 2026-10-28; all at least two weeks old)
