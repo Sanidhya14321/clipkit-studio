@@ -6,7 +6,7 @@ use std::path::Path;
 use ck_core::{CkError, CkResult, ErrorCode};
 use serde_json::{Map, Value, json};
 
-use super::{Change, Homes, Mode, Op, Step, file_step, read_opt};
+use super::{Homes, Mode, Step, file_step, owned_dir_step, read_opt};
 
 /// Marketplace and plugin name; the plugin id in settings is `clipkit@clipkit`.
 const NAME: &str = "clipkit";
@@ -63,7 +63,8 @@ pub const MCP_JSON: &str = r#"{
 pub fn plan(mode: Mode, homes: &Homes) -> CkResult<Vec<Step>> {
     let root = homes.clipkit.join("claude-plugin");
     Ok(vec![
-        plugin_step(mode, &root)?,
+        // The marketplace folder is ClipKit's own.
+        owned_dir_step(mode, &root, marketplace_files(&root))?,
         settings_step(mode, &root, &homes.claude.join("settings.json"))?,
     ])
 }
@@ -95,42 +96,6 @@ fn marketplace_files(root: &Path) -> Vec<(std::path::PathBuf, String)> {
     );
     files.push((plugin.join(".mcp.json"), MCP_JSON.to_owned()));
     files
-}
-
-/// The marketplace folder is ClipKit's own: init rewrites it whole when anything differs (so no
-/// file of an older version stays behind), uninstall removes it whole.
-fn plugin_step(mode: Mode, root: &Path) -> CkResult<Step> {
-    let exists = root.exists();
-    if mode == Mode::Uninstall {
-        return Ok(if exists {
-            Step {
-                path: root.to_path_buf(),
-                change: Change::Remove,
-                ops: vec![Op::RemoveDir(root.to_path_buf())],
-            }
-        } else {
-            Step::unchanged(root)
-        });
-    }
-    let files = marketplace_files(root);
-    let mut current = true;
-    for (path, text) in &files {
-        current &= read_opt(path)?.as_deref() == Some(text.as_str());
-    }
-    if current {
-        return Ok(Step::unchanged(root));
-    }
-    let mut ops = vec![Op::RemoveDir(root.to_path_buf())];
-    ops.extend(files.into_iter().map(|(p, t)| Op::Write(p, t)));
-    Ok(Step {
-        path: root.to_path_buf(),
-        change: if exists {
-            Change::Update
-        } else {
-            Change::Create
-        },
-        ops,
-    })
 }
 
 /// Add or remove `extraKnownMarketplaces.clipkit` and `enabledPlugins["clipkit@clipkit"]`. Other

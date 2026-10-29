@@ -95,8 +95,8 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Heartbeat { holder } => print(&ops()?.heartbeat(&HeartbeatRequest {
             holder: holder.holder,
         })?),
-        Command::Init(args) => install::run(install::Mode::Init, &args),
-        Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args),
+        Command::Init(args) => install::run(install::Mode::Init, &args, &cli.dir),
+        Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args, &cli.dir),
         // Handled in main before run.
         Command::Hook(_) => Ok(()),
     }

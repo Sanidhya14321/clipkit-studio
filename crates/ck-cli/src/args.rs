@@ -70,7 +70,8 @@ pub enum Command {
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),
-    /// Set ClipKit up in Claude Code and Codex: show the plan, ask, then write (spec 6.3).
+    /// Set ClipKit up in Claude Code, Codex, Cursor or any MCP client: show the plan, ask, then
+    /// write (spec 6.3).
     Init(InstallArgs),
     /// Remove everything ck init added.
     Uninstall(InstallArgs),
@@ -91,6 +92,9 @@ pub struct InstallArgs {
 pub enum AgentKind {
     ClaudeCode,
     Codex,
+    Cursor,
+    /// Any MCP client: mcp.json and RULES.md under ~/.clipkit/mcp to point it at.
+    Mcp,
 }
 
 #[derive(Debug, Subcommand)]

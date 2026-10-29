@@ -55,8 +55,12 @@ impl Home {
 
     fn ck(&self, args: &[&str], env: &[(&str, &Path)]) -> Output {
         let mut cmd = Command::new(env!("CARGO_BIN_EXE_ck"));
-        cmd.args(args)
-            .env("HOME", self.home())
+        cmd.args(args);
+        // The project folder (Cursor's rules go there) is the home folder unless a test names one.
+        if !args.contains(&"--dir") {
+            cmd.arg("--dir").arg(self.home());
+        }
+        cmd.env("HOME", self.home())
             .env("PATH", &self.bin)
             .env_remove("CLAUDE_CONFIG_DIR")
             .env_remove("CODEX_HOME")
@@ -145,6 +149,26 @@ fn all(change: &str) -> Vec<(String, Vec<(String, String)>)> {
             ],
         ),
     ]
+}
+
+/// Cursor and the generic MCP client files, which uninstall always checks.
+fn rest(change: &str) -> Vec<(String, Vec<(String, String)>)> {
+    vec![
+        (
+            "cursor".into(),
+            vec![
+                (".cursor/rules/clipkit.mdc".into(), change.into()),
+                (".cursor/mcp.json".into(), change.into()),
+            ],
+        ),
+        ("mcp".into(), vec![(".clipkit/mcp".into(), change.into())]),
+    ]
+}
+
+fn every(change: &str) -> Vec<(String, Vec<(String, String)>)> {
+    let mut v = all(change);
+    v.extend(rest(change));
+    v
 }
 
 #[test]
@@ -277,11 +301,12 @@ fn user_content_is_kept_in_place_and_uninstall_restores_it_byte_for_byte() {
     assert_eq!(r["applied"], true);
     let mut want = all("update");
     want[0].1[0].1 = "remove".into();
+    want.extend(rest("unchanged"));
     assert_eq!(changes(&h, &r), want);
     assert_eq!(h.tree(), before, "uninstall leaves no residue");
 
     let again = h.ok(&["uninstall", "--yes"]);
-    assert_eq!(changes(&h, &again), all("unchanged"));
+    assert_eq!(changes(&h, &again), every("unchanged"));
 }
 
 #[test]
@@ -428,4 +453,96 @@ fn symlinked_files_stay_symlinks_and_keep_their_mode() {
     assert_eq!(mode, 0o600);
     h.ok(&["uninstall", "--yes", "--agent", "codex"]);
     assert_eq!(std::fs::read_to_string(&real).unwrap(), "model = \"o4\"\n");
+}
+
+#[test]
+fn cursor_gets_its_mcp_server_and_a_project_rules_file_and_uninstall_restores_both() {
+    let h = Home::new();
+    let mine = json!({ "mcpServers": { "other": { "command": "other" } } });
+    h.write(".cursor/mcp.json", &format!("{mine:#}\n"));
+    h.write(".cursor/rules/mine.mdc", "my rule\n");
+    let before = h.tree();
+
+    let r = h.ok(&["init", "--yes"]);
+    assert_eq!(
+        changes(&h, &r),
+        vec![(
+            "cursor".into(),
+            vec![
+                (".cursor/rules/clipkit.mdc".into(), "create".into()),
+                (".cursor/mcp.json".into(), "update".into()),
+            ],
+        )]
+    );
+    let mcp: Value = serde_json::from_str(&h.read(".cursor/mcp.json")).unwrap();
+    assert_eq!(
+        mcp["mcpServers"],
+        json!({ "other": { "command": "other" }, "clipkit": { "command": "ck", "args": ["mcp"] } })
+    );
+    let rules = h.read(".cursor/rules/clipkit.mdc");
+    assert!(rules.starts_with("---\ndescription: "));
+    assert!(rules.contains("alwaysApply: true\n---\n"));
+    assert!(rules.contains("## ClipKit video"));
+
+    let after = h.tree();
+    let again = h.ok(&["init", "--yes"]);
+    assert_eq!(again["applied"], false);
+    assert_eq!(h.tree(), after, "a second init writes nothing");
+
+    h.ok(&["uninstall", "--yes"]);
+    assert_eq!(
+        h.tree(),
+        before,
+        "uninstall restores the user's files byte for byte"
+    );
+}
+
+#[test]
+fn cursor_alone_leaves_no_residue_and_a_rules_file_the_user_changed_is_kept() {
+    let h = Home::new();
+    std::fs::create_dir(h.path(".cursor")).unwrap();
+    h.ok(&["init", "--yes", "--agent", "cursor"]);
+    h.ok(&["uninstall", "--yes"]);
+    assert_eq!(h.tree(), BTreeMap::new());
+
+    h.ok(&["init", "--yes", "--agent", "cursor"]);
+    h.write(".cursor/rules/clipkit.mdc", "edited by me\n");
+    h.ok(&["uninstall", "--yes", "--agent", "cursor"]);
+    assert_eq!(h.read(".cursor/rules/clipkit.mdc"), "edited by me\n");
+    assert!(!h.path(".cursor/mcp.json").exists());
+}
+
+#[test]
+fn a_clipkit_mcp_server_of_the_users_own_in_cursor_is_refused_and_kept() {
+    let h = Home::new();
+    let mine = json!({ "mcpServers": { "clipkit": { "command": "mine" } } });
+    h.write(".cursor/mcp.json", &format!("{mine:#}\n"));
+    let before = h.tree();
+    let e = h.err(&["init", "--yes"]);
+    assert_eq!(e["code"], "E_REQUEST");
+    assert!(e["hint"].as_str().unwrap().contains("--agent"));
+    assert_eq!(h.tree(), before, "nothing written");
+    h.ok(&["uninstall", "--yes"]);
+    assert_eq!(h.tree(), before);
+}
+
+#[test]
+fn any_mcp_client_gets_files_to_point_at_only_when_asked() {
+    let h = Home::with_agents();
+    let r = h.ok(&["init", "--yes"]);
+    assert_eq!(changes(&h, &r), all("create"), "mcp is never detected");
+    let r = h.ok(&["init", "--yes", "--agent", "mcp"]);
+    assert_eq!(
+        changes(&h, &r),
+        vec![("mcp".into(), vec![(".clipkit/mcp".into(), "create".into())])]
+    );
+    let mcp: Value = serde_json::from_str(&h.read(".clipkit/mcp/mcp.json")).unwrap();
+    assert_eq!(
+        mcp["mcpServers"]["clipkit"],
+        json!({ "command": "ck", "args": ["mcp"] })
+    );
+    assert!(h.read(".clipkit/mcp/RULES.md").contains("## ClipKit video"));
+    h.ok(&["uninstall", "--yes"]);
+    // Folders left empty go too, as in uninstall_on_a_clean_machine_leaves_no_residue.
+    assert_eq!(h.tree(), BTreeMap::new());
 }

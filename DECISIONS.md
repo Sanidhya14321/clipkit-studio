@@ -4,6 +4,14 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 3 (2026-10-29)
 
+### Step 7: Cursor and any MCP client (spec 6.3)
+- **Format UNVERIFIED**: the researcher could not reach cursor.com (web tools denied in headless runs). From memory: global MCP servers in `~/.cursor/mcp.json` as `{"mcpServers":{"clipkit":{"command":"ck","args":["mcp"]}}}`; rules as `.cursor/rules/*.mdc` with `description`/`globs`/`alwaysApply` frontmatter; user-level rules live only in Cursor's settings, not in a file. Check this against cursor.com/docs/context/mcp and /rules in an interactive session.
+- **Rules go in the project folder**: since there is no user-level rules file, `ck init --agent cursor` writes `<--dir>/.cursor/rules/clipkit.mdc` (default: current folder). Uninstall removes it only from the folder it runs in, and only while it still holds ClipKit's text; a file the user edited stays. The MCP entry is user-level and is merged like Claude Code settings: a `clipkit` server of the user's own is refused by init and kept by uninstall.
+- **MCP server folder**: the Cursor and generic entries run plain `ck mcp` (like Codex), so the project is the MCP server's working folder. Cursor's `${workspaceFolder}` interpolation is not used until it is verified.
+- **Any MCP client** (`--agent mcp`): clients have no common config path, so ck writes `~/.clipkit/mcp/mcp.json` (common `mcpServers` shape) and `~/.clipkit/mcp/RULES.md` (the Codex section text) for the user to point their client at. It is never detected; it is written only when asked for, and removed by uninstall.
+- **Rules text** is the one in `adapters/codex/AGENTS.md`, shared by Codex, Cursor (after `adapters/cursor/frontmatter.mdc`) and the generic RULES.md.
+- Uninstall also removes an agent folder (`~/.cursor`, `~/.claude`) that was empty before init: that is the existing rule of removing a folder when its last file is removed. Kept as is.
+
 ### Step 6: proof and review
 - **Headless proof stand-in**: a real Claude Code or Codex session cannot run headless, so `studio/e2e/phase3.spec.ts` drives the same pieces Claude Code would: the hooks.json command lines through `sh -c` with `CLAUDE_PROJECT_DIR`, and `ck mcp --dir <project>` as .mcp.json registers it. The real-session proof stays BLOCKED in VERIFICATION.md, not marked PASS.
 - **Hook vs start time**: the prompt hook's timeout stays 10 s. A start takes about 16 ms; the 10 s ready limit is only reached by a studio that hangs, and then Claude Code kills the hook, which is non-blocking. The hook no longer retries a failed start (that could double the wait); it falls back only to a studio that is running (browser failure).

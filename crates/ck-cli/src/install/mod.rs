@@ -1,10 +1,13 @@
-//! `ck init` / `ck uninstall`: set ClipKit up in Claude Code and Codex (spec 6.3). Init finds the
+//! `ck init` / `ck uninstall`: set ClipKit up in Claude Code, Codex, Cursor and any MCP client
+//! (spec 6.3). Init finds the
 //! installed agents, shows its plan and asks before writing anything; it is idempotent, and
 //! uninstall removes everything init added. Without `--yes` and without a terminal to ask on,
 //! nothing is written and the plan is the output.
 
 mod claude;
 mod codex;
+mod cursor;
+mod generic;
 mod marked;
 
 use std::fs;
@@ -61,10 +64,12 @@ pub struct Homes {
     clipkit: PathBuf,
     claude: PathBuf,
     codex: PathBuf,
+    cursor: PathBuf,
 }
 
 impl Homes {
-    /// `~/.clipkit`, `$CLAUDE_CONFIG_DIR` or `~/.claude`, `$CODEX_HOME` or `~/.codex`.
+    /// `~/.clipkit`, `$CLAUDE_CONFIG_DIR` or `~/.claude`, `$CODEX_HOME` or `~/.codex`,
+    /// `~/.cursor`.
     fn from_env() -> CkResult<Self> {
         let home = env_path("HOME")
             .or_else(|| env_path("USERPROFILE"))
@@ -76,6 +81,7 @@ impl Homes {
             clipkit: home.join(".clipkit"),
             claude: env_path("CLAUDE_CONFIG_DIR").unwrap_or_else(|| home.join(".claude")),
             codex: env_path("CODEX_HOME").unwrap_or_else(|| home.join(".codex")),
+            cursor: home.join(".cursor"),
         })
     }
 }
@@ -107,9 +113,15 @@ struct Report {
     hint: Option<&'static str>,
 }
 
-const ALL: [AgentKind; 2] = [AgentKind::ClaudeCode, AgentKind::Codex];
+const ALL: [AgentKind; 4] = [
+    AgentKind::ClaudeCode,
+    AgentKind::Codex,
+    AgentKind::Cursor,
+    AgentKind::Mcp,
+];
 
-pub fn run(mode: Mode, args: &InstallArgs) -> CkResult<()> {
+/// `dir` is the project folder; only Cursor's rules file goes there.
+pub fn run(mode: Mode, args: &InstallArgs, dir: &Path) -> CkResult<()> {
     let homes = Homes::from_env()?;
     let agents: Vec<AgentKind> = if !args.agents.is_empty() {
         ALL.into_iter()
@@ -124,15 +136,19 @@ pub fn run(mode: Mode, args: &InstallArgs) -> CkResult<()> {
     if agents.is_empty() {
         return Err(CkError::new(
             ErrorCode::Request,
-            "found no supported agent (Claude Code or Codex)",
+            "found no supported agent (Claude Code, Codex or Cursor)",
         )
-        .with_hint("Install one, or name it with --agent claude-code or --agent codex."));
+        .with_hint(
+            "Install one, or name it with --agent claude-code, codex, cursor or mcp (any MCP client).",
+        ));
     }
     let mut plan = Vec::new();
     for agent in agents {
         let steps = match agent {
             AgentKind::ClaudeCode => claude::plan(mode, &homes)?,
             AgentKind::Codex => codex::plan(mode, &homes)?,
+            AgentKind::Cursor => cursor::plan(mode, &homes, dir)?,
+            AgentKind::Mcp => generic::plan(mode, &homes)?,
         };
         plan.push((agent, steps));
     }
@@ -180,11 +196,14 @@ pub fn run(mode: Mode, args: &InstallArgs) -> CkResult<()> {
     })
 }
 
-/// Agent present: its config folder exists or its command is on PATH.
+/// Agent present: its config folder exists or its command is on PATH. The files for any MCP
+/// client are written only when asked for.
 fn detected(agent: AgentKind, homes: &Homes) -> bool {
     let (dir, bin) = match agent {
         AgentKind::ClaudeCode => (&homes.claude, "claude"),
         AgentKind::Codex => (&homes.codex, "codex"),
+        AgentKind::Cursor => (&homes.cursor, "cursor"),
+        AgentKind::Mcp => return false,
     };
     dir.is_dir() || on_path(bin)
 }
@@ -256,6 +275,41 @@ fn read_opt(path: &Path) -> CkResult<Option<String>> {
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
         Err(e) => Err(storage(path, &e)),
     }
+}
+
+/// A folder that is ClipKit's own: init rewrites it whole when any file differs (so no file of an
+/// older version stays behind), uninstall removes it whole.
+fn owned_dir_step(mode: Mode, root: &Path, files: Vec<(PathBuf, String)>) -> CkResult<Step> {
+    let exists = root.exists();
+    if mode == Mode::Uninstall {
+        return Ok(if exists {
+            Step {
+                path: root.to_path_buf(),
+                change: Change::Remove,
+                ops: vec![Op::RemoveDir(root.to_path_buf())],
+            }
+        } else {
+            Step::unchanged(root)
+        });
+    }
+    let mut current = true;
+    for (path, text) in &files {
+        current &= read_opt(path)?.as_deref() == Some(text.as_str());
+    }
+    if current {
+        return Ok(Step::unchanged(root));
+    }
+    let mut ops = vec![Op::RemoveDir(root.to_path_buf())];
+    ops.extend(files.into_iter().map(|(p, t)| Op::Write(p, t)));
+    Ok(Step {
+        path: root.to_path_buf(),
+        change: if exists {
+            Change::Update
+        } else {
+            Change::Create
+        },
+        ops,
+    })
 }
 
 /// A step that makes `path` hold `want` (None: no file).
