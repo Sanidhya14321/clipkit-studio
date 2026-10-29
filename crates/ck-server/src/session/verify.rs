@@ -22,7 +22,6 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use super::recipe::DEFAULT_LOOK;
 use super::{Session, is_zero};
 
 /// Gates in the order they run.
@@ -503,17 +502,6 @@ fn placeholders(project: &Project, out: &mut Issues) {
     }
 }
 
-/// The brief's look id, else the default.
-fn look_id(project: &Project) -> String {
-    project
-        .brief
-        .fields
-        .get("look")
-        .and_then(|f| f.value.as_str())
-        .map(str::to_owned)
-        .unwrap_or_else(|| DEFAULT_LOOK.into())
-}
-
 /// Runs every gate over the project with the given look.
 pub fn verify(project: &Project, look: &Look) -> VerifyResult {
     let mut out = Issues(Vec::new());
@@ -548,7 +536,7 @@ impl Session {
     pub fn verify(&self) -> CkResult<VerifyResult> {
         let project = self.project()?;
         let look = library::look_get(&library::IdRequest {
-            id: look_id(&project),
+            id: super::look::project_look_id(&project),
         })?;
         Ok(verify(&project, &look))
     }

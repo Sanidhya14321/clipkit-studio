@@ -57,12 +57,18 @@ export function list(props: Props, key: string): string[] {
 /** The look recipe layers fall back to (mirrors `DEFAULT_LOOK` in ck-server recipe apply). */
 export const DEFAULT_LOOK = "clean-product";
 
-/** The project's look id: the brief's `look` field, else the default. */
-export function lookId(brief: {
-  fields: Record<string, { value: unknown } | undefined>;
+/**
+ * The project's look id (the rule of `project_look_id` in crates/ck-server/src/session/look.rs):
+ * the stored `tokens.look`, else the brief's `look` field, else the default.
+ */
+export function lookId(project: {
+  tokens?: Record<string, unknown>;
+  brief: { fields: Record<string, { value: unknown } | undefined> };
 }): string {
-  const v = brief.fields.look?.value;
-  return typeof v === "string" && v !== "" ? v : DEFAULT_LOOK;
+  for (const v of [project.tokens?.look, project.brief.fields.look?.value]) {
+    if (typeof v === "string" && v !== "") return v;
+  }
+  return DEFAULT_LOOK;
 }
 
 /**

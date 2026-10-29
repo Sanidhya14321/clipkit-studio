@@ -5,6 +5,7 @@ mod brief;
 mod fixture;
 mod idle;
 mod live;
+mod look;
 mod ops;
 mod recipe;
 mod studio;

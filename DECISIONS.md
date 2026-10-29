@@ -4,6 +4,13 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 9a: re-theme through tokens (spec 8.1)
+- Step 9 is split: 9a re-theme (`ck look apply`), 9b `ck sound plan`, 9c handoff and `ck wait`.
+- The project look is stored as `tokens.look` (the existing `Project.tokens` map; no schema change). Resolution everywhere (recipe apply, verify, studio preview): `tokens.look`, else the brief's `look`, else `clean-product`.
+- Re-theme writes only `tokens.look` (one agent revision, project lock taken briefly like `brief propose`); layers keep their `$token` refs, so no layer is rewritten. Changing the brief's `look` later does not re-theme a project with a stored look; the agent runs `look apply`.
+- Impact preview = clip layers whose props hold any `$token` ref, in track order; empty when the look does not change. `dryRun` returns it without writing and needs no lock.
+- Recipe apply with a request `look` still does not store it (simplest; the stored look stays the project's single source).
+
 ### Step 8: `ck verify` quality gates (spec 4.3)
 - Gates live in `ck-server::session::verify` beside `layout check` (they need the look and the layout checker from ck-assets; ck-pipeline does not depend on ck-assets). All gates are blocking; `ok` is false when any issue exists. Gating `idle` on them (spec 4.2 quality gate) is not wired yet.
 - Overlaps are checked on video, audio and caption tracks only: overlay tracks stack recipe layers at the same time by design. Gaps: the first video track must be covered from 0 (no "intended gap" mark exists yet).

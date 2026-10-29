@@ -198,6 +198,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 8: `ck verify` and MCP `verify` (schema, 4 KB cap with `omitted`, parity) | PASS | `ck_mcp` `tool_table_snapshot` (1 tool added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` `recipe_tools_answer_like_their_cli_twins` (same reply; layout gate fails on the two titles) |
 | Step 8: captions, audio and critic gates of spec 4.3 | NOT APPLICABLE YET | No captions, voice or audio in the generate slice yet (Phase 5 and 7); critic contact sheet needs rendering (`ck see`, later step or Phase 9) |
 | Step 8 run | PASS | 2026-10-29 `just check`: 208 of 208 nextest (1 skipped), hooks 41 of 41 |
+| Step 9a: re-theme is one `tokens.look` write; layer props unchanged; impact preview lists token layers; dry run writes nothing; same look is a no-op | PASS | `ck-server` `tests::look::apply_rethemes_with_one_write_and_previews_the_impact` |
+| Step 9a: stored look wins over the brief look for recipe apply, verify and the studio preview | PASS | same test (recipe apply and verify report `cinematic` after the brief says `bold-social`); studio `motion.test.ts` (`lookId` reads `tokens.look` first) |
+| Step 9a: unknown look E_NOT_FOUND; a human project lock refuses the write (E_LOCK_HELD), preview still answers | PASS | `tests::look::apply_refuses_unknown_looks_and_human_locks` |
+| Step 9a: `ck look apply` and MCP `look_apply` (schema, 2 KB cap with `omitted`, parity) | PASS | `ck_mcp` `tool_table_snapshot` (1 tool added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` `recipe_apply_answers_like_its_cli_twin` (same dry-run reply, same refusal) |
+| Step 9a run | PASS | 2026-10-29 `just check`: 210 of 210 nextest (1 skipped), hooks 41 of 41; `pnpm --dir studio test` and `tsc --noEmit` clean. Playwright not rerun (preview change is the look id only) |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

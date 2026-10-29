@@ -35,7 +35,7 @@ export function ProjectComposition({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
-  const id = lookId(project.brief);
+  const id = lookId(project);
   const look = looks.find((l) => l.id === id);
 
   return (

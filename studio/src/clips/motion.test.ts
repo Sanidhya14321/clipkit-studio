@@ -113,10 +113,17 @@ test("token refs resolve against the look; unknown refs drop; brief picks the lo
   );
   assert.deepEqual(resolveTokens({ color: "$colors.text" }, undefined), {});
   assert.equal(
-    lookId({ fields: { look: { value: "cinematic" } } }),
+    lookId({ brief: { fields: { look: { value: "cinematic" } } } }),
     "cinematic",
   );
-  assert.equal(lookId({ fields: {} }), "clean-product");
+  assert.equal(
+    lookId({
+      tokens: { look: "bold-social" },
+      brief: { fields: { look: { value: "cinematic" } } },
+    }),
+    "bold-social",
+  );
+  assert.equal(lookId({ brief: { fields: {} } }), "clean-product");
 });
 
 test("box and lines come from the solver's props, with fallbacks", () => {

@@ -640,6 +640,30 @@ expression: specs()
     }
   },
   {
+    "name": "look_apply",
+    "command": "ck look apply",
+    "description": "Re-theme the project with a look: one write, layers keep their token refs. Returns the previous look and the layers that change; dryRun only previews.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "dryRun": {
+          "default": false,
+          "description": "Only preview the impact; write nothing.",
+          "type": "boolean"
+        },
+        "look": {
+          "description": "Look id (from `look list`).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "look"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "recipe_apply",
     "command": "ck recipe apply",
     "description": "Fill a recipe's slots: adds its named layers (tokens, provenance, briefDeps) as one revision. Returns the layer ids.",
@@ -662,7 +686,7 @@ expression: specs()
           ]
         },
         "look": {
-          "description": "Look id whose tokens the layers use; defaults to the brief's look, then `clean-product`.",
+          "description": "Look id whose tokens the layers use; defaults to the project look (`look apply`), then\nthe brief's look, then `clean-product`.",
           "type": [
             "string",
             "null"

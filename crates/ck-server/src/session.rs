@@ -23,6 +23,7 @@ use crate::view::{Status, Summary};
 
 pub mod brief;
 pub mod layout;
+pub mod look;
 pub mod recipe;
 pub mod verify;
 

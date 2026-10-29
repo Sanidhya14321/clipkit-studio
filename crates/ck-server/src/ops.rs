@@ -15,6 +15,7 @@ use crate::session::brief::{
     BriefWaitRequest, BriefWaitResult,
 };
 use crate::session::layout::LayoutCheckResult;
+use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::verify::{VerifyIssue, VerifyResult};
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
@@ -33,6 +34,7 @@ pub mod caps {
     pub const BRIEF: usize = 4 * 1024;
     pub const BRIEF_PROPOSE: usize = 1024;
     pub const RECIPE_APPLY: usize = 1024;
+    pub const LOOK_APPLY: usize = 2 * 1024;
     pub const LAYOUT_CHECK: usize = 4 * 1024;
     pub const VERIFY: usize = 4 * 1024;
 }
@@ -127,6 +129,13 @@ impl Ops {
         trimmed("brief diff", caps::BRIEF, reply)
     }
 
+    /// `look apply`: re-theme the project by switching its look (one write of `tokens.look`);
+    /// the reply lists the layers that change. `dryRun` only previews.
+    pub fn look_apply(&self, req: &LookApplyRequest) -> CkResult<LookApplyResult> {
+        let reply = self.client.post("/api/look/apply", req)?;
+        trimmed("look apply", caps::LOOK_APPLY, reply)
+    }
+
     /// `recipe apply`: expand a recipe with slot values into named layers, as one revision.
     pub fn recipe_apply(&self, req: &RecipeApplyRequest) -> CkResult<RecipeApplyResult> {
         let reply = self.client.post("/api/recipe/apply", req)?;
@@ -159,6 +168,13 @@ impl Trim for LayoutCheckResult {
     type Entry = LayoutIssue;
     fn parts(&mut self) -> (&mut Vec<LayoutIssue>, &mut usize) {
         (&mut self.issues, &mut self.omitted)
+    }
+}
+
+impl Trim for LookApplyResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.impacted, &mut self.omitted)
     }
 }
 

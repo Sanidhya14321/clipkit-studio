@@ -182,6 +182,13 @@ pub enum LookCommand {
     List,
     /// One look with all its design tokens.
     Get { id: String },
+    /// Re-theme the project with a look; prints the layers that change.
+    Apply {
+        id: String,
+        /// Only preview the impact; write nothing.
+        #[arg(long)]
+        dry_run: bool,
+    },
 }
 
 #[derive(Debug, Subcommand)]

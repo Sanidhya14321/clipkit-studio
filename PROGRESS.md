@@ -4,15 +4,15 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 8: `ck verify` + MCP `verify` runs 11 gates (`crates/ck-server/src/session/verify.rs`), 4 KB cap with `omitted`.
-2. Proof: `just check` 208 of 208 nextest, hooks 41 of 41; `tests::verify` 9 tests; parity in `mcp_parity.rs`. Evidence in VERIFICATION.md, step 8.
-3. Open: gates do not yet block `idle` (spec 4.2); captions/audio/critic gates wait for Phase 5/7 and `ck see`; reuse limit 3 is a choice (DECISIONS.md, step 8).
-4. Next: step 9: look re-theme through tokens (store the project look), `ck sound plan`, handoff and `ck wait`.
-5. Start: `just check`; spec 08 (8.5 re-theme, sound), spec 06 (ck wait, handoff); DECISIONS.md steps 7 and 8.
+1. Done: Phase 4 step 9a: `ck look apply <id> [--dry-run]` + MCP `look_apply` (`crates/ck-server/src/session/look.rs`); project look stored as `tokens.look`, used by recipe apply, verify and the studio preview.
+2. Proof: `just check` 210 of 210 nextest, hooks 41 of 41; `tests::look` 2 tests; parity in `mcp_parity.rs`; studio node tests. Evidence in VERIFICATION.md, step 9a.
+3. Open: no studio look switcher yet (a human can patch `/tokens/look`); gates still do not block `idle` (DECISIONS.md, steps 8 and 9a).
+4. Next: step 9b `ck sound plan`, then 9c handoff and `ck wait`.
+5. Start: `just check`; spec 08 (sound placement), spec 06 (`ck wait`, handoff); DECISIONS.md step 9a.
 
 ## Open questions
 - Phase 4 step 8: reuse limit (3 per asset) and the overlay-track overlap exemption are choices; `verify` does not yet block setting `idle` (DECISIONS.md, step 8).
-- Phase 4 step 7: no stored project look; a recipe applied with a request `look` that differs from the brief previews in the brief's look. Store the look with step 9 re-theme (DECISIONS.md, step 7).
+- Phase 4 step 9a: the project look is now `tokens.look`; a recipe applied with a request `look` different from it still previews in the project look (request look is not stored). A brief `look` change does not re-theme once a look is stored (DECISIONS.md, step 9a).
 - Phase 4 step 6b: text-layer role defaults to `title` (recipes carry no `role`), and recipe apply does not re-solve layers of other scenes on screen at the same time; revisit with step 7 rendering (DECISIONS.md, step 6b).
 - Phase 4 step 5b: recipe apply falls back to the `clean-product` look when neither the request nor the brief names one; revisit if the plan stage should pick it.
 - Phase 4 step 3: spec 6.2 lists `brief set`; not built (the studio confirms through a human patch). Add it if the agent needs to set user-requested values directly. Wire `Op::ProposeBrief` stage gating once stages are driven.
@@ -59,7 +59,16 @@ Steps:
 - [x] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [x] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
+  - [x] 9a. Stored project look (`tokens.look`) and `ck look apply <id> [--dry-run]` with impact preview and MCP twin.
+  - [ ] 9b. `ck sound plan`.
+  - [ ] 9c. Handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 11): step 9a.
+- `session::look`: `project_look_id` (tokens.look, else brief look, else clean-product) shared by recipe apply, verify and the studio preview.
+- `look apply`: validates the look, writes `/tokens/look` as one agent revision (project lock), returns previous look and impacted layers (items with `$token` props); `dryRun` only previews.
+- `/api/look/apply`, `Ops::look_apply` (capped), `ck look apply`, MCP `look_apply`; studio resolves `tokens.look` first.
+- Tests: server (apply, dry run, unknown look, recipe/verify follow stored look), tool table, parity.
 
 Run plan (autonomous run 10): step 8.
 - `ck-server::session::verify`: pure `verify(project, look)` running schema, gaps, overlaps, duration, layout, contrast, fonts, motion, reuse, provenance, placeholders.

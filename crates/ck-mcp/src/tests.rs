@@ -48,6 +48,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("look_get", library::caps::LOOK_GET),
         ("recipe_search", library::caps::RECIPE_SEARCH),
         ("recipe_card", library::caps::RECIPE_CARD),
+        ("look_apply", caps::LOOK_APPLY),
         ("recipe_apply", caps::RECIPE_APPLY),
         ("layout_check", caps::LAYOUT_CHECK),
         ("verify", caps::VERIFY),

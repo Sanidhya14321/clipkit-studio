@@ -39,7 +39,8 @@ pub struct RecipeApplyRequest {
     /// `-2`, `-3` ... added when that is taken.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
-    /// Look id whose tokens the layers use; defaults to the brief's look, then `clean-product`.
+    /// Look id whose tokens the layers use; defaults to the project look (`look apply`), then
+    /// the brief's look, then `clean-product`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub look: Option<String>,
 }
@@ -64,19 +65,11 @@ fn server_err(e: impl std::fmt::Display) -> CkError {
     CkError::new(ErrorCode::Server, e.to_string())
 }
 
-/// The look to use: the request's, else the brief's `look` field, else the default.
+/// The look to use: the request's, else the project's (stored, brief, default).
 fn look_id(req: &RecipeApplyRequest, project: &Project) -> String {
     req.look
         .clone()
-        .or_else(|| {
-            project
-                .brief
-                .fields
-                .get("look")
-                .and_then(|f| f.value.as_str())
-                .map(str::to_owned)
-        })
-        .unwrap_or_else(|| DEFAULT_LOOK.into())
+        .unwrap_or_else(|| super::look::project_look_id(project))
 }
 
 fn item_ids(project: &Project) -> Vec<&str> {

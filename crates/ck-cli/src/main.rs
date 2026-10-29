@@ -15,6 +15,7 @@ use ck_server::api::BODY_LIMIT;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
+use ck_server::session::look::LookApplyRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
@@ -128,6 +129,9 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::Look(LookCommand::List) => print(&library::look_list(&LookListRequest {})?),
         Command::Look(LookCommand::Get { id }) => print(&library::look_get(&IdRequest { id })?),
+        Command::Look(LookCommand::Apply { id, dry_run }) => {
+            print(&ops()?.look_apply(&LookApplyRequest { look: id, dry_run })?)
+        }
         Command::Recipe(RecipeCommand::Search { query, limit }) => {
             print(&library::recipe_search(&RecipeSearchRequest {
                 query,

@@ -16,6 +16,7 @@ use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
@@ -47,6 +48,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/brief/diff", get(brief_diff))
         .route("/api/brief/wait", get(brief_wait))
         .route("/api/looks", get(looks))
+        .route("/api/look/apply", post(look_apply))
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
         .route("/api/verify", get(verify))
@@ -139,6 +141,14 @@ async fn layout_check(State(s): State<Arc<Session>>) -> ApiResult {
 
 async fn verify(State(s): State<Arc<Session>>) -> ApiResult {
     blocking(s, |s| s.verify()).await
+}
+
+async fn look_apply(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<LookApplyRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.look_apply(&req)).await
 }
 
 async fn recipe_apply(

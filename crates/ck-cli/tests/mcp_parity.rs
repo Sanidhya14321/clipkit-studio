@@ -236,6 +236,32 @@ fn recipe_apply_answers_like_its_cli_twin() {
             .contains(&json!("layout"))
     );
 
+    // Re-theme: the preview answers the same on both; then each applies once.
+    let preview = ok_line(
+        d,
+        &["look", "apply", "cinematic", "--dry-run"],
+        caps::LOOK_APPLY,
+    );
+    let req = json!({ "look": "cinematic", "dryRun": true });
+    assert_eq!(mcp.ok("look_apply", req, caps::LOOK_APPLY), preview);
+    let cli: Value = serde_json::from_str(&ok_line(
+        d,
+        &["look", "apply", "cinematic"],
+        caps::LOOK_APPLY,
+    ))
+    .unwrap();
+    assert_eq!((&cli["applied"], &cli["rev"]), (&json!(true), &json!(3)));
+    let tool: Value = serde_json::from_str(&mcp.ok(
+        "look_apply",
+        json!({ "look": "cinematic" }),
+        caps::LOOK_APPLY,
+    ))
+    .unwrap();
+    assert_eq!(tool["applied"], false, "already the project look");
+    let refused = mcp.err("look_apply", json!({ "look": "nope" }));
+    assert_eq!(code(&refused), "E_NOT_FOUND");
+    assert_eq!(refused, err_line(d, &["look", "apply", "nope"]));
+
     let bad = json!({ "recipe": "hook-title", "slots": { "nope": 1 } });
     std::fs::write(&file, bad.to_string()).unwrap();
     let refused = mcp.err("recipe_apply", bad);

@@ -13,6 +13,7 @@ use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
@@ -160,6 +161,13 @@ pub fn specs() -> Vec<ToolSpec> {
             "One recipe in full: slots, layers and props.",
             library::caps::RECIPE_CARD,
         ),
+        spec::<LookApplyRequest>(
+            "look_apply",
+            "ck look apply",
+            "Re-theme the project with a look: one write, layers keep their token refs. Returns \
+             the previous look and the layers that change; dryRun only previews.",
+            caps::LOOK_APPLY,
+        ),
         spec::<RecipeApplyRequest>(
             "recipe_apply",
             "ck recipe apply",
@@ -259,6 +267,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_propose" => json(&ops.brief_propose(&parse(args)?)?),
         "brief_wait" => json(&ops.brief_wait(&parse(args)?)?),
         "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
+        "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "recipe_apply" => json(&ops.recipe_apply(&parse(args)?)?),
         "brief_get" => {
             let StatusArgs {} = parse(args)?;
