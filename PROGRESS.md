@@ -62,7 +62,7 @@ Steps:
 - [x] 4. Static AST extraction (oxc) for TS/TSX: exports, props, imports, animation primitives, outline; `ck sources ingest` writes cards, ast.json, per-source INDEX.md and catalog.jsonl.
 - [x] 5. Tantivy search with filters (kind, tags, aspect, license mode, grade, collection) and the retrieval ladder with budget gate: `ck assets search|card|skeleton|slice|source` + MCP twins.
 - [x] 6. License mode in the brief, respected by search, recipes and export; `ck license report` (asset, Remotion runtime, attribution and trademark notes).
-- [ ] 7. Derive with codemods: project-local copy with tokens, easing and data-ck instrumentation, props schema; provenance recorded; `ck assets derive`.
+- [x] 7. Derive with codemods (type check and first render carried to Phase 9): project-local copy with tokens, easing and data-ck instrumentation, props schema; provenance recorded; `ck assets derive`.
 - [ ] 8. Wave 2 for real: vet and ingest the sources whose license reads permissive from the original repo; everything else stays unverified.
 - [ ] 9. Proof run, self review, evidence.
 

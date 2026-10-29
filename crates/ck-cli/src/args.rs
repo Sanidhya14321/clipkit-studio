@@ -460,6 +460,13 @@ pub enum AssetsCommand {
     Skeleton { id: String },
     /// One symbol's source.
     Slice { id: String, symbol: String },
+    /// A project-local codemod copy (needs the studio running).
+    Derive {
+        id: String,
+        /// Folder name for the copy.
+        #[arg(long = "as")]
+        name: String,
+    },
     /// The full source, with a reason (once per decision).
     Source {
         id: String,

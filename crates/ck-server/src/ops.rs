@@ -20,6 +20,7 @@ use crate::session::comments::{
     CommentResolveRequest, CommentResult, CommentView,
 };
 use crate::session::context::{ContextView, OpenComment};
+use crate::session::derive::{DeriveRequest, DeriveResult};
 use crate::session::edit::{
     CutApplyRequest, CutApplyResult, CutSuggestResult, SourceRequest, TranscribeResult,
     TranscriptView,
@@ -72,6 +73,7 @@ pub mod caps {
     pub const VOICE_SCRIPT: usize = 4 * 1024;
     pub const VOICE_WRITE: usize = 1024;
     pub const ASK: usize = 1024;
+    pub const DERIVE: usize = 2 * 1024;
     /// About 300 tokens (spec 6.4).
     pub const CONTEXT: usize = 1536;
 }
@@ -320,6 +322,12 @@ impl Ops {
         capped("ask", caps::ASK, self.client.post("/api/ask", req)?)
     }
 
+    /// `assets derive`: a project-local codemod copy (tokens, instrumentation, props schema).
+    pub fn derive(&self, req: &DeriveRequest) -> CkResult<DeriveResult> {
+        let reply = self.client.post("/api/assets/derive", req)?;
+        trimmed("assets derive", caps::DERIVE, reply)
+    }
+
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.
     pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
         capped(
@@ -445,6 +453,13 @@ impl Trim for CaptionsResult {
     type Entry = SlotCaption;
     fn parts(&mut self) -> (&mut Vec<SlotCaption>, &mut usize) {
         (&mut self.captions, &mut self.omitted)
+    }
+}
+
+impl Trim for DeriveResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.files, &mut self.omitted)
     }
 }
 

@@ -547,3 +547,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - The Remotion runtime line points to remotion.dev/license instead of restating its terms (never invent license text).
 - Export writes the report beside the video as `<name>.licenses.json` and returns `licenseOk`; it does not refuse to export, so the user sees the problem with the file in hand.
 - Starter recipes are ClipKit originals, so recipe search needs no license filter until recipes can reference hub assets.
+
+## Phase 8 step 7: derive (2026-10-30)
+- Codemods are guided by the AST's line ranges with small text edits (oxc has no printer in the crates we pin): quoted hex colours become `ckTokens.colorN` with one exported `ckTokens` table; the first JSX element after `return`, `(` or `=>` in each exported component gets `data-ck-layer={ckLayerId}` (declared at the top; the composition sets it). Easing and structural codemods are not built yet.
+- Props schema: string, number and boolean become JSON types; anything else keeps its TypeScript text as a description.
+- Derive is a studio op so the asset joins `assetsUsed` as an agent revision; the files are written by ck (the guard hook keeps agents from editing `.clipkit/` directly).
+- Type check and first render need Node: carried to the Phase 9 render worker.

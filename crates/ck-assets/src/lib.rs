@@ -6,6 +6,7 @@
 pub mod ast;
 pub mod card;
 pub mod color;
+pub mod derive;
 pub mod hub;
 pub mod ingest;
 pub mod layout;

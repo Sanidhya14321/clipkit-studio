@@ -20,6 +20,7 @@ use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
 use ck_server::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
 };
+use ck_server::session::derive::DeriveRequest;
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
 use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
@@ -263,6 +264,9 @@ fn run(cli: Cli) -> CkResult<()> {
                 author: None,
             })?)
         }
+        Command::Assets(AssetsCommand::Derive { id, name }) => {
+            print(&ops()?.derive(&DeriveRequest { id, name })?)
+        }
         Command::Assets(cmd) => {
             let ladder = Retrieval::new(Hub::locate(&cli.dir)?, &cli.dir);
             match cmd {
@@ -300,6 +304,8 @@ fn run(cli: Cli) -> CkResult<()> {
                         ladder.search(&req)?,
                     )
                 }
+                // Handled above: it needs the studio.
+                AssetsCommand::Derive { .. } => Ok(()),
                 AssetsCommand::Card { id } => capped_print(
                     "assets card",
                     retrieve::caps::CARD,

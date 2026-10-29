@@ -21,6 +21,7 @@ use crate::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
 };
 use crate::session::context::StudioContext;
+use crate::session::derive::DeriveRequest;
 use crate::session::edit::{CutApplyRequest, CutWordsRequest, SourceRequest};
 use crate::session::export::ExportRequest;
 use crate::session::handoff::{HandoffRequest, WaitRequest};
@@ -69,6 +70,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/cut/suggest", get(cut_suggest))
         .route("/api/cut/apply", post(cut_apply))
         .route("/api/export", post(export))
+        .route("/api/assets/derive", post(derive))
         .route("/api/comments", get(comments_list))
         .route("/api/voice/script", post(voice_script))
         .route("/api/voice/mode", post(voice_mode))
@@ -447,6 +449,14 @@ async fn ask_answer(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.ask_answer(&req)).await
+}
+
+async fn derive(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<DeriveRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.derive(&req)).await
 }
 
 async fn look_apply(

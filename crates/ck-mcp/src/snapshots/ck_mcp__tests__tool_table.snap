@@ -1237,6 +1237,30 @@ expression: specs()
     }
   },
   {
+    "name": "assets_derive",
+    "command": "ck assets derive",
+    "description": "Adaptation rung 3: a project-local copy of an asset with colours lifted into tokens, data-ck-layer instrumentation and a props schema; provenance recorded and the asset added to assetsUsed. Refused when the license mode does not allow it.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Asset id from `assets search`.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Folder name for the copy (lowercase, digits, dashes).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "export",
     "command": "ck export",
     "description": "Export a footage-only project to MP4 (fast ffmpeg path): preset source, youtube, tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",

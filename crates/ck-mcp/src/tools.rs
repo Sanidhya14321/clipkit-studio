@@ -26,6 +26,7 @@ use ck_server::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
 };
 use ck_server::session::context::ContextRequest;
+use ck_server::session::derive::DeriveRequest;
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
 use ck_server::session::export::ExportRequest;
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
@@ -340,6 +341,14 @@ pub fn specs() -> Vec<ToolSpec> {
              track becomes the kept segments, end to end, as one revision.",
             caps::CUT_APPLY,
         ),
+        spec::<DeriveRequest>(
+            "assets_derive",
+            "ck assets derive",
+            "Adaptation rung 3: a project-local copy of an asset with colours lifted into \
+             tokens, data-ck-layer instrumentation and a props schema; provenance recorded and \
+             the asset added to assetsUsed. Refused when the license mode does not allow it.",
+            caps::DERIVE,
+        ),
         spec::<ExportRequest>(
             "export",
             "ck export",
@@ -604,6 +613,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
+        "assets_derive" => json(&ops.derive(&parse::<DeriveRequest>(args)?)?),
         "comments_list" => json(&ops.comments_list(&parse(args)?)?),
         "ask" => json(&ops.ask(&parse::<AskRequest>(args)?)?),
         "voice_script" => json(&ops.voice_script(&parse(args)?)?),

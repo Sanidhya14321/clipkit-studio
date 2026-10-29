@@ -267,6 +267,9 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 5 run | PASS | 2026-10-30 `just check`: 320 of 320 nextest (1 skipped), hooks 41 of 41 |
 | Step 6: `ck license report` + MCP twin: every asset used (assetsUsed and item provenance) with license, SPDX, class, attribution line and source note, checked against the brief's license mode (or a given one); ClipKit originals listed apart; unresolved ids make it not ok; the Remotion runtime license is reported separately; export writes `<video>.licenses.json` beside the MP4 when a hub is found | PASS | `ck-assets` `report::tests::the_report_lists_licenses_and_blocks_restricted_assets_in_commercial_safe_mode`; CLI/MCP error parity; fixed: MCP offline tools now resolve the project folder from the `.clipkit` root |
 | Step 6 run | PASS | 2026-10-30 `just check`: 321 of 321 nextest (1 skipped), hooks 41 of 41 |
+| Step 7: `ck assets derive <id> --as <name>` + MCP twin: project-local copy under `.clipkit/derived/<name>/` with colour literals lifted into `ckTokens`, `data-ck-layer` on each exported component's root element, props JSON schema, provenance (source asset, SHA-256, mode, adaptations, license, attribution); the rewritten file still parses; refused for reference-only assets and for classes the brief's license mode does not allow; the asset joins `assetsUsed` once and appears in the license report | PASS | `ck-assets` `derive::tests::*` (3); `mcp_parity::derive_answers_like_its_cli_twin_and_feeds_the_license_report` |
+| Step 7: derived copy type checked and rendered once | BLOCKED | Needs the Node render worker (Phase 9) |
+| Step 7 run | PASS | 2026-10-30 `just check`: 325 of 325 nextest (1 skipped), hooks 41 of 41 |
 | Step 1 run | PASS | 2026-10-30 `just check`: 298 of 298 nextest (1 skipped), hooks 41 of 41 |
 
 ## Phase 7: voice slice (2026-10-29, done; Fish Audio TTS, STT and cloning are PLACEHOLDER stubs)

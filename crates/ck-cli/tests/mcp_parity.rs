@@ -539,6 +539,64 @@ fn sources_tools_answer_like_their_cli_twins_without_a_studio() {
 }
 
 #[test]
+fn derive_answers_like_its_cli_twin_and_feeds_the_license_report() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    std::fs::write(d.join("sources.yaml"), "[]").unwrap();
+    let pack = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../fixtures/sources/pack-mit")
+        .canonicalize()
+        .unwrap();
+    use ck_assets::sources::caps as sc;
+    ok_line(
+        d,
+        &["sources", "add", "pack-a", "--kind", "remotion-components"],
+        sc::SOURCES_WRITE,
+    );
+    ok_line(
+        d,
+        &["sources", "vet", "pack-a", "--from", pack.to_str().unwrap()],
+        ck_assets::vet::caps::VET,
+    );
+    ok_line(
+        d,
+        &["sources", "ingest", "pack-a"],
+        ck_assets::ingest::caps::INGEST,
+    );
+    let _studio = Studio::start(d);
+    let mut mcp = Mcp::start(d);
+
+    let cli: Value = serde_json::from_str(&ok_line(
+        d,
+        &["assets", "derive", "pack-a/glow-title", "--as", "glow"],
+        caps::DERIVE,
+    ))
+    .unwrap();
+    assert_eq!(cli["rev"], 1);
+    assert!(d.join(".clipkit/derived/glow/GlowTitle.tsx").is_file());
+    let tool: Value = serde_json::from_str(&mcp.ok(
+        "assets_derive",
+        json!({ "id": "pack-a/glow-title", "name": "glow-2" }),
+        caps::DERIVE,
+    ))
+    .unwrap();
+    // Same asset again: no new revision, same adaptations.
+    assert_eq!(
+        (&tool["rev"], &tool["adaptations"]),
+        (&json!(1), &cli["adaptations"])
+    );
+
+    let line = ok_line(d, &["license", "report"], ck_assets::report::caps::REPORT);
+    let report: Value = serde_json::from_str(&line).unwrap();
+    assert_eq!(report["ok"], true, "{report}");
+    assert_eq!(report["assets"][0]["id"], "pack-a/glow-title");
+    assert_eq!(
+        mcp.ok("license_report", json!({}), ck_assets::report::caps::REPORT),
+        line
+    );
+}
+
+#[test]
 fn tools_list_names_every_cli_twin_with_its_schema() {
     let dir = tempfile::tempdir().unwrap();
     let mut mcp = Mcp::start(dir.path());

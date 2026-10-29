@@ -70,6 +70,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("transcript_get", caps::TRANSCRIPT),
         ("cut_suggest", caps::CUT_SUGGEST),
         ("cut_apply", caps::CUT_APPLY),
+        ("assets_derive", caps::DERIVE),
         ("export", caps::EXPORT),
         ("voice_script", caps::VOICE_SCRIPT),
         ("voice_mode", caps::VOICE_WRITE),
