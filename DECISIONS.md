@@ -4,6 +4,10 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 10: proof run split; export blocked until Phase 9
+- Spec 2 sends any project with component layers through the full export path (Node render worker, Remotion renderer), which spec 12 places in Phase 9; the fast ffmpeg path (Phase 5) covers footage only. A generated video is all component layers, so step 10 is split: 10a proves prompt to brief to a verified 15 second generated project through the real `ck` binary (`crates/ck-cli/tests/generate_proof.rs`); 10b export is BLOCKED until the render worker exists. Simplest option that adds no Phase 9 work early.
+- The proof uses three scenes (hook-title 4 s, stat-callout 5 s, outro-cta 6 s) back to back; `verify` must pass every gate, including duration against the brief's 15 s.
+
 ### Step 9c: handoff and `ck wait` (spec 4.1 HANDOFF, 6.4, 9.4)
 - Spec 9.4 says "unlock, ck status idle". `/agent` is engine-owned (patches cannot write it), so one `ck handoff [--label]` command does both: it releases every agent lock and sets `agent = {idle, label, []}` with no revision (like locks, agent state is not content). Spec 12 Phase 4 names "handoff, ck wait"; spec 6.2 lists `wait` but not `handoff`, so `handoff` is a small addition.
 - `ck wait --since <rev> [--timeout]` reads history, not the bus: it returns every human or voice revision after `since`, so nothing is lost between calls; agent revisions never end a wait. Kind from patch paths: `/comments` → comment, `/brief/status` or `/brief/checkpoints` → checkpoint, other `/brief` → brief, else edit. Default `since` is the rev at call time.

@@ -213,6 +213,9 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 9c: `wait` blocks, ignores an agent revision and wakes on the user's within 5 s | PASS | `tests::handoff::wait_blocks_until_the_user_acts` |
 | Step 9c: `ck handoff`, `ck wait` and MCP `handoff`, `wait` (schema, 1 KB and 4 KB caps, parity) | PASS | `ck_mcp` `tool_table_snapshot` (2 tools added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` `recipe_apply_answers_like_its_cli_twin` |
 | Step 9c run | PASS | 2026-10-29 `just check`: 217 of 217 nextest (1 skipped), hooks 41 of 41 |
+| Step 10a: prompt to brief (propose, human confirm, ready) to a 15 s generated project (3 recipes); layout check ok, `verify` ok on every gate, sound cues, handoff, wait | PASS | `generate_proof.rs` `prompt_to_brief_to_a_verified_15_second_generated_video` (real `ck studio` and `ck` commands) |
+| Step 10b: export of the generated video | BLOCKED | Component layers need the Node render worker (spec 2 full export path, Phase 9); DECISIONS.md, step 10 |
+| Step 10a run | PASS | 2026-10-29 `just check`: 218 of 218 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

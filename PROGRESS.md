@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 9c: `ck handoff` and `ck wait` + MCP twins (`crates/ck-server/src/session/handoff.rs`); step 9 complete.
-2. Proof: `just check` 217 of 217 nextest, hooks 41 of 41; `tests::handoff` 3 tests plus a kind unit test; parity in `mcp_parity.rs`. Evidence in VERIFICATION.md, step 9c.
-3. Open: wait timeout (25 s max) not verified per agent; `handoff` is a small addition to spec 6.2 (DECISIONS.md, step 9c).
-4. Next: step 10 proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
-5. Start: `just check`; spec 12 Phase 4 proof, spec 04 (export), spec 10; check whether export exists yet (`rg -n export crates/ck-media`).
+1. Done: Phase 4 step 10a: end-to-end generate proof (brief, confirm, 3 recipes = 15 s, layout, verify all gates, sound, handoff, wait) in `crates/ck-cli/tests/generate_proof.rs`.
+2. Proof: `just check` 218 of 218 nextest, hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, step 10a.
+3. Open: 10b export BLOCKED (component layers need the Phase 9 render worker; ck-media is still empty).
+4. Next: step 10c: run rust-reviewer and spec-checker on Phase 4, fix gaps, then mark Phase 4 done (PHASE: 5) with export carried to Phase 9.
+5. Start: `just check`; spec 12 Phase 4 line; DECISIONS.md step 10.
 
 ## Open questions
+- Phase 4 step 10b: the Phase 4 proof ends at a verified project; exporting the generated video waits for the Phase 9 render worker (DECISIONS.md, step 10). Confirm this is acceptable or pull a minimal render path forward.
 - Phase 4 step 9c: verify how Claude Code and Codex handle long-running MCP tool calls and tune the `wait` timeout (default 20 s, at most 25 s) (DECISIONS.md, step 9c).
 - Phase 4 step 9b: sound cues carry no sfx asset until CC0 sound sets are ingested (Phase 8); timing constants and the `hook` name match are choices (DECISIONS.md, step 9b).
 - Phase 4 step 8: reuse limit (3 per asset) and the overlay-track overlap exemption are choices; `verify` does not yet block setting `idle` (DECISIONS.md, step 8).
@@ -65,6 +66,14 @@ Steps:
   - [x] 9b. `ck sound plan`.
   - [x] 9c. Handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+  - [x] 10a. Generate proof through the real binary (`crates/ck-cli/tests/generate_proof.rs`).
+  - [ ] 10b. Export: BLOCKED, component layers need the Phase 9 render worker (DECISIONS.md, step 10).
+  - [ ] 10c. rust-reviewer and spec-checker on Phase 4; fix gaps; mark the phase done with 10b carried to Phase 9.
+
+Run plan (autonomous run 14): step 10.
+- Split: 10a generate proof through the real `ck` binary (brief propose, human confirm, three recipes filling 15 s, layout check, verify all gates pass, sound plan, handoff, wait); 10b export.
+- 10b is blocked: component layers export only through the Node render worker (spec 2, full export path, Phase 9); recorded in DECISIONS.md.
+- Test `crates/ck-cli/tests/generate_proof.rs`; evidence in VERIFICATION.md.
 
 Run plan (autonomous run 13): step 9c.
 - `ck-core::Document::set_agent`: engine-owned agent state (not a revision, like locks).
