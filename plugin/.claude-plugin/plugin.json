@@ -1,0 +1,7 @@
+{
+  "name": "clipkit",
+  "version": "0.1.0",
+  "description": "Edit and generate video by small patches in a live, non-destructive ClipKit project that you watch in a localhost studio.",
+  "license": "PLACEHOLDER",
+  "keywords": ["video", "editing", "remotion", "mcp"]
+}

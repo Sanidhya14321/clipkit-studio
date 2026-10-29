@@ -1,0 +1,50 @@
+{
+  "description": "ClipKit: open the studio for video prompts, keep edits going through ck, stop cleanly.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ck hook prompt --dir \"$CLAUDE_PROJECT_DIR\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ck hook guard --dir \"$CLAUDE_PROJECT_DIR\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ck hook stop --dir \"$CLAUDE_PROJECT_DIR\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ck hook session-end --dir \"$CLAUDE_PROJECT_DIR\"",
+            "timeout": 2
+          }
+        ]
+      }
+    ]
+  }
+}

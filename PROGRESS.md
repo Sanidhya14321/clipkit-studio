@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 3
 
 ## Handoff (latest)
-1. Done: Phase 3 step 3. `ck hook prompt|guard|stop|session-end` (crates/ck-cli/src/hook/) reads the hook JSON from stdin, uses `--dir` as the project folder, exits 0 to pass or 2 with a one-line reason, and never exits 1.
-2. Proof: `cli_hooks.rs` (5 e2e tests) and unit tests for the word list, guard rules and stop reason. `just check`: 129 of 129 nextest, hooks 41 of 41, studio OK. Non-video hooks take about 3 ms each.
-3. Open: hook input field names are from memory of the Claude Code hooks reference; step 4 must check them against the current docs. The reviewer has not yet run on the Phase 3 diff (step 6). Decisions are in DECISIONS.md, Phase 3 step 3.
-4. Next: step 4, `plugin/` (manifest, skills, critic agent, .mcp.json, hooks/hooks.json calling `ck hook <name> --dir "$CLAUDE_PROJECT_DIR"`). Check the format against the current plugins reference with the researcher first.
-5. Start: `just check`. Manual: `echo '{"prompt":"make a video"}' | cargo run -q -p ck-cli -- hook prompt --dir <folder>`.
+1. Done: Phase 3 step 4 except `.mcp.json`. `plugin/` has the manifest, hooks/hooks.json (four `ck hook` commands on `$CLAUDE_PROJECT_DIR`), the clipkit-video skill (spec 9.4 text plus pipeline.md, guardrails.md and voice.md), the clipkit-review skill and the read-only clipkit-critic agent. The format was checked against the current Claude Code reference.
+2. Proof: `crates/ck-cli/tests/plugin_structure.rs`, 8 tests that run the real hook command lines through `sh` and compare the skill against the spec 9.4 block. `just check`: 137 of 137 nextest (1 ignored), hooks 41 of 41, studio OK.
+3. Open: writing `plugin/.mcp.json` was refused as a sensitive file (BLOCKED). In an interactive session, write it with the content in DECISIONS.md (Phase 3 step 4), then remove the `#[ignore]` on `mcp_json_registers_ck_mcp_on_the_project_folder`. The reviewer has not yet run on the Phase 3 diff (step 6).
+4. Next: step 5, `ck init` / `ck uninstall` for Claude Code and Codex, plus adapters/ texts. Check the Codex MCP config file and format, and the Claude Code plugin install path, with the researcher first.
+5. Start: `just check`. Plugin tests: `cargo nextest run -p ck-cli -E 'binary(plugin_structure)' --run-ignored all`.
 
 ## Open questions
+- Phase 3 step 4: `plugin/.mcp.json` must be written in an interactive session; headless runs refuse it as a sensitive file. The content is in DECISIONS.md, and the test is ignored until then.
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
 - Phase 10: runtime for the optional Demucs sidecar, given the default install must not add Python.
 - Pixabay is wave 1 but placed in Phase 8 because ingesting it needs the vetting pipeline.
@@ -40,9 +41,15 @@ Steps:
 - [x] 1. `ck studio --ensure [--open] [--quiet]` and its MCP twin `studio`: idempotent, starts a detached server in the background, opens the browser tab once per server.
 - [x] 2. First ck or MCP call ensures the studio is running (spec 5.1, agents without hooks).
 - [x] 3. `ck hook prompt|guard|stop|session-end` (spec 6.1 hook behavior, fast, never blocks a non-video session).
-- [ ] 4. `plugin/`: manifest, skills (clipkit-video with spec 9.4 text, clipkit-review), clipkit-critic agent, .mcp.json, hooks/hooks.json; format checked against the current plugins reference; structure tests.
+- [x] 4. (`.mcp.json` BLOCKED: write refused headless; see handoff) `plugin/`: manifest, skills (clipkit-video with spec 9.4 text, clipkit-review), clipkit-critic agent, .mcp.json, hooks/hooks.json; format checked against the current plugins reference; structure tests.
 - [ ] 5. `ck init` / `ck uninstall` for Claude Code and Codex (detect, ask, idempotent, no residue); adapters/ texts.
 - [ ] 6. Proof run, reviewer and spec-checker, evidence, phase done.
+
+Run plan (autonomous run 4): step 4 only.
+- Researcher checks the current plugins/hooks/skills/agents reference; differences recorded in DECISIONS.md (and hook field names re-checked).
+- plugin/: .claude-plugin/plugin.json, .mcp.json (`ck mcp`), hooks/hooks.json (prompt, guard on Write|Edit|Bash, stop, session-end via `ck hook <name> --dir "$CLAUDE_PROJECT_DIR"`).
+- skills/clipkit-video/SKILL.md with the spec 9.4 text verbatim plus pipeline.md, guardrails.md, voice.md; skills/clipkit-review/SKILL.md; agents/clipkit-critic.md (read-only, at most ten lines).
+- Structure tests (Rust, in ck-cli tests): files exist, JSON parses, hook commands name real `ck hook` subcommands, SKILL.md under 100 lines and contains the 9.4 text, frontmatter present, no timestamps.
 
 Run plan (autonomous run 3): step 3 only.
 - ck-cli `hook` module: reads the Claude Code hook JSON from stdin (capped), project folder from `--dir` (hooks.json will pass `$CLAUDE_PROJECT_DIR`).

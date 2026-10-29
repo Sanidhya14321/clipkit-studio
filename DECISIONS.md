@@ -4,6 +4,17 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 3 (2026-10-29)
 
+### Step 4: `plugin/`
+- **Format** checked on 2026-10-29 against code.claude.com/docs/en/plugins-reference, /hooks, /mcp, /sub-agents and /skills (researcher). The hook input field names chosen in step 3 match the reference, so no change to `ck hook`. SessionEnd hooks get about 1.5 s by default; `session-end` makes one loopback call, so that is enough.
+- **`ck` is found on PATH** (the release binary or npm wrapper installs it, spec 2.4); the plugin ships no binary and does not use `${CLAUDE_PLUGIN_ROOT}`. A missing `ck` makes a hook fail with a non-2 exit, which Claude Code treats as non-blocking, so a session never stops for it.
+- **Project folder**: hooks pass `--dir "$CLAUDE_PROJECT_DIR"`. MCP passes `--dir ${CLAUDE_PROJECT_DIR}` too, because the reference does not say which working directory a plugin MCP server starts in.
+- **Timeouts** (seconds): prompt 10 (an ensure is about 16 ms, but a cold browser opener can be slow), guard 5, stop 5, session-end 2.
+- **Matcher** `Write|Edit|Bash` is the spec's list. `ck hook guard` also understands MultiEdit and NotebookEdit, but the matcher keeps to the spec's tools; widen it if Claude Code still sends those tools.
+- **Manifest**: name `clipkit`, version 0.1.0, license `PLACEHOLDER` (the project license is not decided for the plugin); no author field (the reference makes it optional).
+- **Skill text**: clipkit-video carries the spec 9.4 text unchanged, plus frontmatter and one REFERENCES line that links pipeline.md, guardrails.md and voice.md and notes the MCP naming. A test reads the 9.4 block from the spec, so the skill cannot drift from it. The reference files summarize spec 4 and spec 6.4/8.3, and guardrails.md names the real error codes. Commands that do not exist yet (pipeline, brief, verify and others) are named as the spec names them; they arrive in Phase 4 and later.
+- **Critic**: `tools: Read` only (it reads the contact sheet and the rubric), `model: inherit`.
+- **`.mcp.json` BLOCKED**: the headless run's permission layer refused to write `plugin/.mcp.json` as a sensitive file. That refusal was not worked around (no shell write, no inline `mcpServers` in plugin.json). Intended content: `{"mcpServers": {"clipkit": {"command": "ck", "args": ["mcp", "--dir", "${CLAUDE_PROJECT_DIR}"]}}}`. Its test is `#[ignore]`d until an interactive session writes the file and removes the ignore.
+
 ### Step 3: `ck hook prompt|guard|stop|session-end`
 - **Protocol**: each hook reads Claude Code's hook JSON from stdin (1 MiB cap; malformed or oversize input counts as empty) and uses only `prompt`, `cwd`, `tool_name`, `tool_input`, `stop_hook_active`. Exit 0 lets the agent go on; exit 2 blocks with one line on stderr. A hook never exits 1, so an internal error never disrupts a session (logged under CK_LOG). Field names are from the Claude Code hooks reference as known; step 4 checks them against the current reference.
 - **Project folder is `--dir`** (hooks.json in step 4 will pass `$CLAUDE_PROJECT_DIR`); the input's `cwd` only resolves relative file paths in guard, since the agent may `cd` into a subfolder.
