@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 3
 
 ## Handoff (latest)
-1. Done: Phase 3 step 4 except `.mcp.json`. `plugin/` has the manifest, hooks/hooks.json (four `ck hook` commands on `$CLAUDE_PROJECT_DIR`), the clipkit-video skill (spec 9.4 text plus pipeline.md, guardrails.md and voice.md), the clipkit-review skill and the read-only clipkit-critic agent. The format was checked against the current Claude Code reference.
-2. Proof: `crates/ck-cli/tests/plugin_structure.rs`, 8 tests that run the real hook command lines through `sh` and compare the skill against the spec 9.4 block. `just check`: 137 of 137 nextest (1 ignored), hooks 41 of 41, studio OK.
-3. Open: writing `plugin/.mcp.json` was refused as a sensitive file (BLOCKED). In an interactive session, write it with the content in DECISIONS.md (Phase 3 step 4), then remove the `#[ignore]` on `mcp_json_registers_ck_mcp_on_the_project_folder`. The reviewer has not yet run on the Phase 3 diff (step 6).
-4. Next: step 5, `ck init` / `ck uninstall` for Claude Code and Codex, plus adapters/ texts. Check the Codex MCP config file and format, and the Claude Code plugin install path, with the researcher first.
-5. Start: `just check`. Plugin tests: `cargo nextest run -p ck-cli -E 'binary(plugin_structure)' --run-ignored all`.
+1. Done: Phase 3 step 5. `ck init` / `ck uninstall [--agent claude-code|codex] [--yes]` (ck-cli `install/`): Claude Code gets the embedded plugin (plus `.mcp.json`) as a local marketplace in `~/.clipkit/claude-plugin` and two settings.json keys; Codex gets marked blocks in `$CODEX_HOME/config.toml` and `AGENTS.md` (texts in adapters/codex/). Asks on a terminal, plan only otherwise.
+2. Proof: `crates/ck-cli/tests/cli_install.rs`, 14 fake-HOME tests (plan only, idempotent, user content kept, uninstall restores the tree byte for byte, conflicts refused, symlinks kept) plus marker and TOML-scan unit tests. `just check`: 156 of 156 nextest, hooks 41 of 41, studio OK. rust-reviewer ran on this step.
+3. Open: Codex config format is UNVERIFIED (docs unreachable); whether Claude Code loads a plugin enabled by settings keys alone is UNVERIFIED. `plugin/.mcp.json` is still BLOCKED (step 4; the installer writes it from a constant).
+4. Next: step 6, the proof run: in an interactive session, `ck init --agent claude-code --yes`, start Claude Code, type a video prompt, see the studio open and a layer patch arrive; same for Codex. Then reviewer on the Phase 3 diff, spec-checker, evidence, phase done.
+5. Start: `just check`. Install tests: `cargo nextest run -p ck-cli -E 'binary(cli_install)'`.
 
 ## Open questions
+- Phase 3 step 5: the Codex MCP config (`$CODEX_HOME/config.toml`, `[mcp_servers.<name>]` command/args, MCP server working folder) and AGENTS.md location are from memory: verify against developers.openai.com/codex/mcp and /guides/agents-md. Also confirm Claude Code picks up a plugin enabled only through `extraKnownMarketplaces` + `enabledPlugins` (else ck init must run `claude plugin install`).
 - Phase 3 step 4: `plugin/.mcp.json` must be written in an interactive session; headless runs refuse it as a sensitive file. The content is in DECISIONS.md, and the test is ignored until then.
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
 - Phase 10: runtime for the optional Demucs sidecar, given the default install must not add Python.
@@ -42,8 +43,14 @@ Steps:
 - [x] 2. First ck or MCP call ensures the studio is running (spec 5.1, agents without hooks).
 - [x] 3. `ck hook prompt|guard|stop|session-end` (spec 6.1 hook behavior, fast, never blocks a non-video session).
 - [x] 4. (`.mcp.json` BLOCKED: write refused headless; see handoff) `plugin/`: manifest, skills (clipkit-video with spec 9.4 text, clipkit-review), clipkit-critic agent, .mcp.json, hooks/hooks.json; format checked against the current plugins reference; structure tests.
-- [ ] 5. `ck init` / `ck uninstall` for Claude Code and Codex (detect, ask, idempotent, no residue); adapters/ texts.
+- [x] 5. `ck init` / `ck uninstall` for Claude Code and Codex (detect, ask, idempotent, no residue); adapters/ texts.
 - [ ] 6. Proof run, reviewer and spec-checker, evidence, phase done.
+
+Run plan (autonomous run 5): step 5 only.
+- Researcher: Claude Code local marketplace (`extraKnownMarketplaces` directory source + `enabledPlugins`) confirmed; Codex docs unreachable, so its format is UNVERIFIED (DECISIONS.md).
+- ck-cli `install` module: `ck init` / `ck uninstall` with `--agent claude-code|codex` (default: detected) and `--yes`; without `--yes` it asks on a terminal and otherwise only prints the plan.
+- Claude Code: write the embedded plugin (plus .mcp.json) as a local marketplace under `~/.clipkit/claude-plugin`, add two keys to `~/.claude/settings.json`. Codex: a marked `[mcp_servers.clipkit]` block in `$CODEX_HOME/config.toml` and a marked section in `$CODEX_HOME/AGENTS.md` (text in adapters/codex/).
+- Tests (fake HOME): plan-only without --yes, init writes, second init unchanged, user content kept, uninstall restores the tree byte for byte, conflict refusal, output cap.
 
 Run plan (autonomous run 4): step 4 only.
 - Researcher checks the current plugins/hooks/skills/agents reference; differences recorded in DECISIONS.md (and hook field names re-checked).

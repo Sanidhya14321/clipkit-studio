@@ -3,6 +3,7 @@
 
 mod args;
 mod hook;
+mod install;
 mod studio;
 
 use std::io::{Read, Write};
@@ -94,6 +95,8 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Heartbeat { holder } => print(&ops()?.heartbeat(&HeartbeatRequest {
             holder: holder.holder,
         })?),
+        Command::Init(args) => install::run(install::Mode::Init, &args),
+        Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args),
         // Handled in main before run.
         Command::Hook(_) => Ok(()),
     }

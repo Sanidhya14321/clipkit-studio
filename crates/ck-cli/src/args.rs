@@ -3,7 +3,8 @@
 use std::path::PathBuf;
 
 use ck_core::model::Holder;
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, ValueEnum};
+use serde::Serialize;
 
 #[derive(Debug, Parser)]
 #[command(
@@ -69,6 +70,27 @@ pub enum Command {
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),
+    /// Set ClipKit up in Claude Code and Codex: show the plan, ask, then write (spec 6.3).
+    Init(InstallArgs),
+    /// Remove everything ck init added.
+    Uninstall(InstallArgs),
+}
+
+#[derive(Debug, Args)]
+pub struct InstallArgs {
+    /// Agent to set up (repeatable); default: the agents found on this machine.
+    #[arg(long = "agent", value_enum)]
+    pub agents: Vec<AgentKind>,
+    /// Write without asking.
+    #[arg(long)]
+    pub yes: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum, Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum AgentKind {
+    ClaudeCode,
+    Codex,
 }
 
 #[derive(Debug, Subcommand)]

@@ -1,0 +1,3 @@
+[mcp_servers.clipkit]
+command = "ck"
+args = ["mcp"]
