@@ -100,14 +100,24 @@ fn prompt(input: &HookInput, dir: &Path) {
 /// The studio url and, when it answers, its status. A failing browser is not an error here.
 fn ensure(dir: &Path) -> CkResult<(String, Option<Status>)> {
     let launcher = Launcher::current(DEFAULT_IDLE_SECS)?;
-    let ensured = launch::ensure(dir, &EnsureRequest { open: true }, &launcher).or_else(|e| {
-        tracing::warn!(error = %e.message, "studio tab not opened");
-        launch::ensure(dir, &EnsureRequest { open: false }, &launcher)
-    })?;
-    let status = Ops::connect(&dir.join(".clipkit"))
+    let root = dir.join(".clipkit");
+    // A failing browser leaves a running studio behind; a failed start does not, and is not
+    // retried, so the hook stays well inside its timeout.
+    let url = match launch::ensure(dir, &EnsureRequest { open: true }, &launcher) {
+        Ok(ensured) => ensured.url,
+        Err(e) => match launch::running(&root) {
+            Some(info) => {
+                tracing::warn!(error = %e.message, "studio tab not opened");
+                info.url
+            }
+            None => return Err(e),
+        },
+    };
+    let status = Ops::connect(&root)
         .and_then(|ops| ops.status())
+        .inspect_err(|e| log("prompt", e))
         .ok();
-    Ok((ensured.url, status))
+    Ok((url, status))
 }
 
 fn note(url: &str, status: Option<&Status>) -> String {

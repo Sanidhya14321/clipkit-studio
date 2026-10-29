@@ -4,6 +4,13 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 3 (2026-10-29)
 
+### Step 6: proof and review
+- **Headless proof stand-in**: a real Claude Code or Codex session cannot run headless, so `studio/e2e/phase3.spec.ts` drives the same pieces Claude Code would: the hooks.json command lines through `sh -c` with `CLAUDE_PROJECT_DIR`, and `ck mcp --dir <project>` as .mcp.json registers it. The real-session proof stays BLOCKED in VERIFICATION.md, not marked PASS.
+- **Hook vs start time**: the prompt hook's timeout stays 10 s. A start takes about 16 ms; the 10 s ready limit is only reached by a studio that hangs, and then Claude Code kills the hook, which is non-blocking. The hook no longer retries a failed start (that could double the wait); it falls back only to a studio that is running (browser failure).
+- **Launch lock**: waits at most 12 s (ready limit plus margin), then E_SERVER with a hint. Was unbounded.
+- **Kept as is (reviewer, low)**: the token reaches the browser on the opener's argv (`url#token=`, spec 5.1 opens the tab with it; local `ps` can read it, same user model as server.json); `$BROWSER` is split on `:` (Unix convention; Windows uses the platform opener); the `pid:port` marker could repeat after pid reuse (the tab then does not reopen; a token-derived marker can replace it later); `studio.log` is truncated per start (only under the launch lock, so a running server's log is not lost in practice); guard misses `sh -c`, `python -c`, `eval` (it is a heuristic; the server enforces guardrails).
+- **Spec 6.3 Cursor and generic MCP clients**: Phase 3 reads spec 06 and no later phase owns it, so it becomes Phase 3 step 7 instead of staying deferred (replaces the step 5 note).
+
 ### Step 5: `ck init` / `ck uninstall`
 - **Shape**: `ck init|uninstall [--agent claude-code|codex]... [--yes]`. Init's default is the detected agents (config folder exists or the command is on PATH); uninstall's default is every agent, since it only looks for what init added. Output: one JSON line `{command, applied, agents: [{agent, steps: [{path, change}]}], hint?}`, cap 2048 bytes.
 - **Asking**: without `--yes`, the plan goes to stderr and a y/N question is asked when stdin is a terminal; with no terminal nothing is written and the plan is the output (`applied: false`, hint names `--yes`). Agents run ck init with `--yes` only after the user agreed in chat.

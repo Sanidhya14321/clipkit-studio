@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 3
 
 ## Handoff (latest)
-1. Done: Phase 3 step 5. `ck init` / `ck uninstall [--agent claude-code|codex] [--yes]` (ck-cli `install/`): Claude Code gets the embedded plugin (plus `.mcp.json`) as a local marketplace in `~/.clipkit/claude-plugin` and two settings.json keys; Codex gets marked blocks in `$CODEX_HOME/config.toml` and `AGENTS.md` (texts in adapters/codex/). Asks on a terminal, plan only otherwise.
-2. Proof: `crates/ck-cli/tests/cli_install.rs`, 14 fake-HOME tests (plan only, idempotent, user content kept, uninstall restores the tree byte for byte, conflicts refused, symlinks kept) plus marker and TOML-scan unit tests. `just check`: 156 of 156 nextest, hooks 41 of 41, studio OK. rust-reviewer ran on this step.
-3. Open: Codex config format is UNVERIFIED (docs unreachable); whether Claude Code loads a plugin enabled by settings keys alone is UNVERIFIED. `plugin/.mcp.json` is still BLOCKED (step 4; the installer writes it from a constant).
-4. Next: step 6, the proof run: in an interactive session, `ck init --agent claude-code --yes`, start Claude Code, type a video prompt, see the studio open and a layer patch arrive; same for Codex. Then reviewer on the Phase 3 diff, spec-checker, evidence, phase done.
-5. Start: `just check`. Install tests: `cargo nextest run -p ck-cli -E 'binary(cli_install)'`.
+1. Done: Phase 3 step 6. Headless proof `studio/e2e/phase3.spec.ts`: the plugin's hook commands open the studio on a video prompt, an MCP patch shows up in the watched page, and guard, stop and session-end behave in the same turn. Fixes from the Phase 3 review: no double start wait in the prompt hook, a bounded launch lock, open marker written before the browser runs, install writes keep their permissions through the rename.
+2. Proof: `just e2e` 3 of 3; `just check` 157 of 157 nextest (1 skipped), hooks 41 of 41, studio OK. New test `a_failed_open_does_not_count_as_opened`. The evidence is in VERIFICATION.md, Phase 3 step 6.
+3. Open: the real Claude Code and Codex sessions are BLOCKED (they need an interactive session: `ck init --agent claude-code --yes`, then type a video prompt). `plugin/.mcp.json` is still BLOCKED. The Codex format is UNVERIFIED.
+4. Next: step 7, Cursor and generic MCP client support for `ck init`/`ck uninstall` (spec 6.3; the researcher checks Cursor's `mcp.json` and rules format). Then mark Phase 3 done, set PHASE: 4 and start the generate slice.
+5. Start: `just check`. E2E: `just e2e`. Install tests: `cargo nextest run -p ck-cli -E 'binary(cli_install)'`.
 
 ## Open questions
+- Phase 3 step 6: run the real proof in an interactive session (Claude Code and Codex) and flip the BLOCKED rows in VERIFICATION.md.
 - Phase 3 step 5: the Codex MCP config (`$CODEX_HOME/config.toml`, `[mcp_servers.<name>]` command/args, MCP server working folder) and AGENTS.md location are from memory: verify against developers.openai.com/codex/mcp and /guides/agents-md. Also confirm Claude Code picks up a plugin enabled only through `extraKnownMarketplaces` + `enabledPlugins` (else ck init must run `claude plugin install`).
 - Phase 3 step 4: `plugin/.mcp.json` must be written in an interactive session; headless runs refuse it as a sensitive file. The content is in DECISIONS.md, and the test is ignored until then.
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -44,7 +45,14 @@ Steps:
 - [x] 3. `ck hook prompt|guard|stop|session-end` (spec 6.1 hook behavior, fast, never blocks a non-video session).
 - [x] 4. (`.mcp.json` BLOCKED: write refused headless; see handoff) `plugin/`: manifest, skills (clipkit-video with spec 9.4 text, clipkit-review), clipkit-critic agent, .mcp.json, hooks/hooks.json; format checked against the current plugins reference; structure tests.
 - [x] 5. `ck init` / `ck uninstall` for Claude Code and Codex (detect, ask, idempotent, no residue); adapters/ texts.
-- [ ] 6. Proof run, reviewer and spec-checker, evidence, phase done.
+- [x] 6. (real Claude Code / Codex session BLOCKED: needs an interactive session) Proof run as headless Playwright stand-in (`e2e/phase3.spec.ts`), reviewer and spec-checker with fixes, evidence.
+- [ ] 7. Spec 6.3 "Cursor and any MCP client: rules file plus MCP registration" in `ck init` / `ck uninstall` (verify Cursor's current MCP and rules format first), then mark the phase done (interactive items stay BLOCKED).
+
+Run plan (autonomous run 6): step 6.
+- Headless stand-in for the proof: Playwright `e2e/phase3.spec.ts` runs the plugin's own hooks.json commands (prompt, stop, session-end) through `sh -c` with `CLAUDE_PROJECT_DIR`, opens the URL the fake `$BROWSER` received, and patches a layer through `ck mcp` (the `.mcp.json` command line) while the page watches.
+- The real Claude Code / Codex session stays BLOCKED (needs an interactive session); recorded, not faked.
+- rust-reviewer on the Phase 3 diff, spec-checker on Phase 3; fix real gaps or record them.
+- VERIFICATION.md evidence; mark phase done if only the interactive items remain; PHASE: 4.
 
 Run plan (autonomous run 5): step 5 only.
 - Researcher: Claude Code local marketplace (`extraKnownMarketplaces` directory source + `enabledPlugins`) confirmed; Codex docs unreachable, so its format is UNVERIFIED (DECISIONS.md).

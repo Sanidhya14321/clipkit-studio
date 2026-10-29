@@ -11,7 +11,7 @@ use std::fs;
 use std::io::{BufRead, IsTerminal, Write};
 use std::path::{Path, PathBuf};
 
-use ck_core::storage::atomic_write;
+use ck_core::storage::atomic_write_with;
 use ck_core::{CkError, CkResult, ErrorCode};
 use serde::Serialize;
 
@@ -229,11 +229,7 @@ fn apply(op: &Op) -> CkResult<()> {
             if let Some(dir) = path.parent() {
                 fs::create_dir_all(dir).map_err(|e| storage(dir, &e))?;
             }
-            atomic_write(&path, text.as_bytes())?;
-            match perms {
-                Some(p) => fs::set_permissions(&path, p).map_err(|e| storage(&path, &e)),
-                None => Ok(()),
-            }
+            atomic_write_with(&path, text.as_bytes(), perms)
         }
         Op::Remove(path) => ignore_missing(fs::remove_file(path), path),
         Op::RemoveDir(path) => ignore_missing(fs::remove_dir_all(path), path),

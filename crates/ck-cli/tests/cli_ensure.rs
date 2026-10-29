@@ -160,6 +160,36 @@ fn open_opens_the_tab_once_per_server() {
 }
 
 #[test]
+fn a_failed_open_does_not_count_as_opened() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _bg = Background::new(d);
+    let (browser, log) = fake_browser(d);
+
+    let failed = ensure_cmd(d, &["--open"])
+        .env("BROWSER", d.join("no-such-browser"))
+        .output()
+        .unwrap();
+    assert_eq!(failed.status.code(), Some(1));
+    let e: Value = serde_json::from_slice(&failed.stderr).unwrap();
+    assert_eq!(e["code"], "E_SERVER", "{e}");
+    assert!(!d.join(".clipkit/opened").exists(), "no marker left");
+
+    // The studio runs on; a working browser now opens its tab.
+    let retried = parse_ok(
+        &ensure_cmd(d, &["--open"])
+            .env("BROWSER", &browser)
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(
+        (&retried["started"], &retried["opened"]),
+        (&json!(false), &json!(true))
+    );
+    assert_eq!(wait_lines(&log, 1).len(), 1);
+}
+
+#[test]
 fn ensure_replaces_a_stale_server_json() {
     let dir = tempfile::tempdir().unwrap();
     let d = dir.path();

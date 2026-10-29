@@ -17,6 +17,8 @@ use crate::ops::{Ops, capped, caps};
 
 /// How long a freshly spawned server may take to answer before ensure gives up.
 const READY_LIMIT: Duration = Duration::from_secs(10);
+/// How long a call waits for another call's start to finish.
+const LOCK_LIMIT: Duration = Duration::from_secs(12);
 const POLL: Duration = Duration::from_millis(10);
 /// Longest stretch of the server log quoted in an error.
 const LOG_TAIL: usize = 300;
@@ -121,7 +123,7 @@ fn ensure_with(dir: &Path, open: Open, launcher: &Launcher) -> CkResult<(ServerI
         .write(true)
         .open(&lock_path)
         .map_err(|e| io_err(&lock_path, e))?;
-    lock.lock().map_err(|e| io_err(&lock_path, e))?;
+    wait_for_lock(&lock, &lock_path)?;
 
     let (info, started) = match running(&root) {
         Some(info) => (info, false),
@@ -138,6 +140,28 @@ fn ensure_with(dir: &Path, open: Open, launcher: &Launcher) -> CkResult<(ServerI
     };
     drop(lock);
     Ok((info, started, opened))
+}
+
+/// Take the launch lock, waiting at most as long as one start may take (plus a margin), so a
+/// stuck holder fails callers with a hint instead of hanging them past their own timeouts.
+fn wait_for_lock(lock: &File, path: &Path) -> CkResult<()> {
+    let t0 = Instant::now();
+    loop {
+        match lock.try_lock() {
+            Ok(()) => return Ok(()),
+            Err(std::fs::TryLockError::WouldBlock) if t0.elapsed() < LOCK_LIMIT => {
+                std::thread::sleep(POLL);
+            }
+            Err(std::fs::TryLockError::WouldBlock) => {
+                return Err(server_err(format!(
+                    "another ck call has been starting the studio for over {} s",
+                    LOCK_LIMIT.as_secs()
+                ))
+                .with_hint("Stop stray ck studio processes for this project, then retry."));
+            }
+            Err(std::fs::TryLockError::Error(e)) => return Err(io_err(path, e)),
+        }
+    }
 }
 
 /// Spawn `ck studio` detached and wait until it answers.
@@ -233,8 +257,12 @@ fn open_once(root: &Path, info: &ServerInfo) -> CkResult<bool> {
     if std::fs::read_to_string(&marker).is_ok_and(|m| m == id) {
         return Ok(false);
     }
-    open_browser(&format!("{}#token={}", info.url, info.token))?;
+    // Marker first: a tab that opened is never reported as a failure or opened twice.
     std::fs::write(&marker, id).map_err(|e| io_err(&marker, e))?;
+    if let Err(e) = open_browser(&format!("{}#token={}", info.url, info.token)) {
+        let _ = std::fs::remove_file(&marker);
+        return Err(e);
+    }
     Ok(true)
 }
 

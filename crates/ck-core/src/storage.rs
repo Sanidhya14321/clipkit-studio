@@ -214,6 +214,16 @@ fn write_json(path: &Path, value: &impl Serialize) -> CkResult<()> {
 
 /// Write `bytes` to `path` so readers see either the old content or the new, never a mix.
 pub fn atomic_write(path: &Path, bytes: &[u8]) -> CkResult<()> {
+    atomic_write_with(path, bytes, None)
+}
+
+/// [`atomic_write`] that gives the new file `perms` before it replaces the old one, so a file
+/// kept private is never briefly readable with default permissions.
+pub fn atomic_write_with(
+    path: &Path,
+    bytes: &[u8],
+    perms: Option<fs::Permissions>,
+) -> CkResult<()> {
     let dir = path
         .parent()
         .ok_or_else(|| io_err(path, "path has no parent folder"))?;
@@ -221,6 +231,9 @@ pub fn atomic_write(path: &Path, bytes: &[u8]) -> CkResult<()> {
     let tmp = dir.join(format!(".{name}{TMP_MARKER}{}", std::process::id()));
     let result = (|| {
         let mut f = File::create(&tmp)?;
+        if let Some(p) = perms {
+            f.set_permissions(p)?;
+        }
         f.write_all(bytes)?;
         f.sync_all()?;
         fs::rename(&tmp, path)?;
