@@ -23,6 +23,8 @@ tracing-subscriber = { version = "0.3.23", features = ["json", "env-filter"] }
 proptest = "1.12.0"
 insta = { version = "1.49.0", features = ["json"] }
 tempfile = "3.27.0"
+# Already in the tree through rust-embed-utils; content hashes for imported media.
+sha2 = "0.11.1"
 # Pinned below 1.54.1 (2026-10-21, under two weeks old at Phase 2 close).
 tokio = { version = "=1.53.2", features = ["rt-multi-thread", "macros", "net", "sync", "time", "signal"] }
 axum = { version = "0.8.9", default-features = false, features = ["http1", "json", "query", "tokio", "ws"] }

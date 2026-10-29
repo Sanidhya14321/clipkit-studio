@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 5
 
 ## Handoff (latest)
-1. Done: Phase 5 step list written; step 1 (`E_MEDIA`, safe ffprobe runner in `ck-media::run`, typed `ck_media::probe`).
-2. Proof: `just check` passing, 228 of 228 nextest (1 skipped), hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, Phase 5 step 1.
+1. Done: Phase 5 step 2a (`ck_media::{hash_file, CachePaths, make_proxy, extract_audio}`); `sha2` 0.11.1 added (already in the tree via rust-embed-utils).
+2. Proof: `just check` passing, 235 of 235 nextest (1 skipped), hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, Phase 5 step 2a.
 3. Open: fixture-backed tests skip when `just fixtures` has not run (CI test job); Phase 4 carries unchanged.
-4. Next: Phase 5 step 2 (import: content hash, 720p proxy, audio extract into `.clipkit/cache/`, source in the project, `ck import` + MCP twin). A hash crate needs a researcher version check.
-5. Start: `just check`; docs/spec/03-layout-and-model.md for sources and cache layout; media-ffmpeg skill.
+4. Next: Phase 5 step 2b: register a `Source` (id, kind, path, proxyPath, hash, durationSec) in the project through a patch, `ck import <path>` with MCP twin, schema, cap and parity tests.
+5. Start: `just check`; docs/spec/03-layout-and-model.md 3.2 Source; rust-conventions skill (CLI command plus MCP twin).
 
 ## Open questions
 - Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
@@ -52,7 +52,7 @@ Spec: 04 (BASE), 08 (8.2, 8.6 export), 14 (wave 1 editing tools). Proof: raw foo
 
 Steps:
 - [x] 1. `ck-media` probe: `E_MEDIA` code, safe ffprobe call (argument array, timeout, `-` path refusal), typed `MediaInfo` (duration, video/audio streams, fps, VFR flag, rotation, audio track count) with fixture tests.
-- [ ] 2. Import: content hash, 720p proxy and audio extraction into `.clipkit/cache/`, source registered in the project; `ck import` with MCP twin.
+- [ ] 2. (2a done: media functions; 2b next: project source and `ck import`) Import: content hash, 720p proxy and audio extraction into `.clipkit/cache/`, source registered in the project; `ck import` with MCP twin.
 - [ ] 3. Silence detection (silencedetect) and scene detection (ffmpeg scene score) as cut-candidate signals.
 - [ ] 4. Transcription: Fish Audio STT (verify API first) with local whisper fallback (whisper-rs, spec 14); word timestamps; cassette tests.
 - [ ] 5. Packed transcript (phrases, silences, fillers; about 12 KB per 10 min) and `ck transcript get`.
@@ -61,6 +61,12 @@ Steps:
 - [ ] 8. Hybrid mode: generated layers over footage.
 - [ ] 9. Fast ffmpeg export (typed filter graph), loudness gates (ebur128/loudnorm) and export presets; `ck export`.
 - [ ] 10. Proof run, reviewer, spec-checker, evidence. Silero VAD via ONNX is pending the `ort` question (Open questions).
+
+Run plan (autonomous run 17): step 2a, media side of import.
+- Split step 2: 2a media functions in ck-media, 2b project source registration and `ck import` + MCP twin.
+- `ck_media::hash_file` (streamed SHA-256; `sha2` is already in the tree via rust-embed, no new code).
+- `ck_media::make_proxy` (at most 720p, H.264, keeps aspect) and `extract_audio` (48 kHz WAV), argument arrays, temp file then rename.
+- `ck_media::CachePaths` keyed by hash under `.clipkit/cache/`; fixture tests; `just check`, evidence, commit.
 
 Run plan (autonomous run 16): step list and step 1.
 - Write the Phase 5 step list above from spec 12 and spec 14.

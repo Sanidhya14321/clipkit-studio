@@ -224,6 +224,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | --- | --- | --- |
 | Step 1: `E_MEDIA` code; ffprobe as an argument array with a 30 s timeout; `-`-prefixed and empty paths refused; typed `MediaInfo` (VFR flag, rotation from side data or tag with display size swap, several audio tracks, cover art skipped, duration fallback) | PASS | `ck-media` `probe::tests::*` (8 tests); `probes_fixture_media_against_ground_truth` ran against `fixtures/generated/` (counter, av, tones durations, size, fps, sample rate from ground-truth.json); error-code table snapshot updated |
 | Step 1 run | PASS | 2026-10-29 `just check`: 228 of 228 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
+| Step 2a: streamed SHA-256 content hash; cache paths keyed by hex hash (non-hex keys refused); 720p H.264 proxy and 48 kHz WAV audio written via temp file and rename, cache hit skips work, failure leaves no file | PASS | `ck-media` `import::tests::*` (7 tests): SHA-256 of `abc` matches the known vector; `proxy_and_audio_from_fixture_media` proxies `fixtures/generated/av.mp4` (h264, height at most 720 and even, one audio track, 12 s) and extracts 48 kHz audio (12 s); a silent video gives `E_MEDIA` and no file |
+| Step 2a run | PASS | 2026-10-29 `just check`: 235 of 235 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 
