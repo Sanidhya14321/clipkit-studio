@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ApiError, request } from "../api";
 import type {
   ActiveTakeRequest,
+  ConsentRequest,
   Project,
   VoiceMode,
   VoiceModeRequest,
@@ -203,6 +204,28 @@ export function VoicePanel({
                   {t.recorded ? " (recorded)" : ""}
                 </label>
               ))}
+              {slot.takes
+                .filter((t) => t.recorded)
+                .map((t) => (
+                  <label key={`consent-${t.id}`} className="consent">
+                    <input
+                      type="checkbox"
+                      data-ck-consent={t.id}
+                      checked={t.consented ?? false}
+                      disabled={readOnly}
+                      onChange={(e) => {
+                        const req: ConsentRequest = {
+                          slot: slot.id,
+                          take: t.id,
+                          consent: e.currentTarget.checked,
+                        };
+                        void post("/api/voice/consent", req);
+                      }}
+                    />
+                    I am the speaker in take {t.id} and consent to cloning my
+                    voice from it.
+                  </label>
+                ))}
             </div>
             <button
               type="button"

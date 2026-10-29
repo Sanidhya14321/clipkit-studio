@@ -85,6 +85,7 @@ fn unchanged_lines_keep_their_takes() {
         path: "a.wav".into(),
         duration_sec: 1.0,
         recorded: false,
+        consented: false,
     });
     old[0].active_take = Some("t1".into());
     let changed = VoiceScriptRequest {
@@ -159,6 +160,11 @@ impl ck_voice::Speaker for ToneSpeaker {
             .success();
         assert!(ok);
         Ok(())
+    }
+
+    fn clone_voice(&self, audio: &std::path::Path) -> ck_core::CkResult<String> {
+        assert!(audio.is_file(), "clones from the take file");
+        Ok("fake-voice-1".into())
     }
 }
 
@@ -310,4 +316,85 @@ fn a_studio_recording_becomes_a_recorded_take_and_takes_can_be_switched() {
     assert_eq!(junk.code, ErrorCode::Media);
     let unknown = f.session.voice_record("v9", &bytes, "wav").unwrap_err();
     assert_eq!(unknown.code, ErrorCode::NotFound);
+}
+
+#[test]
+fn cloning_needs_a_consented_studio_recording() {
+    use crate::session::voice::{ConsentRequest, SlotRequest, VoiceCloneRequest};
+    use ck_core::patch::PatchRequest;
+
+    let fx = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../fixtures/generated/tones.wav");
+    if !fx.is_file() {
+        eprintln!("skipped: run `just fixtures` first");
+        return;
+    }
+    let (_dir, s) = speaking_session();
+    s.voice_script(&VoiceScriptRequest {
+        lines: vec![line("My own voice."), line("Generated line here.")],
+        mode: None,
+    })
+    .unwrap();
+    s.voice_record("v1", &std::fs::read(&fx).unwrap(), "wav")
+        .unwrap();
+    let clone = |slot: &str| {
+        s.voice_clone(&VoiceCloneRequest {
+            slot: slot.into(),
+            take: None,
+        })
+    };
+
+    // No consent yet.
+    assert_eq!(clone("v1").unwrap_err().code, ErrorCode::Request);
+    // The agent cannot give consent itself, even with a raw patch and the lock.
+    s.lock(&crate::session::LockRequest {
+        holder: ck_core::model::Holder::Agent,
+        layer_ids: vec![ck_core::patch::PROJECT_LAYER.into()],
+    })
+    .unwrap();
+    let rev = s.project().unwrap().rev;
+    let sneaky = s
+        .patch(&PatchRequest {
+            base_rev: rev,
+            layer_revs: Default::default(),
+            ops: serde_json::from_value(json!([{ "op": "add",
+                "path": "/voiceSlots/0/takes/0/consented", "value": true }]))
+            .unwrap(),
+            author: Author::Agent,
+            label: "consent".into(),
+        })
+        .unwrap_err();
+    assert_eq!(sneaky.code, ErrorCode::PatchInvalid);
+    s.unlock(&crate::session::UnlockRequest {
+        holder: ck_core::model::Holder::Agent,
+        layer_ids: None,
+    })
+    .unwrap();
+
+    // The user consents in the studio; cloning works and the slot turns cloned.
+    s.voice_consent(&ConsentRequest {
+        slot: "v1".into(),
+        take: "t1".into(),
+        consent: true,
+    })
+    .unwrap();
+    let cloned = clone("v1").unwrap();
+    assert_eq!(cloned.voice_ref, "fake-voice-1");
+    assert_eq!(cloned.slot.mode, VoiceMode::Cloned);
+    // A cloned slot now speaks through its voice.
+    let spoken = s.voice_speak(&SlotRequest { slot: "v1".into() }).unwrap();
+    assert!(!spoken.placeholder);
+
+    // A generated take is never cloned.
+    s.voice_speak(&SlotRequest { slot: "v2".into() }).unwrap();
+    assert_eq!(clone("v2").unwrap_err().code, ErrorCode::Request);
+    // Consent applies to studio recordings only.
+    let err = s
+        .voice_consent(&ConsentRequest {
+            slot: "v2".into(),
+            take: "t1".into(),
+            consent: true,
+        })
+        .unwrap_err();
+    assert_eq!(err.code, ErrorCode::Request);
 }

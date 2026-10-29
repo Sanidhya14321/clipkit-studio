@@ -155,6 +155,7 @@ mod tests {
             path: "v.wav".into(),
             duration_sec: 1.25,
             recorded: false,
+            consented: false,
         });
         p.voice_slots[0].active_take = Some("k1".into());
         assert_eq!(span(&p, &item).unwrap().end, 2.25);

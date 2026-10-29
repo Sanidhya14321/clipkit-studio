@@ -61,6 +61,9 @@ pub struct VoiceTake {
     /// Recorded with the studio microphone (the only audio cloning may use, spec 8.3).
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub recorded: bool,
+    /// The speaker agreed to cloning this recording (set by a human only; spec 8.3).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub consented: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]

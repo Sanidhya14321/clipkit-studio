@@ -5,6 +5,9 @@ import { join } from "node:path";
 import type { Page } from "@playwright/test";
 import { expect, test, type Studio } from "./fixture";
 
+/** The studio posts context 250 ms after it settles; allow for a loaded machine. */
+const CONTEXT_POLL = { timeout: 15_000 };
+
 async function open(page: Page, studio: Studio) {
   await page.goto(`${studio.url}#token=${studio.token}`);
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
@@ -90,7 +93,7 @@ test("hover-select outlines an element; Ask agent anchors a comment to it", asyn
         hovered?: { layerId: string };
       };
       return ctx.hovered?.layerId;
-    })
+    }, CONTEXT_POLL)
     .toBe(layer);
 
   await part.click();
@@ -109,6 +112,7 @@ test("hover-select outlines an element; Ask agent anchors a comment to it", asyn
     .poll(
       async () =>
         ((await studio.ck("context")) as { selection?: string }).selection,
+      CONTEXT_POLL,
     )
     .toBe(layer);
 });

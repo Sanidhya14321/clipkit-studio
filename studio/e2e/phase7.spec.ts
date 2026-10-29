@@ -11,6 +11,17 @@ async function open(page: Page, studio: Studio) {
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
 }
 
+/** Runs a ck command that must fail; returns its error code from stderr. */
+async function errorCode(studio: Studio, ...args: string[]): Promise<string> {
+  try {
+    await studio.ck(...args);
+  } catch (e) {
+    const stderr = (e as { stderr?: string }).stderr ?? "";
+    return (JSON.parse(stderr) as { code: string }).code;
+  }
+  throw new Error(`ck ${args.join(" ")} should fail`);
+}
+
 async function script(studio: Studio, mode: string, lines: string[]) {
   const file = join(studio.dir, "script.json");
   await writeFile(
@@ -48,6 +59,14 @@ test("record-along: countdown, teleprompter, take", async ({
   );
   await expect(slot).toHaveAttribute("data-ck-slot-status", "ready");
   await expect(slot.locator("[data-ck-fit]")).toBeVisible();
+
+  // Cloning is refused until the user consents in the studio; then only the provider stub
+  // (no Fish Audio key in tests) stands in the way.
+  expect(await errorCode(studio, "voice", "clone", "v1")).toBe("E_REQUEST");
+  // A controlled checkbox: it shows checked once the server's snapshot arrives.
+  await slot.locator('[data-ck-consent="t1"]').click();
+  await expect(slot.locator('[data-ck-consent="t1"]')).toBeChecked();
+  expect(await errorCode(studio, "voice", "clone", "v1")).toBe("E_VOICE");
 });
 
 test("a slot without speech offers the labeled placeholder", async ({

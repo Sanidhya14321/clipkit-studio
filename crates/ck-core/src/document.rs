@@ -138,6 +138,7 @@ impl Document {
         locks::check_patch(&self.project.locks, req.author, &applied.touched, now_ms)?;
         if req.author == Author::Agent {
             crate::scope::check(&self.project, &applied.touched)?;
+            consent_unchanged(&self.project, &applied.project)?;
         }
         let mut project = applied.project;
         // Locks are engine state, not content: carry them over and drop expired ones.
@@ -171,3 +172,30 @@ impl Document {
 
 #[cfg(test)]
 mod tests;
+
+/// Only a human gives or withdraws cloning consent (spec 8.3): an agent patch that changes any
+/// take's `consented` flag, or adds a take that carries it, is refused.
+fn consent_unchanged(before: &Project, after: &Project) -> CkResult<()> {
+    let consents = |p: &Project| -> Vec<(String, String)> {
+        let mut v: Vec<(String, String)> = p
+            .voice_slots
+            .iter()
+            .flat_map(|s| {
+                s.takes
+                    .iter()
+                    .filter(|t| t.consented)
+                    .map(|t| (s.id.clone(), t.id.clone()))
+            })
+            .collect();
+        v.sort();
+        v
+    };
+    if consents(before) == consents(after) {
+        return Ok(());
+    }
+    Err(CkError::new(
+        ErrorCode::PatchInvalid,
+        "only the user can give or withdraw cloning consent",
+    )
+    .with_hint("Ask the user to consent in the studio's voice panel."))
+}

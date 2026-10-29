@@ -27,7 +27,8 @@ use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::voice::{
-    ActiveTakeRequest, MAX_RECORDING, SlotRequest, TakeQuery, VoiceModeRequest, VoiceScriptRequest,
+    ActiveTakeRequest, ConsentRequest, MAX_RECORDING, SlotRequest, TakeQuery, VoiceCloneRequest,
+    VoiceModeRequest, VoiceScriptRequest,
 };
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
@@ -76,6 +77,8 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
             post(voice_record).layer(DefaultBodyLimit::max(MAX_RECORDING)),
         )
         .route("/api/voice/active", post(voice_active_take))
+        .route("/api/voice/consent", post(voice_consent))
+        .route("/api/voice/clone", post(voice_clone))
         .route("/api/context", get(context).post(set_context))
         .route("/api/comments/add", post(comments_add))
         .route("/api/comments/reply", post(comments_reply))
@@ -345,6 +348,22 @@ async fn voice_active_take(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.voice_active_take(&req)).await
+}
+
+async fn voice_consent(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<ConsentRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.voice_consent(&req)).await
+}
+
+async fn voice_clone(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<VoiceCloneRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.voice_clone(&req)).await
 }
 
 async fn look_apply(

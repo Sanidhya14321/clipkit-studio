@@ -1008,6 +1008,10 @@ expression: "schemars::schema_for!(Project)"
     "VoiceTake": {
       "type": "object",
       "properties": {
+        "consented": {
+          "description": "The speaker agreed to cloning this recording (set by a human only; spec 8.3).",
+          "type": "boolean"
+        },
         "durationSec": {
           "type": "number",
           "format": "double"

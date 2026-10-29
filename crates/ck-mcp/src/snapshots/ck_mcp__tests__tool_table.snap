@@ -1077,6 +1077,31 @@ expression: specs()
     }
   },
   {
+    "name": "voice_clone",
+    "command": "ck voice clone",
+    "description": "Clone the speaker's voice from a take recorded in the studio that the user consented to (default the active take); the slot becomes cloned. Uploaded or generated audio is refused.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "take": {
+          "description": "Take to clone from; default the slot's active take.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "slot"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "context",
     "command": "ck context",
     "description": "What the user points at in the studio: selected layer, hovered element, playhead, loop range and open comments. Call it first when the user says this, here or that.",

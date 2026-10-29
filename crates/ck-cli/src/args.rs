@@ -349,6 +349,13 @@ pub enum VoiceCommand {
     Script { file: String },
     /// Generate speech for an ai or cloned slot as its new take.
     Speak { slot: String },
+    /// Clone the voice from a consented studio recording of a slot.
+    Clone {
+        slot: String,
+        /// Take id; default the active take.
+        #[arg(long)]
+        take: Option<String>,
+    },
     /// Switch a slot between ai, recorded and cloned.
     Mode {
         slot: String,

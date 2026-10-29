@@ -491,3 +491,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - `VoiceTake.recorded` marks studio recordings: the only takes cloning may use (step 4).
 - Per-line punch-in is recording one slot; multiple takes accumulate and the user picks the active one. Silence trim, loudness and fit run on every take.
 - Playwright runs Chromium with its fake microphone (`--use-fake-device-for-media-stream`).
+
+## Phase 7 step 4: cloning with consent (2026-10-29)
+- Consent lives on the take (`VoiceTake.consented`), set only through the studio's consent checkbox (a human revision). ck-core refuses any agent patch that changes the set of consented takes (E_PATCH_INVALID), so the agent cannot consent for the user even with a raw patch and the lock.
+- `voice clone` uses the slot's active take unless one is named, and requires recorded and consented; the provider call is the Speaker's `clone_voice` (Fish stub until the key and API check). Success stores `voiceRef` and switches the slot to cloned.
+- E2E context polls allow 15 s: under a full parallel run the context post can land after the default 5 s poll.

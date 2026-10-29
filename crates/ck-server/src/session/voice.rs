@@ -308,11 +308,15 @@ impl Session {
             .map(|k| format!("t{k}"))
             .find(|id| !slot.takes.iter().any(|t| &t.id == id))
             .unwrap_or_default();
-        let rel = format!(".clipkit/cache/takes/{}-{take_id}.wav", slot.id);
         let out = self
             .cache_dir()
             .join("takes")
             .join(format!("{}-{take_id}.wav", slot.id));
+        // Stored relative to the project folder, like source paths.
+        let rel = out.strip_prefix(self.workdir()).map_or_else(
+            |_| out.to_string_lossy().into_owned(),
+            |p| p.to_string_lossy().replace('\\', "/"),
+        );
         let window = slot.target_window.map(|w| w.end - w.start);
         let info = ck_media::prepare_take(audio, &out, window)?;
         let take = ck_core::model::VoiceTake {
@@ -320,6 +324,7 @@ impl Session {
             path: rel,
             duration_sec: (info.duration_sec * 1000.0).round() / 1000.0,
             recorded,
+            consented: false,
         };
         let mut doc = self.doc()?;
         let i = slot_index(doc.project(), slot_id)?;
@@ -492,6 +497,128 @@ impl Session {
         Ok(VoiceModeResult {
             rev: rev.rev,
             slot: summary(&slot),
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, ts_rs::TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ConsentRequest {
+    pub slot: String,
+    pub take: String,
+    /// True to consent, false to withdraw.
+    pub consent: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct VoiceCloneRequest {
+    pub slot: String,
+    /// Take to clone from; default the slot's active take.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub take: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct VoiceCloneResult {
+    pub rev: u64,
+    pub slot: SlotSummary,
+    pub voice_ref: String,
+}
+
+impl Session {
+    /// Studio consent dialog: the user consents to (or withdraws) cloning a recorded take.
+    pub fn voice_consent(&self, req: &ConsentRequest) -> CkResult<VoiceModeResult> {
+        let mut doc = self.doc()?;
+        let p = doc.project();
+        let i = slot_index(p, &req.slot)?;
+        let slot = p.voice_slots[i].clone();
+        let t = slot
+            .takes
+            .iter()
+            .position(|t| t.id == req.take)
+            .ok_or_else(|| {
+                CkError::new(
+                    ErrorCode::NotFound,
+                    format!("slot {:?} has no take {:?}", req.slot, req.take),
+                )
+            })?;
+        if !slot.takes[t].recorded {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                "consent applies only to takes recorded in the studio",
+            ));
+        }
+        if slot.takes[t].consented == req.consent {
+            return Ok(VoiceModeResult {
+                rev: p.rev,
+                slot: summary(&slot),
+            });
+        }
+        // `add` sets the field whether or not it is stored (false is left out of the JSON).
+        let ops = json!([{ "op": "add",
+                           "path": format!("/voiceSlots/{i}/takes/{t}/consented"),
+                           "value": req.consent }]);
+        let label = format!("consent: {} {} {}", req.slot, req.take, req.consent);
+        let rev = self.commit_as(&mut doc, ck_core::model::Holder::Human, ops, label, &[])?;
+        Ok(VoiceModeResult {
+            rev: rev.rev,
+            slot: summary(&slot),
+        })
+    }
+
+    /// `voice clone`: only from a take recorded in the studio that the user consented to;
+    /// never from uploaded or generated audio. The slot becomes cloned with the new voice.
+    pub fn voice_clone(&self, req: &VoiceCloneRequest) -> CkResult<VoiceCloneResult> {
+        let slot = {
+            let doc = self.doc()?;
+            let p = doc.project();
+            p.voice_slots[slot_index(p, &req.slot)?].clone()
+        };
+        let take_id = req
+            .take
+            .clone()
+            .or_else(|| slot.active_take.clone())
+            .ok_or_else(|| {
+                CkError::new(
+                    ErrorCode::Request,
+                    format!("slot {:?} has no take", slot.id),
+                )
+            })?;
+        let take = slot
+            .takes
+            .iter()
+            .find(|t| t.id == take_id)
+            .ok_or_else(|| CkError::new(ErrorCode::NotFound, format!("no take {take_id:?}")))?;
+        if !take.recorded {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                "cloning uses only audio recorded in the studio",
+            )
+            .with_hint("Record the line in the studio's voice panel first."));
+        }
+        if !take.consented {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                "the speaker has not consented to cloning this recording",
+            )
+            .with_hint("Ask the user to give consent in the studio's voice panel."));
+        }
+        let voice_ref = self.speaker.clone_voice(&self.resolve(&take.path))?;
+        let mut doc = self.doc()?;
+        let i = slot_index(doc.project(), &slot.id)?;
+        let ops = json!([
+            { "op": "add", "path": format!("/voiceSlots/{i}/voiceRef"), "value": voice_ref },
+            { "op": "replace", "path": format!("/voiceSlots/{i}/mode"), "value": VoiceMode::Cloned }
+        ]);
+        let rev = self.commit_agent(&mut doc, ops, format!("voice clone: {}", slot.id))?;
+        let mut s = summary(&slot);
+        s.mode = VoiceMode::Cloned;
+        Ok(VoiceCloneResult {
+            rev: rev.rev,
+            slot: s,
+            voice_ref,
         })
     }
 }

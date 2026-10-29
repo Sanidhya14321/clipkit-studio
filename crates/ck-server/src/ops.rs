@@ -32,8 +32,8 @@ use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::verify::{VerifyIssue, VerifyResult};
 use crate::session::voice::{
-    SlotRequest, SlotSummary, TakeResult, VoiceModeRequest, VoiceModeResult, VoiceScriptRequest,
-    VoiceScriptResult,
+    SlotRequest, SlotSummary, TakeResult, VoiceCloneRequest, VoiceCloneResult, VoiceModeRequest,
+    VoiceModeResult, VoiceScriptRequest, VoiceScriptResult,
 };
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
@@ -291,6 +291,12 @@ impl Ops {
     pub fn voice_speak(&self, req: &SlotRequest) -> CkResult<TakeResult> {
         let reply = self.client.post_slow("/api/voice/speak", req)?;
         capped("voice speak", caps::VOICE_WRITE, reply)
+    }
+
+    /// `voice clone`: a cloned voice from a consented studio recording.
+    pub fn voice_clone(&self, req: &VoiceCloneRequest) -> CkResult<VoiceCloneResult> {
+        let reply = self.client.post_slow("/api/voice/clone", req)?;
+        capped("voice clone", caps::VOICE_WRITE, reply)
     }
 
     /// `voice mode`: switch a slot between ai, recorded and cloned.

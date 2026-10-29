@@ -11,6 +11,9 @@ use crate::transcript::FISH_KEY_ENV;
 /// Writes speech for `text` (in voice `voice_ref`, or the default voice) as audio to `out`.
 pub trait Speaker: Send + Sync {
     fn speak(&self, text: &str, voice_ref: Option<&str>, out: &Path) -> CkResult<()>;
+
+    /// Make a cloned voice from a consented studio recording; returns its voice ref.
+    fn clone_voice(&self, audio: &Path) -> CkResult<String>;
 }
 
 /// Fish Audio TTS.
@@ -31,14 +34,24 @@ impl FishTts {
     }
 }
 
+impl FishTts {
+    fn refuse(&self, what: &str) -> CkError {
+        let message = if self.configured {
+            format!("Fish Audio {what} is not built yet (API unverified)")
+        } else {
+            format!("no {what}: {FISH_KEY_ENV} is not set")
+        };
+        CkError::new(ErrorCode::Voice, message)
+    }
+}
+
 impl Speaker for FishTts {
     fn speak(&self, _text: &str, _voice_ref: Option<&str>, _out: &Path) -> CkResult<()> {
-        let message = if self.configured {
-            "Fish Audio TTS client is not built yet (API unverified)".to_owned()
-        } else {
-            format!("no speaker: {FISH_KEY_ENV} is not set")
-        };
-        Err(CkError::new(ErrorCode::Voice, message))
+        Err(self.refuse("TTS"))
+    }
+
+    fn clone_voice(&self, _audio: &Path) -> CkResult<String> {
+        Err(self.refuse("voice cloning"))
     }
 }
 
