@@ -72,7 +72,8 @@ fn finds_the_fixture_fillers_and_retake() {
 #[test]
 fn kept_ranges_complement_the_cuts() {
     let cuts = suggest_cuts(&sample(), 12.0);
-    let kept = kept_ranges(&cuts, 12.0);
+    let ranges: Vec<(f64, f64)> = cuts.iter().map(|c| (c.start, c.end)).collect();
+    let kept = kept_ranges(&ranges, 12.0);
     let cut: f64 = cuts.iter().map(|c| c.end - c.start).sum();
     let keep: f64 = kept.iter().map(|(s, e)| e - s).sum();
     assert!((cut + keep - 12.0).abs() < 1e-9);

@@ -16,7 +16,7 @@ use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
-use crate::session::edit::{CutApplyRequest, SourceRequest};
+use crate::session::edit::{CutApplyRequest, CutWordsRequest, SourceRequest};
 use crate::session::handoff::{HandoffRequest, WaitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
@@ -57,6 +57,9 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/transcript", get(transcript_get))
         .route("/api/cut/suggest", get(cut_suggest))
         .route("/api/cut/apply", post(cut_apply))
+        // Studio only: the full word list and delete-to-cut as a human edit.
+        .route("/api/transcript/words", get(transcript_words))
+        .route("/api/cut/words", post(cut_words))
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
         .route("/api/sound/plan", get(sound_plan))
@@ -196,6 +199,22 @@ async fn cut_apply(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.cut_apply(&req)).await
+}
+
+async fn transcript_words(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<SourceRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    blocking(s, move |s| s.transcript_words(&req)).await
+}
+
+async fn cut_words(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<CutWordsRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.cut_words(&req)).await
 }
 
 async fn look_apply(

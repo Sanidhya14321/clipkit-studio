@@ -200,6 +200,24 @@ label: string, activeLayers: Array<string>, };
 
 export type AgentStatus = "idle" | "waiting" | "working";
 
+export type Transcript = { language: string, words: Array<Word>, };
+
+export type Word = { 
+/**
+ * Index in the transcript, from 0.
+ */
+i: number, text: string, 
+/**
+ * Source time in seconds.
+ */
+start: number, end: number, };
+
+export type CutWordsRequest = { source: string, 
+/**
+ * Every deleted word index; words left out are kept (or restored).
+ */
+deleted: Array<number>, };
+
 export type PatchRequest = { 
 /**
  * The project revision the patch was built against.

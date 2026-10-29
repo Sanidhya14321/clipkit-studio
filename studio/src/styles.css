@@ -305,3 +305,22 @@ body {
     box-shadow: 0 0 0 0 transparent;
   }
 }
+
+.transcript-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 4px;
+}
+
+.word {
+  border: none;
+  background: none;
+  padding: 0 2px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.word-cut {
+  text-decoration: line-through;
+  opacity: 0.5;
+}

@@ -146,9 +146,9 @@ pub fn suggest_cuts(t: &Transcript, duration: f64) -> Vec<CutCandidate> {
     out
 }
 
-/// The kept ranges of `[0, duration]` once `cuts` are removed.
-pub fn kept_ranges(cuts: &[CutCandidate], duration: f64) -> Vec<(f64, f64)> {
-    let mut sorted: Vec<(f64, f64)> = cuts.iter().map(|c| (c.start, c.end)).collect();
+/// The kept ranges of `[0, duration]` once the `(start, end)` cuts are removed.
+pub fn kept_ranges(cuts: &[(f64, f64)], duration: f64) -> Vec<(f64, f64)> {
+    let mut sorted = cuts.to_vec();
     sorted.sort_by(|a, b| a.0.total_cmp(&b.0));
     let mut kept = Vec::new();
     let mut at = 0.0;

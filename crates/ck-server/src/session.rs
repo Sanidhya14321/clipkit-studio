@@ -225,6 +225,24 @@ impl Session {
         ops: serde_json::Value,
         label: String,
     ) -> CkResult<Revision> {
+        self.commit_as(doc, Holder::Agent, ops, label, &[])
+    }
+
+    /// Commit as `holder` (agent or human): the locks the write touches, plus `extra` lock ids,
+    /// are taken for the write unless the holder has them, so the other side's live locks
+    /// refuse it.
+    fn commit_as(
+        &self,
+        doc: &mut MutexGuard<'_, Document>,
+        holder: Holder,
+        ops: serde_json::Value,
+        label: String,
+        extra: &[String],
+    ) -> CkResult<Revision> {
+        let author = match holder {
+            Holder::Agent => Author::Agent,
+            Holder::Human => Author::Human,
+        };
         let now = self.now_ms();
         let project = doc.project();
         let patch = PatchRequest {
@@ -232,26 +250,29 @@ impl Session {
             layer_revs: Default::default(),
             ops: serde_json::from_value(ops)
                 .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?,
-            author: Author::Agent,
+            author,
             label,
         };
         // Dry run to learn the lock ids this write touches.
         let touched = ck_core::patch::apply(project, &patch)?.touched;
-        let missing: Vec<String> = touched
+        let mut missing: Vec<String> = touched
             .into_iter()
+            .chain(extra.iter().cloned())
             .filter(|id| {
                 !project
                     .locks
                     .iter()
-                    .any(|l| &l.layer_id == id && l.holder == Holder::Agent && l.is_live(now))
+                    .any(|l| &l.layer_id == id && l.holder == holder && l.is_live(now))
             })
             .collect();
+        missing.sort();
+        missing.dedup();
         if !missing.is_empty() {
-            doc.acquire(Holder::Agent, &missing, now)?;
+            doc.acquire(holder, &missing, now)?;
         }
         let committed = doc.patch(&patch, now).cloned();
         if !missing.is_empty() {
-            doc.release(Holder::Agent, Some(&missing));
+            doc.release(holder, Some(&missing));
         }
         let rev = committed?;
         self.persist(doc)?;

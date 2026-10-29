@@ -70,6 +70,9 @@ fn decls(cfg: &Config) -> Vec<String> {
         AgentState::decl(cfg),
         AgentStatus::decl(cfg),
         // API requests, replies and errors (spec 6.2).
+        ck_voice::Transcript::decl(cfg),
+        ck_voice::Word::decl(cfg),
+        crate::session::edit::CutWordsRequest::decl(cfg),
         PatchRequest::decl(cfg),
         PatchResult::decl(cfg),
         LockRequest::decl(cfg),

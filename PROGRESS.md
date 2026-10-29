@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 5
 
 ## Handoff (latest)
-1. Done: Phase 5 steps 4a, 5, 6: `ck transcribe`, `ck transcript get`, `ck cut suggest|apply` with MCP twins; ck-voice transcript, pack and cuts; `E_VOICE`.
-2. Proof: `just check` passing, 253 of 253 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 5 steps 4a to 6.
+1. Done: Phase 5 step 7 (studio transcript panel: seek, delete-to-cut, restore; `/api/transcript/words`, `/api/cut/words`; footage rebuilds take the track lock).
+2. Proof: `just check` passing (254 of 254 nextest, hooks 41 of 41, studio clean); `just e2e` 8 of 8. Evidence in VERIFICATION.md, Phase 5 step 7.
 3. Open: step 4b (Fish Audio STT, whisper) waits for the owner's key and an API check; fades at joins are left to export (step 9).
-4. Next: Phase 5 step 7: studio transcript panel delete-to-cut and clip-edge restore, with Playwright test.
-5. Start: `just check`; studio-frontend skill; spec 05 for the transcript panel.
+4. Next: Phase 5 step 8 (hybrid: generated layers over footage), then step 9 (fast ffmpeg export, loudness, presets; `ck export`).
+5. Start: `just check`; spec 04 HYBRID, spec 08 8.6 export; media-ffmpeg skill.
 
 ## Open questions
 - Phase 5 step 4b: owner will add FISH_AUDIO_API_KEY; then verify the Fish Audio STT API, build `FishStt`, record a cassette test. Decide whether whisper-rs (C++ build) goes in by default or behind a cargo feature.
@@ -58,7 +58,7 @@ Steps:
 - [ ] 4. (4a core done; 4b BLOCKED: provider waits for the owner's key and API check) Transcription: Fish Audio STT (verify API first) with local whisper fallback (whisper-rs, spec 14); word timestamps; cassette tests.
 - [x] 5. Packed transcript (phrases, silences, fillers; about 12 KB per 10 min) and `ck transcript get`.
 - [x] 6. Cut candidates (silences, fillers, false starts, repeated takes) on word boundaries with fades; `ck cut suggest|apply`.
-- [ ] 7. Studio transcript panel delete-to-cut and clip-edge restore, with Playwright test.
+- [x] 7. Studio transcript panel delete-to-cut and clip-edge restore, with Playwright test.
 - [ ] 8. Hybrid mode: generated layers over footage.
 - [ ] 9. Fast ffmpeg export (typed filter graph), loudness gates (ebur128/loudnorm) and export presets; `ck export`.
 - [ ] 10. Proof run, reviewer, spec-checker, evidence. Silero VAD via ONNX is pending the `ort` question (Open questions).

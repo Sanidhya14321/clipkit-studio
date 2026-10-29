@@ -8,11 +8,12 @@ use ck_core::storage::atomic_write;
 use ck_core::{CkError, CkResult, ErrorCode};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 /// Environment variable holding the Fish Audio key. Never logged or printed.
 pub const FISH_KEY_ENV: &str = "FISH_AUDIO_API_KEY";
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Word {
     /// Index in the transcript, from 0.
@@ -23,7 +24,7 @@ pub struct Word {
     pub end: f64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub struct Transcript {
     #[serde(default)]

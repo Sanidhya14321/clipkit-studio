@@ -439,3 +439,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Retake: a phrase whose first 2+ words (fillers dropped, contractions expanded) open the next phrase within 15 s is cut from its start to the next phrase's start.
 - `cut apply` recomputes the suggestions (deterministic ids) and replaces the source's footage items on the first video track (created as `video-1` if missing). Footage carries no fade field; the short fades at joins are added by the export (step 9).
 - Top-level help cap (2 KB): new command summaries kept to one short line; `init` and `hook` summaries shortened.
+
+## Phase 5 step 7: transcript panel (2026-10-29)
+- Delete-to-cut sends the whole deleted word set (`POST /api/cut/words`, studio only, no agent twin: the agent uses `cut apply`). The panel derives the deleted set from footage segments (a word is cut when no segment keeps its midpoint), so the server stores no extra state.
+- Delete/Backspace on a focused word toggles it; click seeks. A run of deleted words is cut from its first word's start to the next kept word's start.
+- Every footage rebuild (agent or human) also takes the video track's lock: replacing segments only touches item ids, so before this an agent's track lock did not refuse a human cut.

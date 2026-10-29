@@ -3,13 +3,14 @@
 
 use std::path::{Path, PathBuf};
 
-use ck_core::model::{Item, ItemBody, Source, Track, TrackKind};
+use ck_core::model::{Holder, Item, ItemBody, Source, Track, TrackKind};
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_media::CachePaths;
 use ck_voice::{CutCandidate, PackedTranscript, Transcript, kept_ranges, suggest_cuts};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use ts_rs::TS;
 
 use super::{Session, is_zero};
 
@@ -61,6 +62,14 @@ pub struct CutApplyRequest {
     /// Cut ids from `cut suggest`; empty applies every suggested cut.
     #[serde(default)]
     pub ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema, TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CutWordsRequest {
+    pub source: String,
+    /// Every deleted word index; words left out are kept (or restored).
+    pub deleted: Vec<usize>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -218,7 +227,61 @@ impl Session {
                 .filter(|c| req.ids.contains(&c.id))
                 .collect()
         };
-        let kept = kept_ranges(&chosen, duration);
+        let ranges: Vec<(f64, f64)> = chosen.iter().map(|c| (c.start, c.end)).collect();
+        let label = format!("cut: {} ({} cuts)", src.id, chosen.len());
+        self.lay_out(&src, duration, &ranges, Holder::Agent, label)
+    }
+
+    /// The full word list of a source's transcript, for the studio transcript panel.
+    pub fn transcript_words(&self, req: &SourceRequest) -> CkResult<Transcript> {
+        let src = self.source(&req.source)?;
+        self.transcript(&src)
+    }
+
+    /// Studio delete-to-cut: `deleted` is the whole set of deleted word indices, so restoring a
+    /// word at a clip edge is the same call with a smaller set. Each run of deleted words is cut
+    /// from its first word's start to the next kept word's start, as a human revision.
+    pub fn cut_words(&self, req: &CutWordsRequest) -> CkResult<CutApplyResult> {
+        let src = self.source(&req.source)?;
+        let duration = Self::duration(&src)?;
+        let words = self.transcript(&src)?.words;
+        if let Some(bad) = req.deleted.iter().find(|i| **i >= words.len()) {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                format!("word {bad} is past the transcript ({} words)", words.len()),
+            ));
+        }
+        let mut deleted = req.deleted.clone();
+        deleted.sort_unstable();
+        deleted.dedup();
+        let mut ranges: Vec<(f64, f64)> = Vec::new();
+        let mut n = 0;
+        while n < deleted.len() {
+            let first = deleted[n];
+            let mut last = first;
+            while n + 1 < deleted.len() && deleted[n + 1] == last + 1 {
+                n += 1;
+                last = deleted[n];
+            }
+            let end = words.get(last + 1).map_or(duration, |w| w.start);
+            ranges.push((words[first].start, end));
+            n += 1;
+        }
+        let label = format!("cut words: {} ({} deleted)", src.id, deleted.len());
+        self.lay_out(&src, duration, &ranges, Holder::Human, label)
+    }
+
+    /// The source's footage on the video track becomes the kept ranges once `cuts` are removed,
+    /// laid end to end from where its first segment started, as one revision by `holder`.
+    fn lay_out(
+        &self,
+        src: &Source,
+        duration: f64,
+        cuts: &[(f64, f64)],
+        holder: Holder,
+        label: String,
+    ) -> CkResult<CutApplyResult> {
+        let kept = kept_ranges(cuts, duration);
 
         let mut doc = self.doc()?;
         let project = doc.project();
@@ -284,9 +347,8 @@ impl Session {
                 )
             }
         };
-        let label = format!("cut: {} ({} cuts)", src.id, chosen.len());
-        let rev = self.commit_agent(&mut doc, ops, label)?;
-        let removed: f64 = chosen.iter().map(|c| c.end - c.start).sum();
+        let rev = self.commit_as(&mut doc, holder, ops, label, std::slice::from_ref(&track))?;
+        let removed: f64 = duration - kept.iter().map(|(s, e)| e - s).sum::<f64>();
         Ok(CutApplyResult {
             rev: rev.rev,
             track,

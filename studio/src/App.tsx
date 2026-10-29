@@ -1,5 +1,5 @@
-import { Player } from "@remotion/player";
-import { useEffect, useMemo, useState } from "react";
+import { Player, type PlayerRef } from "@remotion/player";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { request } from "./api";
 import type { Look } from "./generated/types";
 import { ActivityFeed } from "./panels/ActivityFeed";
@@ -7,6 +7,7 @@ import { Banner } from "./panels/Banner";
 import { BriefPanel } from "./panels/BriefPanel";
 import { Inspector } from "./panels/Inspector";
 import { Timeline } from "./panels/Timeline";
+import { TranscriptPanel } from "./panels/TranscriptPanel";
 import { ProjectComposition } from "./preview/ProjectComposition";
 import { PROJECT_LAYER, agentLocked, agentStopped, canEdit } from "./state";
 import { durationInFrames } from "./timeline";
@@ -18,6 +19,7 @@ export function App({ token }: { token: string }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [looks, setLooks] = useState<Look[]>([]);
   const [looksFailed, setLooksFailed] = useState(false);
+  const player = useRef<PlayerRef>(null);
 
   useEffect(() => {
     request<Look[]>(token, "/api/looks").then(setLooks, () =>
@@ -50,6 +52,7 @@ export function App({ token }: { token: string }) {
         <div className="studio-body">
           <main className="studio-preview">
             <Player
+              ref={player}
               component={ProjectComposition}
               inputProps={{
                 project,
@@ -80,6 +83,23 @@ export function App({ token }: { token: string }) {
               project={project}
               layerId={selected}
               readOnly={selected !== null && !canEdit(locks, selected, now)}
+            />
+            <TranscriptPanel
+              token={token}
+              project={project}
+              readOnly={
+                !canEdit(
+                  locks,
+                  project.tracks.find((t) => t.kind === "video")?.id ??
+                    PROJECT_LAYER,
+                  now,
+                )
+              }
+              onSeek={(seconds) =>
+                player.current?.seekTo(
+                  Math.round(seconds * project.settings.fps),
+                )
+              }
             />
             <ActivityFeed feed={feed} />
           </aside>
