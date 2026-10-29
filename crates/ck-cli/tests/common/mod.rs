@@ -2,7 +2,7 @@
 #![allow(clippy::unwrap_used, dead_code)] // test helpers outside #[test] functions
 
 use std::io::{BufRead, BufReader};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::{Child, Command, ExitStatus, Output, Stdio};
 use std::time::{Duration, Instant};
 
@@ -58,6 +58,33 @@ impl Drop for Studio {
     fn drop(&mut self) {
         let _ = self.child.kill();
         let _ = self.child.wait();
+    }
+}
+
+/// A fake browser that appends the URL it was given to `opened.txt` next to it.
+pub fn fake_browser(dir: &Path) -> (PathBuf, PathBuf) {
+    use std::os::unix::fs::PermissionsExt;
+    let log = dir.join("opened.txt");
+    let script = dir.join("browser.sh");
+    std::fs::write(
+        &script,
+        format!("#!/bin/sh\nprintf '%s\\n' \"$1\" >> '{}'\n", log.display()),
+    )
+    .unwrap();
+    std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o755)).unwrap();
+    (script, log)
+}
+
+/// Wait until `path` has `lines` lines (the fake browser runs detached).
+pub fn wait_lines(path: &Path, lines: usize) -> Vec<String> {
+    let t0 = Instant::now();
+    loop {
+        let text = std::fs::read_to_string(path).unwrap_or_default();
+        let got: Vec<String> = text.lines().map(str::to_owned).collect();
+        if got.len() >= lines || t0.elapsed() > Duration::from_secs(5) {
+            return got;
+        }
+        std::thread::sleep(Duration::from_millis(10));
     }
 }
 

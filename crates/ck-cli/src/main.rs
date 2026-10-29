@@ -2,6 +2,7 @@
 //! JSON on stdout; failures print the error as JSON on stderr and exit 1.
 
 mod args;
+mod hook;
 mod studio;
 
 use std::io::{Read, Write};
@@ -38,6 +39,10 @@ fn main() -> ExitCode {
     init_logging();
     tracing::debug!(version = env!("CARGO_PKG_VERSION"), "ck start");
     let cli = Cli::parse();
+    // Hooks speak Claude Code's exit-code protocol instead of printing errors.
+    if let Command::Hook(hook) = &cli.command {
+        return hook::run(hook, &cli.dir);
+    }
     match run(cli) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
@@ -89,6 +94,8 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Heartbeat { holder } => print(&ops()?.heartbeat(&HeartbeatRequest {
             holder: holder.holder,
         })?),
+        // Handled in main before run.
+        Command::Hook(_) => Ok(()),
     }
 }
 

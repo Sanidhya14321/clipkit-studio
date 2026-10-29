@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 3
 
 ## Handoff (latest)
-1. Done: Phase 3 step 2. `launch::connect` makes every ops command and every MCP tool except `studio` start a missing studio with the same locked ensure. The tab opens once on an auto-start, best effort; a missing browser does not fail the call.
-2. Proof: each CLI command and the first MCP call start a studio in an empty folder. A corrupt project gives the same start error in both doors. `just check`: 115 of 115 nextest, hooks 41 of 41, studio OK. Ensure is still 16 ms cold and 5 ms warm.
-3. Open: the reviewer has not yet run on the Phase 3 diff (planned for step 6). Test helpers set BROWSER=true; any new test that can auto-start must do the same. Decisions are in DECISIONS.md, Phase 3 step 2.
-4. Next: step 3, `ck hook prompt|guard|stop|session-end` (spec 6.1). The prompt hook runs ensure with open and quiet only for video prompts or an existing .clipkit, and never blocks a non-video session.
-5. Start: `just check`. Manual: `cargo run -p ck-cli -- status --dir <empty folder>` starts a studio. Timings: `cargo nextest run -p ck-cli --no-capture -E 'test(ensure_starts_once)'`.
+1. Done: Phase 3 step 3. `ck hook prompt|guard|stop|session-end` (crates/ck-cli/src/hook/) reads the hook JSON from stdin, uses `--dir` as the project folder, exits 0 to pass or 2 with a one-line reason, and never exits 1.
+2. Proof: `cli_hooks.rs` (5 e2e tests) and unit tests for the word list, guard rules and stop reason. `just check`: 129 of 129 nextest, hooks 41 of 41, studio OK. Non-video hooks take about 3 ms each.
+3. Open: hook input field names are from memory of the Claude Code hooks reference; step 4 must check them against the current docs. The reviewer has not yet run on the Phase 3 diff (step 6). Decisions are in DECISIONS.md, Phase 3 step 3.
+4. Next: step 4, `plugin/` (manifest, skills, critic agent, .mcp.json, hooks/hooks.json calling `ck hook <name> --dir "$CLAUDE_PROJECT_DIR"`). Check the format against the current plugins reference with the researcher first.
+5. Start: `just check`. Manual: `echo '{"prompt":"make a video"}' | cargo run -q -p ck-cli -- hook prompt --dir <folder>`.
 
 ## Open questions
 - Phase 5: `ort` has no stable 2.0 release and downloads ONNX Runtime at build time; confirm static linking into `ck` or evaluate a pure-Rust runtime (DECISIONS.md, asset expansion).
@@ -39,10 +39,16 @@ Spec: 00, 05 (5.1), 06, 09. Proof: typing a video prompt in Claude Code opens th
 Steps:
 - [x] 1. `ck studio --ensure [--open] [--quiet]` and its MCP twin `studio`: idempotent, starts a detached server in the background, opens the browser tab once per server.
 - [x] 2. First ck or MCP call ensures the studio is running (spec 5.1, agents without hooks).
-- [ ] 3. `ck hook prompt|guard|stop|session-end` (spec 6.1 hook behavior, fast, never blocks a non-video session).
+- [x] 3. `ck hook prompt|guard|stop|session-end` (spec 6.1 hook behavior, fast, never blocks a non-video session).
 - [ ] 4. `plugin/`: manifest, skills (clipkit-video with spec 9.4 text, clipkit-review), clipkit-critic agent, .mcp.json, hooks/hooks.json; format checked against the current plugins reference; structure tests.
 - [ ] 5. `ck init` / `ck uninstall` for Claude Code and Codex (detect, ask, idempotent, no residue); adapters/ texts.
 - [ ] 6. Proof run, reviewer and spec-checker, evidence, phase done.
+
+Run plan (autonomous run 3): step 3 only.
+- ck-cli `hook` module: reads the Claude Code hook JSON from stdin (capped), project folder from `--dir` (hooks.json will pass `$CLAUDE_PROJECT_DIR`).
+- `prompt`: acts only for a video-looking prompt or an existing .clipkit; ensure + open, one-line note (url, mode, stage, agent). `guard`: only in a .clipkit project; exit 2 with a reason for Write/Edit on .clipkit/, assets/, media files and Bash running ffmpeg/ffprobe/sox, touching .clipkit or mutating assets/ or media.
+- `stop`: never starts a studio; respects stop_hook_active; blocks once on agent locks or agent status working. `session-end`: releases agent locks; always exit 0.
+- Tests: unit tests for the classifiers; CLI e2e per hook (non-video session silent and exit 0, block exit 2, stop loop guard, session-end unlock).
 
 Run plan (autonomous run 2): step 2 only.
 - ck-server `launch::connect(dir, launcher)`: Ops for the running studio, or ensure one first (the start also opens the tab once, best effort, so hookless agents see it).

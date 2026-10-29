@@ -66,6 +66,21 @@ pub enum Command {
         #[command(flatten)]
         holder: HolderArg,
     },
+    /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
+    #[command(subcommand)]
+    Hook(HookCommand),
+}
+
+#[derive(Debug, Subcommand)]
+pub enum HookCommand {
+    /// UserPromptSubmit: start and open the studio for video prompts; one context line.
+    Prompt,
+    /// PreToolUse: refuse direct edits to .clipkit/, assets/, media and ck-bypassing commands.
+    Guard,
+    /// Stop: block once while the agent holds locks or is mid-stage.
+    Stop,
+    /// SessionEnd: release the agent's locks.
+    SessionEnd,
 }
 
 #[derive(Debug, Subcommand)]

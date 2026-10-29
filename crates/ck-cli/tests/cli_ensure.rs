@@ -4,12 +4,12 @@
 
 mod common;
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::{Command, Output};
 use std::time::{Duration, Instant};
 
 use ck_server::ops::caps;
-use common::{Background, err, ok};
+use common::{Background, err, fake_browser, ok, wait_lines};
 use serde_json::{Value, json};
 
 fn ensure_cmd(dir: &Path, extra: &[&str]) -> Command {
@@ -20,20 +20,6 @@ fn ensure_cmd(dir: &Path, extra: &[&str]) -> Command {
     cmd
 }
 
-/// A fake browser that appends the URL it was given to `opened.txt` next to it.
-fn fake_browser(dir: &Path) -> (PathBuf, PathBuf) {
-    use std::os::unix::fs::PermissionsExt;
-    let log = dir.join("opened.txt");
-    let script = dir.join("browser.sh");
-    std::fs::write(
-        &script,
-        format!("#!/bin/sh\nprintf '%s\\n' \"$1\" >> '{}'\n", log.display()),
-    )
-    .unwrap();
-    std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o755)).unwrap();
-    (script, log)
-}
-
 fn parse_ok(out: &Output) -> Value {
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(out.status.success(), "ensure failed: {stderr}");
@@ -41,19 +27,6 @@ fn parse_ok(out: &Output) -> Value {
     assert_eq!(stdout.lines().count(), 1);
     assert!(stdout.len() <= caps::STUDIO + 1, "over the studio cap");
     serde_json::from_str(&stdout).unwrap()
-}
-
-/// Wait until `path` has `lines` lines (the fake browser runs detached).
-fn wait_lines(path: &Path, lines: usize) -> Vec<String> {
-    let t0 = Instant::now();
-    loop {
-        let text = std::fs::read_to_string(path).unwrap_or_default();
-        let got: Vec<String> = text.lines().map(str::to_owned).collect();
-        if got.len() >= lines || t0.elapsed() > Duration::from_secs(5) {
-            return got;
-        }
-        std::thread::sleep(Duration::from_millis(10));
-    }
 }
 
 #[test]
