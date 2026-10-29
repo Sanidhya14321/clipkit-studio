@@ -420,6 +420,13 @@ impl Trim for ck_assets::vet::VetResult {
     }
 }
 
+impl Trim for ck_assets::ingest::IngestResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.assets, &mut self.omitted)
+    }
+}
+
 impl Trim for VoiceScriptResult {
     type Entry = SlotSummary;
     fn parts(&mut self) -> (&mut Vec<SlotSummary>, &mut usize) {

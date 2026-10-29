@@ -51,6 +51,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("sources_list", ck_assets::sources::caps::SOURCES_LIST),
         ("sources_add", ck_assets::sources::caps::SOURCES_WRITE),
         ("sources_vet", ck_assets::vet::caps::VET),
+        ("sources_ingest", ck_assets::ingest::caps::INGEST),
         ("sources_gaps", ck_assets::sources::caps::SOURCES_GAPS),
         ("look_apply", caps::LOOK_APPLY),
         ("recipe_apply", caps::RECIPE_APPLY),

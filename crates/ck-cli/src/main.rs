@@ -38,6 +38,7 @@ use args::{
     TranscriptCommand, VoiceCommand,
 };
 use ck_assets::hub::Hub;
+use ck_assets::ingest::{self, IngestRequest};
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
@@ -297,6 +298,14 @@ fn run(cli: Cli) -> CkResult<()> {
                     print(&ck_server::ops::trimmed(
                         "sources vet",
                         vet::caps::VET,
+                        out,
+                    )?)
+                }
+                SourcesCommand::Ingest { id } => {
+                    let out = ingest::ingest(&hub, &IngestRequest { id })?;
+                    print(&ck_server::ops::trimmed(
+                        "sources ingest",
+                        ingest::caps::INGEST,
                         out,
                     )?)
                 }

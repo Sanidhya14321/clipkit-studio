@@ -419,6 +419,8 @@ pub enum SourcesCommand {
         #[arg(long)]
         from: Option<String>,
     },
+    /// Turn a vetted source into cards, ast.json files and catalog lines.
+    Ingest { id: String },
     /// What the catalog is missing.
     Gaps,
 }

@@ -5,6 +5,7 @@
 use std::path::Path;
 
 use ck_assets::hub::Hub;
+use ck_assets::ingest::{self, IngestRequest};
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
@@ -198,6 +199,14 @@ pub fn specs() -> Vec<ToolSpec> {
              dependency checks. Pass: vetted and enabled; blocker: rejected; unknown license: \
              stays unverified. Pins the result in sources.lock.",
             vet::caps::VET,
+        ),
+        spec::<IngestRequest>(
+            "sources_ingest",
+            "ck sources ingest",
+            "Turn a vetted source into cards: each exported component gets asset.md, ast.json \
+             and a read-only copy of its file (parsing only, nothing runs); rebuilds the \
+             catalog. Owner notes are kept.",
+            ingest::caps::INGEST,
         ),
         spec::<SourcesGapsRequest>(
             "sources_gaps",
@@ -399,6 +408,7 @@ pub fn is_offline(name: &str) -> bool {
             | "sources_add"
             | "sources_gaps"
             | "sources_vet"
+            | "sources_ingest"
     )
 }
 
@@ -429,6 +439,14 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
             json(&ck_server::ops::trimmed(
                 "sources vet",
                 vet::caps::VET,
+                out,
+            )?)
+        }),
+        "sources_ingest" => parse::<IngestRequest>(args).and_then(|r| {
+            let out = ingest::ingest(&hub()?, &r)?;
+            json(&ck_server::ops::trimmed(
+                "sources ingest",
+                ingest::caps::INGEST,
                 out,
             )?)
         }),

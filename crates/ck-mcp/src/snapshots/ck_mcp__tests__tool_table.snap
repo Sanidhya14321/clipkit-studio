@@ -749,6 +749,24 @@ expression: specs()
     }
   },
   {
+    "name": "sources_ingest",
+    "command": "ck sources ingest",
+    "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "sources_gaps",
     "command": "ck sources gaps",
     "description": "What the catalog is missing: usable and unverified source counts, sources without a repo, asset kinds with no searchable card.",

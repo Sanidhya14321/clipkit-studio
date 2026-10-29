@@ -487,6 +487,18 @@ fn sources_tools_answer_like_their_cli_twins_without_a_studio() {
     );
     assert_eq!(cli, tool);
     assert!(cli.contains("\"vetted\""), "{cli}");
+    let cli = ok_line(
+        d,
+        &["sources", "ingest", "pack-a"],
+        ck_assets::ingest::caps::INGEST,
+    );
+    let tool = mcp.ok(
+        "sources_ingest",
+        json!({ "id": "pack-a" }),
+        ck_assets::ingest::caps::INGEST,
+    );
+    assert_eq!(cli, tool);
+    assert!(cli.contains("pack-a/glow-title"), "{cli}");
 
     let refused = mcp.err("sources_add", json!({ "id": "pack-a", "kind": "x" }));
     assert_eq!(code(&refused), "E_REQUEST");
