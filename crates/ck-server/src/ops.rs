@@ -9,6 +9,10 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use serde::Serialize;
 
 use crate::client::Client;
+use crate::session::brief::{
+    BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
+    BriefWaitRequest, BriefWaitResult,
+};
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
 
@@ -21,6 +25,9 @@ pub mod caps {
     pub const PATCH: usize = 4 * 1024;
     pub const LOCK: usize = 4 * 1024;
     pub const STUDIO: usize = 1024;
+    /// The confirmed brief reaches the agent in about 600 tokens (spec 8.1).
+    pub const BRIEF: usize = 4 * 1024;
+    pub const BRIEF_PROPOSE: usize = 1024;
 }
 
 pub struct Ops {
@@ -77,6 +84,54 @@ impl Ops {
     pub fn heartbeat(&self, req: &HeartbeatRequest) -> CkResult<LockResult> {
         let reply = self.client.post("/api/heartbeat", req)?;
         trimmed("heartbeat", caps::LOCK, reply)
+    }
+
+    /// `brief propose`: write the inferred values; the studio shows the Brief page.
+    pub fn brief_propose(&self, req: &BriefProposeRequest) -> CkResult<BriefProposeResult> {
+        req.check()?;
+        let reply = self.client.post("/api/brief/propose", req)?;
+        trimmed("brief propose", caps::BRIEF_PROPOSE, reply)
+    }
+
+    /// `brief get`: the brief in compact form with its rev.
+    pub fn brief_get(&self) -> CkResult<BriefView> {
+        capped(
+            "brief get",
+            caps::BRIEF,
+            self.client.get("/api/brief", &[])?,
+        )
+    }
+
+    /// `brief wait`: block until the user confirms the brief (or it is auto), up to the timeout.
+    pub fn brief_wait(&self, req: &BriefWaitRequest) -> CkResult<BriefWaitResult> {
+        let secs = req.timeout_secs.map(|s| s.to_string());
+        let query: Vec<(&str, &str)> = secs.iter().map(|s| ("timeoutSecs", s.as_str())).collect();
+        capped(
+            "brief wait",
+            caps::BRIEF,
+            self.client.get("/api/brief/wait", &query)?,
+        )
+    }
+
+    /// `brief diff --since <rev>`: only what changed in the brief.
+    pub fn brief_diff(&self, req: &BriefDiffRequest) -> CkResult<BriefDiff> {
+        let since = req.since.to_string();
+        let reply = self.client.get("/api/brief/diff", &[("since", &since)])?;
+        trimmed("brief diff", caps::BRIEF, reply)
+    }
+}
+
+impl Trim for BriefProposeResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.kept, &mut self.omitted)
+    }
+}
+
+impl Trim for BriefDiff {
+    type Entry = BriefChange;
+    fn parts(&mut self) -> (&mut Vec<BriefChange>, &mut usize) {
+        (&mut self.changes, &mut self.omitted)
     }
 }
 

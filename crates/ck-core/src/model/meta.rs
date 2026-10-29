@@ -186,6 +186,25 @@ pub struct Brief {
     pub effort: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub license_mode: Option<String>,
+    /// Dynamic questions the agent adds to the Brief page (at most [`MAX_BRIEF_QUESTIONS`]).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub questions: Vec<BriefQuestion>,
+}
+
+/// Most dynamic questions one brief may carry (spec 8.1).
+pub const MAX_BRIEF_QUESTIONS: usize = 3;
+
+/// A question the agent adds to the brief, stating which fields its answer affects.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct BriefQuestion {
+    pub id: String,
+    pub text: String,
+    /// Brief fields or parts of the video the answer changes (never empty).
+    pub affects: Vec<String>,
+    /// The user's answer, once given.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub answer: Option<serde_json::Value>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema, TS)]

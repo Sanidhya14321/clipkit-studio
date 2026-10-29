@@ -1,5 +1,6 @@
 ---
 source: crates/ck-core/src/model/tests.rs
+assertion_line: 98
 expression: "schemars::schema_for!(Project)"
 ---
 {
@@ -239,6 +240,13 @@ expression: "schemars::schema_for!(Project)"
             "null"
           ]
         },
+        "questions": {
+          "description": "Dynamic questions the agent adds to the Brief page (at most [`MAX_BRIEF_QUESTIONS`]).",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BriefQuestion"
+          }
+        },
         "status": {
           "$ref": "#/$defs/BriefStatus",
           "default": "proposed"
@@ -262,6 +270,33 @@ expression: "schemars::schema_for!(Project)"
         "value",
         "source",
         "confidence"
+      ]
+    },
+    "BriefQuestion": {
+      "description": "A question the agent adds to the brief, stating which fields its answer affects.",
+      "type": "object",
+      "properties": {
+        "affects": {
+          "description": "Brief fields or parts of the video the answer changes (never empty).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "answer": {
+          "description": "The user's answer, once given."
+        },
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "affects"
       ]
     },
     "BriefSource": {

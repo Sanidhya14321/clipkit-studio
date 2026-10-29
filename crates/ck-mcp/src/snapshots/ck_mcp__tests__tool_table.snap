@@ -1,5 +1,6 @@
 ---
 source: crates/ck-mcp/src/tests.rs
+assertion_line: 11
 expression: specs()
 ---
 [
@@ -396,6 +397,129 @@ expression: specs()
       "required": [
         "holder"
       ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "brief_propose",
+    "command": "ck brief propose",
+    "description": "Send inferred brief values only (and at most 3 questions, each naming what it affects); the studio shows the Brief page. Then call brief_wait.",
+    "cap": 1024,
+    "inputSchema": {
+      "$defs": {
+        "BriefQuestion": {
+          "description": "A question the agent adds to the brief, stating which fields its answer affects.",
+          "properties": {
+            "affects": {
+              "description": "Brief fields or parts of the video the answer changes (never empty).",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "answer": {
+              "description": "The user's answer, once given."
+            },
+            "id": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "text",
+            "affects"
+          ],
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "description": "`brief propose`: inferred values only. Fields the user already set are kept as they are.",
+      "properties": {
+        "auto": {
+          "default": false,
+          "description": "The user asked for no questions or autopilot is on: mark the brief auto, so planning can\nstart; the studio shows it afterwards as an editable card.",
+          "type": "boolean"
+        },
+        "confidence": {
+          "additionalProperties": {
+            "format": "double",
+            "type": "number"
+          },
+          "description": "Optional confidence (0 to 1) per field; 0.5 when omitted.",
+          "type": "object"
+        },
+        "fields": {
+          "additionalProperties": true,
+          "description": "Field name (goal, cta, audience, platform, aspect, length, pacing, look, voice, ...) to\nthe inferred value.",
+          "type": "object"
+        },
+        "questions": {
+          "description": "At most three dynamic questions, each naming what it affects.",
+          "items": {
+            "$ref": "#/$defs/BriefQuestion"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "fields"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "brief_wait",
+    "command": "ck brief wait",
+    "description": "Block until the user confirms the brief (or it is auto), at most 25 s; call again while ready is false. Returns the confirmed brief.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "timeoutSecs": {
+          "description": "Seconds to block (default 20, at most 25); 0 checks once.",
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "brief_diff",
+    "command": "ck brief diff",
+    "description": "Only what changed in the brief since a rev you read; patch only layers whose briefDeps changed.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "since": {
+          "description": "The rev of the brief the agent last read (from `brief get` or `brief wait`).",
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "since"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "brief_get",
+    "command": "ck brief get",
+    "description": "The brief in compact form (value and source per field) with its rev.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "description": "`status` takes no input.",
       "type": "object"
     }
   },

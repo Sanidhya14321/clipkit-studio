@@ -193,3 +193,45 @@ proptest! {
         prop_assert_eq!(a, b);
     }
 }
+
+#[test]
+fn content_at_rebuilds_earlier_revisions() {
+    let mut doc = Document::new(sample());
+    let start = content_of(&doc);
+    doc.acquire(Holder::Agent, &["b".to_owned()], 0).unwrap();
+    for at in [3.0, 4.0] {
+        let req = edit(
+            &doc,
+            Author::Agent,
+            json!([{"op": "replace", "path": "/tracks/1/items/0/at", "value": at}]),
+        );
+        doc.patch(&req, 0).unwrap();
+    }
+    assert_eq!(doc.content_at(0).unwrap(), start);
+    assert_eq!(
+        doc.content_at(1).unwrap()["tracks"][1]["items"][0]["at"],
+        3.0
+    );
+    assert_eq!(doc.content_at(2).unwrap(), content_of(&doc));
+    assert_eq!(doc.content_at(3).unwrap_err().code, ErrorCode::NotFound);
+    let partial = Document::from_parts(doc.project().clone(), doc.history()[1..].to_vec());
+    assert_eq!(partial.content_at(0).unwrap_err().code, ErrorCode::NotFound);
+}
+
+#[test]
+fn brief_questions_are_capped_and_need_affects() {
+    use crate::model::BriefQuestion;
+    let q = |id: &str, affects: &[&str]| BriefQuestion {
+        id: id.into(),
+        text: "Show pricing?".into(),
+        affects: affects.iter().map(|s| (*s).to_owned()).collect(),
+        answer: None,
+    };
+    let mut p = sample();
+    p.brief.questions = vec![q("a", &["cta"]), q("b", &["cta"]), q("c", &["cta"])];
+    p.validate().unwrap();
+    p.brief.questions.push(q("d", &["cta"]));
+    assert_eq!(p.validate().unwrap_err().code, ErrorCode::Schema);
+    p.brief.questions = vec![q("a", &[])];
+    assert_eq!(p.validate().unwrap_err().code, ErrorCode::Schema);
+}

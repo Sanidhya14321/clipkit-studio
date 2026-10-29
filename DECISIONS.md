@@ -4,6 +4,15 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 3: Brief Studio essentials (spec 8.1, 6.2)
+- `Brief.questions` added to the model (id, text, affects, answer); the schema gate caps it at 3 and requires a non-empty `affects`. Schema snapshot and TS types regenerated.
+- `brief propose` is a normal agent revision on `/brief`: the agent takes `@project` for the write unless it holds it, then releases it, so a human holding `@project` refuses the write (E_LOCK_HELD). Fields with source `user` are never overwritten (listed in `kept`); earlier inferred fields not proposed again are dropped; status becomes `proposed` (or `auto` with `auto: true`). The same values twice write no revision. Answers survive when a question is asked again with the same id and text.
+- Confirmation is a human patch on `/brief` (status `confirmed`, fields with source `user`); no separate confirm route. The studio panel (step 4) sends that patch.
+- `brief diff --since <rev>` rebuilds the brief at `rev` from history inverses (`Document::content_at`) instead of storing an agent-seen copy; E_NOT_FOUND if history does not reach back. Entries: field names, `status`, `checkpoints`, `effort`, `licenseMode`, `question:<id>`; a source change alone (inferred to user) counts.
+- `brief wait` blocks at most 25 s (default 20) so it stays under the client's 30 s timeout; the agent calls it again while `ready` is false. The longer `ck wait` event bridge is step 9.
+- Stage gate (`Op::ProposeBrief`) is not enforced yet: no server route advances the pipeline stage. Wire it when stages are driven (step 9 or 10).
+- Caps: proposal input 4 KB and 40 fields; propose reply 1 KB; get, wait and diff 4 KB (spec: about 600 tokens).
+
 ### Step 2: taste and look commands (spec 6.2)
 - **`ck taste read`, not `get`**: spec 6.2 names `taste search, read`; the Phase 4 plan said get. Looks have no spec 6.2 entry; `ck look list|get` were added because the brief's look cards (spec 8.1) and re-theming need them.
 - **Built into the binary**: taste files and looks are embedded with `include_str!` so an installed `ck` needs no repo `assets/` folder; a test checks the embedded copy equals the folder. Adding a file means adding it to the table in `ck-assets/src/library.rs`.

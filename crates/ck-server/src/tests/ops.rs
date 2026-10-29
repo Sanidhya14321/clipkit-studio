@@ -12,8 +12,8 @@ use crate::serve::Server;
 use crate::session::{HeartbeatRequest, LockRequest, PatchResult, UnlockRequest};
 
 /// A running server on its own runtime; dropping it stops the server.
-struct Live {
-    f: Fixture,
+pub(super) struct Live {
+    pub(super) f: Fixture,
     info: ServerInfo,
     /// Kept alive for the server task; dropped after the stop signal.
     _rt: tokio::runtime::Runtime,
@@ -21,7 +21,7 @@ struct Live {
 }
 
 impl Live {
-    fn start() -> Self {
+    pub(super) fn start() -> Self {
         let f = Fixture::new();
         let rt = tokio::runtime::Builder::new_multi_thread()
             .worker_threads(2)
@@ -44,7 +44,7 @@ impl Live {
         }
     }
 
-    fn ops(&self) -> Ops {
+    pub(super) fn ops(&self) -> Ops {
         Ops::connect(self.f.dir.path()).unwrap()
     }
 }

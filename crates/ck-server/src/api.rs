@@ -2,7 +2,7 @@
 
 use std::sync::Arc;
 
-use axum::extract::rejection::JsonRejection;
+use axum::extract::rejection::{JsonRejection, QueryRejection};
 use axum::extract::{DefaultBodyLimit, Query, State};
 use axum::http::{Method, Uri};
 use axum::routing::{get, post};
@@ -15,9 +15,11 @@ use serde::de::DeserializeOwned;
 use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
+use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
 use crate::ws;
+use tokio::sync::broadcast::error::RecvError;
 
 /// Largest accepted request body. Patches are small; whole projects never travel inbound.
 pub const BODY_LIMIT: usize = 1024 * 1024;
@@ -39,6 +41,10 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/lock", post(lock))
         .route("/api/unlock", post(unlock))
         .route("/api/heartbeat", post(heartbeat))
+        .route("/api/brief", get(brief_get))
+        .route("/api/brief/propose", post(brief_propose))
+        .route("/api/brief/diff", get(brief_diff))
+        .route("/api/brief/wait", get(brief_wait))
         .route("/ws", get(ws::upgrade))
         // Runs after the token check, so only authorized calls keep the server alive.
         .layer(middleware::from_fn_with_state(session.clone(), idle::touch))
@@ -108,6 +114,57 @@ async fn heartbeat(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.heartbeat(&req)).await
+}
+
+async fn brief_get(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.brief_get()).await
+}
+
+async fn brief_propose(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<BriefProposeRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.brief_propose(&req)).await
+}
+
+async fn brief_diff(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<BriefDiffRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    blocking(s, move |s| s.brief_diff(&req)).await
+}
+
+/// Blocks until the brief is confirmed or auto, or the timeout passes. It subscribes before the
+/// first check, so a confirmation landing in between still wakes it.
+async fn brief_wait(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<BriefWaitRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    let secs = req
+        .timeout_secs
+        .unwrap_or(brief::WAIT_DEFAULT_SECS)
+        .min(brief::WAIT_MAX_SECS);
+    let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(secs);
+    let mut rx = s.events();
+    loop {
+        let check = blocking(s.clone(), |s| s.brief_wait_check()).await?;
+        if check.0["ready"] == true || tokio::time::Instant::now() >= deadline {
+            return Ok(check);
+        }
+        match tokio::time::timeout_at(deadline, rx.recv()).await {
+            // A change or a lagged receiver: check again. A timeout: the next check is the last.
+            Ok(Ok(_)) | Ok(Err(RecvError::Lagged(_))) | Err(_) => {}
+            Ok(Err(RecvError::Closed)) => return Ok(check),
+        }
+    }
+}
+
+fn query<T>(q: Result<Query<T>, QueryRejection>) -> Result<T, ApiError> {
+    q.map(|Query(v)| v)
+        .map_err(|e| ApiError(CkError::new(ErrorCode::Request, e.body_text())))
 }
 
 fn parse<T: DeserializeOwned>(body: Result<Json<T>, JsonRejection>) -> Result<T, ApiError> {

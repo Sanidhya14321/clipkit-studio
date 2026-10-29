@@ -2,7 +2,7 @@
 
 use std::collections::HashSet;
 
-use super::{ItemBody, Project, SCHEMA_VERSION};
+use super::{ItemBody, MAX_BRIEF_QUESTIONS, Project, SCHEMA_VERSION};
 use crate::error::{CkError, CkResult, ErrorCode};
 
 fn fail(msg: String) -> CkError {
@@ -28,6 +28,36 @@ impl Project {
         let s = &self.settings;
         if s.fps == 0 || s.width == 0 || s.height == 0 {
             return Err(fail("settings.fps, width and height must be > 0".into()));
+        }
+
+        let qs = &self.brief.questions;
+        if qs.len() > MAX_BRIEF_QUESTIONS {
+            return Err(fail(format!(
+                "brief.questions has {} entries; at most {MAX_BRIEF_QUESTIONS}",
+                qs.len()
+            )));
+        }
+        let mut qids = HashSet::new();
+        for q in qs {
+            if q.id.is_empty() || !qids.insert(q.id.as_str()) {
+                return Err(fail(format!(
+                    "brief question id {:?} is empty or repeated",
+                    q.id
+                )));
+            }
+            if q.text.trim().is_empty() || q.affects.is_empty() {
+                return Err(fail(format!(
+                    "brief question {:?} needs text and at least one affected field",
+                    q.id
+                )));
+            }
+        }
+        for (name, f) in &self.brief.fields {
+            if !(0.0..=1.0).contains(&f.confidence) {
+                return Err(fail(format!(
+                    "brief.fields.{name}.confidence must be 0 to 1"
+                )));
+            }
         }
 
         let mut ids = HashSet::new();

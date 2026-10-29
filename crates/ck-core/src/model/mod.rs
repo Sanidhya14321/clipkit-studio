@@ -13,8 +13,9 @@ use ts_rs::TS;
 
 pub use item::{CaptionFrom, Item, ItemBody, TimeRange, Track, TrackKind};
 pub use meta::{
-    Anchor, Author, Brief, BriefField, BriefSource, BriefStatus, Comment, CommentStatus, Holder,
-    Lock, Point, Reply, Source, SourceKind, VoiceMode, VoiceSlot, VoiceSlotStatus, VoiceTake,
+    Anchor, Author, Brief, BriefField, BriefQuestion, BriefSource, BriefStatus, Comment,
+    CommentStatus, Holder, Lock, MAX_BRIEF_QUESTIONS, Point, Reply, Source, SourceKind, VoiceMode,
+    VoiceSlot, VoiceSlotStatus, VoiceTake,
 };
 pub use pipeline::{AgentState, AgentStatus, Pass, PipelineState, Stage};
 

@@ -14,11 +14,12 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::api::BODY_LIMIT;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
+use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
 
-use args::{Cli, Command, LookCommand, ProjectCommand, TasteCommand};
+use args::{BriefCommand, Cli, Command, LookCommand, ProjectCommand, TasteCommand};
 use ck_assets::library::{self, IdRequest, LookListRequest, TasteSearchRequest};
 
 /// JSON log lines to stderr when `CK_LOG` is set (for example `CK_LOG=debug`). Off by default so
@@ -96,6 +97,20 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Heartbeat { holder } => print(&ops()?.heartbeat(&HeartbeatRequest {
             holder: holder.holder,
         })?),
+        Command::Brief(BriefCommand::Propose { file }) => {
+            let req = serde_json::from_str(&read_input(&file, "proposal")?)
+                .map_err(|e| request_err(format!("proposal JSON: {e}")))?;
+            print(&ops()?.brief_propose(&req)?)
+        }
+        Command::Brief(BriefCommand::Wait { timeout }) => {
+            print(&ops()?.brief_wait(&BriefWaitRequest {
+                timeout_secs: timeout,
+            })?)
+        }
+        Command::Brief(BriefCommand::Diff { since }) => {
+            print(&ops()?.brief_diff(&BriefDiffRequest { since })?)
+        }
+        Command::Brief(BriefCommand::Get) => print(&ops()?.brief_get()?),
         // Built-in asset library: no studio needed.
         Command::Taste(TasteCommand::Search { query, limit }) => {
             print(&library::taste_search(&TasteSearchRequest {
@@ -127,19 +142,33 @@ fn mcp(root: std::path::PathBuf) -> CkResult<()> {
 /// The patch argument is the JSON itself, or `-` to read it from stdin.
 fn read_patch(arg: &str) -> CkResult<PatchRequest> {
     let text = if arg == "-" {
-        let mut s = String::new();
-        std::io::stdin()
-            .take(BODY_LIMIT as u64 + 1)
-            .read_to_string(&mut s)
-            .map_err(|e| request_err(format!("reading stdin: {e}")))?;
-        if s.len() > BODY_LIMIT {
-            return Err(request_err(format!("patch is over {BODY_LIMIT} bytes")));
-        }
-        s
+        read_limited(std::io::stdin(), "patch")?
     } else {
         arg.to_owned()
     };
     serde_json::from_str(&text).map_err(|e| request_err(format!("patch JSON: {e}")))
+}
+
+/// A file argument (`ck brief propose FILE`), or `-` for stdin.
+fn read_input(arg: &str, what: &str) -> CkResult<String> {
+    if arg == "-" {
+        return read_limited(std::io::stdin(), what);
+    }
+    let file = std::fs::File::open(arg)
+        .map_err(|e| request_err(format!("opening {what} file {arg:?}: {e}")))?;
+    read_limited(file, what)
+}
+
+fn read_limited(input: impl Read, what: &str) -> CkResult<String> {
+    let mut s = String::new();
+    input
+        .take(BODY_LIMIT as u64 + 1)
+        .read_to_string(&mut s)
+        .map_err(|e| request_err(format!("reading {what}: {e}")))?;
+    if s.len() > BODY_LIMIT {
+        return Err(request_err(format!("{what} is over {BODY_LIMIT} bytes")));
+    }
+    Ok(s)
 }
 
 fn request_err(message: String) -> CkError {

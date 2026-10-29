@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 2: built-in library (`ck-assets/src/library.rs`, embedded), `ck taste search|read`, `ck look list|get` and MCP twins `taste_search`, `taste_read`, `look_list`, `look_get` (no studio needed), `assets/INDEX.md`.
-2. Proof: `just check` 173 of 173 nextest (1 skipped), hooks 41 of 41, studio exit 0. Evidence in VERIFICATION.md, Phase 4 step 2.
-3. Open: `taste read` follows spec 6.2 instead of the plan's `get`; looks commands are an addition for the brief (DECISIONS.md, step 2). Fonts still not bundled. Phase 3 interactive items stay BLOCKED.
-4. Next: Phase 4 step 3, Brief Studio essentials `ck brief propose|wait|diff|get` with MCP twins (spec 8.1, 9).
-5. Start: `just check`. Library tests: `cargo nextest run -p ck-assets -p ck-mcp`.
+1. Done: Phase 4 step 3: `Brief.questions` (max 3), `Document::content_at`, `ck-server/src/session/brief.rs`, routes `/api/brief[/propose|/diff|/wait]`, `ck brief propose|wait|diff|get` and MCP twins `brief_propose|wait|diff|get`.
+2. Proof: `just check` 180 of 180 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 4 step 3.
+3. Open: stage gate for brief ops not enforced (no stage driver yet); `brief wait` caps at 25 s per call; `brief set` (spec 6.2 list) not built, the studio confirms with a human patch (DECISIONS.md, step 3). Fonts still not bundled. Phase 3 interactive items stay BLOCKED.
+4. Next: Phase 4 step 4, studio brief panel (essentials form, pacing slider with numbers, look cards, confirm as a human patch on `/brief`) with a Playwright test.
+5. Start: `just check`. Brief tests: `cargo nextest run -p ck-server -E 'test(brief)'`; parity: `cargo nextest run -p ck-cli -E 'test(brief)'`.
 
 ## Open questions
+- Phase 4 step 3: spec 6.2 lists `brief set`; not built (the studio confirms through a human patch). Add it if the agent needs to set user-requested values directly. Wire `Op::ProposeBrief` stage gating once stages are driven.
 - Phase 3 step 7: check Cursor's `~/.cursor/mcp.json` and `.cursor/rules/*.mdc` format, and whether a user-level rules file exists, against cursor.com/docs (DECISIONS.md, step 7).
 - Phase 3 step 6: run the real proof in an interactive session (Claude Code and Codex) and flip the BLOCKED rows in VERIFICATION.md.
 - Phase 3 step 5: the Codex MCP config (`$CODEX_HOME/config.toml`, `[mcp_servers.<name>]` command/args, MCP server working folder) and AGENTS.md location are from memory: verify against developers.openai.com/codex/mcp and /guides/agents-md. Also confirm Claude Code picks up a plugin enabled only through `extraKnownMarketplaces` + `enabledPlugins` (else ck init must run `claude plugin install`).
@@ -43,7 +44,7 @@ Spec: 00, 04 (4.3), 07, 08 (8.1, 8.5), 09. Proof: prompt to brief to a 15 second
 Steps:
 - [x] 1. Starter taste library (12 files with concrete numbers) and 4 looks (design tokens plus motion personality) in `assets/`, authored originally; `ck-assets` loaders with validation (front matter, size caps, contrast, at most two font families).
 - [x] 2. `ck taste search|read` and `ck look list|get` with MCP twins, output caps, parity tests; `assets/INDEX.md` (under 60 lines).
-- [ ] 3. Brief Studio essentials: `ck brief propose|wait|diff|get` (inferred values only, field sources, at most three dynamic questions) and its MCP twins.
+- [x] 3. Brief Studio essentials: `ck brief propose|wait|diff|get` (inferred values only, field sources, at most three dynamic questions) and its MCP twins.
 - [ ] 4. Studio brief panel (essentials form, pacing slider with numbers, look cards, confirm) with Playwright test.
 - [ ] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
 - [ ] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
@@ -51,6 +52,12 @@ Steps:
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 3): step 3.
+- ck-core: `Brief.questions` (at most 3, each names the fields it affects; schema gate), `Document::content_at(rev)` replaying inverses.
+- ck-server `brief` module: propose (inferred values only, user-set fields kept, status proposed or auto, through the patch and lock gates as the agent), get (compact view with rev), diff since a rev, wait (blocks on the event bus up to 25 s).
+- Routes `/api/brief`, `/api/brief/propose`, `/api/brief/diff`, `/api/brief/wait`; `Ops` with caps; `ck brief propose|wait|diff|get`; MCP twins `brief_propose|wait|diff|get`.
+- Tests: propose/get/diff/wait in server tests, caps, schema snapshot, parity.
 
 Run plan (autonomous run 2): step 2.
 - Embed the starter taste files and looks in `ck-assets` (`include_str!`), so an installed `ck` needs no assets folder; a test keeps the table in step with `assets/`.

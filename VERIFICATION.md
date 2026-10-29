@@ -159,6 +159,14 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 2: MCP twins (schema, cap, parity, no studio started) | PASS | `ck_mcp` `tool_table_snapshot` (4 tools added), `every_tool_has_an_object_schema_and_its_cli_cap`, `offline_tools_are_exactly_the_library_tools`; `crates/ck-cli/tests/mcp_parity.rs` `library_tools_answer_like_their_cli_twins_without_a_studio` |
 | Step 2: `assets/INDEX.md` under 60 lines, names every built-in file | PASS | `assets_index_is_short_and_names_every_built_in_file` |
 | Step 2 run | PASS | 2026-10-29 `just check`: 173 of 173 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and unit tests exit 0 |
+| Step 3: propose sends inferred values only, user-set fields win, re-propose needs confirmation again, same values write no revision | PASS | `ck-server` `tests::brief::propose_get_confirm_and_diff` |
+| Step 3: at most three dynamic questions, each naming what it affects | PASS | `tests::brief::bad_proposals_are_refused` (E_REQUEST over 3, E_SCHEMA with empty affects); `ck-core` `document::tests::brief_questions_are_capped_and_need_affects` |
+| Step 3: brief writes go through the lock gate (human holding `@project` refuses the agent) | PASS | `tests::brief::bad_proposals_are_refused` (E_LOCK_HELD, rev stays 0) |
+| Step 3: `brief wait` blocks on the event bus and wakes on confirm; auto is ready at once | PASS | `tests::brief::wait_blocks_until_the_user_confirms` (woken under 5 s of a 10 s wait) |
+| Step 3: `brief diff --since` rebuilt from history; unknown rev E_NOT_FOUND | PASS | `tests::brief::propose_get_confirm_and_diff`; `ck-core` `document::tests::content_at_rebuilds_earlier_revisions` |
+| Step 3: caps (get/wait/diff 4 KB, propose 1 KB, input 4 KB) | PASS | `tests::brief::brief_replies_stay_under_their_caps` (40-field proposal reads back under cap; diff trimmed with omitted) |
+| Step 3: CLI and MCP twins (schema, cap, parity) | PASS | `ck_mcp` `tool_table_snapshot` (4 tools added), `every_tool_has_an_object_schema_and_its_cli_cap`; `crates/ck-cli/tests/mcp_parity.rs` `brief_tools_answer_like_their_cli_twins`; `cli_commands.rs` `every_command_starts_a_missing_studio` (brief get) |
+| Step 3 run | PASS | 2026-10-29 `just check`: 180 of 180 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

@@ -58,6 +58,7 @@ fn decls(cfg: &Config) -> Vec<String> {
         Author::decl(cfg),
         Brief::decl(cfg),
         BriefField::decl(cfg),
+        BriefQuestion::decl(cfg),
         BriefSource::decl(cfg),
         BriefStatus::decl(cfg),
         Lock::decl(cfg),

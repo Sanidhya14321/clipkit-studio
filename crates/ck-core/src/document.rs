@@ -77,6 +77,31 @@ impl Document {
         locks::release(&mut self.project.locks, holder, layer_ids);
     }
 
+    /// The project content (engine-owned fields removed) as it was at revision `rev`, rebuilt
+    /// by applying the inverse of every later revision. E_NOT_FOUND when history does not reach
+    /// back that far or `rev` is in the future.
+    pub fn content_at(&self, rev: u64) -> CkResult<serde_json::Value> {
+        let current = self.project.rev;
+        let later: Vec<&Revision> = self.history.iter().filter(|r| r.rev > rev).collect();
+        // Revisions are numbered one apart, so a full history holds exactly current - rev later ones.
+        let reachable = rev <= current && later.len() as u64 == current - rev;
+        if !reachable {
+            return Err(CkError::new(
+                ErrorCode::NotFound,
+                format!("revision {rev} is not in history (current is {current})"),
+            ));
+        }
+        let full = serde_json::to_value(&self.project)
+            .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
+        let mut content = patch::content(&full);
+        for r in later.iter().rev() {
+            json_patch::patch(&mut content, &r.inverse).map_err(|e| {
+                CkError::new(ErrorCode::Server, format!("replaying rev {}: {e}", r.rev))
+            })?;
+        }
+        Ok(content)
+    }
+
     fn target(&self, rev: Option<u64>, empty: &str) -> CkResult<Revision> {
         rev.and_then(|r| self.history.iter().find(|h| h.rev == r))
             .cloned()

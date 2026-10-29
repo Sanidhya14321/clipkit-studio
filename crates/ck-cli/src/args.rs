@@ -67,6 +67,9 @@ pub enum Command {
         #[command(flatten)]
         holder: HolderArg,
     },
+    /// Brief Studio: propose inferred values, wait for the user, read the brief or its diff.
+    #[command(subcommand)]
+    Brief(BriefCommand),
     /// Search and read the taste files (direction with concrete numbers).
     #[command(subcommand)]
     Taste(TasteCommand),
@@ -128,6 +131,25 @@ pub enum ProjectCommand {
     },
     /// Apply a patch: a JSON object {baseRev, ops, author, label?, layerRevs?}, or - for stdin.
     Patch { patch: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum BriefCommand {
+    /// Send inferred values: a JSON file {fields, confidence?, questions?, auto?}, or - for stdin.
+    Propose { file: String },
+    /// Block until the user confirms the brief (or it is auto); call again while ready is false.
+    Wait {
+        /// Seconds to block (default 20, at most 25); 0 checks once.
+        #[arg(long)]
+        timeout: Option<u64>,
+    },
+    /// What changed in the brief since a rev you read.
+    Diff {
+        #[arg(long)]
+        since: u64,
+    },
+    /// The brief in compact form with its rev.
+    Get,
 }
 
 #[derive(Debug, Subcommand)]

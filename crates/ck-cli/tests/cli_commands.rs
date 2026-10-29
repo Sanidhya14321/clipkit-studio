@@ -118,6 +118,7 @@ fn every_command_starts_a_missing_studio() {
         (&["lock", "a"], caps::LOCK),
         (&["unlock"], caps::LOCK),
         (&["heartbeat"], caps::LOCK),
+        (&["brief", "get"], caps::BRIEF),
     ] {
         let dir = tempfile::tempdir().unwrap();
         let d = dir.path();

@@ -21,6 +21,8 @@ use crate::event::Event;
 use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
+pub mod brief;
+
 /// Events buffered per subscriber before it lags (a lagging studio gets a fresh snapshot).
 const BUS_CAPACITY: usize = 256;
 
@@ -101,6 +103,11 @@ impl Session {
     pub fn subscribe(&self) -> CkResult<(Event, broadcast::Receiver<Event>)> {
         let rx = self.events.subscribe();
         Ok((snapshot(&*self.doc()?), rx))
+    }
+
+    /// Subscribe to the bus without a snapshot (for calls that block until something changes).
+    pub fn events(&self) -> broadcast::Receiver<Event> {
+        self.events.subscribe()
     }
 
     /// Activity for idle shutdown (spec 5.1).

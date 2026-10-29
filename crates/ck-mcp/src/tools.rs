@@ -10,6 +10,7 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
+use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
 use serde::de::DeserializeOwned;
@@ -91,6 +92,33 @@ pub fn specs() -> Vec<ToolSpec> {
             "ck heartbeat",
             "Renew the holder's live locks so they do not expire; returns them.",
             caps::LOCK,
+        ),
+        spec::<BriefProposeRequest>(
+            "brief_propose",
+            "ck brief propose",
+            "Send inferred brief values only (and at most 3 questions, each naming what it \
+             affects); the studio shows the Brief page. Then call brief_wait.",
+            caps::BRIEF_PROPOSE,
+        ),
+        spec::<BriefWaitRequest>(
+            "brief_wait",
+            "ck brief wait",
+            "Block until the user confirms the brief (or it is auto), at most 25 s; call again \
+             while ready is false. Returns the confirmed brief.",
+            caps::BRIEF,
+        ),
+        spec::<BriefDiffRequest>(
+            "brief_diff",
+            "ck brief diff",
+            "Only what changed in the brief since a rev you read; patch only layers whose \
+             briefDeps changed.",
+            caps::BRIEF,
+        ),
+        spec::<StatusArgs>(
+            "brief_get",
+            "ck brief get",
+            "The brief in compact form (value and source per field) with its rev.",
+            caps::BRIEF,
         ),
         spec::<TasteSearchRequest>(
             "taste_search",
@@ -188,6 +216,13 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "lock" => json(&ops.lock(&parse(args)?)?),
         "unlock" => json(&ops.unlock(&parse(args)?)?),
         "heartbeat" => json(&ops.heartbeat(&parse(args)?)?),
+        "brief_propose" => json(&ops.brief_propose(&parse(args)?)?),
+        "brief_wait" => json(&ops.brief_wait(&parse(args)?)?),
+        "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
+        "brief_get" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.brief_get()?)
+        }
         other => Err(request_err(format!("no tool named {other:?}"))),
     }
 }

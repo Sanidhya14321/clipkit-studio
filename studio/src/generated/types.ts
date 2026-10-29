@@ -134,13 +134,27 @@ export type Brief = {
 /**
  * Field name (audience, pacing, platform, look, voice, ...) to value.
  */
-fields: { [key in string]: BriefField }, status: BriefStatus, checkpoints: Array<string>, effort?: string | null, licenseMode?: string | null, };
+fields: { [key in string]: BriefField }, status: BriefStatus, checkpoints: Array<string>, effort?: string | null, licenseMode?: string | null, 
+/**
+ * Dynamic questions the agent adds to the Brief page (at most [`MAX_BRIEF_QUESTIONS`]).
+ */
+questions?: Array<BriefQuestion>, };
 
 export type BriefField = { value: JsonValue, source: BriefSource, 
 /**
  * 0.0 to 1.0.
  */
 confidence: number, };
+
+export type BriefQuestion = { id: string, text: string, 
+/**
+ * Brief fields or parts of the video the answer changes (never empty).
+ */
+affects: Array<string>, 
+/**
+ * The user's answer, once given.
+ */
+answer?: JsonValue | null, };
 
 export type BriefSource = "inferred" | "default" | "profile" | "reference" | "user";
 

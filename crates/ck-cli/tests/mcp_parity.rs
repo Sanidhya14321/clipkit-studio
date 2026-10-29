@@ -132,6 +132,65 @@ fn code(text: &str) -> Value {
 }
 
 #[test]
+fn brief_tools_answer_like_their_cli_twins() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _studio = Studio::start(d);
+    let mut mcp = Mcp::start(d);
+
+    let proposal = json!({
+        "fields": { "platform": "youtube", "length": 15 },
+        "questions": [{ "id": "price", "text": "Show the price?", "affects": ["cta"] }]
+    });
+    let file = d.join("brief.json");
+    std::fs::write(&file, proposal.to_string()).unwrap();
+    let path = file.to_str().unwrap();
+    let cli = ok_line(d, &["brief", "propose", path], caps::BRIEF_PROPOSE);
+    assert_eq!(serde_json::from_str::<Value>(&cli).unwrap()["rev"], 1);
+    // The same values again change nothing, through either door.
+    assert_eq!(mcp.ok("brief_propose", proposal, caps::BRIEF_PROPOSE), cli);
+
+    let get = ok_line(d, &["brief", "get"], caps::BRIEF);
+    assert_eq!(mcp.ok("brief_get", Value::Null, caps::BRIEF), get);
+    let waited = ok_line(d, &["brief", "wait", "--timeout", "0"], caps::BRIEF);
+    assert_eq!(
+        mcp.ok("brief_wait", json!({ "timeoutSecs": 0 }), caps::BRIEF),
+        waited
+    );
+    assert_eq!(
+        serde_json::from_str::<Value>(&waited).unwrap()["ready"],
+        false
+    );
+
+    let confirm = json!({
+        "baseRev": 1, "author": "human",
+        "ops": [{ "op": "replace", "path": "/brief/status", "value": "confirmed" }]
+    });
+    ok_line(d, &["project", "patch", &confirm.to_string()], caps::PATCH);
+    let diff = ok_line(d, &["brief", "diff", "--since", "1"], caps::BRIEF);
+    assert_eq!(
+        mcp.ok("brief_diff", json!({ "since": 1 }), caps::BRIEF),
+        diff
+    );
+    assert_eq!(
+        serde_json::from_str::<Value>(&diff).unwrap()["changes"][0]["field"],
+        "status"
+    );
+
+    let missing = mcp.err("brief_diff", json!({ "since": 99 }));
+    assert_eq!(code(&missing), "E_NOT_FOUND");
+    assert_eq!(missing, err_line(d, &["brief", "diff", "--since", "99"]));
+    let too_many = json!({ "fields": {}, "questions": [
+        { "id": "a", "text": "?", "affects": ["x"] }, { "id": "b", "text": "?", "affects": ["x"] },
+        { "id": "c", "text": "?", "affects": ["x"] }, { "id": "d", "text": "?", "affects": ["x"] }
+    ]});
+    std::fs::write(&file, too_many.to_string()).unwrap();
+    let refused = mcp.err("brief_propose", too_many);
+    assert_eq!(code(&refused), "E_REQUEST");
+    assert_eq!(refused, err_line(d, &["brief", "propose", path]));
+}
+
+#[test]
 fn tools_list_names_every_cli_twin_with_its_schema() {
     let dir = tempfile::tempdir().unwrap();
     let mut mcp = Mcp::start(dir.path());
