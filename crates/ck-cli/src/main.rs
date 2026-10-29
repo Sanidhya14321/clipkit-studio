@@ -34,12 +34,14 @@ use serde::Serialize;
 
 use args::{
     BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand, LookCommand, ModeArg,
-    PresetArg, ProjectCommand, RecipeCommand, SoundCommand, TasteCommand, TranscriptCommand,
-    VoiceCommand,
+    PresetArg, ProjectCommand, RecipeCommand, SoundCommand, SourcesCommand, TasteCommand,
+    TranscriptCommand, VoiceCommand,
 };
+use ck_assets::hub::Hub;
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
+use ck_assets::sources::{self, SourcesAddRequest, SourcesGapsRequest, SourcesListRequest};
 
 /// JSON log lines to stderr when `CK_LOG` is set (for example `CK_LOG=debug`). Off by default so
 /// command output stays small; fields follow ck_core::log.
@@ -253,6 +255,42 @@ fn run(cli: Cli) -> CkResult<()> {
                 text,
                 author: None,
             })?)
+        }
+        Command::Sources(cmd) => {
+            let hub = Hub::locate(&cli.dir)?;
+            match cmd {
+                SourcesCommand::List { status } => {
+                    let status = status
+                        .map(|s| serde_json::from_value(serde_json::Value::String(s)))
+                        .transpose()
+                        .map_err(|e| request_err(format!("--status: {e}")))?;
+                    let out = sources::sources_list(&hub, &SourcesListRequest { status })?;
+                    print(&ck_server::ops::trimmed(
+                        "sources list",
+                        sources::caps::SOURCES_LIST,
+                        out,
+                    )?)
+                }
+                SourcesCommand::Add {
+                    id,
+                    kind,
+                    repo,
+                    name,
+                    license,
+                } => print(&sources::sources_add(
+                    &hub,
+                    &SourcesAddRequest {
+                        id,
+                        name,
+                        kind,
+                        repo,
+                        license,
+                    },
+                )?),
+                SourcesCommand::Gaps => {
+                    print(&sources::sources_gaps(&hub, &SourcesGapsRequest {})?)
+                }
+            }
         }
         Command::Export { preset, out } => {
             let preset = match preset {

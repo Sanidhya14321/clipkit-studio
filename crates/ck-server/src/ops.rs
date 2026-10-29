@@ -406,6 +406,13 @@ impl Trim for ContextView {
     }
 }
 
+impl Trim for ck_assets::sources::SourcesList {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.lines, &mut self.omitted)
+    }
+}
+
 impl Trim for VoiceScriptResult {
     type Entry = SlotSummary;
     fn parts(&mut self) -> (&mut Vec<SlotSummary>, &mut usize) {

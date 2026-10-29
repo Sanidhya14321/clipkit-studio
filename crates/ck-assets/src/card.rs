@@ -114,8 +114,11 @@ kebab_enum!(
 
 kebab_enum!(
     Grade {
+        #[serde(rename = "A")]
         A = "A",
+        #[serde(rename = "B")]
         B = "B",
+        #[serde(rename = "C")]
         C = "C",
     }
 );

@@ -4,9 +4,11 @@
 
 use std::path::Path;
 
+use ck_assets::hub::Hub;
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
+use ck_assets::sources::{self, SourcesAddRequest, SourcesGapsRequest, SourcesListRequest};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::idle::DEFAULT_IDLE_SECS;
@@ -172,6 +174,27 @@ pub fn specs() -> Vec<ToolSpec> {
             "ck recipe card",
             "One recipe in full: slots, layers and props.",
             library::caps::RECIPE_CARD,
+        ),
+        spec::<SourcesListRequest>(
+            "sources_list",
+            "ck sources list",
+            "The Source Hub registry, one line per source: id, status, enabled, license class, \
+             kind, repo. Only vetted and enabled sources are searchable.",
+            sources::caps::SOURCES_LIST,
+        ),
+        spec::<SourcesAddRequest>(
+            "sources_add",
+            "ck sources add",
+            "Register a source (unverified, disabled, license unknown until vetted). Never \
+             guess a repo: leave it out when unknown.",
+            sources::caps::SOURCES_WRITE,
+        ),
+        spec::<SourcesGapsRequest>(
+            "sources_gaps",
+            "ck sources gaps",
+            "What the catalog is missing: usable and unverified source counts, sources without \
+             a repo, asset kinds with no searchable card.",
+            sources::caps::SOURCES_GAPS,
         ),
         spec::<LookApplyRequest>(
             "look_apply",
@@ -356,12 +379,22 @@ pub fn specs() -> Vec<ToolSpec> {
 pub fn is_offline(name: &str) -> bool {
     matches!(
         name,
-        "taste_search" | "taste_read" | "look_list" | "look_get" | "recipe_search" | "recipe_card"
+        "taste_search"
+            | "taste_read"
+            | "look_list"
+            | "look_get"
+            | "recipe_search"
+            | "recipe_card"
+            | "sources_list"
+            | "sources_add"
+            | "sources_gaps"
     )
 }
 
-/// Tools over the built-in asset library: they need no studio. `None` when `name` is not one.
-pub fn offline(name: &str, args: Value) -> Option<CkResult<String>> {
+/// Tools over the built-in asset library and the Source Hub: they need no studio. `None` when
+/// `name` is not one. `root` is the project folder the hub is found from.
+pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResult<String>> {
+    let hub = || Hub::locate(root);
     let out = match name {
         "taste_search" => parse(args).and_then(|r| json(&library::taste_search(&r)?)),
         "taste_read" => parse(args).and_then(|r| json(&library::taste_read(&r)?)),
@@ -369,6 +402,19 @@ pub fn offline(name: &str, args: Value) -> Option<CkResult<String>> {
         "look_get" => parse(args).and_then(|r| json(&library::look_get(&r)?)),
         "recipe_search" => parse(args).and_then(|r| json(&library::recipe_search(&r)?)),
         "recipe_card" => parse(args).and_then(|r| json(&library::recipe_card(&r)?)),
+        "sources_list" => parse::<SourcesListRequest>(args).and_then(|r| {
+            let out = sources::sources_list(&hub()?, &r)?;
+            json(&ck_server::ops::trimmed(
+                "sources list",
+                sources::caps::SOURCES_LIST,
+                out,
+            )?)
+        }),
+        "sources_add" => {
+            parse::<SourcesAddRequest>(args).and_then(|r| json(&sources::sources_add(&hub()?, &r)?))
+        }
+        "sources_gaps" => parse::<SourcesGapsRequest>(args)
+            .and_then(|r| json(&sources::sources_gaps(&hub()?, &r)?)),
         _ => return None,
     };
     Some(out)

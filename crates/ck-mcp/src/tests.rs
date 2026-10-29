@@ -48,6 +48,9 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("look_get", library::caps::LOOK_GET),
         ("recipe_search", library::caps::RECIPE_SEARCH),
         ("recipe_card", library::caps::RECIPE_CARD),
+        ("sources_list", ck_assets::sources::caps::SOURCES_LIST),
+        ("sources_add", ck_assets::sources::caps::SOURCES_WRITE),
+        ("sources_gaps", ck_assets::sources::caps::SOURCES_GAPS),
         ("look_apply", caps::LOOK_APPLY),
         ("recipe_apply", caps::RECIPE_APPLY),
         ("layout_check", caps::LAYOUT_CHECK),
@@ -84,7 +87,11 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
 #[test]
 fn offline_tools_are_exactly_the_library_tools() {
     for s in specs() {
-        let offline = crate::tools::offline(s.name, serde_json::json!({ "id": "nope" }));
+        let offline = crate::tools::offline(
+            std::path::Path::new("."),
+            s.name,
+            serde_json::json!({ "id": "nope" }),
+        );
         assert_eq!(
             offline.is_some(),
             crate::tools::is_offline(s.name),
@@ -92,7 +99,10 @@ fn offline_tools_are_exactly_the_library_tools() {
             s.name
         );
     }
-    assert!(crate::tools::offline("status", serde_json::Value::Null).is_none());
+    assert!(
+        crate::tools::offline(std::path::Path::new("."), "status", serde_json::Value::Null)
+            .is_none()
+    );
 }
 
 #[test]

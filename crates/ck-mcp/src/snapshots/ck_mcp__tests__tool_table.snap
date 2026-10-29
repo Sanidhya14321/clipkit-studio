@@ -639,6 +639,101 @@ expression: specs()
     }
   },
   {
+    "name": "sources_list",
+    "command": "ck sources list",
+    "description": "The Source Hub registry, one line per source: id, status, enabled, license class, kind, repo. Only vetted and enabled sources are searchable.",
+    "cap": 6144,
+    "inputSchema": {
+      "$defs": {
+        "SourceStatus": {
+          "description": "Vetting status of a source.",
+          "oneOf": [
+            {
+              "enum": [
+                "unverified"
+              ],
+              "type": "string"
+            },
+            {
+              "const": "vetted",
+              "description": "Vetting ran and passed; the license was read from the source.",
+              "type": "string"
+            },
+            {
+              "const": "rejected",
+              "description": "Vetting ran and found a blocker.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Only sources with this status."
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "sources_add",
+    "command": "ck sources add",
+    "description": "Register a source (unverified, disabled, license unknown until vetted). Never guess a repo: leave it out when unknown.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Lowercase id: letters, digits and dashes.",
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "license": {
+          "default": "",
+          "description": "The license the listing claims (recorded as a claim, not a finding).",
+          "type": "string"
+        },
+        "name": {
+          "default": "",
+          "type": "string"
+        },
+        "repo": {
+          "description": "`owner/name` on GitHub, when known (never guessed).",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "sources_gaps",
+    "command": "ck sources gaps",
+    "description": "What the catalog is missing: usable and unverified source counts, sources without a repo, asset kinds with no searchable card.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  {
     "name": "look_apply",
     "command": "ck look apply",
     "description": "Re-theme the project with a look: one write, layers keep their token refs. Returns the previous look and the layers that change; dryRun only previews.",

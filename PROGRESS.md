@@ -57,7 +57,7 @@ Spec: 07, 09 (retrieval budget), 14 (wave 2 and 3, 14.7 checks). Owner approved 
 
 Steps:
 - [x] 1. Card format (spec 7.2 front matter and body), loader and validator; catalog.jsonl; original fixture source packs in `fixtures/sources/` (permissive pack, restricted BBC-style pack, prompt-injection pack).
-- [ ] 2. Sources registry over `sources.yaml` and `sources.lock`: `ck sources list|add|gaps`; unverified or disabled sources never searchable.
+- [x] 2. Sources registry over `sources.yaml` and `sources.lock`: `ck sources list|add|gaps`; unverified or disabled sources never searchable.
 - [ ] 3. Vetting without running code: shallow read-only fetch into `assets/quarantine/<id>` (hooks and submodules off) or local copy; license reading and classification; malware-lure and static dependency checks; `ck sources vet` writes the lock entry (commit, license hash, class, findings).
 - [ ] 4. Static AST extraction (oxc) for TS/TSX: exports, props, imports, animation primitives, outline; `ck sources ingest` writes cards, ast.json, per-source INDEX.md and catalog.jsonl.
 - [ ] 5. Tantivy search with filters (kind, tags, aspect, license mode, grade, collection) and the retrieval ladder with budget gate: `ck assets search|card|skeleton|slice|source` + MCP twins.

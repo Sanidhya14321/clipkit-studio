@@ -427,6 +427,60 @@ fn comment_tools_answer_like_their_cli_twins() {
 }
 
 #[test]
+fn sources_tools_answer_like_their_cli_twins_without_a_studio() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    std::fs::write(d.join("sources.yaml"), "[]").unwrap();
+    let mut mcp = Mcp::start(d);
+    let added = ok_line(
+        d,
+        &[
+            "sources",
+            "add",
+            "pack-a",
+            "--kind",
+            "remotion-components",
+            "--repo",
+            "me/pack-a",
+        ],
+        ck_assets::sources::caps::SOURCES_WRITE,
+    );
+    assert!(added.contains("\"unverified\""), "{added}");
+    let list = ok_line(
+        d,
+        &["sources", "list"],
+        ck_assets::sources::caps::SOURCES_LIST,
+    );
+    assert_eq!(
+        mcp.ok(
+            "sources_list",
+            json!({}),
+            ck_assets::sources::caps::SOURCES_LIST
+        ),
+        list
+    );
+    let gaps = ok_line(
+        d,
+        &["sources", "gaps"],
+        ck_assets::sources::caps::SOURCES_GAPS,
+    );
+    assert_eq!(
+        mcp.ok(
+            "sources_gaps",
+            json!({}),
+            ck_assets::sources::caps::SOURCES_GAPS
+        ),
+        gaps
+    );
+    let refused = mcp.err("sources_add", json!({ "id": "pack-a", "kind": "x" }));
+    assert_eq!(code(&refused), "E_REQUEST");
+    assert_eq!(
+        refused,
+        err_line(d, &["sources", "add", "pack-a", "--kind", "x"])
+    );
+}
+
+#[test]
 fn tools_list_names_every_cli_twin_with_its_schema() {
     let dir = tempfile::tempdir().unwrap();
     let mut mcp = Mcp::start(dir.path());

@@ -118,6 +118,9 @@ pub enum Command {
     /// List, add, reply to and resolve comments.
     #[command(subcommand)]
     Comments(CommentsCommand),
+    /// Source Hub: list, add and report gaps.
+    #[command(subcommand)]
+    Sources(SourcesCommand),
     /// Export a footage-only project to MP4.
     Export {
         /// source, youtube, tiktok, reels or shorts.
@@ -385,4 +388,30 @@ pub enum ModeArg {
     Ai,
     Recorded,
     Cloned,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum SourcesCommand {
+    /// One line per source: id, status, enabled, license class, kind, repo.
+    List {
+        /// unverified, vetted or rejected.
+        #[arg(long)]
+        status: Option<String>,
+    },
+    /// Register a source (unverified and disabled until vetted).
+    Add {
+        id: String,
+        #[arg(long)]
+        kind: String,
+        /// owner/name on GitHub; leave out when unknown.
+        #[arg(long)]
+        repo: Option<String>,
+        #[arg(long, default_value = "")]
+        name: String,
+        /// The license the listing claims (recorded as a claim).
+        #[arg(long, default_value = "")]
+        license: String,
+    },
+    /// What the catalog is missing.
+    Gaps,
 }

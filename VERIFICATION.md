@@ -256,6 +256,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Step 1: asset card format (spec 7.2 front matter with kinds, runtime, determinism, license, SPDX, license class, grade, deps, cost, duration, aspects, tags, collections, reviewed, attribution; the 11 body sections in order), parse, render, round trip, owner notes kept on regeneration, catalog line; license modes gate classes; original fixture packs (MIT, restricted non-commercial, hostile injection) | PASS | `ck-assets` `card::tests::*` (4); `fixtures/sources/` |
+| Step 2: Source Hub registry over `sources.yaml` (JSON) and `sources.lock`; unknown fields kept; `ck sources list|add|gaps` + MCP twins working without a studio; add records unverified, disabled, license unknown (claim kept as a claim); ids and repos validated; gaps count only vetted and enabled sources | PASS | `ck-assets` `hub::tests::*` (3, including the real registry of 63 sources); `mcp_parity::sources_tools_answer_like_their_cli_twins_without_a_studio` |
+| Step 2 run | PASS | 2026-10-30 `just check`: 302 of 302 nextest (1 skipped), hooks 41 of 41 |
 | Step 1 run | PASS | 2026-10-30 `just check`: 298 of 298 nextest (1 skipped), hooks 41 of 41 |
 
 ## Phase 7: voice slice (2026-10-29, done; Fish Audio TTS, STT and cloning are PLACEHOLDER stubs)

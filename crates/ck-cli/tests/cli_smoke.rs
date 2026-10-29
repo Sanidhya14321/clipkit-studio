@@ -16,8 +16,9 @@ fn version_prints_and_stays_under_cap() {
     assert!(stdout.len() <= MAX_OUTPUT_BYTES);
 }
 
-/// Help text lists every command, so it gets a larger cap than command output.
-const MAX_HELP_BYTES: usize = 2048;
+/// Help text lists every command, so it gets a larger cap than command output (3 KB since
+/// Phase 8: spec 6.2's full command set does not fit 2 KB with one-line summaries).
+const MAX_HELP_BYTES: usize = 3 * 1024;
 
 #[test]
 fn no_args_exit_with_short_help() {

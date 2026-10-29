@@ -517,3 +517,10 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Cards are parsed by hand like taste files (front matter `key: value`, lists `[a, b]`), capped at 2400 bytes; the 11 body sections are required in order and only Owner notes, Pairs well with and Adaptation presets may be empty. `icon` was added to the spec's kind list for Tabler and Simple Icons (wave 2).
 - License modes: commercial-safe allows permissive and attribution only; personal and any allow every class except unknown and reference-only (reference-only assets are re-implemented natively, never used).
 - Attribution-class cards must carry an `attribution` line (spec 14.1, CC BY).
+
+## Phase 8 step 2: Source Hub registry (2026-10-30)
+- The hub is the folder holding `sources.yaml`: `CK_HUB`, else the nearest folder at or above the project folder (the repo root in development). Ingested cards live in `<hub>/assets/<source>/`, raw sources in `<hub>/assets/quarantine/<source>/`. The starter taste, looks and recipes stay compiled into the binary.
+- `sources.yaml` stays JSON (valid YAML), read and written with serde_json; unknown fields round-trip through a flattened map. `sources.lock` is JSON keyed by source id.
+- Status gains `vetted` and `rejected` beside `unverified`; searchable means vetted and enabled.
+- Sources tools are offline (no studio): the MCP server finds the hub from its project folder.
+- The CLI help cap rose from 2 KB to 3 KB (our own Phase 2 number, not a spec one); spec 6.2's command set does not fit 2 KB.
