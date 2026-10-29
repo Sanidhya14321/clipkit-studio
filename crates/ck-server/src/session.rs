@@ -12,7 +12,7 @@ use ck_core::model::{Author, Holder, Item, Lock};
 use ck_core::patch::PatchRequest;
 use ck_core::storage::Store;
 use ck_core::{CkError, CkResult, Document, ErrorCode, Project};
-use ck_voice::{FishStt, Transcriber};
+use ck_voice::{FishStt, FishTts, Speaker, Transcriber};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use tokio::sync::broadcast;
@@ -95,6 +95,7 @@ pub struct Session {
     degraded: AtomicBool,
     activity: Arc<Activity>,
     transcriber: Arc<dyn Transcriber>,
+    speaker: Arc<dyn Speaker>,
     /// What the studio last reported pointing at (UI state, never stored).
     studio_context: Mutex<context::StudioContext>,
 }
@@ -113,8 +114,15 @@ impl Session {
             degraded: AtomicBool::new(false),
             activity: Arc::default(),
             transcriber: Arc::new(FishStt::from_env()),
+            speaker: Arc::new(FishTts::from_env()),
             studio_context: Mutex::default(),
         })
+    }
+
+    /// Use another speaker (tests, or a local voice once one is installed).
+    pub fn with_speaker(mut self, speaker: Arc<dyn Speaker>) -> Self {
+        self.speaker = speaker;
+        self
     }
 
     /// Use another transcriber (tests, or a local model once one is installed).

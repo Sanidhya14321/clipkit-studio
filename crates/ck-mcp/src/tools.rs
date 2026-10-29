@@ -23,7 +23,7 @@ use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
-use ck_server::session::voice::{VoiceModeRequest, VoiceScriptRequest};
+use ck_server::session::voice::{SlotRequest, VoiceModeRequest, VoiceScriptRequest};
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
 use serde::de::DeserializeOwned;
@@ -271,6 +271,14 @@ pub fn specs() -> Vec<ToolSpec> {
             "Switch a voice slot between ai, recorded and cloned; takes are kept.",
             caps::VOICE_WRITE,
         ),
+        spec::<SlotRequest>(
+            "voice_speak",
+            "ck voice speak",
+            "Generate speech for an ai or cloned slot (cached by text and voice); the take is \
+             trimmed, normalized and fit to the window. placeholder=true means no audio could \
+             be made: the studio plays a labeled browser voice.",
+            caps::VOICE_WRITE,
+        ),
         spec::<ContextRequest>(
             "context",
             "ck context",
@@ -398,6 +406,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "comments_list" => json(&ops.comments_list(&parse(args)?)?),
         "voice_script" => json(&ops.voice_script(&parse(args)?)?),
         "voice_mode" => json(&ops.voice_mode(&parse(args)?)?),
+        "voice_speak" => json(&ops.voice_speak(&parse(args)?)?),
         "context" => {
             let _: ContextRequest = parse(args)?;
             json(&ops.context()?)

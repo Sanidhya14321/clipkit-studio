@@ -7,6 +7,7 @@ pub mod export;
 pub mod import;
 pub mod probe;
 mod run;
+pub mod take;
 
 pub use detect::{SceneChange, Silence, detect_scenes, detect_silences};
 pub use export::{
@@ -16,3 +17,4 @@ pub use import::{
     AUDIO_SAMPLE_RATE, CachePaths, PROXY_MAX_HEIGHT, extract_audio, hash_file, make_proxy,
 };
 pub use probe::{AudioStream, MediaInfo, VideoStream, parse_probe, probe};
+pub use take::{Fit, TakeInfo, prepare_take};

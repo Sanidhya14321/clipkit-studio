@@ -24,7 +24,7 @@ use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
-use ck_server::session::voice::VoiceModeRequest;
+use ck_server::session::voice::{SlotRequest, VoiceModeRequest};
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
@@ -181,6 +181,9 @@ fn run(cli: Cli) -> CkResult<()> {
             let req = serde_json::from_str(&read_input(&file, "voice script")?)
                 .map_err(|e| request_err(format!("voice script JSON: {e}")))?;
             print(&ops()?.voice_script(&req)?)
+        }
+        Command::Voice(VoiceCommand::Speak { slot }) => {
+            print(&ops()?.voice_speak(&SlotRequest { slot })?)
         }
         Command::Voice(VoiceCommand::Mode { slot, mode }) => {
             let mode = match mode {

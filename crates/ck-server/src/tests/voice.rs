@@ -135,3 +135,115 @@ fn modes_switch_and_bad_scripts_are_refused() {
         );
     }
 }
+
+/// Writes a 440 Hz tone with 0.3 s of silence around it, 0.4 s per word.
+struct ToneSpeaker;
+
+impl ck_voice::Speaker for ToneSpeaker {
+    fn speak(
+        &self,
+        text: &str,
+        _voice: Option<&str>,
+        out: &std::path::Path,
+    ) -> ck_core::CkResult<()> {
+        let secs = 0.4 * text.split_whitespace().count() as f64;
+        let filter = format!("sine=f=440:d={secs},adelay=300,apad=pad_dur=0.3");
+        let ok = std::process::Command::new("ffmpeg")
+            .args([
+                "-v", "error", "-y", "-f", "lavfi", "-i", &filter, "-f", "wav",
+            ])
+            .arg(out)
+            .status()
+            .unwrap()
+            .success();
+        assert!(ok);
+        Ok(())
+    }
+}
+
+fn speaking_session() -> (tempfile::TempDir, crate::session::Session) {
+    let dir = tempfile::tempdir().unwrap();
+    ck_core::storage::Store::new(dir.path())
+        .init(&super::fixture::project())
+        .unwrap();
+    let s = crate::session::Session::open(
+        dir.path(),
+        std::sync::Arc::new(super::fixture::FakeClock::default()),
+    )
+    .unwrap()
+    .with_speaker(std::sync::Arc::new(ToneSpeaker));
+    (dir, s)
+}
+
+#[test]
+fn speak_makes_a_trimmed_fitted_cached_take() {
+    use crate::session::voice::SlotRequest;
+
+    let (dir, s) = speaking_session();
+    s.voice_script(&VoiceScriptRequest {
+        // 5 words: 2.0 s at 2.5 words/s; the tone is 2.0 s after trimming.
+        lines: vec![line("One two three four five.")],
+        mode: None,
+    })
+    .unwrap();
+    let slot = SlotRequest { slot: "v1".into() };
+    let first = s.voice_speak(&slot).unwrap();
+    assert!(!first.placeholder && !first.cached);
+    let info = first.info.unwrap();
+    assert!((info.raw_sec - 2.0).abs() < 0.1, "{info:?}");
+    assert_eq!(info.fit, ck_media::Fit::Fits);
+    let p = s.project().unwrap();
+    let v1 = &p.voice_slots[0];
+    assert_eq!(
+        (v1.status, v1.active_take.as_deref()),
+        (VoiceSlotStatus::Ready, Some("t1"))
+    );
+    assert!(dir.path().join("cache/takes/v1-t1.wav").is_file());
+    // The voice item now spans the take.
+    let item = p.item("voice-v1").unwrap();
+    let span = ck_core::timeline::span(&p, item).unwrap();
+    assert!((span.end - span.start - v1.takes[0].duration_sec).abs() < 1e-9);
+
+    let second = s.voice_speak(&slot).unwrap();
+    assert!(second.cached);
+    assert_eq!(second.take.as_deref(), Some("t2"));
+}
+
+#[test]
+fn without_a_speaker_the_slot_falls_back_to_the_placeholder() {
+    use crate::session::voice::SlotRequest;
+
+    let f = Fixture::new();
+    f.session
+        .voice_script(&VoiceScriptRequest {
+            lines: vec![line("Hello.")],
+            mode: None,
+        })
+        .unwrap();
+    let r = f
+        .session
+        .voice_speak(&SlotRequest { slot: "v1".into() })
+        .unwrap();
+    assert!(r.placeholder);
+    assert_eq!(r.slot.status, VoiceSlotStatus::Failed);
+    assert!(r.reason.is_some());
+
+    // Recorded slots are made in the studio; cloned ones need a cloned voice.
+    for (mode, code) in [
+        (VoiceMode::Recorded, ErrorCode::Request),
+        (VoiceMode::Cloned, ErrorCode::Request),
+    ] {
+        f.session
+            .voice_mode(&VoiceModeRequest {
+                slot: "v1".into(),
+                mode,
+                author: None,
+            })
+            .unwrap();
+        let err = f
+            .session
+            .voice_speak(&SlotRequest { slot: "v1".into() })
+            .unwrap_err();
+        assert_eq!(err.code, code);
+    }
+}

@@ -1059,6 +1059,24 @@ expression: specs()
     }
   },
   {
+    "name": "voice_speak",
+    "command": "ck voice speak",
+    "description": "Generate speech for an ai or cloned slot (cached by text and voice); the take is trimmed, normalized and fit to the window. placeholder=true means no audio could be made: the studio plays a labeled browser voice.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "slot": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "slot"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "context",
     "command": "ck context",
     "description": "What the user points at in the studio: selected layer, hovered element, playhead, loop range and open comments. Call it first when the user says this, here or that.",

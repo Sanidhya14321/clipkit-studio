@@ -62,6 +62,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("export", caps::EXPORT),
         ("voice_script", caps::VOICE_SCRIPT),
         ("voice_mode", caps::VOICE_WRITE),
+        ("voice_speak", caps::VOICE_WRITE),
         ("context", caps::CONTEXT),
         ("comments_list", caps::COMMENTS),
         ("comments_add", caps::COMMENT_WRITE),

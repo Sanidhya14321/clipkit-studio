@@ -347,6 +347,8 @@ pub enum CommentsCommand {
 pub enum VoiceCommand {
     /// Split a script into voice slots: a JSON file {lines: [{text, window?}], mode?}, or -.
     Script { file: String },
+    /// Generate speech for an ai or cloned slot as its new take.
+    Speak { slot: String },
     /// Switch a slot between ai, recorded and cloned.
     Mode {
         slot: String,

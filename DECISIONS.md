@@ -479,3 +479,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Phase 7 step 1: voice slots (2026-10-29)
 - `voice script` takes lines (text, optional window); slot ids are v1..vn by position. A missing window is estimated at 2.5 words per second, laid end to end with 0.3 s gaps (choices). A line keeps its takes when its id and text are unchanged and its window was not given anew.
 - Voice items live on an audio track `voice-1` (one item `voice-<slot>` at the window start); the whole track is rebuilt with the slots, so no item dangles.
+
+## Phase 7 step 2: speech and takes (2026-10-29)
+- Voice takes normalize to -16 LUFS integrated, -1.5 dBTP (not in the spec; a common voice level that sits under the -14 LUFS export target). Leading and trailing audio under -45 dB is trimmed.
+- Fit: a take within 8% of its window is time-stretched to it with `atempo`; outside that the take is kept and reported `tooLong` or `tooShort`, and the agent or user picks the spec's options (extend visuals, shorten the line, re-record).
+- Speech cache key: SHA-256 over provider, voice ref and text, length-prefixed. Cached audio is used offline and when the speaker fails. With neither, `voice speak` answers `placeholder: true`, marks the slot failed, and the studio plays a labeled browser speech placeholder (no error, so the build continues).
+- `FishTts` is a PLACEHOLDER until the owner adds the key and the API is verified (same as STT, Phase 5 step 4b).
