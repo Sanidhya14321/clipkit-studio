@@ -118,6 +118,9 @@ pub enum Command {
     /// List, add, reply to and resolve comments.
     #[command(subcommand)]
     Comments(CommentsCommand),
+    /// Retrieval ladder over vetted assets: search, card, skeleton, slice, source.
+    #[command(subcommand)]
+    Assets(AssetsCommand),
     /// Source Hub: list, add and report gaps.
     #[command(subcommand)]
     Sources(SourcesCommand),
@@ -423,4 +426,41 @@ pub enum SourcesCommand {
     Ingest { id: String },
     /// What the catalog is missing.
     Gaps,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum AssetsCommand {
+    /// Top 5 compact lines from vetted sources.
+    Search {
+        #[arg(default_value = "")]
+        query: String,
+        #[arg(long)]
+        kind: Option<String>,
+        #[arg(long)]
+        tag: Option<String>,
+        #[arg(long)]
+        aspect: Option<String>,
+        /// commercial-safe, personal or any (default: the brief's).
+        #[arg(long)]
+        mode: Option<String>,
+        /// Lowest grade accepted: A, B or C.
+        #[arg(long)]
+        grade: Option<String>,
+        #[arg(long)]
+        collection: Option<String>,
+        #[arg(long)]
+        limit: Option<usize>,
+    },
+    /// One asset card (at most 2 per decision).
+    Card { id: String },
+    /// Props, primitives, imports and outline.
+    Skeleton { id: String },
+    /// One symbol's source.
+    Slice { id: String, symbol: String },
+    /// The full source, with a reason (once per decision).
+    Source {
+        id: String,
+        #[arg(long)]
+        reason: String,
+    },
 }

@@ -448,4 +448,4 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
 }
 
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;

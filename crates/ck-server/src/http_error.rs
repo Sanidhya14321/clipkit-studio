@@ -21,6 +21,7 @@ pub fn status_of(code: ErrorCode) -> StatusCode {
         ErrorCode::PatchStale => StatusCode::CONFLICT,
         ErrorCode::LockHeld | ErrorCode::LockNotHeld => StatusCode::LOCKED,
         ErrorCode::Scope => StatusCode::FORBIDDEN,
+        ErrorCode::Budget => StatusCode::TOO_MANY_REQUESTS,
         ErrorCode::PatchInvalid | ErrorCode::Schema | ErrorCode::Media | ErrorCode::Voice => {
             StatusCode::UNPROCESSABLE_ENTITY
         }

@@ -9,6 +9,9 @@ use ck_assets::ingest::{self, IngestRequest};
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
+use ck_assets::retrieve::{
+    self, AssetIdRequest, AssetSearchRequest, AssetSliceRequest, AssetSourceRequest, Retrieval,
+};
 use ck_assets::sources::{self, SourcesAddRequest, SourcesGapsRequest, SourcesListRequest};
 use ck_assets::vet::{self, VetRequest};
 use ck_core::patch::PatchRequest;
@@ -199,6 +202,39 @@ pub fn specs() -> Vec<ToolSpec> {
              dependency checks. Pass: vetted and enabled; blocker: rejected; unknown license: \
              stays unverified. Pins the result in sources.lock.",
             vet::caps::VET,
+        ),
+        spec::<AssetSearchRequest>(
+            "assets_search",
+            "ck assets search",
+            "Retrieval ladder step 1: top 5 compact lines (id kind grade licenseClass: use when) \
+             from vetted sources, filtered by kind, tag, aspect, grade, collection and the \
+             license mode (default the brief's, else commercial-safe).",
+            retrieve::caps::SEARCH,
+        ),
+        spec::<AssetIdRequest>(
+            "assets_card",
+            "ck assets card",
+            "Step 2: one asset card. At most 2 distinct cards per decision (E_BUDGET after).",
+            retrieve::caps::CARD,
+        ),
+        spec::<AssetIdRequest>(
+            "assets_skeleton",
+            "ck assets skeleton",
+            "Step 3: props, animation primitives, imports and the outline with line ranges \
+             (about 600 tokens).",
+            retrieve::caps::SKELETON,
+        ),
+        spec::<AssetSliceRequest>(
+            "assets_slice",
+            "ck assets slice",
+            "Step 4: one symbol's source from the outline (about 800 tokens).",
+            retrieve::caps::SLICE,
+        ),
+        spec::<AssetSourceRequest>(
+            "assets_source",
+            "ck assets source",
+            "Step 5: the full source, only with a one-line reason; once per decision.",
+            retrieve::caps::SOURCE,
         ),
         spec::<IngestRequest>(
             "sources_ingest",
@@ -409,13 +445,23 @@ pub fn is_offline(name: &str) -> bool {
             | "sources_gaps"
             | "sources_vet"
             | "sources_ingest"
+            | "assets_search"
+            | "assets_card"
+            | "assets_skeleton"
+            | "assets_slice"
+            | "assets_source"
     )
+}
+
+fn capped_json<T: serde::Serialize>(what: &str, cap: usize, v: &T) -> CkResult<String> {
+    json(&ck_server::ops::capped(what, cap, v)?)
 }
 
 /// Tools over the built-in asset library and the Source Hub: they need no studio. `None` when
 /// `name` is not one. `root` is the project folder the hub is found from.
 pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResult<String>> {
     let hub = || Hub::locate(root);
+    let ladder = || Hub::locate(root).map(|h| Retrieval::new(h, root));
     let out = match name {
         "taste_search" => parse(args).and_then(|r| json(&library::taste_search(&r)?)),
         "taste_read" => parse(args).and_then(|r| json(&library::taste_read(&r)?)),
@@ -449,6 +495,32 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
                 ingest::caps::INGEST,
                 out,
             )?)
+        }),
+        "assets_search" => parse::<AssetSearchRequest>(args).and_then(|r| {
+            capped_json(
+                "assets search",
+                retrieve::caps::SEARCH,
+                &ladder()?.search(&r)?,
+            )
+        }),
+        "assets_card" => parse::<AssetIdRequest>(args)
+            .and_then(|r| capped_json("assets card", retrieve::caps::CARD, &ladder()?.card(&r)?)),
+        "assets_skeleton" => parse::<AssetIdRequest>(args).and_then(|r| {
+            capped_json(
+                "assets skeleton",
+                retrieve::caps::SKELETON,
+                &ladder()?.skeleton(&r)?,
+            )
+        }),
+        "assets_slice" => parse::<AssetSliceRequest>(args).and_then(|r| {
+            capped_json("assets slice", retrieve::caps::SLICE, &ladder()?.slice(&r)?)
+        }),
+        "assets_source" => parse::<AssetSourceRequest>(args).and_then(|r| {
+            capped_json(
+                "assets source",
+                retrieve::caps::SOURCE,
+                &ladder()?.source(&r)?,
+            )
         }),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)
             .and_then(|r| json(&sources::sources_gaps(&hub()?, &r)?)),

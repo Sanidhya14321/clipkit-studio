@@ -18,6 +18,7 @@ oxc_allocator.workspace = true
 oxc_ast.workspace = true
 oxc_parser.workspace = true
 oxc_span.workspace = true
+tantivy.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

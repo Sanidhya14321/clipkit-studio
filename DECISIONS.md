@@ -535,3 +535,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - oxc 0.154 has no visitor in the crates we pin (`oxc_ast_visit` is separate); top-level statements are enough for imports, exports, props types and the outline, so no visitor crate is added. Exports are `Statement::ExportDeclaration` in this version.
 - One asset per exported PascalCase function or const (types and `*Props` excluded). Kind: remotion-clip when it imports Remotion, else react-component. Determinism: native when it uses `useCurrentFrame` and vetting found no `Math.random`/`Date.now` in its file, else wrappable. Runtime: reference-only for unknown or reference-only licenses, derive-only for non-Remotion components, else direct. Grade A needs native, typed props and a doc comment (its own or its props type's); B is native otherwise; C is wrappable.
 - Generated cards are `reviewed: false`, collection = the source id, cost 2 (no measurement yet), no aspects (unknown until previewed). Doc text carried into a card is cut to 240 characters; it is data.
+
+## Phase 8 step 5: search and the budget gate (2026-10-30)
+- Search builds a tantivy index in memory per call from catalog.jsonl (small; no stale on-disk index). Ranking is BM25 over name, tags, kind, use-when and id, then grade, then id. Telemetry and variety ranking (spec 7.3) wait for usage data.
+- A "decision" is the window until the project revision changes: the agent reads, decides, patches. The ledger is `.clipkit/retrieval.json`; outside a project there is no ledger and no gate.
+- Gate: at most 2 distinct cards and 1 full source per decision (E_BUDGET, HTTP 429); full source needs a reason of 10+ characters. Skeleton and slice are capped by size and counted, not refused. Tokens are estimated as output bytes / 4 and labeled as ck's own measure (spec 9.3).
+- Default license mode when the brief has none: commercial-safe.

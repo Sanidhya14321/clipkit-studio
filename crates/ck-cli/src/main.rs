@@ -33,14 +33,18 @@ use clap::Parser;
 use serde::Serialize;
 
 use args::{
-    BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand, LookCommand, ModeArg,
-    PresetArg, ProjectCommand, RecipeCommand, SoundCommand, SourcesCommand, TasteCommand,
-    TranscriptCommand, VoiceCommand,
+    AssetsCommand, BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand,
+    LookCommand, ModeArg, PresetArg, ProjectCommand, RecipeCommand, SoundCommand, SourcesCommand,
+    TasteCommand, TranscriptCommand, VoiceCommand,
 };
+use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
 use ck_assets::ingest::{self, IngestRequest};
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
+};
+use ck_assets::retrieve::{
+    self, AssetIdRequest, AssetSearchRequest, AssetSliceRequest, AssetSourceRequest, Retrieval,
 };
 use ck_assets::sources::{self, SourcesAddRequest, SourcesGapsRequest, SourcesListRequest};
 use ck_assets::vet::{self, VetRequest};
@@ -258,6 +262,65 @@ fn run(cli: Cli) -> CkResult<()> {
                 author: None,
             })?)
         }
+        Command::Assets(cmd) => {
+            let ladder = Retrieval::new(Hub::locate(&cli.dir)?, &cli.dir);
+            match cmd {
+                AssetsCommand::Search {
+                    query,
+                    kind,
+                    tag,
+                    aspect,
+                    mode,
+                    grade,
+                    collection,
+                    limit,
+                } => {
+                    let bad =
+                        |what: &str, v: &str| request_err(format!("--{what} {v:?} is not known"));
+                    let req = AssetSearchRequest {
+                        query,
+                        kind: kind
+                            .map(|k| AssetKind::parse(&k).ok_or_else(|| bad("kind", &k)))
+                            .transpose()?,
+                        tag,
+                        aspect,
+                        mode: mode
+                            .map(|m| LicenseMode::parse(&m).ok_or_else(|| bad("mode", &m)))
+                            .transpose()?,
+                        grade: grade
+                            .map(|g| Grade::parse(&g).ok_or_else(|| bad("grade", &g)))
+                            .transpose()?,
+                        collection,
+                        limit,
+                    };
+                    capped_print(
+                        "assets search",
+                        retrieve::caps::SEARCH,
+                        ladder.search(&req)?,
+                    )
+                }
+                AssetsCommand::Card { id } => capped_print(
+                    "assets card",
+                    retrieve::caps::CARD,
+                    ladder.card(&AssetIdRequest { id })?,
+                ),
+                AssetsCommand::Skeleton { id } => capped_print(
+                    "assets skeleton",
+                    retrieve::caps::SKELETON,
+                    ladder.skeleton(&AssetIdRequest { id })?,
+                ),
+                AssetsCommand::Slice { id, symbol } => capped_print(
+                    "assets slice",
+                    retrieve::caps::SLICE,
+                    ladder.slice(&AssetSliceRequest { id, symbol })?,
+                ),
+                AssetsCommand::Source { id, reason } => capped_print(
+                    "assets source",
+                    retrieve::caps::SOURCE,
+                    ladder.source(&AssetSourceRequest { id, reason })?,
+                ),
+            }
+        }
         Command::Sources(cmd) => {
             let hub = Hub::locate(&cli.dir)?;
             match cmd {
@@ -334,6 +397,11 @@ fn run(cli: Cli) -> CkResult<()> {
         // Handled in main before run.
         Command::Hook(_) => Ok(()),
     }
+}
+
+/// Print `v` unless its compact JSON is over `cap` (E_OUTPUT_CAP).
+fn capped_print<T: Serialize>(what: &str, cap: usize, v: T) -> CkResult<()> {
+    print(&ck_server::ops::capped(what, cap, v)?)
 }
 
 /// `ck mcp`: stdout carries the protocol, so nothing else is printed there.

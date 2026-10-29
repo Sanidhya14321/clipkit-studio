@@ -78,5 +78,9 @@ expression: table
   [
     "E_SCOPE",
     "Change only the comment's layer and declared scope, or reply with a wider scope."
+  ],
+  [
+    "E_BUDGET",
+    "Decide with what you have read, apply it, then read more for the next decision."
   ]
 ]

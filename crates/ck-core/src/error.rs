@@ -64,6 +64,9 @@ pub enum ErrorCode {
     /// While the agent works on a comment, a patch touched layers outside its scope.
     #[serde(rename = "E_SCOPE")]
     Scope,
+    /// The retrieval ladder's budget for this decision is spent (spec 7.3).
+    #[serde(rename = "E_BUDGET")]
+    Budget,
 }
 
 impl ErrorCode {
@@ -88,6 +91,7 @@ impl ErrorCode {
         ErrorCode::Media,
         ErrorCode::Voice,
         ErrorCode::Scope,
+        ErrorCode::Budget,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -111,6 +115,7 @@ impl ErrorCode {
             ErrorCode::Media => "E_MEDIA",
             ErrorCode::Voice => "E_VOICE",
             ErrorCode::Scope => "E_SCOPE",
+            ErrorCode::Budget => "E_BUDGET",
         }
     }
 
@@ -141,6 +146,9 @@ impl ErrorCode {
                 "Check the media file and that ffmpeg and ffprobe are on PATH (ck doctor)."
             }
             ErrorCode::Voice => "Set FISH_AUDIO_API_KEY or install a local model (ck doctor).",
+            ErrorCode::Budget => {
+                "Decide with what you have read, apply it, then read more for the next decision."
+            }
             ErrorCode::Scope => {
                 "Change only the comment's layer and declared scope, or reply with a wider scope."
             }

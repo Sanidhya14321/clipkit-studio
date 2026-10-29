@@ -500,6 +500,32 @@ fn sources_tools_answer_like_their_cli_twins_without_a_studio() {
     assert_eq!(cli, tool);
     assert!(cli.contains("pack-a/glow-title"), "{cli}");
 
+    // The retrieval ladder answers alike (no project here, so no ledger is kept).
+    use ck_assets::retrieve::caps as rc;
+    let found = ok_line(d, &["assets", "search", "glow"], rc::SEARCH);
+    assert!(
+        found.contains("pack-a/glow-title remotion-clip A permissive"),
+        "{found}"
+    );
+    assert_eq!(
+        mcp.ok("assets_search", json!({ "query": "glow" }), rc::SEARCH),
+        found
+    );
+    let skeleton = ok_line(
+        d,
+        &["assets", "skeleton", "pack-a/glow-title"],
+        rc::SKELETON,
+    );
+    let tool = mcp.ok(
+        "assets_skeleton",
+        json!({ "id": "pack-a/glow-title" }),
+        rc::SKELETON,
+    );
+    assert_eq!(tool, skeleton);
+    let refused = mcp.err("assets_card", json!({ "id": "pack-a/nope" }));
+    assert_eq!(code(&refused), "E_NOT_FOUND");
+    assert_eq!(refused, err_line(d, &["assets", "card", "pack-a/nope"]));
+
     let refused = mcp.err("sources_add", json!({ "id": "pack-a", "kind": "x" }));
     assert_eq!(code(&refused), "E_REQUEST");
     assert_eq!(

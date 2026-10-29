@@ -749,6 +749,201 @@ expression: specs()
     }
   },
   {
+    "name": "assets_search",
+    "command": "ck assets search",
+    "description": "Retrieval ladder step 1: top 5 compact lines (id kind grade licenseClass: use when) from vetted sources, filtered by kind, tag, aspect, grade, collection and the license mode (default the brief's, else commercial-safe).",
+    "cap": 2048,
+    "inputSchema": {
+      "$defs": {
+        "AssetKind": {
+          "description": "What an asset is.",
+          "enum": [
+            "remotion-clip",
+            "react-component",
+            "css-effect",
+            "shader",
+            "lottie",
+            "lut",
+            "overlay-video",
+            "sfx",
+            "font",
+            "icon",
+            "ae-reference",
+            "premiere-reference"
+          ],
+          "type": "string"
+        },
+        "Grade": {
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "type": "string"
+        },
+        "LicenseMode": {
+          "description": "License mode (spec 7.6): a brief field that search, recipes and export respect.",
+          "enum": [
+            "commercial-safe",
+            "personal",
+            "any"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "aspect": {
+          "description": "For example `9:16`; assets with no aspects listed match any.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "collection": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "grade": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Grade"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Lowest grade accepted (A is best)."
+        },
+        "kind": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssetKind"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "limit": {
+          "description": "At most 5.",
+          "format": "uint",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LicenseMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Default: the brief's licenseMode, else commercial-safe."
+        },
+        "query": {
+          "default": "",
+          "type": "string"
+        },
+        "tag": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "assets_card",
+    "command": "ck assets card",
+    "description": "Step 2: one asset card. At most 2 distinct cards per decision (E_BUDGET after).",
+    "cap": 3072,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "assets_skeleton",
+    "command": "ck assets skeleton",
+    "description": "Step 3: props, animation primitives, imports and the outline with line ranges (about 600 tokens).",
+    "cap": 2656,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "assets_slice",
+    "command": "ck assets slice",
+    "description": "Step 4: one symbol's source from the outline (about 800 tokens).",
+    "cap": 3456,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "symbol": {
+          "description": "Symbol name from the skeleton's outline.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "symbol"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "assets_source",
+    "command": "ck assets source",
+    "description": "Step 5: the full source, only with a one-line reason; once per decision.",
+    "cap": 16384,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "description": "Why the card, skeleton and slice are not enough (one line, at least 10 characters).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "reason"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "sources_ingest",
     "command": "ck sources ingest",
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",
