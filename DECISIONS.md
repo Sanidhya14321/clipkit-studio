@@ -4,6 +4,16 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 8: `ck verify` quality gates (spec 4.3)
+- Gates live in `ck-server::session::verify` beside `layout check` (they need the look and the layout checker from ck-assets; ck-pipeline does not depend on ck-assets). All gates are blocking; `ok` is false when any issue exists. Gating `idle` on them (spec 4.2 quality gate) is not wired yet.
+- Overlaps are checked on video, audio and caption tracks only: overlay tracks stack recipe layers at the same time by design. Gaps: the first video track must be covered from 0 (no "intended gap" mark exists yet).
+- Duration: timeline end against the brief's `length` within max(0.5 s, 5%); skipped when the brief has no length.
+- Contrast: text `color` (token or hex) against the color of the video-track clip on screen at the text's start, else the look background; 4.5 minimum (the look rule).
+- Motion: at most 3 animating layers at once (taste `motion.md`); `backdrop` counts as still. Holds and direction are not checked yet.
+- Reuse: limit 3 per asset (no number in the spec or taste files; simplest choice); one use = one layer per recipe layer name; layers with prop `motif: true` are exempt.
+- Placeholders: unfilled `{slot}` strings and the whole words placeholder, lorem ipsum, todo, tbd, xxx in clip props and voice slot text.
+- Captions, audio and the critic pass are not built: nothing in the generate slice produces them yet. `--critic` comes with `ck see`.
+
 ### Step 7: native core clips (spec 7, 4)
 - The 8 clips live in `studio/src/clips/` as plain React inside the Remotion composition: pure functions of (props, seconds into clip, frame size). Motion helpers are in `motion.ts` with node tests; the Node render worker (Phase 9) can reuse the same files.
 - "Instrumented" here: each clip root carries `data-ck-layer` and `data-ck-clip`, each pointable part `data-ck-part`. Hover-select itself is Phase 6.

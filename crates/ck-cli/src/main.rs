@@ -143,6 +143,7 @@ fn run(cli: Cli) -> CkResult<()> {
             print(&ops()?.recipe_apply(&req)?)
         }
         Command::Layout(LayoutCommand::Check) => print(&ops()?.layout_check()?),
+        Command::Verify => print(&ops()?.verify()?),
         Command::Init(args) => install::run(install::Mode::Init, &args, &cli.dir),
         Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args, &cli.dir),
         // Handled in main before run.

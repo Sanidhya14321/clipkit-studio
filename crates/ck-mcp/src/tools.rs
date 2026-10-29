@@ -174,6 +174,14 @@ pub fn specs() -> Vec<ToolSpec> {
              size, cut text, at most 3 blocks) for the brief's platform. Returns the issues.",
             caps::LAYOUT_CHECK,
         ),
+        spec::<StatusArgs>(
+            "verify",
+            "ck verify",
+            "Run the quality gates (schema, gaps, overlaps, duration, layout, contrast, fonts, \
+             motion, reuse, provenance, placeholders). Returns passed and failed gates and the \
+             issues; fix failures before the next pass.",
+            caps::VERIFY,
+        ),
     ]
 }
 
@@ -259,6 +267,10 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "layout_check" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.layout_check()?)
+        }
+        "verify" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.verify()?)
         }
         other => Err(request_err(format!("no tool named {other:?}"))),
     }

@@ -224,6 +224,18 @@ fn recipe_apply_answers_like_its_cli_twin() {
     );
     assert_eq!(checked["issues"][0]["rule"], "overlap");
 
+    // The same collision fails the layout gate of verify.
+    let verified = ok_line(d, &["verify"], caps::VERIFY);
+    assert_eq!(mcp.ok("verify", Value::Null, caps::VERIFY), verified);
+    let verified: Value = serde_json::from_str(&verified).unwrap();
+    assert_eq!(verified["ok"], false);
+    assert!(
+        verified["failed"]
+            .as_array()
+            .unwrap()
+            .contains(&json!("layout"))
+    );
+
     let bad = json!({ "recipe": "hook-title", "slots": { "nope": 1 } });
     std::fs::write(&file, bad.to_string()).unwrap();
     let refused = mcp.err("recipe_apply", bad);

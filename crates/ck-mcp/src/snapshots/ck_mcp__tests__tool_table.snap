@@ -702,5 +702,16 @@ expression: specs()
       "description": "`status` takes no input.",
       "type": "object"
     }
+  },
+  {
+    "name": "verify",
+    "command": "ck verify",
+    "description": "Run the quality gates (schema, gaps, overlaps, duration, layout, contrast, fonts, motion, reuse, provenance, placeholders). Returns passed and failed gates and the issues; fix failures before the next pass.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "description": "`status` takes no input.",
+      "type": "object"
+    }
   }
 ]

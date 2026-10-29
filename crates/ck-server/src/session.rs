@@ -24,6 +24,7 @@ use crate::view::{Status, Summary};
 pub mod brief;
 pub mod layout;
 pub mod recipe;
+pub mod verify;
 
 /// Events buffered per subscriber before it lags (a lagging studio gets a fresh snapshot).
 const BUS_CAPACITY: usize = 256;

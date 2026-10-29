@@ -8,3 +8,4 @@ mod live;
 mod ops;
 mod recipe;
 mod studio;
+mod verify;

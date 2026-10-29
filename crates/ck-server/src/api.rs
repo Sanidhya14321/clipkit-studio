@@ -49,6 +49,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/looks", get(looks))
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
+        .route("/api/verify", get(verify))
         .route("/ws", get(ws::upgrade))
         // Runs after the token check, so only authorized calls keep the server alive.
         .layer(middleware::from_fn_with_state(session.clone(), idle::touch))
@@ -134,6 +135,10 @@ async fn brief_propose(
 
 async fn layout_check(State(s): State<Arc<Session>>) -> ApiResult {
     blocking(s, |s| s.layout_check()).await
+}
+
+async fn verify(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.verify()).await
 }
 
 async fn recipe_apply(

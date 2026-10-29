@@ -193,6 +193,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: token refs resolve against the brief's look (default clean-product); solver `box`/`lines` drive placement | PASS | `motion.test.ts` "token refs resolve..." and "box and lines..." |
 | Step 7: applied recipe renders in the Player through its clips, instrumented (`data-ck-layer`, `data-ck-clip`, `data-ck-part`), look color applied, text inside the frame | PASS | `studio/e2e/phase4-clips.spec.ts` |
 | Step 7 run | PASS | 2026-10-29 `just check` exit 0; `just studio-build` then `pnpm --dir studio e2e` 6 of 6 |
+| Step 8: a clean generated project passes all 11 gates | PASS | `ck-server` `tests::verify::clean_project_passes_every_gate`; `verify_through_the_client_after_recipe_apply` (real hook-title apply, brief length 3 s, landscape) |
+| Step 8: each gate catches its own fault and only it (schema, gaps, overlaps, duration, layout, contrast, fonts, motion, reuse with motif, provenance, placeholders) | PASS | `tests::verify::*` (8 tests); `session::verify::tests::placeholder_marks_match_whole_words` |
+| Step 8: `ck verify` and MCP `verify` (schema, 4 KB cap with `omitted`, parity) | PASS | `ck_mcp` `tool_table_snapshot` (1 tool added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` `recipe_tools_answer_like_their_cli_twins` (same reply; layout gate fails on the two titles) |
+| Step 8: captions, audio and critic gates of spec 4.3 | NOT APPLICABLE YET | No captions, voice or audio in the generate slice yet (Phase 5 and 7); critic contact sheet needs rendering (`ck see`, later step or Phase 9) |
+| Step 8 run | PASS | 2026-10-29 `just check`: 208 of 208 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

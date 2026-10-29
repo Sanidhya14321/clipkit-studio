@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 7: 8 native core clips in `studio/src/clips/` (`clips.tsx`, pure `motion.ts`), rendered by `ProjectComposition` with look tokens resolved; instrumented with `data-ck-layer`/`data-ck-clip`/`data-ck-part`.
-2. Proof: `just check` exit 0; `pnpm --dir studio e2e` 6 of 6 incl. `e2e/phase4-clips.spec.ts`; `motion.test.ts` 7 tests. Evidence in VERIFICATION.md, step 7.
-3. Open: the project look is not stored (preview uses the brief look, else clean-product); media sources draw as named panels until proxies; list/quote/stat text not solver-placed; text width is a 0.55 em estimate.
-4. Next: step 8: GENERATE quality gates of spec 4.3 in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
-5. Start: `just check`; read spec 04 section 4.3 and spec 06 for `ck verify`; DECISIONS.md steps 6b and 7.
+1. Done: Phase 4 step 8: `ck verify` + MCP `verify` runs 11 gates (`crates/ck-server/src/session/verify.rs`), 4 KB cap with `omitted`.
+2. Proof: `just check` 208 of 208 nextest, hooks 41 of 41; `tests::verify` 9 tests; parity in `mcp_parity.rs`. Evidence in VERIFICATION.md, step 8.
+3. Open: gates do not yet block `idle` (spec 4.2); captions/audio/critic gates wait for Phase 5/7 and `ck see`; reuse limit 3 is a choice (DECISIONS.md, step 8).
+4. Next: step 9: look re-theme through tokens (store the project look), `ck sound plan`, handoff and `ck wait`.
+5. Start: `just check`; spec 08 (8.5 re-theme, sound), spec 06 (ck wait, handoff); DECISIONS.md steps 7 and 8.
 
 ## Open questions
+- Phase 4 step 8: reuse limit (3 per asset) and the overlay-track overlap exemption are choices; `verify` does not yet block setting `idle` (DECISIONS.md, step 8).
 - Phase 4 step 7: no stored project look; a recipe applied with a request `look` that differs from the brief previews in the brief's look. Store the look with step 9 re-theme (DECISIONS.md, step 7).
 - Phase 4 step 6b: text-layer role defaults to `title` (recipes carry no `role`), and recipe apply does not re-solve layers of other scenes on screen at the same time; revisit with step 7 rendering (DECISIONS.md, step 6b).
 - Phase 4 step 5b: recipe apply falls back to the `clean-product` look when neither the request nor the brief names one; revisit if the plan stage should pick it.
@@ -56,9 +57,14 @@ Steps:
   - [x] 6a. Pure solver and checker in `ck-assets::layout` with tests.
   - [x] 6b. `ck layout check` with MCP twin; recipe apply runs the solver.
 - [x] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
-- [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
+- [x] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 10): step 8.
+- `ck-server::session::verify`: pure `verify(project, look)` running schema, gaps, overlaps, duration, layout, contrast, fonts, motion, reuse, provenance, placeholders.
+- `/api/verify`, `Ops::verify` (4 KB cap, trimmed), `ck verify`, MCP `verify`.
+- Tests: one clean project plus one fault per gate; client test after a real recipe apply; tool table and CLI/MCP parity.
 
 Run plan (autonomous run 9): step 7.
 - `studio/src/clips/`: pure motion helpers (`motion.ts`: look easings, enter progress, stagger, counter value, box style) with node tests.

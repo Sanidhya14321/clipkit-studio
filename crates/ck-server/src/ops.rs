@@ -16,6 +16,7 @@ use crate::session::brief::{
 };
 use crate::session::layout::LayoutCheckResult;
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
+use crate::session::verify::{VerifyIssue, VerifyResult};
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
 
@@ -33,6 +34,7 @@ pub mod caps {
     pub const BRIEF_PROPOSE: usize = 1024;
     pub const RECIPE_APPLY: usize = 1024;
     pub const LAYOUT_CHECK: usize = 4 * 1024;
+    pub const VERIFY: usize = 4 * 1024;
 }
 
 pub struct Ops {
@@ -136,6 +138,20 @@ impl Ops {
     pub fn layout_check(&self) -> CkResult<LayoutCheckResult> {
         let reply = self.client.get("/api/layout/check", &[])?;
         trimmed("layout check", caps::LAYOUT_CHECK, reply)
+    }
+
+    /// `verify`: the quality gates of spec 4.3 that apply to a generated video. Issues past the
+    /// cap are counted in `omitted`.
+    pub fn verify(&self) -> CkResult<VerifyResult> {
+        let reply = self.client.get("/api/verify", &[])?;
+        trimmed("verify", caps::VERIFY, reply)
+    }
+}
+
+impl Trim for VerifyResult {
+    type Entry = VerifyIssue;
+    fn parts(&mut self) -> (&mut Vec<VerifyIssue>, &mut usize) {
+        (&mut self.issues, &mut self.omitted)
     }
 }
 

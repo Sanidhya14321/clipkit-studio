@@ -82,6 +82,9 @@ pub enum Command {
     /// Check text layout: safe areas, collisions, grid, sizes, cut text.
     #[command(subcommand)]
     Layout(LayoutCommand),
+    /// Run the quality gates: schema, gaps, overlaps, duration, layout, contrast, fonts,
+    /// motion, reuse, provenance, placeholders.
+    Verify,
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),
