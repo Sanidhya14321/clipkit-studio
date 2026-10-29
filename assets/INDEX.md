@@ -14,7 +14,7 @@ The taste files and looks below are built into `ck`; this folder is their source
 | --- | --- | --- |
 | Taste files | 12 | `taste/` |
 | Looks | 4 | `looks/` |
-| Recipes | 0 (Phase 4 step 5) | `recipes/` |
+| Recipes | 10 | `recipes/` |
 | Cards | 0 (Phase 8) | `<source>/` |
 
 ## Taste files (taste/)
@@ -36,6 +36,10 @@ The taste files and looks below are built into `ck`; this folder is their source
 - calm-documentary: warm paper tones, deep green accent, gentle motion
 - cinematic: deep shadows, serif titles, muted gold accent, slow motion
 - clean-product: light and precise, one blue accent, calm confident motion
+
+## Recipes (recipes/)
+- before-after, hook-title, kinetic-list, outro-cta, product-reveal
+- quote-testimonial, section-card, stat-callout, step-explainer, talking-head
 
 ## Rules
 - `quarantine/` is untrusted and read-only; never run or import from it.

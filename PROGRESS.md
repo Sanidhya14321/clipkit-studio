@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 4: `studio/src/brief.ts` (essentials, pacing scale, confirm patch), `panels/BriefPanel.tsx` (sources, pacing slider with numbers, look cards, questions, confirm), `GET /api/looks`, look TS types.
-2. Proof: `just check` 180 of 180 nextest (1 skipped), hooks 41 of 41, studio unit tests; `just e2e` 5 of 5 (2 new in `e2e/phase4.spec.ts`). Evidence in VERIFICATION.md, Phase 4 step 4.
-3. Open: more options (spec 8.1 second list), tuning chips and impact preview not built; the panel keeps unsaved edits across agent revisions. Stage gate for brief ops still not enforced. Phase 3 interactive items stay BLOCKED.
-4. Next: Phase 4 step 5, 10 recipes with typed slots and `ck recipe search|apply` (expander, named layers, tokens, provenance, briefDeps).
-5. Start: `just check`; studio: `just e2e` (needs Chromium once).
+1. Done: Phase 4 step 5a: `ck-assets/src/recipe.rs` (typed slots, validation, expander with named layers, token refs, provenance, briefDeps), 10 recipes in `assets/recipes/`, built in via `library::recipes()`, INDEX updated.
+2. Proof: `just check` 186 of 186 nextest (1 skipped), hooks 41 of 41; 6 new recipe tests. Evidence in VERIFICATION.md, step 5a.
+3. Open: the expander does not run the layout solver (step 6) or check license mode; the clip prop names are provisional until step 7 builds the clips. Stage gate for brief ops still not enforced.
+4. Next: Phase 4 step 5b, `ck recipe search|apply` with MCP twins, output caps and parity tests; apply turns an Expansion into an agent patch (tracks by kind, provenance on items).
+5. Start: `just check`; read `crates/ck-assets/src/recipe.rs` and DECISIONS.md step 5a.
 
 ## Open questions
 - Phase 4 step 3: spec 6.2 lists `brief set`; not built (the studio confirms through a human patch). Add it if the agent needs to set user-requested values directly. Wire `Op::ProposeBrief` stage gating once stages are driven.
@@ -47,11 +47,19 @@ Steps:
 - [x] 3. Brief Studio essentials: `ck brief propose|wait|diff|get` (inferred values only, field sources, at most three dynamic questions) and its MCP twins.
 - [x] 4. Studio brief panel (essentials form, pacing slider with numbers, look cards, confirm) with Playwright test.
 - [ ] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
+  - [x] 5a. Recipe model, validation, expander and the 10 recipes.
+  - [ ] 5b. `ck recipe search|apply` with MCP twins.
 - [ ] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
 - [ ] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 5): step 5a (recipe model, expander, 10 recipes; CLI is 5b).
+- Finish the uncommitted `ck-assets/src/recipe.rs` from run 4: wire it in, make it compile under clippy.
+- Author 10 original recipes in `assets/recipes/` (typed slots, named layers, token refs, briefDeps); built-in copy in `library`.
+- Tests: all 10 load, validation refusals, expansion (layer ids, times, tokens kept, provenance, optional slot drop, bad slots).
+- Next run (5b): `ck recipe search|apply` with MCP twins, caps and parity tests.
 
 Run plan (autonomous run 4): step 4.
 - `GET /api/looks` (look tokens for the cards); look types exported to TS.

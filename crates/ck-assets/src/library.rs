@@ -9,6 +9,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::look::{Look, MotionPersonality};
+use crate::recipe::Recipe;
 use crate::taste::TasteFile;
 
 /// Output caps in bytes of compact JSON, shared by each command and its MCP twin.
@@ -54,6 +55,24 @@ pub const LOOK_FILES: &[(&str, &str)] = embed!(
         "calm-documentary",
         "cinematic",
         "clean-product",
+    ]
+);
+
+/// (id, text) of every built-in recipe (spec 7.5).
+pub const RECIPE_FILES: &[(&str, &str)] = embed!(
+    "recipes",
+    "json",
+    [
+        "before-after",
+        "hook-title",
+        "kinetic-list",
+        "outro-cta",
+        "product-reveal",
+        "quote-testimonial",
+        "section-card",
+        "stat-callout",
+        "step-explainer",
+        "talking-head",
     ]
 );
 
@@ -127,6 +146,14 @@ pub fn looks() -> Result<Vec<Look>, CkError> {
     LOOK_FILES
         .iter()
         .map(|(id, text)| Look::parse(&virtual_path("looks", id, "json"), text))
+        .collect()
+}
+
+/// Every built-in recipe, parsed and validated, sorted by id.
+pub fn recipes() -> Result<Vec<Recipe>, CkError> {
+    RECIPE_FILES
+        .iter()
+        .map(|(id, text)| Recipe::parse(&virtual_path("recipes", id, "json"), text))
         .collect()
 }
 

@@ -1,0 +1,48 @@
+{
+  "id": "step-explainer",
+  "name": "Step explainer",
+  "description": "A numbered step with its instruction and an optional visual.",
+  "useWhen": "Walking through a how-to, one scene per step.",
+  "tags": ["steps", "how-to", "tutorial", "explainer"],
+  "duration": { "default": 4.0, "min": 2.5, "max": 10.0 },
+  "slots": [
+    { "name": "step", "kind": "number", "required": true, "description": "Step number." },
+    { "name": "instruction", "kind": "text", "required": true, "description": "What to do, as an imperative.", "maxChars": 72 },
+    { "name": "media", "kind": "source", "required": false, "description": "Source id showing the step." }
+  ],
+  "layers": [
+    {
+      "name": "backdrop",
+      "purpose": "Background, or the step's visual when given",
+      "track": "video",
+      "pass": "structure",
+      "clip": "backdrop",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "color": "$colors.background", "source": "{media}" },
+      "briefDeps": ["look", "aspect"]
+    },
+    {
+      "name": "number",
+      "purpose": "Step number badge",
+      "track": "overlay",
+      "pass": "graphicsMotion",
+      "clip": "stat-counter",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "value": "{step}", "font": "$fonts.display", "color": "$colors.accent", "easing": "$motion.enterEasing" },
+      "briefDeps": ["look"]
+    },
+    {
+      "name": "instruction",
+      "purpose": "The instruction text",
+      "track": "overlay",
+      "pass": "text",
+      "clip": "kinetic-text",
+      "start": 0.1,
+      "end": 1.0,
+      "props": { "text": "{instruction}", "font": "$fonts.text", "color": "$colors.text", "stagger": "$motion.stagger" },
+      "briefDeps": ["audience", "pacing"]
+    }
+  ]
+}

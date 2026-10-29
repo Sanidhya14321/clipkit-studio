@@ -1,0 +1,46 @@
+{
+  "id": "quote-testimonial",
+  "name": "Quote or testimonial",
+  "description": "A short quote on a card with its author, revealed line by line.",
+  "useWhen": "A customer, reviewer or expert said something that proves the point.",
+  "tags": ["quote", "testimonial", "review", "social proof"],
+  "duration": { "default": 5.0, "min": 3.0, "max": 9.0 },
+  "slots": [
+    { "name": "quote", "kind": "text", "required": true, "description": "The quote, trimmed to its strongest sentence.", "maxChars": 140 },
+    { "name": "author", "kind": "text", "required": true, "description": "Who said it.", "maxChars": 40 },
+    { "name": "detail", "kind": "text", "required": false, "description": "Their role or company.", "maxChars": 48 }
+  ],
+  "layers": [
+    {
+      "name": "backdrop",
+      "purpose": "Background behind the card",
+      "track": "video",
+      "pass": "structure",
+      "clip": "backdrop",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "color": "$colors.background" },
+      "briefDeps": ["look", "aspect"]
+    },
+    {
+      "name": "card",
+      "purpose": "Quote card with attribution",
+      "track": "overlay",
+      "pass": "text",
+      "clip": "quote-card",
+      "start": 0.0,
+      "end": 1.0,
+      "props": {
+        "quote": "{quote}",
+        "author": "{author}",
+        "detail": "{detail}",
+        "font": "$fonts.display",
+        "color": "$colors.text",
+        "card": "$colors.surface",
+        "mark": "$colors.accent",
+        "radius": "$size.radius"
+      },
+      "briefDeps": ["goal", "look"]
+    }
+  ]
+}

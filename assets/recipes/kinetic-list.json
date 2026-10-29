@@ -1,0 +1,46 @@
+{
+  "id": "kinetic-list",
+  "name": "Kinetic list",
+  "description": "A title and up to five short points that enter one after another.",
+  "useWhen": "Several reasons, features or tips need to land quickly in order.",
+  "tags": ["list", "bullets", "features", "tips"],
+  "duration": { "default": 5.0, "min": 3.0, "max": 9.0 },
+  "slots": [
+    { "name": "title", "kind": "text", "required": true, "description": "What the list is about.", "maxChars": 40 },
+    { "name": "items", "kind": "list", "required": true, "description": "Two to five points, a few words each.", "maxChars": 36, "minItems": 2, "maxItems": 5 }
+  ],
+  "layers": [
+    {
+      "name": "backdrop",
+      "purpose": "Background for the list",
+      "track": "video",
+      "pass": "structure",
+      "clip": "backdrop",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "color": "$colors.background" },
+      "briefDeps": ["look", "aspect"]
+    },
+    {
+      "name": "list",
+      "purpose": "Title and points, staggered in",
+      "track": "overlay",
+      "pass": "text",
+      "clip": "bullet-list",
+      "start": 0.0,
+      "end": 1.0,
+      "props": {
+        "title": "{title}",
+        "items": "{items}",
+        "titleFont": "$fonts.display",
+        "font": "$fonts.text",
+        "color": "$colors.text",
+        "marker": "$colors.accent",
+        "easing": "$motion.enterEasing",
+        "stagger": "$motion.stagger",
+        "gap": "$size.spacingUnit"
+      },
+      "briefDeps": ["pacing", "look"]
+    }
+  ]
+}

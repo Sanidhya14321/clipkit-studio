@@ -1,0 +1,36 @@
+{
+  "id": "section-card",
+  "name": "Section transition card",
+  "description": "A short full-frame card that names the next section, wiped in and out in the accent color.",
+  "useWhen": "Moving between chapters of a longer video.",
+  "tags": ["section", "chapter", "transition", "divider"],
+  "duration": { "default": 1.5, "min": 1.0, "max": 3.0 },
+  "slots": [
+    { "name": "title", "kind": "text", "required": true, "description": "Section name.", "maxChars": 32 },
+    { "name": "index", "kind": "number", "required": false, "description": "Section number." }
+  ],
+  "layers": [
+    {
+      "name": "wipe",
+      "purpose": "Accent wipe that carries the cut",
+      "track": "video",
+      "pass": "transitions",
+      "clip": "backdrop",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "color": "$colors.accent", "enter": "$motion.enterEasing", "exit": "$motion.exitEasing" },
+      "briefDeps": ["look", "pacing"]
+    },
+    {
+      "name": "title",
+      "purpose": "Section name and number",
+      "track": "overlay",
+      "pass": "text",
+      "clip": "kinetic-text",
+      "start": 0.1,
+      "end": 0.9,
+      "props": { "text": "{title}", "index": "{index}", "font": "$fonts.display", "color": "$colors.accentText" },
+      "briefDeps": ["look"]
+    }
+  ]
+}

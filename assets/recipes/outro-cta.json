@@ -1,0 +1,56 @@
+{
+  "id": "outro-cta",
+  "name": "Outro with call to action",
+  "description": "The closing line and one clear action, with an optional handle or URL.",
+  "useWhen": "The last scene: tell the viewer exactly what to do next.",
+  "tags": ["outro", "cta", "call to action", "ending", "close"],
+  "duration": { "default": 3.0, "min": 2.0, "max": 6.0 },
+  "slots": [
+    { "name": "action", "kind": "text", "required": true, "description": "The action, as a verb phrase (Try it free).", "maxChars": 32 },
+    { "name": "line", "kind": "text", "required": false, "description": "A closing line above the action.", "maxChars": 60 },
+    { "name": "handle", "kind": "text", "required": false, "description": "URL or handle shown under the action.", "maxChars": 40 }
+  ],
+  "layers": [
+    {
+      "name": "backdrop",
+      "purpose": "Closing background",
+      "track": "video",
+      "pass": "structure",
+      "clip": "backdrop",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "color": "$colors.background", "accent": "$colors.accent" },
+      "briefDeps": ["look", "aspect"]
+    },
+    {
+      "name": "line",
+      "purpose": "Closing line",
+      "track": "overlay",
+      "pass": "text",
+      "clip": "kinetic-text",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "text": "{line}", "font": "$fonts.display", "color": "$colors.text" },
+      "briefDeps": ["goal"]
+    },
+    {
+      "name": "action",
+      "purpose": "The call to action and handle",
+      "track": "overlay",
+      "pass": "graphicsMotion",
+      "clip": "lower-third",
+      "start": 0.2,
+      "end": 1.0,
+      "props": {
+        "name": "{action}",
+        "role": "{handle}",
+        "font": "$fonts.text",
+        "color": "$colors.accentText",
+        "panel": "$colors.accent",
+        "radius": "$size.radius",
+        "enter": "$motion.enterEasing"
+      },
+      "briefDeps": ["cta", "platform", "look"]
+    }
+  ]
+}

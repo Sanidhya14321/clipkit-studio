@@ -6,6 +6,7 @@
 pub mod color;
 pub mod library;
 pub mod look;
+pub mod recipe;
 pub mod taste;
 
 use std::path::Path;
@@ -13,6 +14,7 @@ use std::path::Path;
 use ck_core::{CkError, ErrorCode};
 
 pub use look::{Colors, Easing, Fonts, Look, Motion, MotionPersonality, load_looks};
+pub use recipe::{Expansion, Recipe, load_recipes};
 pub use taste::{TasteFile, load_taste};
 
 /// `E_ASSET` error naming the file and what is wrong with it.

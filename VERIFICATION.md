@@ -171,6 +171,10 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 4: read-only while the agent holds `@project`, in the DOM and by the server (423 E_LOCK_HELD) | PASS | `studio/e2e/phase4.spec.ts` "the brief is read-only while the agent holds the project" |
 | Step 4: confirm patch, pacing scale in step with `assets/taste/pacing.md` | PASS | `studio/src/brief.test.ts` (5 tests) |
 | Step 4 run | PASS | 2026-10-29 `just check`: 180 of 180 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and unit tests exit 0; `just e2e` 5 of 5 |
+| Step 5a: the 10 recipes of spec 7.5 load, validate, stay under 6 KB and match the built-in copy | PASS | `ck-assets` tests `recipes::ten_recipes_of_spec_7_5_load_and_match_the_folder`, `assets_index_is_short_and_names_every_built_in_file` |
+| Step 5a: expander builds named layers (`<prefix>-<layer>`), times from fractions, keeps token refs, drops unfilled optional props, records provenance and briefDeps | PASS | `recipes::expand_builds_named_layers_with_times_tokens_and_provenance`, `every_token_a_recipe_uses_resolves_in_every_look` |
+| Step 5a: bad slots, duration, `at` and source ids refused with E_REQUEST; malformed recipes with E_ASSET | PASS | `recipes::expand_checks_slots_and_duration`, `source_slots_need_a_project_source`, `recipe_refusals_carry_e_asset` |
+| Step 5a run | PASS | 2026-10-29 `just check`: 186 of 186 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

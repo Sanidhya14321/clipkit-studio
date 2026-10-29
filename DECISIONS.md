@@ -4,6 +4,13 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 5a: recipe format and expander (spec 7.1, 7.4, 7.5)
+- Step 5 is split: 5a is the recipe model, expander and the 10 recipes; 5b is `ck recipe search|apply` with MCP twins.
+- Recipes are JSON (like looks), built into `ck`. Layers place a core clip (the 8 ids step 7 builds) at fractions of the scene duration. Props refer to slots as `"{slot}"` and to tokens as `"$role.name"` (colors, fonts, motion, size).
+- Token references stay unresolved in the layer props, so a re-theme (step 9) swaps the look without touching layers; the expander still resolves each one to prove it exists.
+- An optional slot left empty drops the props that use it; there are no placeholder values. Slot errors are E_REQUEST, recipe file errors E_ASSET. Provenance hash is FNV-1a 64 of the recipe text (no new dependency); license `original`.
+- The layout solver (step 6) is not run by the expander yet; `apply` will call it once it exists.
+
 ### Step 4: studio brief panel (spec 8.1)
 - `GET /api/looks` (studio-only, read-only, four small files) feeds the look cards; it is not a CLI command, so no MCP twin (the agent has `ck look list|get`). `ck-server` now depends on `ck-assets`; look types derive `TS`.
 - The panel is always in the side column (Brief page before the build, brief panel after). Essentials: goal, cta, audience, platform, aspect, length, pacing, look, voice. More options (spec 8.1 second list) and tuning chips are later work.

@@ -1,0 +1,57 @@
+{
+  "id": "stat-callout",
+  "name": "Stat callout",
+  "description": "One number counts up to its value with a label and an optional source line.",
+  "useWhen": "A single figure carries the point (a result, a saving, a count).",
+  "tags": ["stat", "number", "metric", "proof"],
+  "duration": { "default": 3.0, "min": 2.0, "max": 5.0 },
+  "slots": [
+    { "name": "value", "kind": "number", "required": true, "description": "The figure to count up to." },
+    { "name": "unit", "kind": "text", "required": false, "description": "Unit or suffix shown after the figure, such as % or x.", "maxChars": 8 },
+    { "name": "label", "kind": "text", "required": true, "description": "What the figure measures.", "maxChars": 48 },
+    { "name": "source", "kind": "text", "required": false, "description": "Where the figure comes from.", "maxChars": 60 }
+  ],
+  "layers": [
+    {
+      "name": "backdrop",
+      "purpose": "Background for the stat",
+      "track": "video",
+      "pass": "structure",
+      "clip": "backdrop",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "color": "$colors.surface" },
+      "briefDeps": ["look", "aspect"]
+    },
+    {
+      "name": "counter",
+      "purpose": "The figure counting up, with its label",
+      "track": "overlay",
+      "pass": "graphicsMotion",
+      "clip": "stat-counter",
+      "start": 0.0,
+      "end": 1.0,
+      "props": {
+        "value": "{value}",
+        "unit": "{unit}",
+        "label": "{label}",
+        "font": "$fonts.display",
+        "color": "$colors.accent",
+        "labelColor": "$colors.text",
+        "easing": "$motion.enterEasing"
+      },
+      "briefDeps": ["goal", "look"]
+    },
+    {
+      "name": "source",
+      "purpose": "Small source line under the stat",
+      "track": "overlay",
+      "pass": "text",
+      "clip": "kinetic-text",
+      "start": 0.3,
+      "end": 1.0,
+      "props": { "text": "{source}", "font": "$fonts.text", "color": "$colors.mutedText", "size": "small" },
+      "briefDeps": []
+    }
+  ]
+}

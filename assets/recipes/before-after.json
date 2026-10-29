@@ -1,0 +1,47 @@
+{
+  "id": "before-after",
+  "name": "Before and after",
+  "description": "Two states side by side (or stacked on vertical) with a wipe between them.",
+  "useWhen": "The change itself is the message: old against new, problem against fix.",
+  "tags": ["compare", "before", "after", "split", "transformation"],
+  "duration": { "default": 4.0, "min": 2.5, "max": 8.0 },
+  "slots": [
+    { "name": "before", "kind": "text", "required": true, "description": "The old state in a few words.", "maxChars": 60 },
+    { "name": "after", "kind": "text", "required": true, "description": "The new state in a few words.", "maxChars": 60 },
+    { "name": "beforeMedia", "kind": "source", "required": false, "description": "Source id showing the old state." },
+    { "name": "afterMedia", "kind": "source", "required": false, "description": "Source id showing the new state." }
+  ],
+  "layers": [
+    {
+      "name": "backdrop",
+      "purpose": "Background for the comparison",
+      "track": "video",
+      "pass": "structure",
+      "clip": "backdrop",
+      "start": 0.0,
+      "end": 1.0,
+      "props": { "color": "$colors.background" },
+      "briefDeps": ["look", "aspect"]
+    },
+    {
+      "name": "compare",
+      "purpose": "Split comparison with a wipe",
+      "track": "overlay",
+      "pass": "graphicsMotion",
+      "clip": "split-compare",
+      "start": 0.0,
+      "end": 1.0,
+      "props": {
+        "beforeLabel": "{before}",
+        "afterLabel": "{after}",
+        "beforeSource": "{beforeMedia}",
+        "afterSource": "{afterMedia}",
+        "font": "$fonts.text",
+        "color": "$colors.text",
+        "divider": "$colors.accent",
+        "easing": "$motion.enterEasing"
+      },
+      "briefDeps": ["aspect", "pacing", "look"]
+    }
+  ]
+}
