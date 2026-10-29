@@ -23,7 +23,7 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
-    /// Serve the project and the studio on 127.0.0.1 (--ensure: start it in the background).
+    /// Serve the project and studio on 127.0.0.1 (--ensure: in the background).
     Studio {
         /// Port to bind; 0 picks a free one.
         #[arg(long, default_value_t = 0)]
@@ -69,16 +69,16 @@ pub enum Command {
     /// Brief Studio: propose, wait, read the brief or its diff.
     #[command(subcommand)]
     Brief(BriefCommand),
-    /// Search and read the taste files (direction with concrete numbers).
+    /// Search and read the taste files.
     #[command(subcommand)]
     Taste(TasteCommand),
-    /// List and read the looks (design tokens plus motion personality).
+    /// List, read and apply the looks (design tokens).
     #[command(subcommand)]
     Look(LookCommand),
-    /// Search, read and apply recipes (pre-wired scenes with typed slots).
+    /// Search, read and apply recipes (scenes with typed slots).
     #[command(subcommand)]
     Recipe(RecipeCommand),
-    /// Check text layout: safe areas, collisions, grid, sizes, cut text.
+    /// Check text layout (safe areas, collisions, sizes).
     #[command(subcommand)]
     Layout(LayoutCommand),
     /// Run the quality gates (schema, timing, layout, contrast, motion, provenance).
@@ -96,6 +96,9 @@ pub enum Command {
     /// Suggest and apply cuts.
     #[command(subcommand)]
     Cut(CutCommand),
+    /// Voice slots: script, mode.
+    #[command(subcommand)]
+    Voice(VoiceCommand),
     /// What the user points at in the studio, plus open comments.
     Context,
     /// List, add, reply to and resolve comments.
@@ -338,4 +341,23 @@ pub enum CommentsCommand {
         #[arg(long)]
         text: Option<String>,
     },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum VoiceCommand {
+    /// Split a script into voice slots: a JSON file {lines: [{text, window?}], mode?}, or -.
+    Script { file: String },
+    /// Switch a slot between ai, recorded and cloned.
+    Mode {
+        slot: String,
+        #[arg(value_enum)]
+        mode: ModeArg,
+    },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum ModeArg {
+    Ai,
+    Recorded,
+    Cloned,
 }

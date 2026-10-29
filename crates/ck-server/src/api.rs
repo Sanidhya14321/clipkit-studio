@@ -26,6 +26,7 @@ use crate::session::handoff::{HandoffRequest, WaitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
+use crate::session::voice::{VoiceModeRequest, VoiceScriptRequest};
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
 use crate::ws;
@@ -64,6 +65,8 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/cut/apply", post(cut_apply))
         .route("/api/export", post(export))
         .route("/api/comments", get(comments_list))
+        .route("/api/voice/script", post(voice_script))
+        .route("/api/voice/mode", post(voice_mode))
         .route("/api/context", get(context).post(set_context))
         .route("/api/comments/add", post(comments_add))
         .route("/api/comments/reply", post(comments_reply))
@@ -280,6 +283,22 @@ async fn set_context(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.set_context(req)).await
+}
+
+async fn voice_script(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<VoiceScriptRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.voice_script(&req)).await
+}
+
+async fn voice_mode(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<VoiceModeRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.voice_mode(&req)).await
 }
 
 async fn look_apply(

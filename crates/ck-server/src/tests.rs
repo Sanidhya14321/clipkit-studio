@@ -15,3 +15,4 @@ mod recipe;
 mod sound;
 mod studio;
 mod verify;
+mod voice;

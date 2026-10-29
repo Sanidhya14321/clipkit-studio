@@ -35,6 +35,7 @@ pub mod look;
 pub mod recipe;
 pub mod sound;
 pub mod verify;
+pub mod voice;
 
 /// Events buffered per subscriber before it lags (a lagging studio gets a fresh snapshot).
 const BUS_CAPACITY: usize = 256;

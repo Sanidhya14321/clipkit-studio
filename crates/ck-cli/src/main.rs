@@ -9,7 +9,7 @@ mod studio;
 use std::io::{Read, Write};
 use std::process::ExitCode;
 
-use ck_core::model::Anchor;
+use ck_core::model::{Anchor, VoiceMode};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::api::BODY_LIMIT;
@@ -24,13 +24,15 @@ use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
+use ck_server::session::voice::VoiceModeRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
 
 use args::{
-    BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand, LookCommand, PresetArg,
-    ProjectCommand, RecipeCommand, SoundCommand, TasteCommand, TranscriptCommand,
+    BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand, LookCommand, ModeArg,
+    PresetArg, ProjectCommand, RecipeCommand, SoundCommand, TasteCommand, TranscriptCommand,
+    VoiceCommand,
 };
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
@@ -175,6 +177,23 @@ fn run(cli: Cli) -> CkResult<()> {
             print(&ops()?.cut_apply(&CutApplyRequest { source, ids })?)
         }
         Command::Context => print(&ops()?.context()?),
+        Command::Voice(VoiceCommand::Script { file }) => {
+            let req = serde_json::from_str(&read_input(&file, "voice script")?)
+                .map_err(|e| request_err(format!("voice script JSON: {e}")))?;
+            print(&ops()?.voice_script(&req)?)
+        }
+        Command::Voice(VoiceCommand::Mode { slot, mode }) => {
+            let mode = match mode {
+                ModeArg::Ai => VoiceMode::Ai,
+                ModeArg::Recorded => VoiceMode::Recorded,
+                ModeArg::Cloned => VoiceMode::Cloned,
+            };
+            print(&ops()?.voice_mode(&VoiceModeRequest {
+                slot,
+                mode,
+                author: None,
+            })?)
+        }
         Command::Comments(CommentsCommand::List { all }) => {
             print(&ops()?.comments_list(&CommentListRequest { all })?)
         }

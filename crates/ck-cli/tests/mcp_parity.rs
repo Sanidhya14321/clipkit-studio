@@ -382,6 +382,24 @@ fn comment_tools_answer_like_their_cli_twins() {
     assert_eq!(mcp.ok("context", json!({}), caps::CONTEXT), context);
     assert!(context.contains("\"c2\""), "{context}");
 
+    // Voice slots: the script from a file on the CLI, the mode through MCP.
+    let script = json!({ "lines": [{ "text": "Hello there." }, { "text": "Bye now." }] });
+    let file = d.join("script.json");
+    std::fs::write(&file, script.to_string()).unwrap();
+    let cli: Value = serde_json::from_str(&ok_line(
+        d,
+        &["voice", "script", file.to_str().unwrap()],
+        caps::VOICE_SCRIPT,
+    ))
+    .unwrap();
+    let tool: Value =
+        serde_json::from_str(&mcp.ok("voice_script", script, caps::VOICE_SCRIPT)).unwrap();
+    assert_eq!(cli["slots"], tool["slots"]);
+    let moded = ok_line(d, &["voice", "mode", "v1", "recorded"], caps::VOICE_WRITE);
+    assert!(moded.contains("\"recorded\""), "{moded}");
+    let refused = mcp.err("voice_mode", json!({ "slot": "v9", "mode": "ai" }));
+    assert_eq!(refused, err_line(d, &["voice", "mode", "v9", "ai"]));
+
     let refused = mcp.err("comments_resolve", json!({ "id": "c9" }));
     assert_eq!(code(&refused), "E_NOT_FOUND");
     assert_eq!(refused, err_line(d, &["comments", "resolve", "c9"]));

@@ -31,6 +31,9 @@ use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::verify::{VerifyIssue, VerifyResult};
+use crate::session::voice::{
+    SlotSummary, VoiceModeRequest, VoiceModeResult, VoiceScriptRequest, VoiceScriptResult,
+};
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
 
@@ -63,6 +66,8 @@ pub mod caps {
     /// The send bundle: open comments and the layers they point at.
     pub const COMMENTS: usize = 8 * 1024;
     pub const COMMENT_WRITE: usize = 2 * 1024;
+    pub const VOICE_SCRIPT: usize = 4 * 1024;
+    pub const VOICE_WRITE: usize = 1024;
     /// About 300 tokens (spec 6.4).
     pub const CONTEXT: usize = 1536;
 }
@@ -274,6 +279,18 @@ impl Ops {
         )
     }
 
+    /// `voice script`: the script as voice slots with target windows (replaces the slots).
+    pub fn voice_script(&self, req: &VoiceScriptRequest) -> CkResult<VoiceScriptResult> {
+        let reply = self.client.post("/api/voice/script", req)?;
+        trimmed("voice script", caps::VOICE_SCRIPT, reply)
+    }
+
+    /// `voice mode`: switch a slot between ai, recorded and cloned.
+    pub fn voice_mode(&self, req: &VoiceModeRequest) -> CkResult<VoiceModeResult> {
+        let reply = self.client.post("/api/voice/mode", req)?;
+        capped("voice mode", caps::VOICE_WRITE, reply)
+    }
+
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.
     pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
         capped(
@@ -357,6 +374,13 @@ impl Trim for ContextView {
     type Entry = OpenComment;
     fn parts(&mut self) -> (&mut Vec<OpenComment>, &mut usize) {
         (&mut self.open_comments, &mut self.omitted)
+    }
+}
+
+impl Trim for VoiceScriptResult {
+    type Entry = SlotSummary;
+    fn parts(&mut self) -> (&mut Vec<SlotSummary>, &mut usize) {
+        (&mut self.slots, &mut self.omitted)
     }
 }
 

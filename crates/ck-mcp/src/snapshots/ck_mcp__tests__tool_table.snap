@@ -924,6 +924,141 @@ expression: specs()
     }
   },
   {
+    "name": "voice_script",
+    "command": "ck voice script",
+    "description": "Split the script into voice slots v1..vn, one per line, with target windows (estimated at 2.5 words/s when absent); replaces the slots and the voice track, keeping takes of unchanged lines.",
+    "cap": 4096,
+    "inputSchema": {
+      "$defs": {
+        "ScriptLine": {
+          "additionalProperties": false,
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "window": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TimeRange"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Target window; estimated from the word count when absent."
+            }
+          },
+          "required": [
+            "text"
+          ],
+          "type": "object"
+        },
+        "TimeRange": {
+          "description": "A half-open time range in seconds, `[start, end)`.",
+          "properties": {
+            "end": {
+              "format": "double",
+              "type": "number"
+            },
+            "start": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "type": "object"
+        },
+        "VoiceMode": {
+          "enum": [
+            "ai",
+            "recorded",
+            "cloned"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "lines": {
+          "description": "One slot per line, in order. Replaces the current slots; a slot whose text and mode are\nunchanged keeps its takes.",
+          "items": {
+            "$ref": "#/$defs/ScriptLine"
+          },
+          "type": "array"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VoiceMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Mode for new slots (default ai)."
+        }
+      },
+      "required": [
+        "lines"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "voice_mode",
+    "command": "ck voice mode",
+    "description": "Switch a voice slot between ai, recorded and cloned; takes are kept.",
+    "cap": 1024,
+    "inputSchema": {
+      "$defs": {
+        "Author": {
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ],
+          "type": "string"
+        },
+        "VoiceMode": {
+          "enum": [
+            "ai",
+            "recorded",
+            "cloned"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Author"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Who switches it: the agent (default) or the human (the studio badge)."
+        },
+        "mode": {
+          "$ref": "#/$defs/VoiceMode"
+        },
+        "slot": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "slot",
+        "mode"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "context",
     "command": "ck context",
     "description": "What the user points at in the studio: selected layer, hovered element, playhead, loop range and open comments. Call it first when the user says this, here or that.",

@@ -23,6 +23,7 @@ use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
+use ck_server::session::voice::{VoiceModeRequest, VoiceScriptRequest};
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
 use serde::de::DeserializeOwned;
@@ -256,6 +257,20 @@ pub fn specs() -> Vec<ToolSpec> {
              tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",
             caps::EXPORT,
         ),
+        spec::<VoiceScriptRequest>(
+            "voice_script",
+            "ck voice script",
+            "Split the script into voice slots v1..vn, one per line, with target windows \
+             (estimated at 2.5 words/s when absent); replaces the slots and the voice track, \
+             keeping takes of unchanged lines.",
+            caps::VOICE_SCRIPT,
+        ),
+        spec::<VoiceModeRequest>(
+            "voice_mode",
+            "ck voice mode",
+            "Switch a voice slot between ai, recorded and cloned; takes are kept.",
+            caps::VOICE_WRITE,
+        ),
         spec::<ContextRequest>(
             "context",
             "ck context",
@@ -381,6 +396,8 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
         "comments_list" => json(&ops.comments_list(&parse(args)?)?),
+        "voice_script" => json(&ops.voice_script(&parse(args)?)?),
+        "voice_mode" => json(&ops.voice_mode(&parse(args)?)?),
         "context" => {
             let _: ContextRequest = parse(args)?;
             json(&ops.context()?)

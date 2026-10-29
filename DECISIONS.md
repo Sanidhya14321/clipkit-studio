@@ -475,3 +475,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Phase 6 step 6: tuning chips (2026-10-29)
 - Chip mapping (not in the spec): punchier and calmer move pacing one level on the 5-level scale; shorter keeps 80% of the length (rounded, at least 1 s); more premium sets the look to `cinematic` and writes `tokens.look` so the video re-themes through tokens with zero agent tokens (spec 8.1). A chip at the end of its range is disabled.
 - The impact preview is computed in the studio from items' briefDeps; `brief diff` returns the same set as `affected`, so the agent re-plans only those layers. `affected` is not trimmed under the brief cap (layer counts are small).
+
+## Phase 7 step 1: voice slots (2026-10-29)
+- `voice script` takes lines (text, optional window); slot ids are v1..vn by position. A missing window is estimated at 2.5 words per second, laid end to end with 0.3 s gaps (choices). A line keeps its takes when its id and text are unchanged and its window was not given anew.
+- Voice items live on an audio track `voice-1` (one item `voice-<slot>` at the window start); the whole track is rebuilt with the slots, so no item dangles.

@@ -49,6 +49,20 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
+## Phase 7: voice slice (2026-10-29, in progress)
+
+Spec: 06 (6.2 voice commands, 6.4 lanes), 08 (8.3). Proof: a script becomes voice slots, each slot gets a take (AI through a fake speaker in tests, recorded in the studio), takes are normalized and fit-checked, captions come from the active take, and push-to-talk runs a local command; `ck ask` returns the user's answer. Fish Audio calls (TTS, cloning) are PLACEHOLDER stubs until the owner adds the key (same as Phase 5 step 4b).
+
+Steps:
+- [x] 1. `ck voice script` (script to slots with target windows) and `ck voice mode <slot> ai|recorded|cloned`, MCP twins.
+- [ ] 2. Speaker interface (Fish TTS stub, E_VOICE), audio cache by content hash, take processing (silence trim, loudness to the voice target, fit check: time-stretch within 8%, else options); `ck voice speak <slot>` + MCP twin.
+- [ ] 3. Record-along: the studio uploads a recorded take per slot (teleprompter, countdown, takes list, active take); server converts, trims, normalizes, fit-checks; Playwright with a fake microphone.
+- [ ] 4. Cloning with consent: only from takes recorded in the studio, after a consent record; Fish clone stub; refusal tests. `ck voice clone` + MCP twin.
+- [ ] 5. Captions from the active take's timing (transcriber over the take), as caption items.
+- [ ] 6. Lane B push-to-talk: local command parser (play, pause, undo, redo, go to N seconds, split here), free-form phrases become comments at the selection or playhead.
+- [ ] 7. Lane C `ck ask` + MCP twin: a question card with options in the studio, the answer returns as the tool result.
+- [ ] 8. Proof run, self review, evidence.
+
 ## Phase 6: interaction slice (2026-10-29, done)
 
 Spec: 05 (5.3, 5.4), 08 (8.4), 04 (scope gate), 06 (comments CLI, ck context). Proof: the user comments on a layer, the agent picks it up through `ck wait`, fixes it inside the scope gate, and resolves it with a before/after diff; hover-select and tuning chips work in the studio.
