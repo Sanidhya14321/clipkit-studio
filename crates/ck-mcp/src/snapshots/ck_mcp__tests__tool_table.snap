@@ -1,6 +1,5 @@
 ---
 source: crates/ck-mcp/src/tests.rs
-assertion_line: 11
 expression: specs()
 ---
 [
@@ -765,6 +764,25 @@ expression: specs()
           ]
         }
       },
+      "type": "object"
+    }
+  },
+  {
+    "name": "import",
+    "command": "ck import",
+    "description": "Import a media file by absolute path: probe, hash, 720p proxy and 48 kHz audio into the cache, then register it as a project source. Same content twice returns the existing source.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "description": "Absolute path of the media file.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
       "type": "object"
     }
   },

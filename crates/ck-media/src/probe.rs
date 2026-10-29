@@ -131,8 +131,20 @@ struct RawSideData {
     rotation: Option<f64>,
 }
 
+/// Image containers ffprobe reports for still pictures.
+fn is_still_format(format: &str) -> bool {
+    format == "image2" || format.ends_with("_pipe")
+}
+
+impl MediaInfo {
+    /// True for a still picture (PNG, JPEG, WebP and the like); its duration is 0.
+    pub fn is_still(&self) -> bool {
+        self.video.is_some() && is_still_format(&self.format)
+    }
+}
+
 /// Parses ffprobe `-of json` output. Fails with `E_MEDIA` when the file has no usable
-/// video or audio stream or no duration.
+/// video or audio stream, or no duration unless it is a still image (duration 0).
 pub fn parse_probe(json: &[u8]) -> Result<MediaInfo, CkError> {
     let raw: RawProbe = serde_json::from_slice(json)
         .map_err(|e| CkError::new(ErrorCode::Media, format!("unreadable ffprobe output: {e}")))?;
@@ -171,11 +183,14 @@ pub fn parse_probe(json: &[u8]) -> Result<MediaInfo, CkError> {
             .filter_map(|s| s.duration.as_deref().and_then(parse_f64))
             .fold(0.0, f64::max);
     }
-    if !duration.is_finite() || duration <= 0.0 {
+    let format_name = format.map(|f| f.format_name.clone()).unwrap_or_default();
+    if is_still_format(&format_name) && video.is_some() {
+        duration = 0.0;
+    } else if !duration.is_finite() || duration <= 0.0 {
         return Err(CkError::new(ErrorCode::Media, "no duration"));
     }
     Ok(MediaInfo {
-        format: format.map(|f| f.format_name.clone()).unwrap_or_default(),
+        format: format_name,
         duration,
         video,
         audio,

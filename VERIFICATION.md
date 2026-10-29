@@ -226,6 +226,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 1 run | PASS | 2026-10-29 `just check`: 228 of 228 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
 | Step 2a: streamed SHA-256 content hash; cache paths keyed by hex hash (non-hex keys refused); 720p H.264 proxy and 48 kHz WAV audio written via temp file and rename, cache hit skips work, failure leaves no file | PASS | `ck-media` `import::tests::*` (7 tests): SHA-256 of `abc` matches the known vector; `proxy_and_audio_from_fixture_media` proxies `fixtures/generated/av.mp4` (h264, height at most 720 and even, one audio track, 12 s) and extracts 48 kHz audio (12 s); a silent video gives `E_MEDIA` and no file |
 | Step 2a run | PASS | 2026-10-29 `just check`: 235 of 235 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
+| Step 2b: `ck import` probes, hashes, proxies (video), extracts audio and registers a `Source` (id `src-<8 hex>`, kind, path, proxyPath, hash, durationSec) as one agent revision; same content twice is a no-op; stills probe with duration 0 | PASS | `ck-server` `tests::import::*` (3): av.mp4 to a video source with cached proxy and WAV, re-import keeps rev 1; tones.wav to audio, square.png to image without duration; relative path `E_REQUEST`, missing file `E_MEDIA`. `ck-media` `probe::tests::still_images_have_no_duration_and_are_not_refused`. `ck-cli` `mcp_parity::import_answers_like_its_cli_twin`; `ck-mcp` tool table and caps (`import`, 1 KB) |
+| Step 2b run | PASS | 2026-10-29 `just check`: 240 of 240 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

@@ -290,6 +290,34 @@ fn recipe_apply_answers_like_its_cli_twin() {
 }
 
 #[test]
+fn import_answers_like_its_cli_twin() {
+    let media = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/generated/tones.wav");
+    if !media.exists() {
+        eprintln!("skipped: run `just fixtures` first");
+        return;
+    }
+    let media = media.canonicalize().unwrap();
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _studio = Studio::start(d);
+    let mut mcp = Mcp::start(d);
+
+    let path = media.to_str().unwrap();
+    let cli: Value = serde_json::from_str(&ok_line(d, &["import", path], caps::IMPORT)).unwrap();
+    assert_eq!((&cli["added"], &cli["rev"]), (&json!(true), &json!(1)));
+    assert_eq!(cli["source"]["kind"], "audio");
+    // The same content again: both answer with the existing source and no new revision.
+    let again = ok_line(d, &["import", path], caps::IMPORT);
+    assert_eq!(
+        mcp.ok("import", json!({ "path": path }), caps::IMPORT),
+        again
+    );
+    let refused = mcp.err("import", json!({ "path": "/no/such/clip.mp4" }));
+    assert_eq!(code(&refused), "E_MEDIA");
+    assert_eq!(refused, err_line(d, &["import", "/no/such/clip.mp4"]));
+}
+
+#[test]
 fn tools_list_names_every_cli_twin_with_its_schema() {
     let dir = tempfile::tempdir().unwrap();
     let mut mcp = Mcp::start(dir.path());

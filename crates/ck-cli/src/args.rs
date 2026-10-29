@@ -88,6 +88,9 @@ pub enum Command {
     /// Plan sound design: whooshes, hits, risers, room tone and ducking.
     #[command(subcommand)]
     Sound(SoundCommand),
+    /// Import a media file: probe, hash, 720p proxy and audio into the cache, then register it as
+    /// a project source.
+    Import { path: std::path::PathBuf },
     /// Hand the project to the user: release every agent lock and set the agent idle.
     Handoff {
         /// What the studio shows for the agent while idle.

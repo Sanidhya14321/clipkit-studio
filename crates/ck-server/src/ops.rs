@@ -15,6 +15,7 @@ use crate::session::brief::{
     BriefWaitRequest, BriefWaitResult,
 };
 use crate::session::handoff::{HandoffRequest, HandoffResult, WaitEvent, WaitRequest, WaitResult};
+use crate::session::import::{ImportRequest, ImportResult};
 use crate::session::layout::LayoutCheckResult;
 use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
@@ -42,6 +43,7 @@ pub mod caps {
     pub const SOUND_PLAN: usize = 4 * 1024;
     pub const HANDOFF: usize = 1024;
     pub const WAIT: usize = 4 * 1024;
+    pub const IMPORT: usize = 1024;
 }
 
 pub struct Ops {
@@ -167,6 +169,15 @@ impl Ops {
     pub fn sound_plan(&self) -> CkResult<SoundPlan> {
         let reply = self.client.get("/api/sound/plan", &[])?;
         trimmed("sound plan", caps::SOUND_PLAN, reply)
+    }
+
+    /// `import`: probe, hash, proxy and extract audio, then register the file as a source.
+    pub fn import(&self, req: &ImportRequest) -> CkResult<ImportResult> {
+        capped(
+            "import",
+            caps::IMPORT,
+            self.client.post("/api/import", req)?,
+        )
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.

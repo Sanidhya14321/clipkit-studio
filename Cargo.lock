@@ -366,6 +366,7 @@ dependencies = [
  "axum",
  "ck-assets",
  "ck-core",
+ "ck-media",
  "futures-util",
  "getrandom 0.4.3",
  "insta",

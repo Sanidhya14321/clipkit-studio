@@ -16,6 +16,7 @@ use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
+use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
@@ -150,6 +151,13 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Layout(LayoutCommand::Check) => print(&ops()?.layout_check()?),
         Command::Verify => print(&ops()?.verify()?),
         Command::Sound(SoundCommand::Plan) => print(&ops()?.sound_plan()?),
+        Command::Import { path } => {
+            let path = std::path::absolute(&path)
+                .map_err(|e| CkError::new(ErrorCode::Request, format!("import path: {e}")))?;
+            print(&ops()?.import(&ImportRequest {
+                path: path.to_string_lossy().into_owned(),
+            })?)
+        }
         Command::Handoff { label } => print(&ops()?.handoff(&HandoffRequest { label })?),
         Command::Wait { since, timeout } => print(&ops()?.wait(&WaitRequest {
             since,

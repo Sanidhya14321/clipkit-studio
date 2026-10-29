@@ -95,6 +95,16 @@ fn duration_falls_back_to_streams() {
 }
 
 #[test]
+fn still_images_have_no_duration_and_are_not_refused() {
+    let png = json!({ "streams": [video(json!({ "codec_name": "png" }))],
+                      "format": { "format_name": "png_pipe" } });
+    let m = parse(png).unwrap();
+    assert!(m.is_still());
+    assert_eq!(m.duration, 0.0);
+    assert!(!parse(file(vec![video(json!({}))])).unwrap().is_still());
+}
+
+#[test]
 fn unusable_files_are_media_errors() {
     for bad in [
         json!({ "streams": [], "format": { "duration": "3" } }),

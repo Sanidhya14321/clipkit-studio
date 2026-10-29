@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 5
 
 ## Handoff (latest)
-1. Done: Phase 5 step 2a (`ck_media::{hash_file, CachePaths, make_proxy, extract_audio}`); `sha2` 0.11.1 added (already in the tree via rust-embed-utils).
-2. Proof: `just check` passing, 235 of 235 nextest (1 skipped), hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, Phase 5 step 2a.
-3. Open: fixture-backed tests skip when `just fixtures` has not run (CI test job); Phase 4 carries unchanged.
-4. Next: Phase 5 step 2b: register a `Source` (id, kind, path, proxyPath, hash, durationSec) in the project through a patch, `ck import <path>` with MCP twin, schema, cap and parity tests.
-5. Start: `just check`; docs/spec/03-layout-and-model.md 3.2 Source; rust-conventions skill (CLI command plus MCP twin).
+1. Done: Phase 5 step 2b (`ck import <path>` and MCP `import`: probe, hash, proxy, audio, `Source` registered as one agent revision; stills probe with duration 0).
+2. Proof: `just check` passing, 240 of 240 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 5 step 2b.
+3. Open: import runs ffmpeg inside the server request (blocking thread); fixture-backed tests skip without `just fixtures`; Phase 4 carries unchanged.
+4. Next: Phase 5 step 3: silence detection (silencedetect) and scene detection (scene score) as cut-candidate signals in ck-media.
+5. Start: `just check`; docs/spec/04 (BASE edit) and spec 14 wave 1 scene detection; media-ffmpeg skill.
 
 ## Open questions
 - Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
@@ -52,7 +52,7 @@ Spec: 04 (BASE), 08 (8.2, 8.6 export), 14 (wave 1 editing tools). Proof: raw foo
 
 Steps:
 - [x] 1. `ck-media` probe: `E_MEDIA` code, safe ffprobe call (argument array, timeout, `-` path refusal), typed `MediaInfo` (duration, video/audio streams, fps, VFR flag, rotation, audio track count) with fixture tests.
-- [ ] 2. (2a done: media functions; 2b next: project source and `ck import`) Import: content hash, 720p proxy and audio extraction into `.clipkit/cache/`, source registered in the project; `ck import` with MCP twin.
+- [x] 2. (2a media functions; 2b project source and `ck import`) Import: content hash, 720p proxy and audio extraction into `.clipkit/cache/`, source registered in the project; `ck import` with MCP twin.
 - [ ] 3. Silence detection (silencedetect) and scene detection (ffmpeg scene score) as cut-candidate signals.
 - [ ] 4. Transcription: Fish Audio STT (verify API first) with local whisper fallback (whisper-rs, spec 14); word timestamps; cassette tests.
 - [ ] 5. Packed transcript (phrases, silences, fillers; about 12 KB per 10 min) and `ck transcript get`.

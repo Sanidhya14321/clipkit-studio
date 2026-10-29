@@ -17,6 +17,7 @@ use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use crate::session::handoff::{HandoffRequest, WaitRequest};
+use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
@@ -50,6 +51,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/brief/wait", get(brief_wait))
         .route("/api/looks", get(looks))
         .route("/api/look/apply", post(look_apply))
+        .route("/api/import", post(import))
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
         .route("/api/sound/plan", get(sound_plan))
@@ -149,6 +151,14 @@ async fn sound_plan(State(s): State<Arc<Session>>) -> ApiResult {
 
 async fn verify(State(s): State<Arc<Session>>) -> ApiResult {
     blocking(s, |s| s.verify()).await
+}
+
+async fn import(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<ImportRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.import(&req)).await
 }
 
 async fn look_apply(

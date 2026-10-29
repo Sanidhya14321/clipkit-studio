@@ -54,6 +54,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("verify", caps::VERIFY),
         ("sound_plan", caps::SOUND_PLAN),
         ("handoff", caps::HANDOFF),
+        ("import", caps::IMPORT),
         ("wait", caps::WAIT),
     ];
     let table: Vec<(&str, usize)> = specs().iter().map(|s| (s.name, s.cap)).collect();

@@ -14,6 +14,7 @@ use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
+use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
@@ -206,6 +207,14 @@ pub fn specs() -> Vec<ToolSpec> {
              Then reply in five lines or fewer and loop on wait with since = the returned rev.",
             caps::HANDOFF,
         ),
+        spec::<ImportRequest>(
+            "import",
+            "ck import",
+            "Import a media file by absolute path: probe, hash, 720p proxy and 48 kHz audio into \
+             the cache, then register it as a project source. Same content twice returns the \
+             existing source.",
+            caps::IMPORT,
+        ),
         spec::<WaitRequest>(
             "wait",
             "ck wait",
@@ -292,6 +301,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_wait" => json(&ops.brief_wait(&parse(args)?)?),
         "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
+        "import" => json(&ops.import(&parse(args)?)?),
         "recipe_apply" => json(&ops.recipe_apply(&parse(args)?)?),
         "brief_get" => {
             let StatusArgs {} = parse(args)?;

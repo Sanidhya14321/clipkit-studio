@@ -39,6 +39,11 @@ impl Store {
         Self { root: root.into() }
     }
 
+    /// The `.clipkit` folder this store writes under.
+    pub fn root(&self) -> &Path {
+        &self.root
+    }
+
     pub fn project_path(&self) -> PathBuf {
         self.root.join("project.json")
     }
