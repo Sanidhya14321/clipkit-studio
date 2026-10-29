@@ -227,6 +227,11 @@ fn recipe_apply_answers_like_its_cli_twin() {
     // The same collision fails the layout gate of verify.
     let verified = ok_line(d, &["verify"], caps::VERIFY);
     assert_eq!(mcp.ok("verify", Value::Null, caps::VERIFY), verified);
+
+    let planned = ok_line(d, &["sound", "plan"], caps::SOUND_PLAN);
+    assert_eq!(mcp.ok("sound_plan", Value::Null, caps::SOUND_PLAN), planned);
+    let planned: Value = serde_json::from_str(&planned).unwrap();
+    assert!(planned["cues"].is_array());
     let verified: Value = serde_json::from_str(&verified).unwrap();
     assert_eq!(verified["ok"], false);
     assert!(

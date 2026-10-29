@@ -17,6 +17,7 @@ use crate::session::brief::{
 use crate::session::layout::LayoutCheckResult;
 use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
+use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::verify::{VerifyIssue, VerifyResult};
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
@@ -37,6 +38,7 @@ pub mod caps {
     pub const LOOK_APPLY: usize = 2 * 1024;
     pub const LAYOUT_CHECK: usize = 4 * 1024;
     pub const VERIFY: usize = 4 * 1024;
+    pub const SOUND_PLAN: usize = 4 * 1024;
 }
 
 pub struct Ops {
@@ -154,6 +156,21 @@ impl Ops {
     pub fn verify(&self) -> CkResult<VerifyResult> {
         let reply = self.client.get("/api/verify", &[])?;
         trimmed("verify", caps::VERIFY, reply)
+    }
+
+    /// `sound plan`: whooshes before cuts, hits on text landings, risers before hooks, room
+    /// tone under cuts and duck cues for music under voice. Cues past the cap are counted in
+    /// `omitted`.
+    pub fn sound_plan(&self) -> CkResult<SoundPlan> {
+        let reply = self.client.get("/api/sound/plan", &[])?;
+        trimmed("sound plan", caps::SOUND_PLAN, reply)
+    }
+}
+
+impl Trim for SoundPlan {
+    type Entry = SoundCue;
+    fn parts(&mut self) -> (&mut Vec<SoundCue>, &mut usize) {
+        (&mut self.cues, &mut self.omitted)
     }
 }
 

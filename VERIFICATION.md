@@ -203,6 +203,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 9a: unknown look E_NOT_FOUND; a human project lock refuses the write (E_LOCK_HELD), preview still answers | PASS | `tests::look::apply_refuses_unknown_looks_and_human_locks` |
 | Step 9a: `ck look apply` and MCP `look_apply` (schema, 2 KB cap with `omitted`, parity) | PASS | `ck_mcp` `tool_table_snapshot` (1 tool added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` `recipe_apply_answers_like_its_cli_twin` (same dry-run reply, same refusal) |
 | Step 9a run | PASS | 2026-10-29 `just check`: 210 of 210 nextest (1 skipped), hooks 41 of 41; `pnpm --dir studio test` and `tsc --noEmit` clean. Playwright not rerun (preview change is the look id only) |
+| Step 9b: whooshes 0.15 s before cuts, room tone under cuts, hits on text landings scaled by the look | PASS | `ck-server` `tests::sound::cuts_get_whooshes_and_room_tone_and_text_gets_hits` |
+| Step 9b: risers lead into hooks, clamped at 0, none for a hook at 0 | PASS | `tests::sound::risers_lead_into_hooks_and_clamp_at_zero` |
+| Step 9b: duck cues for music under voice, none for music already ducked | PASS | `tests::sound::music_under_voice_gets_duck_cues_unless_already_ducked` |
+| Step 9b: `ck sound plan` and MCP `sound_plan` (schema, 4 KB cap with `omitted`, parity) | PASS | `ck_mcp` `tool_table_snapshot` (1 tool added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` (same reply from CLI and MCP) |
+| Step 9b run | PASS | 2026-10-29 `just check`: 213 of 213 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

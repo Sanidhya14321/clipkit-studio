@@ -85,6 +85,9 @@ pub enum Command {
     /// Run the quality gates: schema, gaps, overlaps, duration, layout, contrast, fonts,
     /// motion, reuse, provenance, placeholders.
     Verify,
+    /// Plan sound design: whooshes, hits, risers, room tone and ducking.
+    #[command(subcommand)]
+    Sound(SoundCommand),
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),
@@ -207,6 +210,12 @@ pub enum RecipeCommand {
     /// Expand a recipe into named layers: a JSON file {recipe, at?, duration?, slots, prefix?,
     /// look?}, or - for stdin.
     Apply { file: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum SoundCommand {
+    /// Timed sound cues for the audio pass (read-only).
+    Plan,
 }
 
 #[derive(Debug, Subcommand)]

@@ -190,6 +190,14 @@ pub fn specs() -> Vec<ToolSpec> {
              issues; fix failures before the next pass.",
             caps::VERIFY,
         ),
+        spec::<StatusArgs>(
+            "sound_plan",
+            "ck sound plan",
+            "Plan sound design for the audio pass: whooshes just before cuts, hits on text \
+             landings, risers before hooks, room tone under cuts, duck cues for music under \
+             voice. Read-only; returns timed cues.",
+            caps::SOUND_PLAN,
+        ),
     ]
 }
 
@@ -280,6 +288,10 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "verify" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.verify()?)
+        }
+        "sound_plan" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.sound_plan()?)
         }
         other => Err(request_err(format!("no tool named {other:?}"))),
     }

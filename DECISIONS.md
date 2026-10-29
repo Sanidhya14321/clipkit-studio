@@ -4,6 +4,11 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 9b: `ck sound plan` (spec 8.5)
+- Read-only plan of timed cues (whoosh, hit, riser, roomTone, duck) in `ck-server::session::sound`; it writes nothing. The agent places the cues it keeps in the audio pass. No sfx cards exist in the catalog (CC0 sound sets arrive with Phase 8 ingestion), so cues carry no asset id; never invent one.
+- Timing constants are choices: whoosh 0.4 s starting 0.15 s before the cut; hit at text start + 0.2 s times the look's `durationScale` (dropped if the layer ends first); riser 1 s ending at the hook start (clamped at 0, none for a hook at 0); room tone 0.25 s each side of a cut.
+- A cut = an item starting after 0 on a video track. A hook = a layer whose name, purpose or provenance source contains `hook`. Duck cues = overlap of each non-ducked audio item with each voice item that has an active take.
+
 ### Step 9a: re-theme through tokens (spec 8.1)
 - Step 9 is split: 9a re-theme (`ck look apply`), 9b `ck sound plan`, 9c handoff and `ck wait`.
 - The project look is stored as `tokens.look` (the existing `Project.tokens` map; no schema change). Resolution everywhere (recipe apply, verify, studio preview): `tokens.look`, else the brief's `look`, else `clean-product`.

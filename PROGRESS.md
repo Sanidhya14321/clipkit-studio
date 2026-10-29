@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 9a: `ck look apply <id> [--dry-run]` + MCP `look_apply` (`crates/ck-server/src/session/look.rs`); project look stored as `tokens.look`, used by recipe apply, verify and the studio preview.
-2. Proof: `just check` 210 of 210 nextest, hooks 41 of 41; `tests::look` 2 tests; parity in `mcp_parity.rs`; studio node tests. Evidence in VERIFICATION.md, step 9a.
-3. Open: no studio look switcher yet (a human can patch `/tokens/look`); gates still do not block `idle` (DECISIONS.md, steps 8 and 9a).
-4. Next: step 9b `ck sound plan`, then 9c handoff and `ck wait`.
-5. Start: `just check`; spec 08 (sound placement), spec 06 (`ck wait`, handoff); DECISIONS.md step 9a.
+1. Done: Phase 4 step 9b: `ck sound plan` + MCP `sound_plan` (`crates/ck-server/src/session/sound.rs`): read-only timed cues (whoosh, hit, riser, roomTone, duck).
+2. Proof: `just check` 213 of 213 nextest, hooks 41 of 41; `tests::sound` 3 tests; parity in `mcp_parity.rs`. Evidence in VERIFICATION.md, step 9b.
+3. Open: cues name no sfx asset (none in the catalog until Phase 8); timing constants are choices (DECISIONS.md, step 9b).
+4. Next: step 9c handoff and `ck wait`, then step 10 proof run.
+5. Start: `just check`; spec 06 (`ck wait`, handoff), spec 05 (takeover); DECISIONS.md steps 9a and 9b.
 
 ## Open questions
+- Phase 4 step 9b: sound cues carry no sfx asset until CC0 sound sets are ingested (Phase 8); timing constants and the `hook` name match are choices (DECISIONS.md, step 9b).
 - Phase 4 step 8: reuse limit (3 per asset) and the overlay-track overlap exemption are choices; `verify` does not yet block setting `idle` (DECISIONS.md, step 8).
 - Phase 4 step 9a: the project look is now `tokens.look`; a recipe applied with a request `look` different from it still previews in the project look (request look is not stored). A brief `look` change does not re-theme once a look is stored (DECISIONS.md, step 9a).
 - Phase 4 step 6b: text-layer role defaults to `title` (recipes carry no `role`), and recipe apply does not re-solve layers of other scenes on screen at the same time; revisit with step 7 rendering (DECISIONS.md, step 6b).
@@ -60,9 +61,15 @@ Steps:
 - [x] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
   - [x] 9a. Stored project look (`tokens.look`) and `ck look apply <id> [--dry-run]` with impact preview and MCP twin.
-  - [ ] 9b. `ck sound plan`.
+  - [x] 9b. `ck sound plan`.
   - [ ] 9c. Handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 12): step 9b.
+- `ck-server::session::sound`: pure `sound_plan(project, look)`: whooshes just before cuts on the video track, hits on text landings, risers before hook layers, room tone under cuts, duck suggestions for music under voice.
+- Read-only plan (no sfx cards exist yet, so cues name no asset; `sfx` stays empty until Phase 8 ingests CC0 sets).
+- `/api/sound/plan`, `Ops::sound_plan` (4 KB cap, trimmed), `ck sound plan`, MCP `sound_plan`.
+- Tests: pure cue placement per kind, clamping at 0, tool table, CLI/MCP parity.
 
 Run plan (autonomous run 11): step 9a.
 - `session::look`: `project_look_id` (tokens.look, else brief look, else clean-product) shared by recipe apply, verify and the studio preview.

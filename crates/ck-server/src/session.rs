@@ -25,6 +25,7 @@ pub mod brief;
 pub mod layout;
 pub mod look;
 pub mod recipe;
+pub mod sound;
 pub mod verify;
 
 /// Events buffered per subscriber before it lags (a lagging studio gets a fresh snapshot).

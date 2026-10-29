@@ -8,5 +8,6 @@ mod live;
 mod look;
 mod ops;
 mod recipe;
+mod sound;
 mod studio;
 mod verify;

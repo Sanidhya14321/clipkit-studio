@@ -22,7 +22,7 @@ use serde::Serialize;
 
 use args::{
     BriefCommand, Cli, Command, LayoutCommand, LookCommand, ProjectCommand, RecipeCommand,
-    TasteCommand,
+    SoundCommand, TasteCommand,
 };
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
@@ -148,6 +148,7 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::Layout(LayoutCommand::Check) => print(&ops()?.layout_check()?),
         Command::Verify => print(&ops()?.verify()?),
+        Command::Sound(SoundCommand::Plan) => print(&ops()?.sound_plan()?),
         Command::Init(args) => install::run(install::Mode::Init, &args, &cli.dir),
         Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args, &cli.dir),
         // Handled in main before run.

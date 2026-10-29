@@ -51,6 +51,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/look/apply", post(look_apply))
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
+        .route("/api/sound/plan", get(sound_plan))
         .route("/api/verify", get(verify))
         .route("/ws", get(ws::upgrade))
         // Runs after the token check, so only authorized calls keep the server alive.
@@ -137,6 +138,10 @@ async fn brief_propose(
 
 async fn layout_check(State(s): State<Arc<Session>>) -> ApiResult {
     blocking(s, |s| s.layout_check()).await
+}
+
+async fn sound_plan(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.sound_plan()).await
 }
 
 async fn verify(State(s): State<Arc<Session>>) -> ApiResult {

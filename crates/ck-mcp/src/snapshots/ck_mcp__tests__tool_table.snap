@@ -737,5 +737,16 @@ expression: specs()
       "description": "`status` takes no input.",
       "type": "object"
     }
+  },
+  {
+    "name": "sound_plan",
+    "command": "ck sound plan",
+    "description": "Plan sound design for the audio pass: whooshes just before cuts, hits on text landings, risers before hooks, room tone under cuts, duck cues for music under voice. Read-only; returns timed cues.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "description": "`status` takes no input.",
+      "type": "object"
+    }
   }
 ]

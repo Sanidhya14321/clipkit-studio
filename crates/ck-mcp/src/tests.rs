@@ -52,6 +52,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("recipe_apply", caps::RECIPE_APPLY),
         ("layout_check", caps::LAYOUT_CHECK),
         ("verify", caps::VERIFY),
+        ("sound_plan", caps::SOUND_PLAN),
     ];
     let table: Vec<(&str, usize)> = specs().iter().map(|s| (s.name, s.cap)).collect();
     assert_eq!(table, expected);
