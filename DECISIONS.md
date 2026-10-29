@@ -4,6 +4,13 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 7: native core clips (spec 7, 4)
+- The 8 clips live in `studio/src/clips/` as plain React inside the Remotion composition: pure functions of (props, seconds into clip, frame size). Motion helpers are in `motion.ts` with node tests; the Node render worker (Phase 9) can reuse the same files.
+- "Instrumented" here: each clip root carries `data-ck-layer` and `data-ck-clip`, each pointable part `data-ck-part`. Hover-select itself is Phase 6.
+- Token refs stay in props (step 5a) and the preview resolves them against the project's look: the brief's `look` field, else `clean-product` (the recipe-apply fallback minus the per-request look, which is not stored). A request-level look that differs from the brief therefore previews in the brief's look; step 9 (re-theme) should store the project look. Unresolved refs are dropped so clips use their defaults.
+- Media sources (`source`, `beforeSource`, ...) render as a framed panel naming the source id until proxies reach the preview (Phase 5).
+- The looks fetch moved from BriefPanel to App so the composition gets them as input props (the composition makes no fetches).
+
 ### Step 6b: `ck layout check` and recipe placement (spec 6.2, 7.4, 8.5)
 - A text layer is a clip item with a non-empty string `text` prop. Recipes carry no role, so the role comes from a `role` prop, else `caption` when `size` is `small`, else `title`; align from `align`, else center. Simplest rule that fits the 10 recipes; recipes can add `role` later.
 - The placement is stored in the layer's props as `box` ({x,y,w,h} frame fractions), `fontSize`, `lines` and `textCut` (only when cut), so the clip renderer (step 7) and the checker read the same data. `size` was already a recipe prop, hence `fontSize`.

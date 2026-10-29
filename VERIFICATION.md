@@ -188,6 +188,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 6b: recipe apply writes the solved placement into text layers only, using the brief platform; `layout check` reads the brief platform, checks written placements, solves unplaced ones, reports overlap between two concurrent scenes | PASS | `ck-server` test `recipe::apply_places_text_and_layout_check_reads_it` |
 | Step 6b: `ck layout check` and MCP `layout_check` give the same line under the 4 KiB cap; tool table snapshot and cap test include it | PASS | `ck-cli` test `mcp_parity::recipe_apply_answers_like_its_cli_twin`, `ck-mcp` `tool_table_snapshot` and caps test |
 | Step 6b run | PASS | 2026-10-29 `just check` exit 0: 198 of 198 nextest (1 skipped), hooks 41 of 41, studio checks clean |
+| Step 7: 8 native core clips, one per `CORE_CLIPS` id, ids kept in step with the Rust list | PASS | `studio/src/clips/motion.test.ts` "CORE_CLIPS mirrors the Rust list exactly"; `CLIPS` record typed over `CoreClip` (tsc) |
+| Step 7: motion is deterministic (enter/hold/exit in [0,1], stagger from the look, counters keep decimals), every look easing known | PASS | `motion.test.ts` (7 tests) |
+| Step 7: token refs resolve against the brief's look (default clean-product); solver `box`/`lines` drive placement | PASS | `motion.test.ts` "token refs resolve..." and "box and lines..." |
+| Step 7: applied recipe renders in the Player through its clips, instrumented (`data-ck-layer`, `data-ck-clip`, `data-ck-part`), look color applied, text inside the frame | PASS | `studio/e2e/phase4-clips.spec.ts` |
+| Step 7 run | PASS | 2026-10-29 `just check` exit 0; `just studio-build` then `pnpm --dir studio e2e` 6 of 6 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

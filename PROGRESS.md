@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 6 (6b): `ck layout check` + MCP `layout_check` (`crates/ck-server/src/session/layout.rs`, `GET /api/layout/check`, cap 4 KiB); recipe apply writes `box`, `fontSize`, `lines`, `textCut` into text-layer props.
-2. Proof: `just check` exit 0, 198 of 198 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, step 6b.
-3. Open: recipe apply places only its own scene (concurrent scenes show as overlap); list/quote/stat text not placed; text width is a 0.55 em estimate; license mode and stage gate not enforced.
-4. Next: step 7: 8 native core Remotion clips (CORE_CLIPS in `ck-assets/src/recipe.rs`), instrumented, rendering `box`/`fontSize`/`lines`; the studio Player renders them.
-5. Start: `just check`; read spec 07 and 04 sections on core clips, `studio/src` preview code, DECISIONS.md steps 6a and 6b.
+1. Done: Phase 4 step 7: 8 native core clips in `studio/src/clips/` (`clips.tsx`, pure `motion.ts`), rendered by `ProjectComposition` with look tokens resolved; instrumented with `data-ck-layer`/`data-ck-clip`/`data-ck-part`.
+2. Proof: `just check` exit 0; `pnpm --dir studio e2e` 6 of 6 incl. `e2e/phase4-clips.spec.ts`; `motion.test.ts` 7 tests. Evidence in VERIFICATION.md, step 7.
+3. Open: the project look is not stored (preview uses the brief look, else clean-product); media sources draw as named panels until proxies; list/quote/stat text not solver-placed; text width is a 0.55 em estimate.
+4. Next: step 8: GENERATE quality gates of spec 4.3 in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
+5. Start: `just check`; read spec 04 section 4.3 and spec 06 for `ck verify`; DECISIONS.md steps 6b and 7.
 
 ## Open questions
+- Phase 4 step 7: no stored project look; a recipe applied with a request `look` that differs from the brief previews in the brief's look. Store the look with step 9 re-theme (DECISIONS.md, step 7).
 - Phase 4 step 6b: text-layer role defaults to `title` (recipes carry no `role`), and recipe apply does not re-solve layers of other scenes on screen at the same time; revisit with step 7 rendering (DECISIONS.md, step 6b).
 - Phase 4 step 5b: recipe apply falls back to the `clean-product` look when neither the request nor the brief names one; revisit if the plan stage should pick it.
 - Phase 4 step 3: spec 6.2 lists `brief set`; not built (the studio confirms through a human patch). Add it if the agent needs to set user-requested values directly. Wire `Op::ProposeBrief` stage gating once stages are driven.
@@ -54,10 +55,16 @@ Steps:
 - [x] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
   - [x] 6a. Pure solver and checker in `ck-assets::layout` with tests.
   - [x] 6b. `ck layout check` with MCP twin; recipe apply runs the solver.
-- [ ] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
+- [x] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 9): step 7.
+- `studio/src/clips/`: pure motion helpers (`motion.ts`: look easings, enter progress, stagger, counter value, box style) with node tests.
+- 8 clip components (CORE_CLIPS) reading recipe props (tokens resolved, `box`/`fontSize`/`lines`), each root tagged `data-ck-layer` + `data-ck-clip`; parts tagged `data-ck-part`.
+- `ProjectComposition` renders clip items through the registry; unknown clips keep the labelled box.
+- Playwright: `ck recipe apply` then the Player shows the clip with its text; registry test that every CORE_CLIPS id has a component.
 
 Run plan (autonomous run 8): step 6b.
 - `ck-assets::layout::blocks_from_items`: text layers are clip items with a string `text` prop; role from a `role` prop (else `caption` when `size` is `small`, else `title`).

@@ -21,22 +21,26 @@ export function BriefPanel({
   token,
   project,
   readOnly,
+  looks,
+  looksFailed,
 }: {
   token: string;
   project: Project;
   readOnly: boolean;
+  /** Built-in looks (loaded once by App). */
+  looks: Look[];
+  looksFailed: boolean;
 }) {
-  const [looks, setLooks] = useState<Look[]>([]);
   const [edits, setEdits] = useState<Edits>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    looksFailed ? "The looks did not load from ck." : null,
+  );
   const brief = project.brief;
 
   useEffect(() => {
-    request<Look[]>(token, "/api/looks").then(setLooks, () =>
-      setError("The looks did not load from ck."),
-    );
-  }, [token]);
+    if (looksFailed) setError("The looks did not load from ck.");
+  }, [looksFailed]);
 
   const value = (name: string): JsonValue | undefined =>
     name in edits ? edits[name] : brief.fields[name]?.value;

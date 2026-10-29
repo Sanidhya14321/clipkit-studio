@@ -1,5 +1,7 @@
 import { Player } from "@remotion/player";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { request } from "./api";
+import type { Look } from "./generated/types";
 import { ActivityFeed } from "./panels/ActivityFeed";
 import { Banner } from "./panels/Banner";
 import { BriefPanel } from "./panels/BriefPanel";
@@ -14,6 +16,14 @@ export function App({ token }: { token: string }) {
   const { connected, project, locks, lastRevision, feed } = useStudio(token);
   const now = useNow();
   const [selected, setSelected] = useState<string | null>(null);
+  const [looks, setLooks] = useState<Look[]>([]);
+  const [looksFailed, setLooksFailed] = useState(false);
+
+  useEffect(() => {
+    request<Look[]>(token, "/api/looks").then(setLooks, () =>
+      setLooksFailed(true),
+    );
+  }, [token]);
 
   const stopped = agentStopped(locks, now);
   const agentLayers = useMemo(() => {
@@ -43,6 +53,7 @@ export function App({ token }: { token: string }) {
               component={ProjectComposition}
               inputProps={{
                 project,
+                looks,
                 agentLayers: [...agentLayers],
                 flash: lastRevision?.touched ?? [],
                 flashRev: lastRevision?.rev ?? 0,
@@ -60,6 +71,8 @@ export function App({ token }: { token: string }) {
               token={token}
               project={project}
               readOnly={!canEdit(locks, PROJECT_LAYER, now)}
+              looks={looks}
+              looksFailed={looksFailed}
             />
             <Inspector
               key={selected ?? ""}
