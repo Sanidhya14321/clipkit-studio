@@ -81,6 +81,13 @@ fn decls(cfg: &Config) -> Vec<String> {
         ItemSummary::decl(cfg),
         CkError::decl(cfg),
         ErrorCode::decl(cfg),
+        // Looks for the Brief page (`GET /api/looks`).
+        ck_assets::Look::decl(cfg),
+        ck_assets::Colors::decl(cfg),
+        ck_assets::Fonts::decl(cfg),
+        ck_assets::Motion::decl(cfg),
+        ck_assets::MotionPersonality::decl(cfg),
+        ck_assets::Easing::decl(cfg),
         // WebSocket push.
         Event::decl(cfg),
         // Untyped JSON (plan, tokens, props; typed in later phases).

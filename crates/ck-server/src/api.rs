@@ -45,6 +45,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/brief/propose", post(brief_propose))
         .route("/api/brief/diff", get(brief_diff))
         .route("/api/brief/wait", get(brief_wait))
+        .route("/api/looks", get(looks))
         .route("/ws", get(ws::upgrade))
         // Runs after the token check, so only authorized calls keep the server alive.
         .layer(middleware::from_fn_with_state(session.clone(), idle::touch))
@@ -160,6 +161,15 @@ async fn brief_wait(
             Ok(Err(RecvError::Closed)) => return Ok(check),
         }
     }
+}
+
+/// `GET /api/looks`: every built-in look with its tokens, for the Brief page's look cards
+/// (four small files, well under any reply cap).
+async fn looks() -> ApiResult {
+    let looks = ck_assets::library::looks().map_err(ApiError)?;
+    serde_json::to_value(looks)
+        .map(Json)
+        .map_err(|e| ApiError(CkError::new(ErrorCode::Server, e.to_string())))
 }
 
 fn query<T>(q: Result<Query<T>, QueryRejection>) -> Result<T, ApiError> {

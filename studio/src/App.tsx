@@ -2,10 +2,11 @@ import { Player } from "@remotion/player";
 import { useMemo, useState } from "react";
 import { ActivityFeed } from "./panels/ActivityFeed";
 import { Banner } from "./panels/Banner";
+import { BriefPanel } from "./panels/BriefPanel";
 import { Inspector } from "./panels/Inspector";
 import { Timeline } from "./panels/Timeline";
 import { ProjectComposition } from "./preview/ProjectComposition";
-import { agentLocked, agentStopped, canEdit } from "./state";
+import { PROJECT_LAYER, agentLocked, agentStopped, canEdit } from "./state";
 import { durationInFrames } from "./timeline";
 import { useNow, useStudio } from "./useStudio";
 
@@ -55,6 +56,11 @@ export function App({ token }: { token: string }) {
             />
           </main>
           <aside className="studio-side">
+            <BriefPanel
+              token={token}
+              project={project}
+              readOnly={!canEdit(locks, PROJECT_LAYER, now)}
+            />
             <Inspector
               key={selected ?? ""}
               token={token}

@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 3: `Brief.questions` (max 3), `Document::content_at`, `ck-server/src/session/brief.rs`, routes `/api/brief[/propose|/diff|/wait]`, `ck brief propose|wait|diff|get` and MCP twins `brief_propose|wait|diff|get`.
-2. Proof: `just check` 180 of 180 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 4 step 3.
-3. Open: stage gate for brief ops not enforced (no stage driver yet); `brief wait` caps at 25 s per call; `brief set` (spec 6.2 list) not built, the studio confirms with a human patch (DECISIONS.md, step 3). Fonts still not bundled. Phase 3 interactive items stay BLOCKED.
-4. Next: Phase 4 step 4, studio brief panel (essentials form, pacing slider with numbers, look cards, confirm as a human patch on `/brief`) with a Playwright test.
-5. Start: `just check`. Brief tests: `cargo nextest run -p ck-server -E 'test(brief)'`; parity: `cargo nextest run -p ck-cli -E 'test(brief)'`.
+1. Done: Phase 4 step 4: `studio/src/brief.ts` (essentials, pacing scale, confirm patch), `panels/BriefPanel.tsx` (sources, pacing slider with numbers, look cards, questions, confirm), `GET /api/looks`, look TS types.
+2. Proof: `just check` 180 of 180 nextest (1 skipped), hooks 41 of 41, studio unit tests; `just e2e` 5 of 5 (2 new in `e2e/phase4.spec.ts`). Evidence in VERIFICATION.md, Phase 4 step 4.
+3. Open: more options (spec 8.1 second list), tuning chips and impact preview not built; the panel keeps unsaved edits across agent revisions. Stage gate for brief ops still not enforced. Phase 3 interactive items stay BLOCKED.
+4. Next: Phase 4 step 5, 10 recipes with typed slots and `ck recipe search|apply` (expander, named layers, tokens, provenance, briefDeps).
+5. Start: `just check`; studio: `just e2e` (needs Chromium once).
 
 ## Open questions
 - Phase 4 step 3: spec 6.2 lists `brief set`; not built (the studio confirms through a human patch). Add it if the agent needs to set user-requested values directly. Wire `Op::ProposeBrief` stage gating once stages are driven.
@@ -45,13 +45,19 @@ Steps:
 - [x] 1. Starter taste library (12 files with concrete numbers) and 4 looks (design tokens plus motion personality) in `assets/`, authored originally; `ck-assets` loaders with validation (front matter, size caps, contrast, at most two font families).
 - [x] 2. `ck taste search|read` and `ck look list|get` with MCP twins, output caps, parity tests; `assets/INDEX.md` (under 60 lines).
 - [x] 3. Brief Studio essentials: `ck brief propose|wait|diff|get` (inferred values only, field sources, at most three dynamic questions) and its MCP twins.
-- [ ] 4. Studio brief panel (essentials form, pacing slider with numbers, look cards, confirm) with Playwright test.
+- [x] 4. Studio brief panel (essentials form, pacing slider with numbers, look cards, confirm) with Playwright test.
 - [ ] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
 - [ ] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
 - [ ] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 4): step 4.
+- `GET /api/looks` (look tokens for the cards); look types exported to TS.
+- `studio/src/brief.ts`: essentials, pacing levels from the taste file, confirm patch (changed fields as `user`, answers, status confirmed); unit tests.
+- `BriefPanel`: each field with its source, pacing slider with numbers, look cards, questions, confirm; read-only under the `@project` lock.
+- Playwright `e2e/phase4.spec.ts`: propose via CLI, adjust, confirm, `ck brief wait` returns it; read-only and server refusal.
 
 Run plan (autonomous run 3): step 3.
 - ck-core: `Brief.questions` (at most 3, each names the fields it affects; schema gate), `Document::content_at(rev)` replaying inverses.

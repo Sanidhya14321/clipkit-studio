@@ -280,6 +280,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tempfile",
+ "ts-rs",
 ]
 
 [[package]]
@@ -355,6 +356,7 @@ name = "ck-server"
 version = "0.0.0"
 dependencies = [
  "axum",
+ "ck-assets",
  "ck-core",
  "futures-util",
  "getrandom 0.4.3",

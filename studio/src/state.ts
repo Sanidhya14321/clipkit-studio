@@ -97,6 +97,9 @@ export function canEdit(
   return !agentLocked(locks, nowMs).has(layerId);
 }
 
+/** Lock id for project-level content such as the brief (`ck_core::patch::PROJECT_LAYER`). */
+export const PROJECT_LAYER = "@project";
+
 export interface Located {
   item: Item;
   trackIndex: number;

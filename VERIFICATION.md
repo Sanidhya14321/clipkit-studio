@@ -167,6 +167,10 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 3: caps (get/wait/diff 4 KB, propose 1 KB, input 4 KB) | PASS | `tests::brief::brief_replies_stay_under_their_caps` (40-field proposal reads back under cap; diff trimmed with omitted) |
 | Step 3: CLI and MCP twins (schema, cap, parity) | PASS | `ck_mcp` `tool_table_snapshot` (4 tools added), `every_tool_has_an_object_schema_and_its_cli_cap`; `crates/ck-cli/tests/mcp_parity.rs` `brief_tools_answer_like_their_cli_twins`; `cli_commands.rs` `every_command_starts_a_missing_studio` (brief get) |
 | Step 3 run | PASS | 2026-10-29 `just check`: 180 of 180 nextest (1 skipped), hooks 41 of 41 |
+| Step 4: Brief page shows every essential with its source, pacing slider shows its numbers, four look cards, question answer, confirm as a human patch that `ck brief wait` returns | PASS | `studio/e2e/phase4.spec.ts` "the user adjusts and confirms the brief; the agent's wait returns it" |
+| Step 4: read-only while the agent holds `@project`, in the DOM and by the server (423 E_LOCK_HELD) | PASS | `studio/e2e/phase4.spec.ts` "the brief is read-only while the agent holds the project" |
+| Step 4: confirm patch, pacing scale in step with `assets/taste/pacing.md` | PASS | `studio/src/brief.test.ts` (5 tests) |
+| Step 4 run | PASS | 2026-10-29 `just check`: 180 of 180 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and unit tests exit 0; `just e2e` 5 of 5 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

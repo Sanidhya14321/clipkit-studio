@@ -238,6 +238,30 @@ layerIds?: Array<string>, };
 
 export type ErrorCode = "E_STAGE" | "E_RETRY" | "E_LOCK_HELD" | "E_LOCK_NOT_HELD" | "E_PATCH_STALE" | "E_PATCH_INVALID" | "E_SCHEMA" | "E_HISTORY_EMPTY" | "E_STORAGE" | "E_MIGRATION" | "E_AUTH" | "E_NOT_FOUND" | "E_REQUEST" | "E_SERVER" | "E_OUTPUT_CAP" | "E_ASSET";
 
+export type Look = { id: string, name: string, description: string, colors: Colors, fonts: Fonts, 
+/**
+ * Ratio between neighbouring type sizes.
+ */
+typeScale: number, radius: number, spacingUnit: number, motion: Motion, };
+
+export type Colors = { background: string, surface: string, text: string, mutedText: string, accent: string, accentText: string, };
+
+export type Fonts = { display: string, text: string, };
+
+export type Motion = { personality: MotionPersonality, 
+/**
+ * Multiplies the durations of the motion taste file.
+ */
+durationScale: number, enterEasing: Easing, exitEasing: Easing, 
+/**
+ * Seconds between staggered entrances.
+ */
+stagger: number, };
+
+export type MotionPersonality = "snappy" | "smooth" | "calm" | "slow";
+
+export type Easing = "linear" | "quad-in" | "quad-out" | "cubic-in" | "cubic-out" | "expo-out" | "sine-in-out" | "back-out";
+
 export type Event = { "type": "snapshot", project: Project, } | { "type": "revision", rev: number, author: Author, label: string, touched: Array<string>, } | { "type": "locks", locks: Array<Lock>, };
 
 export type JsonValue = number | string | boolean | Array<JsonValue> | { [key in string]: JsonValue } | null;

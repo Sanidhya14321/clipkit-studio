@@ -8,6 +8,7 @@ use std::path::Path;
 use ck_core::CkError;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 use crate::color::{contrast, parse_hex};
 use crate::{asset_error, list_files, read_file, stem};
@@ -15,7 +16,7 @@ use crate::{asset_error, list_files, read_file, stem};
 /// Minimum WCAG contrast for every text role on the color it sits on (spec 4.3 readable contrast).
 pub const MIN_TEXT_CONTRAST: f64 = 4.5;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Look {
     pub id: String,
@@ -31,7 +32,7 @@ pub struct Look {
 }
 
 /// Color roles as `#RRGGBB`.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Colors {
     pub background: String,
@@ -43,14 +44,14 @@ pub struct Colors {
 }
 
 /// Two roles, so a look never uses more than two font families (spec 4.3).
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Fonts {
     pub display: String,
     pub text: String,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub enum MotionPersonality {
     Snappy,
@@ -59,7 +60,7 @@ pub enum MotionPersonality {
     Slow,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "kebab-case")]
 pub enum Easing {
     Linear,
@@ -72,7 +73,7 @@ pub enum Easing {
     BackOut,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Motion {
     pub personality: MotionPersonality,

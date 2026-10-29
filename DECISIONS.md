@@ -4,6 +4,12 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 4: studio brief panel (spec 8.1)
+- `GET /api/looks` (studio-only, read-only, four small files) feeds the look cards; it is not a CLI command, so no MCP twin (the agent has `ck look list|get`). `ck-server` now depends on `ck-assets`; look types derive `TS`.
+- The panel is always in the side column (Brief page before the build, brief panel after). Essentials: goal, cta, audience, platform, aspect, length, pacing, look, voice. More options (spec 8.1 second list) and tuning chips are later work.
+- Pacing is stored as a level 1 to 5 (`assets/taste/pacing.md`); a proposed name such as `punchy` maps to its level, anything else shows level 3.
+- Confirm is one human patch: `add` for each changed field with source `user`, confidence 1; `add` for question answers; status `confirmed`. Read-only follows the `@project` lock.
+
 ### Step 3: Brief Studio essentials (spec 8.1, 6.2)
 - `Brief.questions` added to the model (id, text, affects, answer); the schema gate caps it at 3 and requires a non-empty `affects`. Schema snapshot and TS types regenerated.
 - `brief propose` is a normal agent revision on `/brief`: the agent takes `@project` for the write unless it holds it, then releases it, so a human holding `@project` refuses the write (E_LOCK_HELD). Fields with source `user` are never overwritten (listed in `kept`); earlier inferred fields not proposed again are dropped; status becomes `proposed` (or `auto` with `auto: true`). The same values twice write no revision. Answers survive when a question is asked again with the same id and text.
