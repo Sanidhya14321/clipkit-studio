@@ -180,6 +180,10 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 5b: a human holding the touched locks refuses apply (E_LOCK_HELD), nothing written | PASS | `recipe::apply_respects_a_human_lock` |
 | Step 5b: MCP twins `recipe_search|card|apply` answer like the CLI (search and card offline), caps in the tool table | PASS | `ck-cli` tests `mcp_parity::library_tools_answer_like_their_cli_twins_without_a_studio`, `recipe_apply_answers_like_its_cli_twin`; `ck-mcp` `every_tool_has_an_object_schema_and_its_cli_cap`, `tool_table` snapshot |
 | Step 5b run | PASS | 2026-10-29 `just check`: 191 of 191 nextest (1 skipped), hooks 41 of 41 |
+| Step 6a: layout solver places text on the column grid inside each platform's safe area, stacks blocks sharing screen time with a 0.03 gap, deterministic; its output passes the checker on all 4 platforms | PASS | `ck-assets` tests `layout::tests::solved_layout_passes_check_on_every_platform`, `blocks_apart_in_time_do_not_interact` |
+| Step 6a: text fitting shrinks one type step, then cuts words (flagged), never below the label size | PASS | `layout::tests::fitting_shrinks_then_cuts_never_below_label` |
+| Step 6a: checker reports safe-area, too-small, off-grid, overlap, gap, too-many-blocks, text-cut | PASS | `layout::tests::check_reports_each_rule` |
+| Step 6a run | PASS | 2026-10-29 `just check`: 196 of 196 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

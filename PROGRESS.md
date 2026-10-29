@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 5 (5b): `ck recipe search|card|apply` with MCP twins; apply is `POST /api/recipe/apply` (`ck-server/src/session/recipe.rs`), one agent revision; `Item.provenance` added to ck-core (schema, TS regenerated).
-2. Proof: `just check` 191 of 191 nextest (1 skipped), hooks 41 of 41; 5 new tests incl. CLI/MCP parity. Evidence in VERIFICATION.md, step 5b.
-3. Open: apply does not run the layout solver (step 6) or check license mode; clip prop names provisional until step 7. Stage gate for brief and recipe ops not enforced.
-4. Next: Phase 4 step 6, deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check` with MCP twin; then call it from recipe apply.
-5. Start: `just check`; read spec 07 (layout), `crates/ck-server/src/session/recipe.rs`, DECISIONS.md step 5b.
+1. Done: Phase 4 step 6a: pure layout solver and checker `ck-assets/src/layout.rs` (`Platform`, `TextRole`, `solve`, `check`, rules safe-area/overlap/gap/too-many-blocks/too-small/off-grid/text-cut).
+2. Proof: `just check` 196 of 196 nextest (1 skipped), hooks 41 of 41; 5 new layout tests. Evidence in VERIFICATION.md, step 6a.
+3. Open: not yet wired anywhere; text width is a 0.55 em estimate (no font metrics); recipe apply still skips layout and license mode; stage gate not enforced.
+4. Next: step 6b: `ck layout check` (reads clip items' text props and a `box` prop, platform from the brief) with MCP twin, cap and parity tests; recipe apply calls `solve` and writes `box`/`size` into text-layer props.
+5. Start: `just check`; read `crates/ck-assets/src/layout.rs`, `crates/ck-server/src/session/recipe.rs`, DECISIONS.md step 6a.
 
 ## Open questions
 - Phase 4 step 5b: recipe apply falls back to the `clean-product` look when neither the request nor the brief names one; revisit if the plan stage should pick it.
@@ -51,10 +51,17 @@ Steps:
   - [x] 5a. Recipe model, validation, expander and the 10 recipes.
   - [x] 5b. `ck recipe search|card|apply` with MCP twins.
 - [ ] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
+  - [x] 6a. Pure solver and checker in `ck-assets::layout` with tests.
+  - [ ] 6b. `ck layout check` with MCP twin; recipe apply runs the solver.
 - [ ] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 7): step 6a (solver; CLI and wiring are 6b).
+- `ck-assets::layout`: platforms and safe areas, grid, type sizes from the taste files, frame-fraction geometry.
+- `solve`: fit (wrap, shrink one step, cut, label floor), full-width grid boxes, stack blocks sharing screen time with 0.03 gap, centered.
+- `check`: safe area, overlap, gap, at most 3 blocks, label floor, grid, cut text; unit tests per rule.
 
 Run plan (autonomous run 6): step 5b.
 - `library::recipe_search|recipe_card` (offline, caps) and `Item.provenance` in ck-core.

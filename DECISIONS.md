@@ -4,6 +4,13 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 6a: layout solver (spec 7.4, 8.5; taste files layout, typography, platform-specs)
+- Step 6 is split: 6a is the pure solver and checker in `ck-assets::layout`; 6b is `ck layout check` with its MCP twin and the call from recipe apply.
+- Geometry is in frame fractions (x and w of width; y, h and type size of height), like the look tokens. Numbers are copied from the taste files into code; the taste files stay the readable source.
+- No font metrics: line length uses an average glyph advance of 0.55 em. Simplest deterministic estimate; revisit when step 7 renders real text.
+- The solver places each text block full width on the grid and centers each group of blocks that share screen time, stacked in input order. Fitting: wrap at the role size; over the role's line limit, shrink one type step (look `typeScale`, floor at label size) and rewrap; still over, cut trailing lines and flag `cut` (the checker reports `text-cut`).
+- Line limits per role: display 2, title 3, caption and label 2, body 6 (typography gives title and caption; display and body are chosen here).
+
 ### Step 5b: `ck recipe search|card|apply` (spec 6.2, 7.1, 7.4)
 - `recipe card` is included because spec 6.2 lists it next to search and apply; search and card run offline over the built-in library like `taste`.
 - Provenance lives on the item: `Item.provenance` (optional, ck-core `Provenance`), so it survives edits and the evaluator can read it per layer. Schema and TS types regenerated.

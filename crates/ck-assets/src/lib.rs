@@ -4,6 +4,7 @@
 //! the read ops over the built-in copy (`library`).
 
 pub mod color;
+pub mod layout;
 pub mod library;
 pub mod look;
 pub mod recipe;
