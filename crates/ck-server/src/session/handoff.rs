@@ -80,6 +80,8 @@ pub struct WaitResult {
 }
 
 const IDLE_LABEL: &str = "Waiting for you";
+/// The handoff label is persisted and sent in every snapshot; longer labels are cut.
+const MAX_LABEL_CHARS: usize = 80;
 
 /// Classify by the first path segment of the revision's operations; the most specific kind
 /// any operation hits wins (comment, then checkpoint, then brief).
@@ -95,6 +97,14 @@ fn kind_of(paths: &[&str]) -> WaitKind {
     } else {
         WaitKind::Edit
     }
+}
+
+/// The idle label: the request's label cut to `MAX_LABEL_CHARS`, or the default when blank.
+fn handoff_label(label: Option<&str>) -> String {
+    label
+        .filter(|l| !l.trim().is_empty())
+        .map(|l| l.chars().take(MAX_LABEL_CHARS).collect())
+        .unwrap_or_else(|| IDLE_LABEL.to_owned())
 }
 
 /// The user's (human or voice) revisions after `since`, oldest first.
@@ -126,11 +136,7 @@ impl Session {
             .filter(|l| l.holder == Holder::Agent)
             .count();
         doc.release(Holder::Agent, None);
-        let label = req
-            .label
-            .clone()
-            .filter(|l| !l.trim().is_empty())
-            .unwrap_or_else(|| IDLE_LABEL.to_owned());
+        let label = handoff_label(req.label.as_deref());
         doc.set_agent(AgentState {
             status: AgentStatus::Idle,
             label,
@@ -182,5 +188,14 @@ mod tests {
         assert_eq!(kind_of(&["/brief/fields/pacing"]), WaitKind::Brief);
         assert_eq!(kind_of(&["/briefing"]), WaitKind::Edit);
         assert_eq!(kind_of(&["/tracks/0/items/1/at"]), WaitKind::Edit);
+    }
+
+    #[test]
+    fn handoff_label_is_capped_and_defaulted() {
+        assert_eq!(handoff_label(None), IDLE_LABEL);
+        assert_eq!(handoff_label(Some("  ")), IDLE_LABEL);
+        assert_eq!(handoff_label(Some("Done")), "Done");
+        let long = "é".repeat(500);
+        assert_eq!(handoff_label(Some(&long)).chars().count(), MAX_LABEL_CHARS);
     }
 }

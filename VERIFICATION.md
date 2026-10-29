@@ -215,6 +215,7 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 9c run | PASS | 2026-10-29 `just check`: 217 of 217 nextest (1 skipped), hooks 41 of 41 |
 | Step 10a: prompt to brief (propose, human confirm, ready) to a 15 s generated project (3 recipes); layout check ok, `verify` ok on every gate, sound cues, handoff, wait | PASS | `generate_proof.rs` `prompt_to_brief_to_a_verified_15_second_generated_video` (real `ck studio` and `ck` commands) |
 | Step 10b: export of the generated video | BLOCKED | Component layers need the Node render worker (spec 2 full export path, Phase 9); DECISIONS.md, step 10 |
+| Step 10c: rust-reviewer and spec-checker run; trimmed `wait` resumes after the last kept event; handoff label capped at 80 chars | PASS | `ops::tests::trimmed_wait_resumes_after_the_last_kept_event`, `handoff::tests::handoff_label_is_capped_and_defaulted`; 2026-10-29 `just check` exit 0 (220 of 220 nextest, 1 skipped; hooks 41 of 41; studio clean). Carried gaps in DECISIONS.md step 10c |
 | Step 10a run | PASS | 2026-10-29 `just check`: 218 of 218 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)

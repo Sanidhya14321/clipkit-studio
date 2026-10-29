@@ -191,8 +191,19 @@ impl Ops {
         if let Some(s) = &secs {
             query.push(("timeoutSecs", s));
         }
-        trimmed("wait", caps::WAIT, self.client.get("/api/wait", &query)?)
+        let mut result: WaitResult =
+            trimmed("wait", caps::WAIT, self.client.get("/api/wait", &query)?)?;
+        if result.omitted > 0 {
+            result.rev = resume_rev(&result.events, req.since.unwrap_or(0));
+        }
+        Ok(result)
     }
+}
+
+/// The rev to resume from after trimming: the last kept event, so the next `wait` with it as
+/// `since` returns the events that were left out.
+fn resume_rev(kept: &[WaitEvent], since: u64) -> u64 {
+    kept.last().map_or(since, |e| e.rev)
 }
 
 impl Trim for WaitResult {
@@ -315,4 +326,27 @@ fn json_len<T: Serialize>(value: &T) -> CkResult<usize> {
     serde_json::to_vec(value)
         .map(|v| v.len())
         .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::session::handoff::WaitKind;
+    use ck_core::model::Author;
+
+    fn event(rev: u64) -> WaitEvent {
+        WaitEvent {
+            rev,
+            kind: WaitKind::Edit,
+            author: Author::Human,
+            label: String::new(),
+            touched: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn trimmed_wait_resumes_after_the_last_kept_event() {
+        assert_eq!(resume_rev(&[event(4), event(7)], 3), 7);
+        assert_eq!(resume_rev(&[], 3), 3);
+    }
 }

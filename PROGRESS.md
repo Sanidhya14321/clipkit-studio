@@ -1,16 +1,17 @@
 # Progress
 
 STATUS: RUNNING
-PHASE: 4
+PHASE: 5
 
 ## Handoff (latest)
-1. Done: Phase 4 step 10a: end-to-end generate proof (brief, confirm, 3 recipes = 15 s, layout, verify all gates, sound, handoff, wait) in `crates/ck-cli/tests/generate_proof.rs`.
-2. Proof: `just check` 218 of 218 nextest, hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, step 10a.
-3. Open: 10b export BLOCKED (component layers need the Phase 9 render worker; ck-media is still empty).
-4. Next: step 10c: run rust-reviewer and spec-checker on Phase 4, fix gaps, then mark Phase 4 done (PHASE: 5) with export carried to Phase 9.
-5. Start: `just check`; spec 12 Phase 4 line; DECISIONS.md step 10.
+1. Done: Phase 4 closed (step 10c): rust-reviewer and spec-checker ran; trimmed `wait` resumes after the last kept event; handoff label capped at 80 chars.
+2. Proof: `just check` exit 0, 220 of 220 nextest, hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, step 10c.
+3. Open: generated-video export (10b) carried to Phase 9; spec-checker gaps carried in DECISIONS.md step 10c.
+4. Next: Phase 5 (edit slice): write the phase step list from spec 12 Phase 5 and spec 14 additions, then step 1.
+5. Start: `just check`; docs/spec/12-phases.md Phase 5; docs/spec/INDEX.md for its files.
 
 ## Open questions
+- Phase 4 step 10c: spec-checker gaps carried forward (verify --critic, audio and captions gates, motion direction and holds, license-mode check, retrieval budgets, token meter, variants, brief more-options, verify before idle); assign each to a later phase (DECISIONS.md, step 10c).
 - Phase 4 step 10b: the Phase 4 proof ends at a verified project; exporting the generated video waits for the Phase 9 render worker (DECISIONS.md, step 10). Confirm this is acceptable or pull a minimal render path forward.
 - Phase 4 step 9c: verify how Claude Code and Codex handle long-running MCP tool calls and tune the `wait` timeout (default 20 s, at most 25 s) (DECISIONS.md, step 9c).
 - Phase 4 step 9b: sound cues carry no sfx asset until CC0 sound sets are ingested (Phase 8); timing constants and the `hook` name match are choices (DECISIONS.md, step 9b).
@@ -44,7 +45,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 4: generate slice (2026-10-29, in progress)
+## Phase 4: generate slice (2026-10-29, done; export carried to Phase 9)
 
 Spec: 00, 04 (4.3), 07, 08 (8.1, 8.5), 09. Proof: prompt to brief to a 15 second generated video to export.
 
@@ -65,10 +66,15 @@ Steps:
   - [x] 9a. Stored project look (`tokens.look`) and `ck look apply <id> [--dry-run]` with impact preview and MCP twin.
   - [x] 9b. `ck sound plan`.
   - [x] 9c. Handoff and `ck wait`.
-- [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+- [x] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
   - [x] 10a. Generate proof through the real binary (`crates/ck-cli/tests/generate_proof.rs`).
-  - [ ] 10b. Export: BLOCKED, component layers need the Phase 9 render worker (DECISIONS.md, step 10).
-  - [ ] 10c. rust-reviewer and spec-checker on Phase 4; fix gaps; mark the phase done with 10b carried to Phase 9.
+  - [ ] 10b. Export: BLOCKED, carried to Phase 9; component layers need the Phase 9 render worker (DECISIONS.md, step 10).
+  - [x] 10c. rust-reviewer and spec-checker on Phase 4; fix gaps; mark the phase done with 10b carried to Phase 9.
+
+Run plan (autonomous run 15): step 10c.
+- Run rust-reviewer (Phase 4 diff) and spec-checker (Phase 4 vs spec) in parallel.
+- Fix small confirmed gaps with tests; record larger ones as open questions or carry them forward.
+- `just check`, evidence in VERIFICATION.md, mark Phase 4 done (PHASE: 5) with 10b carried to Phase 9, commit.
 
 Run plan (autonomous run 14): step 10.
 - Split: 10a generate proof through the real `ck` binary (brief propose, human confirm, three recipes filling 15 s, layout check, verify all gates pass, sound plan, handoff, wait); 10b export.

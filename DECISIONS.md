@@ -4,6 +4,10 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 10c: review fixes and carried gaps; Phase 4 closed
+- rust-reviewer fixes: a trimmed `wait` now returns `rev` = the last kept event (or `since`), so omitted events come back on the next call; the handoff label is cut to 80 characters. Not done (low): rejecting `since` beyond the current rev, and merging the two wait loops.
+- spec-checker gaps carried forward (recorded, not built, to keep Phase 4 to its spec 12 line): `verify --critic` (needs a contact-sheet render, Phase 9; the plugin skill mentions it); audio gate (needs ck-media loudness, Phase 5/9); captions gate (Phase 7 takes); motion direction and hold checks; license-mode check in the provenance gate (Phase 8 license classes); retrieval-ladder budgets (Phase 8); token meter (Phase 9); token-only variants (spec 8.5); brief "more options" fields and `brief set`; `verify` blocking `idle`.
+
 ### Step 10: proof run split; export blocked until Phase 9
 - Spec 2 sends any project with component layers through the full export path (Node render worker, Remotion renderer), which spec 12 places in Phase 9; the fast ffmpeg path (Phase 5) covers footage only. A generated video is all component layers, so step 10 is split: 10a proves prompt to brief to a verified 15 second generated project through the real `ck` binary (`crates/ck-cli/tests/generate_proof.rs`); 10b export is BLOCKED until the render worker exists. Simplest option that adds no Phase 9 work early.
 - The proof uses three scenes (hook-title 4 s, stat-callout 5 s, outro-cta 6 s) back to back; `verify` must pass every gate, including duration against the brief's 15 s.
