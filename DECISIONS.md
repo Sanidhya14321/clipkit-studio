@@ -450,3 +450,10 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - In a project with footage, recipe layers whose track kind is video go to an overlay track, so generated work never shares the footage track. Backdrops keep their authored look and may cover footage; the recipe choice is the agent's.
 - Footage cuts now target the track that holds the source, else `footage-1` (was the first video track).
 - `/media/<hash>.mp4` serves proxies with byte ranges (open ranges capped at 4 MB per reply). A `<video>` cannot send headers, so the token may ride in the query for `/media/` (as for `/ws`); Host and Origin checks still apply.
+
+## Phase 5 step 9: fast export (2026-10-29)
+- Loudness targets are not in the spec: every preset normalizes to -14 LUFS integrated and -1 dBTP with single-pass `loudnorm` (LRA 11). The gate passes within 1 LU and at most -1 dBTP, measured with `ebur128` on the written file; a miss is reported (`loudnessPass: false`), not an error.
+- Presets: source (project size), youtube 1920x1080, tiktok/reels/shorts 1080x1920; the frame is scaled and padded (aspect reflow is a later feature). Frame rate is the project's.
+- The fast path takes footage-only projects at speed 1; any other layer is refused with its id (hint: Phase 9 render worker). Gaps become black and silence; joins get 30 ms audio fades.
+- Export, import and transcribe run inside the request on a blocking thread; the client uses a 60 min timeout for them (30 s for the rest). The spec's background queue with progress is not built yet.
+- Output must be a relative .mp4 inside the project folder (default `exports/<project>-<preset>.mp4`).

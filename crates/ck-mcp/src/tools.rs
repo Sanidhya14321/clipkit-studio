@@ -14,6 +14,7 @@ use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
+use ck_server::session::export::ExportRequest;
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
@@ -244,6 +245,13 @@ pub fn specs() -> Vec<ToolSpec> {
              track becomes the kept segments, end to end, as one revision.",
             caps::CUT_APPLY,
         ),
+        spec::<ExportRequest>(
+            "export",
+            "ck export",
+            "Export a footage-only project to MP4 (fast ffmpeg path): preset source, youtube, \
+             tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",
+            caps::EXPORT,
+        ),
         spec::<WaitRequest>(
             "wait",
             "ck wait",
@@ -331,6 +339,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
+        "export" => json(&ops.export(&parse(args)?)?),
         "transcribe" => json(&ops.transcribe(&parse(args)?)?),
         "transcript_get" => json(&ops.transcript_get(&parse(args)?)?),
         "cut_suggest" => json(&ops.cut_suggest(&parse(args)?)?),

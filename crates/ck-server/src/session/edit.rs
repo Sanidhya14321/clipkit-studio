@@ -90,7 +90,7 @@ fn round3(x: f64) -> f64 {
 }
 
 impl Session {
-    fn workdir(&self) -> PathBuf {
+    pub(super) fn workdir(&self) -> PathBuf {
         let root = self.store.root();
         root.parent().unwrap_or(root).to_path_buf()
     }
@@ -105,7 +105,7 @@ impl Session {
             .ok_or_else(|| CkError::new(ErrorCode::NotFound, format!("no source with id {id:?}")))
     }
 
-    fn resolve(&self, stored: &str) -> PathBuf {
+    pub(super) fn resolve(&self, stored: &str) -> PathBuf {
         let p = Path::new(stored);
         if p.is_absolute() {
             p.to_path_buf()

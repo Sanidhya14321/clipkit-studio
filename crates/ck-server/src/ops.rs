@@ -18,6 +18,7 @@ use crate::session::edit::{
     CutApplyRequest, CutApplyResult, CutSuggestResult, SourceRequest, TranscribeResult,
     TranscriptView,
 };
+use crate::session::export::{ExportRequest, ExportResult};
 use crate::session::handoff::{HandoffRequest, HandoffResult, WaitEvent, WaitRequest, WaitResult};
 use crate::session::import::{ImportRequest, ImportResult};
 use crate::session::layout::LayoutCheckResult;
@@ -53,6 +54,7 @@ pub mod caps {
     pub const TRANSCRIPT: usize = 16 * 1024;
     pub const CUT_SUGGEST: usize = 8 * 1024;
     pub const CUT_APPLY: usize = 2 * 1024;
+    pub const EXPORT: usize = 1024;
 }
 
 pub struct Ops {
@@ -185,13 +187,13 @@ impl Ops {
         capped(
             "import",
             caps::IMPORT,
-            self.client.post("/api/import", req)?,
+            self.client.post_slow("/api/import", req)?,
         )
     }
 
     /// `transcribe`: word-level transcript of a source, stored on disk.
     pub fn transcribe(&self, req: &SourceRequest) -> CkResult<TranscribeResult> {
-        let reply = self.client.post("/api/transcribe", req)?;
+        let reply = self.client.post_slow("/api/transcribe", req)?;
         capped("transcribe", caps::TRANSCRIBE, reply)
     }
 
@@ -215,6 +217,15 @@ impl Ops {
     pub fn cut_apply(&self, req: &CutApplyRequest) -> CkResult<CutApplyResult> {
         let reply = self.client.post("/api/cut/apply", req)?;
         trimmed("cut apply", caps::CUT_APPLY, reply)
+    }
+
+    /// `export`: the fast ffmpeg path to an MP4 with a platform preset and a loudness gate.
+    pub fn export(&self, req: &ExportRequest) -> CkResult<ExportResult> {
+        capped(
+            "export",
+            caps::EXPORT,
+            self.client.post_slow("/api/export", req)?,
+        )
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.

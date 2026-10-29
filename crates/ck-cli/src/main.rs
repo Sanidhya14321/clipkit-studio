@@ -16,6 +16,7 @@ use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
+use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
@@ -24,7 +25,7 @@ use clap::Parser;
 use serde::Serialize;
 
 use args::{
-    BriefCommand, Cli, Command, CutCommand, LayoutCommand, LookCommand, ProjectCommand,
+    BriefCommand, Cli, Command, CutCommand, LayoutCommand, LookCommand, PresetArg, ProjectCommand,
     RecipeCommand, SoundCommand, TasteCommand, TranscriptCommand,
 };
 use ck_assets::library::{
@@ -168,6 +169,16 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::Cut(CutCommand::Apply { source, ids }) => {
             print(&ops()?.cut_apply(&CutApplyRequest { source, ids })?)
+        }
+        Command::Export { preset, out } => {
+            let preset = match preset {
+                PresetArg::Source => Preset::Source,
+                PresetArg::Youtube => Preset::Youtube,
+                PresetArg::Tiktok => Preset::Tiktok,
+                PresetArg::Reels => Preset::Reels,
+                PresetArg::Shorts => Preset::Shorts,
+            };
+            print(&ops()?.export(&ExportRequest { preset, out })?)
         }
         Command::Handoff { label } => print(&ops()?.handoff(&HandoffRequest { label })?),
         Command::Wait { since, timeout } => print(&ops()?.wait(&WaitRequest {

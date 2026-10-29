@@ -870,6 +870,60 @@ expression: specs()
     }
   },
   {
+    "name": "export",
+    "command": "ck export",
+    "description": "Export a footage-only project to MP4 (fast ffmpeg path): preset source, youtube, tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",
+    "cap": 1024,
+    "inputSchema": {
+      "$defs": {
+        "Preset": {
+          "oneOf": [
+            {
+              "const": "source",
+              "description": "The project's own frame size.",
+              "type": "string"
+            },
+            {
+              "const": "youtube",
+              "description": "1920x1080.",
+              "type": "string"
+            },
+            {
+              "const": "tiktok",
+              "description": "1080x1920.",
+              "type": "string"
+            },
+            {
+              "const": "reels",
+              "description": "1080x1920.",
+              "type": "string"
+            },
+            {
+              "const": "shorts",
+              "description": "1080x1920.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "out": {
+          "description": "Output path relative to the project folder; default `exports/<project>-<preset>.mp4`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "preset": {
+          "$ref": "#/$defs/Preset",
+          "default": "source"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "wait",
     "command": "ck wait",
     "description": "Block until the user changes something after `since` (comments, brief edits, confirmations, layer edits), at most 25 s. Returns events oldest first; empty on timeout. Call again with since = the returned rev.",

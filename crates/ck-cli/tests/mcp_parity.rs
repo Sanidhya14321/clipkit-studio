@@ -331,6 +331,11 @@ fn import_answers_like_its_cli_twin() {
         assert_eq!(code(&refused), "E_NOT_FOUND", "{tool}");
         assert_eq!(refused, err_line(d, &args), "{tool}");
     }
+
+    // An audio-only project has no footage: export refuses alike.
+    let refused = mcp.err("export", json!({ "preset": "tiktok" }));
+    assert_eq!(code(&refused), "E_REQUEST");
+    assert_eq!(refused, err_line(d, &["export", "--preset", "tiktok"]));
 }
 
 #[test]

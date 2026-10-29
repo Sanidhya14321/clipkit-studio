@@ -197,3 +197,77 @@ fn studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock() {
     let refused = s.cut_words(&words(vec![1])).unwrap_err();
     assert_eq!(refused.code, ErrorCode::LockHeld);
 }
+
+#[test]
+fn cut_footage_exports_with_presets_and_a_loudness_gate() {
+    use crate::session::export::{ExportRequest, Preset};
+
+    let Some(fx) = fixtures() else {
+        eprintln!("skipped: run `just fixtures` first");
+        return;
+    };
+    let dir = tempfile::tempdir().unwrap();
+    let store = dir.path().join(".clipkit");
+    Store::new(&store)
+        .init(&ck_core::Project::new(
+            "p1",
+            "Demo",
+            ck_core::model::Mode::Generate,
+        ))
+        .unwrap();
+    let s = Session::open(&store, Arc::new(FakeClock::default()))
+        .unwrap()
+        .with_transcriber(Arc::new(FixtureTranscriber(fx.join("transcript.json"))));
+    let id = s
+        .import(&ImportRequest {
+            path: fx.join("av.mp4").to_string_lossy().into_owned(),
+        })
+        .unwrap()
+        .source
+        .id;
+    s.transcribe(&src(&id)).unwrap();
+    let cut = s
+        .cut_apply(&CutApplyRequest {
+            source: id,
+            ids: vec![],
+        })
+        .unwrap();
+
+    let out = s.export(&ExportRequest::default()).unwrap();
+    assert_eq!(out.path, "exports/p1-source.mp4");
+    assert!(dir.path().join(&out.path).is_file());
+    assert!(
+        (out.duration_sec - cut.duration_sec).abs() < 0.15,
+        "{out:?}"
+    );
+    assert!(out.loudness_pass, "{:?}", out.loudness);
+
+    let vertical = s
+        .export(&ExportRequest {
+            preset: Preset::Tiktok,
+            out: Some("exports/v.mp4".into()),
+        })
+        .unwrap();
+    assert_eq!((vertical.width, vertical.height), (1080, 1920));
+
+    for bad in ["../x.mp4", "/tmp/x.mp4", "x.mov"] {
+        let err = s
+            .export(&ExportRequest {
+                preset: Preset::Source,
+                out: Some(bad.into()),
+            })
+            .unwrap_err();
+        assert_eq!(err.code, ErrorCode::Request, "{bad}");
+    }
+}
+
+#[test]
+fn component_layers_are_refused_by_the_fast_path() {
+    let f = super::fixture::Fixture::new();
+    let err = f
+        .session
+        .export(&crate::session::export::ExportRequest::default())
+        .unwrap_err();
+    assert_eq!(err.code, ErrorCode::Request);
+    assert_eq!(err.layer_ids, ["title"]);
+}

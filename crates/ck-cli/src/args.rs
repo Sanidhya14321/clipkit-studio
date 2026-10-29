@@ -23,8 +23,7 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
-    /// Serve the project and the studio on 127.0.0.1 until interrupted, or with --ensure start
-    /// it in the background if it is not running.
+    /// Serve the project and the studio on 127.0.0.1 (--ensure: start it in the background).
     Studio {
         /// Port to bind; 0 picks a free one.
         #[arg(long, default_value_t = 0)]
@@ -98,6 +97,15 @@ pub enum Command {
     /// Suggest and apply cuts.
     #[command(subcommand)]
     Cut(CutCommand),
+    /// Export a footage-only project to MP4.
+    Export {
+        /// source, youtube, tiktok, reels or shorts.
+        #[arg(long, value_enum, default_value_t = PresetArg::Source)]
+        preset: PresetArg,
+        /// Output path relative to the project folder.
+        #[arg(long)]
+        out: Option<String>,
+    },
     /// Hand the project to the user: release every agent lock and set the agent idle.
     Handoff {
         /// What the studio shows for the agent while idle.
@@ -277,4 +285,13 @@ pub struct HolderArg {
 fn parse_holder(s: &str) -> Result<Holder, String> {
     serde_json::from_value(serde_json::Value::String(s.to_owned()))
         .map_err(|_| format!("{s:?} is not agent or human"))
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum PresetArg {
+    Source,
+    Youtube,
+    Tiktok,
+    Reels,
+    Shorts,
 }
