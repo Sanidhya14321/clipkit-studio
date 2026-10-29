@@ -11,6 +11,7 @@ import { TranscriptPanel } from "./panels/TranscriptPanel";
 import { CommentsPanel } from "./panels/CommentsPanel";
 import { VoicePanel } from "./panels/VoicePanel";
 import { PushToTalk } from "./panels/PushToTalk";
+import { AskCards } from "./panels/AskCards";
 import { HoverSelect, type Target } from "./preview/HoverSelect";
 import type { Pointer } from "./comments";
 import type { StudioContext } from "./generated/types";
@@ -20,7 +21,8 @@ import { durationInFrames, mediaUrls } from "./timeline";
 import { useNow, useStudio } from "./useStudio";
 
 export function App({ token }: { token: string }) {
-  const { connected, project, locks, lastRevision, feed } = useStudio(token);
+  const { connected, project, locks, lastRevision, feed, asks } =
+    useStudio(token);
   const now = useNow();
   const [selected, setSelected] = useState<string | null>(null);
   const [looks, setLooks] = useState<Look[]>([]);
@@ -170,6 +172,7 @@ export function App({ token }: { token: string }) {
                 )
               }
             />
+            <AskCards token={token} asks={asks} />
             <PushToTalk
               token={token}
               selection={selected}

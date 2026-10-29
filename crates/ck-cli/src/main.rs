@@ -15,6 +15,7 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::api::BODY_LIMIT;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
+use ck_server::session::ask::AskRequest;
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
 use ck_server::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
@@ -179,6 +180,17 @@ fn run(cli: Cli) -> CkResult<()> {
             print(&ops()?.cut_apply(&CutApplyRequest { source, ids })?)
         }
         Command::Context => print(&ops()?.context()?),
+        Command::Ask {
+            question,
+            options,
+            id,
+            timeout,
+        } => print(&ops()?.ask(&AskRequest {
+            question,
+            options,
+            id,
+            timeout_secs: timeout,
+        })?),
         Command::Voice(VoiceCommand::Script { file }) => {
             let req = serde_json::from_str(&read_input(&file, "voice script")?)
                 .map_err(|e| request_err(format!("voice script JSON: {e}")))?;

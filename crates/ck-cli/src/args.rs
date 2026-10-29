@@ -99,6 +99,20 @@ pub enum Command {
     /// Voice slots: script, mode.
     #[command(subcommand)]
     Voice(VoiceCommand),
+    /// Ask the user a question in the studio; prints the answer.
+    Ask {
+        /// The question (omit with --id to keep waiting).
+        question: Option<String>,
+        /// An option to offer; repeat for more.
+        #[arg(long = "option")]
+        options: Vec<String>,
+        /// Keep waiting on an earlier question.
+        #[arg(long)]
+        id: Option<String>,
+        /// Seconds to block (default 20, at most 25).
+        #[arg(long)]
+        timeout: Option<u64>,
+    },
     /// What the user points at in the studio, plus open comments.
     Context,
     /// List, add, reply to and resolve comments.

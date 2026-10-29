@@ -1112,6 +1112,48 @@ expression: specs()
     }
   },
   {
+    "name": "ask",
+    "command": "ck ask",
+    "description": "Ask the user a question in the studio (up to 6 options; they may also type or speak an answer) and block up to 25 s. answered=false: call again with the id.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Keep waiting for the answer to this earlier question.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "options": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "question": {
+          "description": "The question; omit it with `id` to keep waiting on an earlier one.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timeoutSecs": {
+          "description": "Seconds to block (default 20, at most 25); 0 checks once.",
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "context",
     "command": "ck context",
     "description": "What the user points at in the studio: selected layer, hovered element, playhead, loop range and open comments. Call it first when the user says this, here or that.",

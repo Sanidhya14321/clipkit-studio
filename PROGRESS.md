@@ -61,7 +61,7 @@ Steps:
 - [x] 4. Cloning with consent: only from takes recorded in the studio, after a consent record; Fish clone stub; refusal tests. `ck voice clone` + MCP twin.
 - [x] 5. Captions from the active take's timing (transcriber over the take), as caption items.
 - [x] 6. Lane B push-to-talk: local command parser (play, pause, undo, redo, go to N seconds, split here), free-form phrases become comments at the selection or playhead.
-- [ ] 7. Lane C `ck ask` + MCP twin: a question card with options in the studio, the answer returns as the tool result.
+- [x] 7. Lane C `ck ask` + MCP twin: a question card with options in the studio, the answer returns as the tool result.
 - [ ] 8. Proof run, self review, evidence.
 
 ## Phase 6: interaction slice (2026-10-29, done)

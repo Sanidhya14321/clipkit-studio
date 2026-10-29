@@ -507,3 +507,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Local commands: play, pause, undo, redo, go/jump/seek to <time> (12, 12 s, 1:05, 1 minute 5 seconds), split here. "Split here" needs a selected clip or footage layer and cuts it into `<id>` and `<id>-b` at the playhead.
 - Undo, redo and split are studio routes (not agent tools; the agent edits by patch). They run as the human or voice author and the lock gate applies.
 - Voice revisions hold locks as the human (`commit_by`); the revision author stays `voice`.
+
+## Phase 7 step 7: ck ask (2026-10-29)
+- Questions are memory-only UI state (like context), at most 8 open, up to 6 options, 500 bytes per text. The studio learns them from a new `asks` event (the whole list) and `GET /api/asks` on connect.
+- `ask` blocks like `wait` (default 20 s, at most 25 s). Unanswered, it returns the id; `ask --id <id>` keeps waiting. Each answer is delivered once, then forgotten.
+- The card's microphone uses the browser's speech recognition when present; otherwise the user types.

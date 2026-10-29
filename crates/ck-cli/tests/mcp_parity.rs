@@ -400,6 +400,27 @@ fn comment_tools_answer_like_their_cli_twins() {
     let refused = mcp.err("voice_mode", json!({ "slot": "v9", "mode": "ai" }));
     assert_eq!(refused, err_line(d, &["voice", "mode", "v9", "ai"]));
 
+    // Ask: unanswered after a 0 s wait on both sides; a resume of an unknown id refuses alike.
+    let cli: Value = serde_json::from_str(&ok_line(
+        d,
+        &["ask", "Keep it?", "--option", "Yes", "--timeout", "0"],
+        caps::ASK,
+    ))
+    .unwrap();
+    assert_eq!(cli, json!({ "id": "q1", "answered": false }));
+    let tool: Value = serde_json::from_str(&mcp.ok(
+        "ask",
+        json!({ "question": "Sure?", "timeoutSecs": 0 }),
+        caps::ASK,
+    ))
+    .unwrap();
+    assert_eq!(tool, json!({ "id": "q2", "answered": false }));
+    let refused = mcp.err("ask", json!({ "id": "q9", "timeoutSecs": 0 }));
+    assert_eq!(
+        refused,
+        err_line(d, &["ask", "--id", "q9", "--timeout", "0"])
+    );
+
     let refused = mcp.err("comments_resolve", json!({ "id": "c9" }));
     assert_eq!(code(&refused), "E_NOT_FOUND");
     assert_eq!(refused, err_line(d, &["comments", "resolve", "c9"]));

@@ -15,6 +15,7 @@ use serde::de::DeserializeOwned;
 use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
+use crate::session::ask::{AnswerRequest, AskRequest};
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use crate::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
@@ -83,6 +84,9 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/voice/captions", post(voice_captions))
         // Studio only: keyboard and push-to-talk commands.
         .route("/api/undo", post(undo))
+        .route("/api/ask", post(ask))
+        .route("/api/asks", get(asks_open))
+        .route("/api/ask/answer", post(ask_answer))
         .route("/api/redo", post(redo))
         .route("/api/split", post(split))
         .route("/api/context", get(context).post(set_context))
@@ -402,6 +406,47 @@ async fn split(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.split(&req)).await
+}
+
+/// Blocks until the studio answers or the timeout passes (like `wait`); subscribes before the
+/// first check so an answer landing in between still wakes it.
+async fn ask(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<AskRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    let secs = req
+        .timeout_secs
+        .unwrap_or(brief::WAIT_DEFAULT_SECS)
+        .min(brief::WAIT_MAX_SECS);
+    let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(secs);
+    let mut rx = s.events();
+    let open = req.clone();
+    let id = blocking(s.clone(), move |s| s.ask_open(&open)).await?.0;
+    let id = id.as_str().unwrap_or_default().to_owned();
+    loop {
+        let check_id = id.clone();
+        let check = blocking(s.clone(), move |s| s.ask_check(&check_id)).await?;
+        if check.0["answered"] == true || tokio::time::Instant::now() >= deadline {
+            return Ok(check);
+        }
+        match tokio::time::timeout_at(deadline, rx.recv()).await {
+            Ok(Ok(_)) | Ok(Err(RecvError::Lagged(_))) | Err(_) => {}
+            Ok(Err(RecvError::Closed)) => return Ok(check),
+        }
+    }
+}
+
+async fn asks_open(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.asks_open()).await
+}
+
+async fn ask_answer(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<AnswerRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.ask_answer(&req)).await
 }
 
 async fn look_apply(

@@ -22,4 +22,6 @@ pub enum Event {
     },
     /// Locks changed (acquire, release, heartbeat expiry).
     Locks { locks: Vec<Lock> },
+    /// The agent's open questions changed (`ck ask`): the whole list.
+    Asks { asks: Vec<crate::session::ask::Ask> },
 }

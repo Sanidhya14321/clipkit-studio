@@ -23,6 +23,7 @@ use crate::event::Event;
 use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
+pub mod ask;
 pub mod brief;
 pub mod comments;
 pub mod context;
@@ -99,6 +100,8 @@ pub struct Session {
     speaker: Arc<dyn Speaker>,
     /// What the studio last reported pointing at (UI state, never stored).
     studio_context: Mutex<context::StudioContext>,
+    /// The agent's open questions and their undelivered answers (`ck ask`).
+    asks: Mutex<ask::Asks>,
 }
 
 impl Session {
@@ -117,6 +120,7 @@ impl Session {
             transcriber: Arc::new(FishStt::from_env()),
             speaker: Arc::new(FishTts::from_env()),
             studio_context: Mutex::default(),
+            asks: Mutex::default(),
         })
     }
 

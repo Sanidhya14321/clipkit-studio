@@ -172,3 +172,10 @@ test("field patch refuses unknown layers and fields that do not apply", () => {
   assert.equal(fieldPatch(project(), "cap", "at", 1), null);
   assert.equal(fieldPatch(project(), "music", "dur", 1), null);
 });
+
+test("asks events replace the open questions", () => {
+  const asks = [{ id: "q1", question: "Which?", options: ["A", "B"] }];
+  const s = reduce(initial, { type: "asks", asks });
+  assert.deepEqual(s.asks, asks);
+  assert.deepEqual(reduce(s, { type: "asks", asks: [] }).asks, []);
+});

@@ -1,6 +1,7 @@
 //! Server tests: router calls in process (oneshot) and one real socket for server.json and /ws.
 
 mod api;
+mod ask;
 mod brief;
 mod comments;
 mod edit;

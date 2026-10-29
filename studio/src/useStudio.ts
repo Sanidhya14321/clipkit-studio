@@ -1,6 +1,7 @@
 // Live studio state: events from the server's WebSocket folded by the pure reducer in state.ts.
 import { useEffect, useState } from "react";
-import { subscribe } from "./api";
+import { request, subscribe } from "./api";
+import type { Ask } from "./generated/types";
 import { initial, reduce, type StudioState } from "./state";
 
 export function useStudio(token: string): StudioState {
@@ -10,7 +11,16 @@ export function useStudio(token: string): StudioState {
       subscribe(
         token,
         (event) => setState((s) => reduce(s, event)),
-        (connected) => setState((s) => ({ ...s, connected })),
+        (connected) => {
+          setState((s) => ({ ...s, connected }));
+          // Questions asked before this studio connected (later ones arrive as events).
+          if (connected) {
+            request<Ask[]>(token, "/api/asks").then(
+              (asks) => setState((s) => ({ ...s, asks })),
+              () => undefined,
+            );
+          }
+        },
       ),
     [token],
   );

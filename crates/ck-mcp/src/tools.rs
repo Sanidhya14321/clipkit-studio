@@ -12,6 +12,7 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
+use ck_server::session::ask::AskRequest;
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use ck_server::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
@@ -297,6 +298,13 @@ pub fn specs() -> Vec<ToolSpec> {
              take are listed in skipped.",
             caps::VOICE_SCRIPT,
         ),
+        spec::<AskRequest>(
+            "ask",
+            "ck ask",
+            "Ask the user a question in the studio (up to 6 options; they may also type or \
+             speak an answer) and block up to 25 s. answered=false: call again with the id.",
+            caps::ASK,
+        ),
         spec::<ContextRequest>(
             "context",
             "ck context",
@@ -422,6 +430,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
         "comments_list" => json(&ops.comments_list(&parse(args)?)?),
+        "ask" => json(&ops.ask(&parse::<AskRequest>(args)?)?),
         "voice_script" => json(&ops.voice_script(&parse(args)?)?),
         "voice_mode" => json(&ops.voice_mode(&parse(args)?)?),
         "voice_speak" => json(&ops.voice_speak(&parse(args)?)?),

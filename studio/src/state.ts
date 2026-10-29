@@ -3,6 +3,7 @@
 // The server is the source of truth: the project comes only from `snapshot` events, locks from
 // `locks` events, and `revision` events say who changed what (activity feed and flash).
 import type {
+  Ask,
   Author,
   Event,
   Item,
@@ -31,6 +32,8 @@ export interface StudioState {
   locks: Lock[];
   lastRevision: Revision | null;
   feed: FeedEntry[];
+  /** The agent's open questions (`ck ask`). */
+  asks: Ask[];
 }
 
 export const initial: StudioState = {
@@ -39,6 +42,7 @@ export const initial: StudioState = {
   locks: [],
   lastRevision: null,
   feed: [],
+  asks: [],
 };
 
 export function reduce(state: StudioState, event: Event): StudioState {
@@ -48,6 +52,8 @@ export function reduce(state: StudioState, event: Event): StudioState {
       return { ...state, project: event.project, locks: event.project.locks };
     case "locks":
       return { ...state, locks: event.locks };
+    case "asks":
+      return { ...state, asks: event.asks };
     case "revision": {
       const entry: FeedEntry = {
         rev: event.rev,

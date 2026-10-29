@@ -134,3 +134,50 @@ test("push-to-talk: seek, split here, undo locally; other phrases become comment
     anchor: { layerId: "hook-title-backdrop" },
   });
 });
+
+test("ck ask shows a card; the user's answer is the tool result", async ({
+  page,
+  studio,
+}) => {
+  // Asked before the studio opens: the card still shows once it connects.
+  const early = (await studio.ck(
+    "ask",
+    "Keep the intro?",
+    "--timeout",
+    "0",
+  )) as {
+    id: string;
+    answered: boolean;
+  };
+  expect(early).toEqual({ id: "q1", answered: false });
+  await open(page, studio);
+  await expect(page.locator('[data-ck-question="q1"]')).toContainText(
+    "Keep the intro?",
+  );
+
+  const asked = studio.ck(
+    "ask",
+    "Which logo?",
+    "--option",
+    "Old",
+    "--option",
+    "New",
+    "--timeout",
+    "20",
+  );
+  const card = page.locator('[data-ck-question="q2"]');
+  await card.locator('[data-ck-ask-option="New"]').click();
+  expect(await asked).toEqual({ id: "q2", answered: true, answer: "New" });
+  await expect(card).toHaveCount(0);
+
+  // A typed answer to the earlier question; the agent picks it up with --id.
+  const first = page.locator('[data-ck-question="q1"]');
+  await first.locator("[data-ck-ask-answer]").fill("Yes, shorter");
+  await first.locator("[data-ck-ask-answer]").press("Enter");
+  await expect(first).toHaveCount(0);
+  expect(await studio.ck("ask", "--id", "q1", "--timeout", "0")).toEqual({
+    id: "q1",
+    answered: true,
+    answer: "Yes, shorter",
+  });
+});

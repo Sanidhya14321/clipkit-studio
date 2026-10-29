@@ -10,6 +10,7 @@ use ck_core::{CkError, CkResult, ErrorCode};
 use serde::Serialize;
 
 use crate::client::Client;
+use crate::session::ask::{AskRequest, AskResult};
 use crate::session::brief::{
     BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
     BriefWaitRequest, BriefWaitResult,
@@ -70,6 +71,7 @@ pub mod caps {
     pub const COMMENT_WRITE: usize = 2 * 1024;
     pub const VOICE_SCRIPT: usize = 4 * 1024;
     pub const VOICE_WRITE: usize = 1024;
+    pub const ASK: usize = 1024;
     /// About 300 tokens (spec 6.4).
     pub const CONTEXT: usize = 1536;
 }
@@ -310,6 +312,12 @@ impl Ops {
     pub fn voice_mode(&self, req: &VoiceModeRequest) -> CkResult<VoiceModeResult> {
         let reply = self.client.post("/api/voice/mode", req)?;
         capped("voice mode", caps::VOICE_WRITE, reply)
+    }
+
+    /// `ask`: show a question with options in the studio and block (at most 25 s) for the
+    /// answer; unanswered, the reply carries the id to keep waiting with.
+    pub fn ask(&self, req: &AskRequest) -> CkResult<AskResult> {
+        capped("ask", caps::ASK, self.client.post("/api/ask", req)?)
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.

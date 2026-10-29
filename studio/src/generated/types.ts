@@ -278,6 +278,10 @@ export type HistoryRequest = {
  */
 author?: Author | null, };
 
+export type Ask = { id: string, question: string, options: Array<string>, };
+
+export type AnswerRequest = { id: string, answer: string, };
+
 export type SplitRequest = { layerId: string, 
 /**
  * Timeline time to split at, in seconds.
@@ -366,6 +370,6 @@ export type MotionPersonality = "snappy" | "smooth" | "calm" | "slow";
 
 export type Easing = "linear" | "quad-in" | "quad-out" | "cubic-in" | "cubic-out" | "expo-out" | "sine-in-out" | "back-out";
 
-export type Event = { "type": "snapshot", project: Project, } | { "type": "revision", rev: number, author: Author, label: string, touched: Array<string>, } | { "type": "locks", locks: Array<Lock>, };
+export type Event = { "type": "snapshot", project: Project, } | { "type": "revision", rev: number, author: Author, label: string, touched: Array<string>, } | { "type": "locks", locks: Array<Lock>, } | { "type": "asks", asks: Array<Ask>, };
 
 export type JsonValue = number | string | boolean | Array<JsonValue> | { [key in string]: JsonValue } | null;
