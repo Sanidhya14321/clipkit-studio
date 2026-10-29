@@ -136,7 +136,11 @@ export type VoiceSlotStatus = "empty" | "pending" | "ready" | "failed";
 
 export type VoiceTake = { id: string, path: string, durationSec: number, };
 
-export type Comment = { id: string, author: Author, anchor: Anchor, text: string, status: CommentStatus, createdRev: number, resolvedRev?: number | null, replies: Array<Reply>, };
+export type Comment = { id: string, author: Author, anchor: Anchor, text: string, status: CommentStatus, createdRev: number, resolvedRev?: number | null, replies: Array<Reply>, 
+/**
+ * Layers the agent declared it will change besides the anchored one (scope gate).
+ */
+scope?: Array<string>, };
 
 export type CommentStatus = "open" | "working" | "resolved";
 
@@ -272,7 +276,7 @@ export type CkError = { code: ErrorCode, message: string, hint: string,
  */
 layerIds?: Array<string>, };
 
-export type ErrorCode = "E_STAGE" | "E_RETRY" | "E_LOCK_HELD" | "E_LOCK_NOT_HELD" | "E_PATCH_STALE" | "E_PATCH_INVALID" | "E_SCHEMA" | "E_HISTORY_EMPTY" | "E_STORAGE" | "E_MIGRATION" | "E_AUTH" | "E_NOT_FOUND" | "E_REQUEST" | "E_SERVER" | "E_OUTPUT_CAP" | "E_ASSET" | "E_MEDIA" | "E_VOICE";
+export type ErrorCode = "E_STAGE" | "E_RETRY" | "E_LOCK_HELD" | "E_LOCK_NOT_HELD" | "E_PATCH_STALE" | "E_PATCH_INVALID" | "E_SCHEMA" | "E_HISTORY_EMPTY" | "E_STORAGE" | "E_MIGRATION" | "E_AUTH" | "E_NOT_FOUND" | "E_REQUEST" | "E_SERVER" | "E_OUTPUT_CAP" | "E_ASSET" | "E_MEDIA" | "E_VOICE" | "E_SCOPE";
 
 export type Look = { id: string, name: string, description: string, colors: Colors, fonts: Fonts, 
 /**

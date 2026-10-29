@@ -77,6 +77,20 @@ impl Status {
     }
 }
 
+impl ItemSummary {
+    pub fn of(project: &Project, i: &ck_core::model::Item) -> Self {
+        let span = timeline::span(project, i);
+        Self {
+            id: i.id.clone(),
+            kind: item_kind(i),
+            name: i.name.clone(),
+            rev: i.rev,
+            start: span.map(|s| s.start),
+            end: span.map(|s| s.end),
+        }
+    }
+}
+
 impl Summary {
     pub fn of(project: &Project) -> Self {
         let tracks = project
@@ -88,17 +102,7 @@ impl Summary {
                 items: t
                     .items
                     .iter()
-                    .map(|i| {
-                        let span = timeline::span(project, i);
-                        ItemSummary {
-                            id: i.id.clone(),
-                            kind: item_kind(i),
-                            name: i.name.clone(),
-                            rev: i.rev,
-                            start: span.map(|s| s.start),
-                            end: span.map(|s| s.end),
-                        }
-                    })
+                    .map(|i| ItemSummary::of(project, i))
                     .collect(),
             })
             .collect();

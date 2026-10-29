@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 6
 
 ## Handoff (latest)
-1. Done: Phase 5 (edit slice): import, proxies, packed transcript, cut candidates, delete-to-cut, hybrid, fast export; proof `crates/ck-cli/tests/edit_proof.rs` raw footage to an exported MP4.
-2. Proof: `just check` and `just test` 265 of 265 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 9 of 9. Evidence in VERIFICATION.md, Phase 5.
-3. Open: step 4b (Fish Audio STT with the owner's key, whisper choice), Silero VAD (ort question), export background queue and progress, rust-reviewer/spec-checker runs (agents unavailable this session).
-4. Next: Phase 6 (see docs/spec/12-phases.md); plan it in PROGRESS.md first.
-5. Start: `just check`; phase-runner skill; spec 12 Phase 6 and the spec files it names.
+1. Done: Phase 6 steps 1 to 4: comments (`@comments` lock id, add/list/reply/resolve + MCP), scope gate (E_SCOPE), `@structure` global lock, `ck context` + MCP.
+2. Proof: `just check` 273 of 273 nextest (1 skipped), hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, Phase 6.
+3. Open: Phase 5 carried items (transcription provider, VAD, export queue, reviewer runs).
+4. Next: Phase 6 step 5: studio comments panel and pins, Send to agent, hover-select with Ask agent; studio posts its context; Playwright.
+5. Start: `just check`; studio-frontend skill; studio/src/App.tsx, preview/ProjectComposition.tsx, clips (data-ck-part).
 
 ## Open questions
 - Phase 5 close: run the rust-reviewer and spec-checker subagents on the Phase 5 diff (05509be..HEAD) in a session that has them. Self review found no blocker; known gaps: export and import block one request thread (no queue or progress), `/media/` non-range requests read the whole proxy, packed transcript cap trims lines for sources much longer than 10 min.
@@ -47,6 +47,21 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 8 (assets at scale): wave 2 ingestion (RenderComp Free, cliphou.se, RemotionUI, Remotion Bits, Kenney, Tabler, Simple Icons, IWLTBAP free LUTs) and Pixabay; frame-clock adapter with determinism tests BEFORE any wrappable card (GSAP, Motion, Origin UI, Launch UI); LYGIA and BBC-style restricted fixtures for license mode; site-license snapshots, custom-license and trademark notes.
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
+
+## Phase 6: interaction slice (2026-10-29, in progress)
+
+Spec: 05 (5.3, 5.4), 08 (8.4), 04 (scope gate), 06 (comments CLI, ck context). Proof: the user comments on a layer, the agent picks it up through `ck wait`, fixes it inside the scope gate, and resolves it with a before/after diff; hover-select and tuning chips work in the studio.
+
+Steps:
+- [x] 1. Comments: lock id `@comments` (comments never wait behind the project lock); `ck comments add|list|reply|resolve` + MCP twins; `list` is the send bundle (open and working comments plus affected layer summaries); resolve records `resolvedRev` and the touched layers between created and resolved revs.
+- [x] 2. Scope gate (spec 4): an agent reply can start work on a comment with a declared scope; while a comment is working, agent patches may touch only the anchored layer, the declared dependents and comments; anything else is E_SCOPE.
+- [x] 3. Global structural lock (spec 5.3): track set/order, mode and total duration changes touch `@structure`; while the agent holds it every human patch is refused.
+- [x] 4. `ck context` + MCP: the studio reports selection, hovered element, playhead and loop range; the answer adds open comments, about 300 tokens.
+- [ ] 5. Studio comments panel and pins (moment, range, layer, element), Send to agent; hover-select on the preview (highlight with label, click selects, Ask agent anchors a comment to the path); Playwright.
+- [ ] 6. Brief panel tuning chips (punchier, shorter, calmer, more premium) and diff re-planning: `brief diff` lists the layers whose briefDeps the change hits; impact preview in the studio; Playwright.
+- [ ] 7. Proof run, self review, evidence.
+
+Crates: ck-core (comments lock id, scope gate, structure lock, model field `scope`), ck-server (sessions, routes, context), ck-mcp, ck-cli, studio.
 
 ## Phase 5: edit slice (2026-10-29, done; 4b transcription provider and Silero VAD carried)
 

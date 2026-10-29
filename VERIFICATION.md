@@ -246,6 +246,14 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: studio transcript panel: click a word to seek, Delete/Backspace cuts it from the footage (human revision through `POST /api/cut/words` with the whole deleted set), same key restores at the clip edge; read-only while the agent holds the video track, and the server refuses (track lock now part of every footage rebuild) | PASS | `studio/e2e/phase5.spec.ts` (2 tests, `just e2e` 8 of 8 passed); `studio/src/transcript.test.ts` (deleted words from segment midpoints, toggle, source-to-timeline time); `ck-server` `tests::edit::studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock` (E_LOCK_HELD) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 254 of 254 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean; `just e2e` 8 of 8 |
 
+## Phase 6: interaction slice (2026-10-29, in progress)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Steps 1 to 3: comments on their own lock id `@comments` (the user comments while the agent holds `@project`); `ck comments add|list|reply|resolve` + MCP twins; list is the send bundle with anchored and scoped layers; an agent reply starts work (working) with a declared scope; resolve records `resolvedRev` and the layers changed since; scope gate refuses agent patches outside a working comment's layer and scope with E_SCOPE; `@structure` for track reorder/removal and mode changes freezes every human patch while the agent holds it | PASS | `ck-core` `document::tests::comments_have_their_own_lock_id_so_the_user_can_comment_while_the_agent_works`, `structural_changes_take_the_global_lock_and_freeze_human_edits`, `the_scope_gate_keeps_the_agent_inside_a_working_comment`; `ck-server` `tests::comments::*` (lifecycle, E_SCOPE on `@project`, changed = ["title"], bundle filtering, unknown ids); `mcp_parity::comment_tools_answer_like_their_cli_twins` |
+| Step 4: `ck context` + MCP twin: studio-reported selection, hovered element and path, playhead, loop range, selected layer name, open comments cut to 80 chars, under 1.2 KB | PASS | `ck-server` `tests::comments::context_reports_what_the_studio_points_at_plus_open_comments`; parity in `comment_tools_answer_like_their_cli_twins` |
+| Steps 1 to 4 run | PASS | 2026-10-29 `just check`: 273 of 273 nextest (1 skipped), hooks 41 of 41, studio clean |
+
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 
 | Item | Status | Evidence |

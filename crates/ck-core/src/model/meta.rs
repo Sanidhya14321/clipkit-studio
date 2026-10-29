@@ -141,6 +141,9 @@ pub struct Comment {
     pub resolved_rev: Option<u64>,
     #[serde(default)]
     pub replies: Vec<Reply>,
+    /// Layers the agent declared it will change besides the anchored one (scope gate).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub scope: Vec<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema, TS)]

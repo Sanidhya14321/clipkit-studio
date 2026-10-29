@@ -339,6 +339,55 @@ fn import_answers_like_its_cli_twin() {
 }
 
 #[test]
+fn comment_tools_answer_like_their_cli_twins() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _studio = Studio::start(d);
+    let mut mcp = Mcp::start(d);
+
+    let cli: Value = serde_json::from_str(&ok_line(
+        d,
+        &["comments", "add", "Is this the right logo?", "--at", "2.5"],
+        caps::COMMENT_WRITE,
+    ))
+    .unwrap();
+    assert_eq!((&cli["id"], &cli["status"]), (&json!("c1"), &json!("open")));
+    let tool: Value = serde_json::from_str(&mcp.ok(
+        "comments_add",
+        json!({ "text": "Check the pacing", "anchor": { "tStart": 1.0, "tEnd": 3.0 } }),
+        caps::COMMENT_WRITE,
+    ))
+    .unwrap();
+    assert_eq!(tool["id"], "c2");
+
+    let listed = ok_line(d, &["comments", "list"], caps::COMMENTS);
+    assert_eq!(mcp.ok("comments_list", json!({}), caps::COMMENTS), listed);
+
+    let replied: Value = serde_json::from_str(&mcp.ok(
+        "comments_reply",
+        json!({ "id": "c1", "text": "Looking", "scope": [] }),
+        caps::COMMENT_WRITE,
+    ))
+    .unwrap();
+    assert_eq!(replied["status"], "working");
+    let resolved: Value = serde_json::from_str(&ok_line(
+        d,
+        &["comments", "resolve", "c1", "--text", "Kept it"],
+        caps::COMMENT_WRITE,
+    ))
+    .unwrap();
+    assert_eq!(resolved["status"], "resolved");
+
+    let context = ok_line(d, &["context"], caps::CONTEXT);
+    assert_eq!(mcp.ok("context", json!({}), caps::CONTEXT), context);
+    assert!(context.contains("\"c2\""), "{context}");
+
+    let refused = mcp.err("comments_resolve", json!({ "id": "c9" }));
+    assert_eq!(code(&refused), "E_NOT_FOUND");
+    assert_eq!(refused, err_line(d, &["comments", "resolve", "c9"]));
+}
+
+#[test]
 fn tools_list_names_every_cli_twin_with_its_schema() {
     let dir = tempfile::tempdir().unwrap();
     let mut mcp = Mcp::start(dir.path());

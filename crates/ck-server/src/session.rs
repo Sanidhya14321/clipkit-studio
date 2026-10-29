@@ -24,6 +24,8 @@ use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
 pub mod brief;
+pub mod comments;
+pub mod context;
 pub mod edit;
 pub mod export;
 pub mod handoff;
@@ -92,6 +94,8 @@ pub struct Session {
     degraded: AtomicBool,
     activity: Arc<Activity>,
     transcriber: Arc<dyn Transcriber>,
+    /// What the studio last reported pointing at (UI state, never stored).
+    studio_context: Mutex<context::StudioContext>,
 }
 
 impl Session {
@@ -108,6 +112,7 @@ impl Session {
             degraded: AtomicBool::new(false),
             activity: Arc::default(),
             transcriber: Arc::new(FishStt::from_env()),
+            studio_context: Mutex::default(),
         })
     }
 

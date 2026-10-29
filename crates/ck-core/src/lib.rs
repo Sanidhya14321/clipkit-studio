@@ -10,6 +10,7 @@ pub mod log;
 pub mod migrate;
 pub mod model;
 pub mod patch;
+pub mod scope;
 pub mod storage;
 pub mod timeline;
 

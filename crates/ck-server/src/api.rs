@@ -16,6 +16,10 @@ use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use crate::session::comments::{
+    CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
+};
+use crate::session::context::StudioContext;
 use crate::session::edit::{CutApplyRequest, CutWordsRequest, SourceRequest};
 use crate::session::export::ExportRequest;
 use crate::session::handoff::{HandoffRequest, WaitRequest};
@@ -59,6 +63,11 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/cut/suggest", get(cut_suggest))
         .route("/api/cut/apply", post(cut_apply))
         .route("/api/export", post(export))
+        .route("/api/comments", get(comments_list))
+        .route("/api/context", get(context).post(set_context))
+        .route("/api/comments/add", post(comments_add))
+        .route("/api/comments/reply", post(comments_reply))
+        .route("/api/comments/resolve", post(comments_resolve))
         // Studio only: the full word list and delete-to-cut as a human edit.
         .route("/api/transcript/words", get(transcript_words))
         .route("/api/cut/words", post(cut_words))
@@ -226,6 +235,51 @@ async fn export(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.export(&req)).await
+}
+
+async fn comments_list(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<CommentListRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    blocking(s, move |s| s.comments_list(&req)).await
+}
+
+async fn comments_add(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<CommentAddRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.comments_add(&req)).await
+}
+
+async fn comments_reply(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<CommentReplyRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.comments_reply(&req)).await
+}
+
+async fn comments_resolve(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<CommentResolveRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.comments_resolve(&req)).await
+}
+
+async fn context(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.context()).await
+}
+
+/// Studio only: the pointer state `ck context` reports.
+async fn set_context(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<StudioContext>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.set_context(req)).await
 }
 
 async fn look_apply(

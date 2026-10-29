@@ -95,6 +95,14 @@ pub fn check_patch(
             }
         }
         Author::Human | Author::Voice => {
+            // During a structural change the whole editor is read-only (spec 5.3).
+            if holder_of(locks, crate::patch::STRUCTURE_LAYER, now_ms) == Some(Holder::Agent) {
+                return Err(CkError::new(
+                    ErrorCode::LockHeld,
+                    "the agent is making a structural change; the editor is read-only",
+                )
+                .with_layers(touched.to_vec()));
+            }
             let held: Vec<String> = touched
                 .iter()
                 .filter(|id| holder_of(locks, id, now_ms) == Some(Holder::Agent))

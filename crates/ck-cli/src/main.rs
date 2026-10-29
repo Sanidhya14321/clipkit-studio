@@ -9,12 +9,16 @@ mod studio;
 use std::io::{Read, Write};
 use std::process::ExitCode;
 
+use ck_core::model::Anchor;
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::api::BODY_LIMIT;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
+use ck_server::session::comments::{
+    CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
+};
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
 use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
@@ -25,8 +29,8 @@ use clap::Parser;
 use serde::Serialize;
 
 use args::{
-    BriefCommand, Cli, Command, CutCommand, LayoutCommand, LookCommand, PresetArg, ProjectCommand,
-    RecipeCommand, SoundCommand, TasteCommand, TranscriptCommand,
+    BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand, LookCommand, PresetArg,
+    ProjectCommand, RecipeCommand, SoundCommand, TasteCommand, TranscriptCommand,
 };
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
@@ -169,6 +173,42 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::Cut(CutCommand::Apply { source, ids }) => {
             print(&ops()?.cut_apply(&CutApplyRequest { source, ids })?)
+        }
+        Command::Context => print(&ops()?.context()?),
+        Command::Comments(CommentsCommand::List { all }) => {
+            print(&ops()?.comments_list(&CommentListRequest { all })?)
+        }
+        Command::Comments(CommentsCommand::Add {
+            text,
+            layer,
+            at,
+            to,
+            path,
+        }) => print(&ops()?.comments_add(&CommentAddRequest {
+            text,
+            anchor: Anchor {
+                t_start: at,
+                t_end: to,
+                layer_id: layer,
+                prop_path: path,
+                point: None,
+            },
+            author: None,
+        })?),
+        Command::Comments(CommentsCommand::Reply { id, text, scope }) => {
+            print(&ops()?.comments_reply(&CommentReplyRequest {
+                id,
+                text,
+                scope,
+                author: None,
+            })?)
+        }
+        Command::Comments(CommentsCommand::Resolve { id, text }) => {
+            print(&ops()?.comments_resolve(&CommentResolveRequest {
+                id,
+                text,
+                author: None,
+            })?)
         }
         Command::Export { preset, out } => {
             let preset = match preset {

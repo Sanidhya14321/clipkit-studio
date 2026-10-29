@@ -924,6 +924,232 @@ expression: specs()
     }
   },
   {
+    "name": "context",
+    "command": "ck context",
+    "description": "What the user points at in the studio: selected layer, hovered element, playhead, loop range and open comments. Call it first when the user says this, here or that.",
+    "cap": 1536,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  {
+    "name": "comments_list",
+    "command": "ck comments list",
+    "description": "The send bundle: open and working comments (all with all=true) with anchors, declared scope and last reply, plus the anchored layers in short.",
+    "cap": 8192,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "all": {
+          "default": false,
+          "description": "Include resolved comments.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "comments_add",
+    "command": "ck comments add",
+    "description": "Add a comment anchored to a moment (tStart), range (tStart, tEnd), layer (layerId) or element (layerId, propPath); use it to flag an uncertainty for the user.",
+    "cap": 2048,
+    "inputSchema": {
+      "$defs": {
+        "Anchor": {
+          "description": "Where a comment points: a time range, a layer, a property and/or a point on the frame.",
+          "properties": {
+            "layerId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "point": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Point"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "propPath": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tEnd": {
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "tStart": {
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Author": {
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ],
+          "type": "string"
+        },
+        "Point": {
+          "properties": {
+            "x": {
+              "format": "double",
+              "type": "number"
+            },
+            "y": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ],
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "anchor": {
+          "$ref": "#/$defs/Anchor",
+          "default": {}
+        },
+        "author": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Author"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Who writes it: the agent (uncertainties) or the human (the studio). Default agent."
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "comments_reply",
+    "command": "ck comments reply",
+    "description": "Reply to a comment. An agent reply on an open comment starts work on it; scope lists the layers you will change besides the anchored one (others are refused with E_SCOPE until you resolve).",
+    "cap": 2048,
+    "inputSchema": {
+      "$defs": {
+        "Author": {
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Author"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "scope": {
+          "description": "Layers the agent will change besides the anchored one (replaces the declared scope).",
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "comments_resolve",
+    "command": "ck comments resolve",
+    "description": "Resolve a comment, with an optional closing reply; returns the layers changed since it was made.",
+    "cap": 2048,
+    "inputSchema": {
+      "$defs": {
+        "Author": {
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Author"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "description": "Optional closing reply.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "wait",
     "command": "ck wait",
     "description": "Block until the user changes something after `since` (comments, brief edits, confirmations, layer edits), at most 25 s. Returns events oldest first; empty on timeout. Call again with since = the returned rev.",

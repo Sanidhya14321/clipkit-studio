@@ -14,6 +14,11 @@ use crate::session::brief::{
     BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
     BriefWaitRequest, BriefWaitResult,
 };
+use crate::session::comments::{
+    CommentAddRequest, CommentBundle, CommentListRequest, CommentReplyRequest,
+    CommentResolveRequest, CommentResult, CommentView,
+};
+use crate::session::context::{ContextView, OpenComment};
 use crate::session::edit::{
     CutApplyRequest, CutApplyResult, CutSuggestResult, SourceRequest, TranscribeResult,
     TranscriptView,
@@ -55,6 +60,11 @@ pub mod caps {
     pub const CUT_SUGGEST: usize = 8 * 1024;
     pub const CUT_APPLY: usize = 2 * 1024;
     pub const EXPORT: usize = 1024;
+    /// The send bundle: open comments and the layers they point at.
+    pub const COMMENTS: usize = 8 * 1024;
+    pub const COMMENT_WRITE: usize = 2 * 1024;
+    /// About 300 tokens (spec 6.4).
+    pub const CONTEXT: usize = 1536;
 }
 
 pub struct Ops {
@@ -228,6 +238,42 @@ impl Ops {
         )
     }
 
+    /// `comments list`: the send bundle (open and working comments, their layers in short).
+    /// Comments past the cap are counted in `omitted`.
+    pub fn comments_list(&self, req: &CommentListRequest) -> CkResult<CommentBundle> {
+        let all = if req.all { "true" } else { "false" };
+        let reply = self.client.get("/api/comments", &[("all", all)])?;
+        trimmed("comments list", caps::COMMENTS, reply)
+    }
+
+    /// `comments add`: a comment anchored to a moment, range, layer or element.
+    pub fn comments_add(&self, req: &CommentAddRequest) -> CkResult<CommentResult> {
+        let reply = self.client.post("/api/comments/add", req)?;
+        trimmed("comments add", caps::COMMENT_WRITE, reply)
+    }
+
+    /// `comments reply`: an agent reply starts work on the comment, optionally with a scope.
+    pub fn comments_reply(&self, req: &CommentReplyRequest) -> CkResult<CommentResult> {
+        let reply = self.client.post("/api/comments/reply", req)?;
+        trimmed("comments reply", caps::COMMENT_WRITE, reply)
+    }
+
+    /// `comments resolve`: closes the comment; lists the layers changed since it was made.
+    pub fn comments_resolve(&self, req: &CommentResolveRequest) -> CkResult<CommentResult> {
+        let reply = self.client.post("/api/comments/resolve", req)?;
+        trimmed("comments resolve", caps::COMMENT_WRITE, reply)
+    }
+
+    /// `context`: the studio selection, hovered element, playhead, loop range and open
+    /// comments. Comments past the cap are counted in `omitted`.
+    pub fn context(&self) -> CkResult<ContextView> {
+        trimmed(
+            "context",
+            caps::CONTEXT,
+            self.client.get("/api/context", &[])?,
+        )
+    }
+
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.
     pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
         capped(
@@ -290,6 +336,27 @@ impl Trim for CutApplyResult {
     type Entry = String;
     fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
         (&mut self.segments, &mut self.omitted)
+    }
+}
+
+impl Trim for CommentBundle {
+    type Entry = CommentView;
+    fn parts(&mut self) -> (&mut Vec<CommentView>, &mut usize) {
+        (&mut self.comments, &mut self.omitted)
+    }
+}
+
+impl Trim for CommentResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.changed, &mut self.omitted)
+    }
+}
+
+impl Trim for ContextView {
+    type Entry = OpenComment;
+    fn parts(&mut self) -> (&mut Vec<OpenComment>, &mut usize) {
+        (&mut self.open_comments, &mut self.omitted)
     }
 }
 

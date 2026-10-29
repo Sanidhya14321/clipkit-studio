@@ -61,6 +61,9 @@ pub enum ErrorCode {
     /// Transcription or speech failed, or the voice provider is not configured.
     #[serde(rename = "E_VOICE")]
     Voice,
+    /// While the agent works on a comment, a patch touched layers outside its scope.
+    #[serde(rename = "E_SCOPE")]
+    Scope,
 }
 
 impl ErrorCode {
@@ -84,6 +87,7 @@ impl ErrorCode {
         ErrorCode::Asset,
         ErrorCode::Media,
         ErrorCode::Voice,
+        ErrorCode::Scope,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -106,6 +110,7 @@ impl ErrorCode {
             ErrorCode::Asset => "E_ASSET",
             ErrorCode::Media => "E_MEDIA",
             ErrorCode::Voice => "E_VOICE",
+            ErrorCode::Scope => "E_SCOPE",
         }
     }
 
@@ -136,6 +141,9 @@ impl ErrorCode {
                 "Check the media file and that ffmpeg and ffprobe are on PATH (ck doctor)."
             }
             ErrorCode::Voice => "Set FISH_AUDIO_API_KEY or install a local model (ck doctor).",
+            ErrorCode::Scope => {
+                "Change only the comment's layer and declared scope, or reply with a wider scope."
+            }
         }
     }
 }

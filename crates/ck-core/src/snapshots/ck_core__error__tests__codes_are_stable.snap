@@ -74,5 +74,9 @@ expression: table
   [
     "E_VOICE",
     "Set FISH_AUDIO_API_KEY or install a local model (ck doctor)."
+  ],
+  [
+    "E_SCOPE",
+    "Change only the comment's layer and declared scope, or reply with a wider scope."
   ]
 ]

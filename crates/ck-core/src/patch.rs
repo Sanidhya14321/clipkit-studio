@@ -192,11 +192,19 @@ pub(crate) fn content(full: &Value) -> Value {
 }
 
 /// Lock id that stands for project-level content (settings, brief, sources, voice slots,
-/// comments, tokens, plan). Layer and track ids may not start with `@`.
+/// tokens, plan). Layer and track ids may not start with `@`.
 pub const PROJECT_LAYER: &str = "@project";
+/// Lock id for comments, kept apart from `@project` so the user can comment while the agent
+/// works (spec 5.3: comments queue while the agent works).
+pub const COMMENTS_LAYER: &str = "@comments";
+/// Lock id for structural changes: existing tracks reordered or removed, or the mode changed
+/// (spec 5.3). While the agent holds it the whole editor is read-only.
+pub const STRUCTURE_LAYER: &str = "@structure";
 
 /// What a patch touched, as lock ids: items added, removed, changed or moved to another track;
-/// tracks whose own fields or item order changed; and `PROJECT_LAYER` when any other content changed.
+/// tracks whose own fields or item order changed; `COMMENTS_LAYER` for comments;
+/// `STRUCTURE_LAYER` for track reorder or removal and mode changes; and `PROJECT_LAYER` when
+/// any other content changed.
 /// Sorted. Every content change produces at least one id, so the lock gate always applies.
 fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
     let items = |p: &Project| -> CkResult<BTreeMap<String, Value>> {
@@ -223,6 +231,7 @@ fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
         let mut v = content(&json(p)?);
         if let Some(o) = v.as_object_mut() {
             o.remove("tracks");
+            o.remove("comments");
         }
         Ok(v)
     };
@@ -260,6 +269,25 @@ fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
     }
     if rest(a)? != rest(b)? {
         touched.insert(PROJECT_LAYER.to_owned());
+    }
+    if json(&a.comments)? != json(&b.comments)? {
+        touched.insert(COMMENTS_LAYER.to_owned());
+    }
+    // Existing tracks reordered or removed, or the mode changed. Appending tracks and
+    // lengthening the timeline are covered by item and track locks (DECISIONS.md, Phase 6).
+    let kept = |x: &Project, y: &Project| -> Vec<String> {
+        x.tracks
+            .iter()
+            .filter(|t| y.tracks.iter().any(|u| u.id == t.id))
+            .map(|t| t.id.clone())
+            .collect()
+    };
+    let removed = a
+        .tracks
+        .iter()
+        .any(|t| !b.tracks.iter().any(|u| u.id == t.id));
+    if removed || kept(a, b) != kept(b, a) || a.mode != b.mode {
+        touched.insert(STRUCTURE_LAYER.to_owned());
     }
     Ok(touched.into_iter().collect())
 }

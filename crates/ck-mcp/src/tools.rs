@@ -13,6 +13,10 @@ use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use ck_server::session::comments::{
+    CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
+};
+use ck_server::session::context::ContextRequest;
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
 use ck_server::session::export::ExportRequest;
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
@@ -252,6 +256,42 @@ pub fn specs() -> Vec<ToolSpec> {
              tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",
             caps::EXPORT,
         ),
+        spec::<ContextRequest>(
+            "context",
+            "ck context",
+            "What the user points at in the studio: selected layer, hovered element, playhead, \
+             loop range and open comments. Call it first when the user says this, here or that.",
+            caps::CONTEXT,
+        ),
+        spec::<CommentListRequest>(
+            "comments_list",
+            "ck comments list",
+            "The send bundle: open and working comments (all with all=true) with anchors, \
+             declared scope and last reply, plus the anchored layers in short.",
+            caps::COMMENTS,
+        ),
+        spec::<CommentAddRequest>(
+            "comments_add",
+            "ck comments add",
+            "Add a comment anchored to a moment (tStart), range (tStart, tEnd), layer (layerId) \
+             or element (layerId, propPath); use it to flag an uncertainty for the user.",
+            caps::COMMENT_WRITE,
+        ),
+        spec::<CommentReplyRequest>(
+            "comments_reply",
+            "ck comments reply",
+            "Reply to a comment. An agent reply on an open comment starts work on it; scope \
+             lists the layers you will change besides the anchored one (others are refused \
+             with E_SCOPE until you resolve).",
+            caps::COMMENT_WRITE,
+        ),
+        spec::<CommentResolveRequest>(
+            "comments_resolve",
+            "ck comments resolve",
+            "Resolve a comment, with an optional closing reply; returns the layers changed \
+             since it was made.",
+            caps::COMMENT_WRITE,
+        ),
         spec::<WaitRequest>(
             "wait",
             "ck wait",
@@ -340,6 +380,14 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
+        "comments_list" => json(&ops.comments_list(&parse(args)?)?),
+        "context" => {
+            let _: ContextRequest = parse(args)?;
+            json(&ops.context()?)
+        }
+        "comments_add" => json(&ops.comments_add(&parse(args)?)?),
+        "comments_reply" => json(&ops.comments_reply(&parse(args)?)?),
+        "comments_resolve" => json(&ops.comments_resolve(&parse(args)?)?),
         "transcribe" => json(&ops.transcribe(&parse(args)?)?),
         "transcript_get" => json(&ops.transcript_get(&parse(args)?)?),
         "cut_suggest" => json(&ops.cut_suggest(&parse(args)?)?),

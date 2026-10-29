@@ -60,6 +60,11 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("cut_suggest", caps::CUT_SUGGEST),
         ("cut_apply", caps::CUT_APPLY),
         ("export", caps::EXPORT),
+        ("context", caps::CONTEXT),
+        ("comments_list", caps::COMMENTS),
+        ("comments_add", caps::COMMENT_WRITE),
+        ("comments_reply", caps::COMMENT_WRITE),
+        ("comments_resolve", caps::COMMENT_WRITE),
         ("wait", caps::WAIT),
     ];
     let table: Vec<(&str, usize)> = specs().iter().map(|s| (s.name, s.cap)).collect();

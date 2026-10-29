@@ -457,3 +457,11 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - The fast path takes footage-only projects at speed 1; any other layer is refused with its id (hint: Phase 9 render worker). Gaps become black and silence; joins get 30 ms audio fades.
 - Export, import and transcribe run inside the request on a blocking thread; the client uses a 60 min timeout for them (30 s for the rest). The spec's background queue with progress is not built yet.
 - Output must be a relative .mp4 inside the project folder (default `exports/<project>-<preset>.mp4`).
+
+## Phase 6 steps 1 to 4: comments, scope gate, structure lock, context (2026-10-29)
+- Comments get their own lock id `@comments` (was part of `@project`) so the user can comment while the agent holds the project lock; the agent auto-takes it for its own comment writes.
+- Starting work: spec 6.2 lists `comments list, reply, resolve`; an agent reply on an open comment moves it to working, and `scope` on the reply declares the dependents (the "declared dependents" of spec 4). `comments add` is added for spec 8.4's agent comments for uncertainties; the studio uses the same route with author human.
+- Scope gate: while any comment is working, agent patches may touch only the anchored layers, the declared scopes and `@comments`, else E_SCOPE (HTTP 403). Humans are never gated. A comment anchored only to a moment has an empty scope until the agent declares one.
+- `@structure` (spec 5.3 global lock) covers existing tracks reordered or removed and mode changes. Appending tracks and lengthening the timeline are not structural: they happen on every recipe apply and would freeze the editor constantly; item and track locks cover them.
+- Resolve's before/after is the list of content layers touched by revisions after the comment's `createdRev`; a full visual diff waits for history and branches (Phase 9).
+- `ck context` reads UI state the studio posts to `/api/context` (memory only, not a revision); comment text is cut to 80 characters; cap 1.5 KB.

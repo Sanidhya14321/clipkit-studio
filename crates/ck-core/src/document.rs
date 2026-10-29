@@ -136,6 +136,9 @@ impl Document {
     ) -> CkResult<&Revision> {
         let applied = patch::apply(&self.project, req)?;
         locks::check_patch(&self.project.locks, req.author, &applied.touched, now_ms)?;
+        if req.author == Author::Agent {
+            crate::scope::check(&self.project, &applied.touched)?;
+        }
         let mut project = applied.project;
         // Locks are engine state, not content: carry them over and drop expired ones.
         project.locks = std::mem::take(&mut self.project.locks);

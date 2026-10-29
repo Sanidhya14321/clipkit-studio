@@ -1,6 +1,5 @@
 ---
 source: crates/ck-core/src/model/tests.rs
-assertion_line: 99
 expression: "schemars::schema_for!(Project)"
 ---
 {
@@ -364,6 +363,13 @@ expression: "schemars::schema_for!(Project)"
           ],
           "format": "uint64",
           "minimum": 0
+        },
+        "scope": {
+          "description": "Layers the agent declared it will change besides the anchored one (scope gate).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "status": {
           "$ref": "#/$defs/CommentStatus",

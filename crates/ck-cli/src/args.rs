@@ -55,7 +55,7 @@ pub enum Command {
         #[command(flatten)]
         holder: HolderArg,
     },
-    /// Release layers (all of the holder's locks when no ids are given).
+    /// Release layers (all of the holder's locks by default).
     Unlock {
         layer_ids: Vec<String>,
         #[command(flatten)]
@@ -66,7 +66,7 @@ pub enum Command {
         #[command(flatten)]
         holder: HolderArg,
     },
-    /// Brief Studio: propose inferred values, wait for the user, read the brief or its diff.
+    /// Brief Studio: propose, wait, read the brief or its diff.
     #[command(subcommand)]
     Brief(BriefCommand),
     /// Search and read the taste files (direction with concrete numbers).
@@ -81,10 +81,9 @@ pub enum Command {
     /// Check text layout: safe areas, collisions, grid, sizes, cut text.
     #[command(subcommand)]
     Layout(LayoutCommand),
-    /// Run the quality gates: schema, gaps, overlaps, duration, layout, contrast, fonts,
-    /// motion, reuse, provenance, placeholders.
+    /// Run the quality gates (schema, timing, layout, contrast, motion, provenance).
     Verify,
-    /// Plan sound design: whooshes, hits, risers, room tone and ducking.
+    /// Plan sound cues: whooshes, hits, risers, room tone, ducking.
     #[command(subcommand)]
     Sound(SoundCommand),
     /// Import a media file as a project source.
@@ -97,6 +96,11 @@ pub enum Command {
     /// Suggest and apply cuts.
     #[command(subcommand)]
     Cut(CutCommand),
+    /// What the user points at in the studio, plus open comments.
+    Context,
+    /// List, add, reply to and resolve comments.
+    #[command(subcommand)]
+    Comments(CommentsCommand),
     /// Export a footage-only project to MP4.
     Export {
         /// source, youtube, tiktok, reels or shorts.
@@ -106,13 +110,13 @@ pub enum Command {
         #[arg(long)]
         out: Option<String>,
     },
-    /// Hand the project to the user: release every agent lock and set the agent idle.
+    /// Hand the project to the user: release agent locks, go idle.
     Handoff {
         /// What the studio shows for the agent while idle.
         #[arg(long)]
         label: Option<String>,
     },
-    /// Block until the user changes something after a rev; prints the events (empty on timeout).
+    /// Block until the user changes something after a rev; prints the events.
     Wait {
         /// Report revisions after this rev (from handoff or the last wait); default the current rev.
         #[arg(long)]
@@ -124,7 +128,7 @@ pub enum Command {
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks.
     #[command(subcommand)]
     Hook(HookCommand),
-    /// Set ClipKit up in Claude Code, Codex, Cursor or any MCP client (spec 6.3).
+    /// Set ClipKit up in Claude Code, Codex, Cursor or any MCP client.
     Init(InstallArgs),
     /// Remove everything ck init added.
     Uninstall(InstallArgs),
@@ -294,4 +298,44 @@ pub enum PresetArg {
     Tiktok,
     Reels,
     Shorts,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum CommentsCommand {
+    /// The send bundle: open and working comments with their layers.
+    List {
+        /// Include resolved comments.
+        #[arg(long)]
+        all: bool,
+    },
+    /// Add a comment anchored to a moment, range, layer or element.
+    Add {
+        text: String,
+        #[arg(long)]
+        layer: Option<String>,
+        /// Moment, or range start, in seconds.
+        #[arg(long)]
+        at: Option<f64>,
+        /// Range end in seconds.
+        #[arg(long)]
+        to: Option<f64>,
+        /// Element path inside the layer (data-ck-path).
+        #[arg(long)]
+        path: Option<String>,
+    },
+    /// Reply; an agent reply on an open comment starts work on it.
+    Reply {
+        id: String,
+        text: String,
+        /// Layers you will change besides the anchored one, comma separated.
+        #[arg(long, value_delimiter = ',')]
+        scope: Option<Vec<String>>,
+    },
+    /// Resolve a comment; prints the layers changed since it was made.
+    Resolve {
+        id: String,
+        /// Closing reply.
+        #[arg(long)]
+        text: Option<String>,
+    },
 }

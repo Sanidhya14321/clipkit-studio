@@ -235,3 +235,101 @@ fn brief_questions_are_capped_and_need_affects() {
     p.brief.questions = vec![q("a", &[])];
     assert_eq!(p.validate().unwrap_err().code, ErrorCode::Schema);
 }
+
+fn comment(id: &str, layer: Option<&str>, status: &str, scope: &[&str]) -> Value {
+    json!({ "id": id, "author": "human", "anchor": { "layerId": layer }, "text": "fix",
+            "status": status, "createdRev": 0, "scope": scope })
+}
+
+#[test]
+fn comments_have_their_own_lock_id_so_the_user_can_comment_while_the_agent_works() {
+    let mut doc = Document::new(sample());
+    doc.acquire(Holder::Agent, &[crate::patch::PROJECT_LAYER.to_owned()], 0)
+        .unwrap();
+    let add = edit(
+        &doc,
+        Author::Human,
+        json!([{ "op": "add", "path": "/comments/-", "value": comment("c1", Some("b"), "open", &[]) }]),
+    );
+    let rev = doc.patch(&add, 1).unwrap();
+    assert_eq!(rev.touched, vec![crate::patch::COMMENTS_LAYER.to_owned()]);
+}
+
+#[test]
+fn structural_changes_take_the_global_lock_and_freeze_human_edits() {
+    let mut doc = Document::new(sample());
+    let swap = json!([{ "op": "move", "from": "/tracks/1", "path": "/tracks/0" }]);
+    let err = doc
+        .patch(&edit(&doc, Author::Agent, swap.clone()), 0)
+        .unwrap_err();
+    assert!(
+        err.layer_ids
+            .contains(&crate::patch::STRUCTURE_LAYER.to_owned())
+    );
+
+    let mode = json!([{ "op": "replace", "path": "/mode", "value": "generate" }]);
+    let touched = crate::patch::apply(doc.project(), &edit(&doc, Author::Agent, mode))
+        .unwrap()
+        .touched;
+    assert!(touched.contains(&crate::patch::STRUCTURE_LAYER.to_owned()));
+
+    // Appending a track is not structural.
+    let append = json!([{ "op": "add", "path": "/tracks/-",
+                          "value": { "id": "t3", "kind": "audio", "items": [] } }]);
+    let touched = crate::patch::apply(doc.project(), &edit(&doc, Author::Agent, append))
+        .unwrap()
+        .touched;
+    assert!(!touched.contains(&crate::patch::STRUCTURE_LAYER.to_owned()));
+
+    // While the agent holds the structure lock, even an unrelated human edit is refused.
+    doc.acquire(
+        Holder::Agent,
+        &[crate::patch::STRUCTURE_LAYER.to_owned()],
+        0,
+    )
+    .unwrap();
+    let rename = json!([{ "op": "replace", "path": "/tracks/1/items/0/name", "value": "x" }]);
+    let err = doc
+        .patch(&edit(&doc, Author::Human, rename), 1)
+        .unwrap_err();
+    assert_eq!(err.code, ErrorCode::LockHeld);
+}
+
+#[test]
+fn the_scope_gate_keeps_the_agent_inside_a_working_comment() {
+    let mut p = sample();
+    p.comments =
+        serde_json::from_value(json!([comment("c1", Some("b"), "working", &["c"])])).unwrap();
+    let mut doc = Document::new(p);
+    let all: Vec<String> = ["a", "b", "c", crate::patch::COMMENTS_LAYER]
+        .iter()
+        .map(|s| (*s).to_owned())
+        .collect();
+    doc.acquire(Holder::Agent, &all, 0).unwrap();
+
+    // The anchored layer and the declared dependent are fine.
+    let inside = json!([
+        { "op": "replace", "path": "/tracks/1/items/0/name", "value": "b2" },
+        { "op": "replace", "path": "/tracks/1/items/1/name", "value": "c2" }
+    ]);
+    doc.patch(&edit(&doc, Author::Agent, inside), 1).unwrap();
+
+    // Layer `a` is outside the scope.
+    let outside = json!([{ "op": "replace", "path": "/tracks/0/items/0/name", "value": "a2" }]);
+    let err = doc
+        .patch(&edit(&doc, Author::Agent, outside.clone()), 2)
+        .unwrap_err();
+    assert_eq!(
+        (err.code, err.layer_ids),
+        (ErrorCode::Scope, vec!["a".to_owned()])
+    );
+
+    // Humans are not gated; once the comment resolves, the agent is not either.
+    doc.release(Holder::Agent, None);
+    doc.patch(&edit(&doc, Author::Human, outside), 3).unwrap();
+    let resolve = json!([{ "op": "replace", "path": "/comments/0/status", "value": "resolved" }]);
+    doc.acquire(Holder::Agent, &all, 4).unwrap();
+    doc.patch(&edit(&doc, Author::Agent, resolve), 4).unwrap();
+    let later = json!([{ "op": "replace", "path": "/tracks/0/items/0/name", "value": "a3" }]);
+    doc.patch(&edit(&doc, Author::Agent, later), 5).unwrap();
+}
