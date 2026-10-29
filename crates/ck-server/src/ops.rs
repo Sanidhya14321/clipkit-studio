@@ -413,6 +413,13 @@ impl Trim for ck_assets::sources::SourcesList {
     }
 }
 
+impl Trim for ck_assets::vet::VetResult {
+    type Entry = ck_assets::hub::Finding;
+    fn parts(&mut self) -> (&mut Vec<ck_assets::hub::Finding>, &mut usize) {
+        (&mut self.findings, &mut self.omitted)
+    }
+}
+
 impl Trim for VoiceScriptResult {
     type Entry = SlotSummary;
     fn parts(&mut self) -> (&mut Vec<SlotSummary>, &mut usize) {

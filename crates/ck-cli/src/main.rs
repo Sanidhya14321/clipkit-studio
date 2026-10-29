@@ -42,6 +42,7 @@ use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
 use ck_assets::sources::{self, SourcesAddRequest, SourcesGapsRequest, SourcesListRequest};
+use ck_assets::vet::{self, VetRequest};
 
 /// JSON log lines to stderr when `CK_LOG` is set (for example `CK_LOG=debug`). Off by default so
 /// command output stays small; fields follow ck_core::log.
@@ -287,6 +288,18 @@ fn run(cli: Cli) -> CkResult<()> {
                         license,
                     },
                 )?),
+                SourcesCommand::Vet { id, from } => {
+                    let from = from
+                        .map(|f| std::path::absolute(&f).map(|p| p.to_string_lossy().into_owned()))
+                        .transpose()
+                        .map_err(|e| request_err(format!("--from: {e}")))?;
+                    let out = vet::vet(&hub, &VetRequest { id, from })?;
+                    print(&ck_server::ops::trimmed(
+                        "sources vet",
+                        vet::caps::VET,
+                        out,
+                    )?)
+                }
                 SourcesCommand::Gaps => {
                     print(&sources::sources_gaps(&hub, &SourcesGapsRequest {})?)
                 }

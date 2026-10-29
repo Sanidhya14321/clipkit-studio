@@ -4,5 +4,6 @@ import { useCurrentFrame } from "remotion";
 export const Sparkle = ({ size }: { size: number }) => {
   const frame = useCurrentFrame();
   const t = Date.now();
-  return <div style={{ width: size, opacity: Math.random() * frame + t * 0 }} />;
+  const extra = new Function("return 0")();
+  return <div style={{ width: size, opacity: Math.random() * frame + t * 0 + extra }} />;
 };

@@ -472,6 +472,22 @@ fn sources_tools_answer_like_their_cli_twins_without_a_studio() {
         ),
         gaps
     );
+    // Vetting a fixture pack from a local folder: CLI and MCP pin the same result.
+    let pack = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/sources/pack-mit");
+    let pack = pack.canonicalize().unwrap();
+    let cli = ok_line(
+        d,
+        &["sources", "vet", "pack-a", "--from", pack.to_str().unwrap()],
+        ck_assets::vet::caps::VET,
+    );
+    let tool = mcp.ok(
+        "sources_vet",
+        json!({ "id": "pack-a", "from": pack }),
+        ck_assets::vet::caps::VET,
+    );
+    assert_eq!(cli, tool);
+    assert!(cli.contains("\"vetted\""), "{cli}");
+
     let refused = mcp.err("sources_add", json!({ "id": "pack-a", "kind": "x" }));
     assert_eq!(code(&refused), "E_REQUEST");
     assert_eq!(

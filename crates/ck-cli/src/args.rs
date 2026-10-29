@@ -412,6 +412,13 @@ pub enum SourcesCommand {
         #[arg(long, default_value = "")]
         license: String,
     },
+    /// Vet a source without running its code; pins the result in sources.lock.
+    Vet {
+        id: String,
+        /// Vet a local folder instead of cloning the repo.
+        #[arg(long)]
+        from: Option<String>,
+    },
     /// What the catalog is missing.
     Gaps,
 }

@@ -9,6 +9,7 @@ use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
 use ck_assets::sources::{self, SourcesAddRequest, SourcesGapsRequest, SourcesListRequest};
+use ck_assets::vet::{self, VetRequest};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::idle::DEFAULT_IDLE_SECS;
@@ -188,6 +189,15 @@ pub fn specs() -> Vec<ToolSpec> {
             "Register a source (unverified, disabled, license unknown until vetted). Never \
              guess a repo: leave it out when unknown.",
             sources::caps::SOURCES_WRITE,
+        ),
+        spec::<VetRequest>(
+            "sources_vet",
+            "ck sources vet",
+            "Vet a source without running its code: shallow read-only fetch into quarantine \
+             (or `from` a local folder), license read from its text, malware-lure and \
+             dependency checks. Pass: vetted and enabled; blocker: rejected; unknown license: \
+             stays unverified. Pins the result in sources.lock.",
+            vet::caps::VET,
         ),
         spec::<SourcesGapsRequest>(
             "sources_gaps",
@@ -388,6 +398,7 @@ pub fn is_offline(name: &str) -> bool {
             | "sources_list"
             | "sources_add"
             | "sources_gaps"
+            | "sources_vet"
     )
 }
 
@@ -413,6 +424,14 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
         "sources_add" => {
             parse::<SourcesAddRequest>(args).and_then(|r| json(&sources::sources_add(&hub()?, &r)?))
         }
+        "sources_vet" => parse::<VetRequest>(args).and_then(|r| {
+            let out = vet::vet(&hub()?, &r)?;
+            json(&ck_server::ops::trimmed(
+                "sources vet",
+                vet::caps::VET,
+                out,
+            )?)
+        }),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)
             .and_then(|r| json(&sources::sources_gaps(&hub()?, &r)?)),
         _ => return None,

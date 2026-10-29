@@ -724,6 +724,31 @@ expression: specs()
     }
   },
   {
+    "name": "sources_vet",
+    "command": "ck sources vet",
+    "description": "Vet a source without running its code: shallow read-only fetch into quarantine (or `from` a local folder), license read from its text, malware-lure and dependency checks. Pass: vetted and enabled; blocker: rejected; unknown license: stays unverified. Pins the result in sources.lock.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "description": "Vet a local folder instead of cloning the repo (fixtures, manual downloads).",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "sources_gaps",
     "command": "ck sources gaps",
     "description": "What the catalog is missing: usable and unverified source counts, sources without a repo, asset kinds with no searchable card.",

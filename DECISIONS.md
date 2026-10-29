@@ -524,3 +524,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Status gains `vetted` and `rejected` beside `unverified`; searchable means vetted and enabled.
 - Sources tools are offline (no studio): the MCP server finds the hub from its project folder.
 - The CLI help cap rose from 2 KB to 3 KB (our own Phase 2 number, not a spec one); spec 6.2's command set does not fit 2 KB.
+
+## Phase 8 step 3: vetting (2026-10-30)
+- Fetch: `git clone --depth 1 --single-branch --no-tags` over https from GitHub only, with `core.hooksPath=/dev/null`, `protocol.file.allow=never`, LFS filters emptied and `GIT_LFS_SKIP_SMUDGE=1`, no submodules; `.git` is removed after reading the commit. A clone then passes through the same copy limits as a local folder (2 MB per file, 5000 files, 64 MB). Quarantined files are made read-only.
+- License classification matches distinctive phrases of each license text; restrictions (Commons Clause, CC BY-NC, non-commercial terms) take precedence. Custom terms get an empty SPDX id and a "custom terms" license line. Package-manifest license claims are never trusted.
+- Lures that block: executable magic or binary extensions, npm install-lifecycle scripts, dependencies from git, URLs or files, `curl|sh`-style instructions, archive downloads from non-GitHub hosts, `eval`/`new Function`/base64 decoding/`child_process` in code. Prompt-injection text and `Math.random`/`Date.now` are warnings (injection text is data; nondeterminism is graded at ingest).
+- Outcome: no blockers and a recognized license: vetted and enabled. Any blocker: rejected and disabled. No blockers but unknown license: stays unverified (reference-only), never searchable.

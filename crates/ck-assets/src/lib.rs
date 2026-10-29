@@ -8,10 +8,12 @@ pub mod color;
 pub mod hub;
 pub mod layout;
 pub mod library;
+pub mod license;
 pub mod look;
 pub mod recipe;
 pub mod sources;
 pub mod taste;
+pub mod vet;
 
 use std::path::Path;
 
