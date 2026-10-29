@@ -13,6 +13,7 @@ use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
@@ -198,6 +199,21 @@ pub fn specs() -> Vec<ToolSpec> {
              voice. Read-only; returns timed cues.",
             caps::SOUND_PLAN,
         ),
+        spec::<HandoffRequest>(
+            "handoff",
+            "ck handoff",
+            "Hand the project to the user: release every agent lock and set the agent idle. \
+             Then reply in five lines or fewer and loop on wait with since = the returned rev.",
+            caps::HANDOFF,
+        ),
+        spec::<WaitRequest>(
+            "wait",
+            "ck wait",
+            "Block until the user changes something after `since` (comments, brief edits, \
+             confirmations, layer edits), at most 25 s. Returns events oldest first; empty on \
+             timeout. Call again with since = the returned rev.",
+            caps::WAIT,
+        ),
     ]
 }
 
@@ -293,6 +309,8 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
             let StatusArgs {} = parse(args)?;
             json(&ops.sound_plan()?)
         }
+        "handoff" => json(&ops.handoff(&parse(args)?)?),
+        "wait" => json(&ops.wait(&parse(args)?)?),
         other => Err(request_err(format!("no tool named {other:?}"))),
     }
 }

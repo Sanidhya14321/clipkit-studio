@@ -15,6 +15,7 @@ use ck_server::api::BODY_LIMIT;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
+use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
@@ -149,6 +150,11 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Layout(LayoutCommand::Check) => print(&ops()?.layout_check()?),
         Command::Verify => print(&ops()?.verify()?),
         Command::Sound(SoundCommand::Plan) => print(&ops()?.sound_plan()?),
+        Command::Handoff { label } => print(&ops()?.handoff(&HandoffRequest { label })?),
+        Command::Wait { since, timeout } => print(&ops()?.wait(&WaitRequest {
+            since,
+            timeout_secs: timeout,
+        })?),
         Command::Init(args) => install::run(install::Mode::Init, &args, &cli.dir),
         Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args, &cli.dir),
         // Handled in main before run.

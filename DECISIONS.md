@@ -4,6 +4,11 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 9c: handoff and `ck wait` (spec 4.1 HANDOFF, 6.4, 9.4)
+- Spec 9.4 says "unlock, ck status idle". `/agent` is engine-owned (patches cannot write it), so one `ck handoff [--label]` command does both: it releases every agent lock and sets `agent = {idle, label, []}` with no revision (like locks, agent state is not content). Spec 12 Phase 4 names "handoff, ck wait"; spec 6.2 lists `wait` but not `handoff`, so `handoff` is a small addition.
+- `ck wait --since <rev> [--timeout]` reads history, not the bus: it returns every human or voice revision after `since`, so nothing is lost between calls; agent revisions never end a wait. Kind from patch paths: `/comments` → comment, `/brief/status` or `/brief/checkpoints` → checkpoint, other `/brief` → brief, else edit. Default `since` is the rev at call time.
+- Timeout default 20 s, at most 25 s (same as `brief wait`), chosen to stay under common MCP client tool-call timeouts; not yet verified per agent (Open questions). Spoken requests arrive as voice-authored revisions once Lane B exists (Phase 6); `ck ask` is separate.
+
 ### Step 9b: `ck sound plan` (spec 8.5)
 - Read-only plan of timed cues (whoosh, hit, riser, roomTone, duck) in `ck-server::session::sound`; it writes nothing. The agent places the cues it keeps in the audio pass. No sfx cards exist in the catalog (CC0 sound sets arrive with Phase 8 ingestion), so cues carry no asset id; never invent one.
 - Timing constants are choices: whoosh 0.4 s starting 0.15 s before the cut; hit at text start + 0.2 s times the look's `durationScale` (dropped if the layer ends first); riser 1 s ending at the hook start (clamped at 0, none for a hook at 0); room tone 0.25 s each side of a cut.

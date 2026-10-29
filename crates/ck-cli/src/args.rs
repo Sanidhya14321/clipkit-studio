@@ -88,6 +88,21 @@ pub enum Command {
     /// Plan sound design: whooshes, hits, risers, room tone and ducking.
     #[command(subcommand)]
     Sound(SoundCommand),
+    /// Hand the project to the user: release every agent lock and set the agent idle.
+    Handoff {
+        /// What the studio shows for the agent while idle.
+        #[arg(long)]
+        label: Option<String>,
+    },
+    /// Block until the user changes something after a rev; prints the events (empty on timeout).
+    Wait {
+        /// Report revisions after this rev (from handoff or the last wait); default the current rev.
+        #[arg(long)]
+        since: Option<u64>,
+        /// Seconds to block (default 20, at most 25); 0 checks once.
+        #[arg(long)]
+        timeout: Option<u64>,
+    },
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),

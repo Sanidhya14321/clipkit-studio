@@ -16,6 +16,7 @@ use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use crate::session::handoff::{HandoffRequest, WaitRequest};
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
@@ -53,6 +54,8 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/layout/check", get(layout_check))
         .route("/api/sound/plan", get(sound_plan))
         .route("/api/verify", get(verify))
+        .route("/api/handoff", post(handoff))
+        .route("/api/wait", get(wait))
         .route("/ws", get(ws::upgrade))
         // Runs after the token check, so only authorized calls keep the server alive.
         .layer(middleware::from_fn_with_state(session.clone(), idle::touch))
@@ -192,6 +195,46 @@ async fn brief_wait(
         }
         match tokio::time::timeout_at(deadline, rx.recv()).await {
             // A change or a lagged receiver: check again. A timeout: the next check is the last.
+            Ok(Ok(_)) | Ok(Err(RecvError::Lagged(_))) | Err(_) => {}
+            Ok(Err(RecvError::Closed)) => return Ok(check),
+        }
+    }
+}
+
+async fn handoff(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<HandoffRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.handoff(&req)).await
+}
+
+/// Blocks until the user makes a revision after `since`, or the timeout passes. `since` is
+/// fixed before subscribing, and the check reads history, so nothing landing in between is lost.
+async fn wait(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<WaitRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    let secs = req
+        .timeout_secs
+        .unwrap_or(brief::WAIT_DEFAULT_SECS)
+        .min(brief::WAIT_MAX_SECS);
+    let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(secs);
+    let since = match req.since {
+        Some(rev) => rev,
+        None => blocking(s.clone(), |s| s.status()).await?.0["rev"]
+            .as_u64()
+            .unwrap_or(0),
+    };
+    let mut rx = s.events();
+    loop {
+        let check = blocking(s.clone(), move |s| s.wait_check(Some(since))).await?;
+        let ready = check.0["events"].as_array().is_some_and(|e| !e.is_empty());
+        if ready || tokio::time::Instant::now() >= deadline {
+            return Ok(check);
+        }
+        match tokio::time::timeout_at(deadline, rx.recv()).await {
             Ok(Ok(_)) | Ok(Err(RecvError::Lagged(_))) | Err(_) => {}
             Ok(Err(RecvError::Closed)) => return Ok(check),
         }

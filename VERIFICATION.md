@@ -208,6 +208,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 9b: duck cues for music under voice, none for music already ducked | PASS | `tests::sound::music_under_voice_gets_duck_cues_unless_already_ducked` |
 | Step 9b: `ck sound plan` and MCP `sound_plan` (schema, 4 KB cap with `omitted`, parity) | PASS | `ck_mcp` `tool_table_snapshot` (1 tool added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` (same reply from CLI and MCP) |
 | Step 9b run | PASS | 2026-10-29 `just check`: 213 of 213 nextest (1 skipped), hooks 41 of 41 |
+| Step 9c: `handoff` releases only agent locks, sets the agent idle with a label, makes no revision | PASS | `ck-server` `tests::handoff::handoff_releases_agent_locks_and_sets_idle` |
+| Step 9c: `wait` returns human and voice revisions after `since`, classified (comment, checkpoint, brief, edit); agent revisions skipped; default `since` is now | PASS | `tests::handoff::wait_returns_user_revisions_by_kind_and_skips_the_agent`; `session::handoff::tests::kinds_follow_the_most_specific_path` |
+| Step 9c: `wait` blocks, ignores an agent revision and wakes on the user's within 5 s | PASS | `tests::handoff::wait_blocks_until_the_user_acts` |
+| Step 9c: `ck handoff`, `ck wait` and MCP `handoff`, `wait` (schema, 1 KB and 4 KB caps, parity) | PASS | `ck_mcp` `tool_table_snapshot` (2 tools added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` `recipe_apply_answers_like_its_cli_twin` |
+| Step 9c run | PASS | 2026-10-29 `just check`: 217 of 217 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

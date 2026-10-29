@@ -3,7 +3,7 @@
 use crate::error::{CkError, CkResult, ErrorCode};
 use crate::history::{Revision, RevisionKind, Stacks};
 use crate::locks;
-use crate::model::{Author, Holder, Project};
+use crate::model::{AgentState, Author, Holder, Project};
 use crate::patch::{self, PatchRequest};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -71,6 +71,11 @@ impl Document {
 
     pub fn heartbeat(&mut self, holder: Holder, now_ms: u64) -> usize {
         locks::heartbeat(&mut self.project.locks, holder, now_ms)
+    }
+
+    /// Set the engine-owned agent state. Like locks it is not content, so no revision is made.
+    pub fn set_agent(&mut self, agent: AgentState) {
+        self.project.agent = agent;
     }
 
     pub fn release(&mut self, holder: Holder, layer_ids: Option<&[String]>) {

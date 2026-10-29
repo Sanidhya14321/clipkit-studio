@@ -3,6 +3,7 @@
 mod api;
 mod brief;
 mod fixture;
+mod handoff;
 mod idle;
 mod live;
 mod look;

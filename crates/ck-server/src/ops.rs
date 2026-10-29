@@ -14,6 +14,7 @@ use crate::session::brief::{
     BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
     BriefWaitRequest, BriefWaitResult,
 };
+use crate::session::handoff::{HandoffRequest, HandoffResult, WaitEvent, WaitRequest, WaitResult};
 use crate::session::layout::LayoutCheckResult;
 use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
@@ -39,6 +40,8 @@ pub mod caps {
     pub const LAYOUT_CHECK: usize = 4 * 1024;
     pub const VERIFY: usize = 4 * 1024;
     pub const SOUND_PLAN: usize = 4 * 1024;
+    pub const HANDOFF: usize = 1024;
+    pub const WAIT: usize = 4 * 1024;
 }
 
 pub struct Ops {
@@ -164,6 +167,38 @@ impl Ops {
     pub fn sound_plan(&self) -> CkResult<SoundPlan> {
         let reply = self.client.get("/api/sound/plan", &[])?;
         trimmed("sound plan", caps::SOUND_PLAN, reply)
+    }
+
+    /// `handoff`: release every agent lock and set the agent idle; the user takes over.
+    pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
+        capped(
+            "handoff",
+            caps::HANDOFF,
+            self.client.post("/api/handoff", req)?,
+        )
+    }
+
+    /// `wait`: block until the user changes something after `since` (comments, brief edits,
+    /// confirmations, layer edits), up to the timeout. Events past the cap are counted in
+    /// `omitted`; the agent reads them with the next `wait`.
+    pub fn wait(&self, req: &WaitRequest) -> CkResult<WaitResult> {
+        let since = req.since.map(|s| s.to_string());
+        let secs = req.timeout_secs.map(|s| s.to_string());
+        let mut query: Vec<(&str, &str)> = Vec::new();
+        if let Some(s) = &since {
+            query.push(("since", s));
+        }
+        if let Some(s) = &secs {
+            query.push(("timeoutSecs", s));
+        }
+        trimmed("wait", caps::WAIT, self.client.get("/api/wait", &query)?)
+    }
+}
+
+impl Trim for WaitResult {
+    type Entry = WaitEvent;
+    fn parts(&mut self) -> (&mut Vec<WaitEvent>, &mut usize) {
+        (&mut self.events, &mut self.omitted)
     }
 }
 

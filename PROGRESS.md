@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 9b: `ck sound plan` + MCP `sound_plan` (`crates/ck-server/src/session/sound.rs`): read-only timed cues (whoosh, hit, riser, roomTone, duck).
-2. Proof: `just check` 213 of 213 nextest, hooks 41 of 41; `tests::sound` 3 tests; parity in `mcp_parity.rs`. Evidence in VERIFICATION.md, step 9b.
-3. Open: cues name no sfx asset (none in the catalog until Phase 8); timing constants are choices (DECISIONS.md, step 9b).
-4. Next: step 9c handoff and `ck wait`, then step 10 proof run.
-5. Start: `just check`; spec 06 (`ck wait`, handoff), spec 05 (takeover); DECISIONS.md steps 9a and 9b.
+1. Done: Phase 4 step 9c: `ck handoff` and `ck wait` + MCP twins (`crates/ck-server/src/session/handoff.rs`); step 9 complete.
+2. Proof: `just check` 217 of 217 nextest, hooks 41 of 41; `tests::handoff` 3 tests plus a kind unit test; parity in `mcp_parity.rs`. Evidence in VERIFICATION.md, step 9c.
+3. Open: wait timeout (25 s max) not verified per agent; `handoff` is a small addition to spec 6.2 (DECISIONS.md, step 9c).
+4. Next: step 10 proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+5. Start: `just check`; spec 12 Phase 4 proof, spec 04 (export), spec 10; check whether export exists yet (`rg -n export crates/ck-media`).
 
 ## Open questions
+- Phase 4 step 9c: verify how Claude Code and Codex handle long-running MCP tool calls and tune the `wait` timeout (default 20 s, at most 25 s) (DECISIONS.md, step 9c).
 - Phase 4 step 9b: sound cues carry no sfx asset until CC0 sound sets are ingested (Phase 8); timing constants and the `hook` name match are choices (DECISIONS.md, step 9b).
 - Phase 4 step 8: reuse limit (3 per asset) and the overlay-track overlap exemption are choices; `verify` does not yet block setting `idle` (DECISIONS.md, step 8).
 - Phase 4 step 9a: the project look is now `tokens.look`; a recipe applied with a request `look` different from it still previews in the project look (request look is not stored). A brief `look` change does not re-theme once a look is stored (DECISIONS.md, step 9a).
@@ -59,11 +60,17 @@ Steps:
   - [x] 6b. `ck layout check` with MCP twin; recipe apply runs the solver.
 - [x] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [x] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
-- [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
+- [x] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
   - [x] 9a. Stored project look (`tokens.look`) and `ck look apply <id> [--dry-run]` with impact preview and MCP twin.
   - [x] 9b. `ck sound plan`.
-  - [ ] 9c. Handoff and `ck wait`.
+  - [x] 9c. Handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 13): step 9c.
+- `ck-core::Document::set_agent`: engine-owned agent state (not a revision, like locks).
+- `session::handoff`: `handoff` releases every agent lock, sets agent idle with a label, returns rev, released count, open comments; `wait --since <rev>` blocks (default 20 s, at most 25) until human or voice revisions land after `since` and returns them as compact events (comment, brief, checkpoint, edit).
+- `/api/handoff`, `/api/wait`, `Ops::handoff|wait` (4 KB caps), `ck handoff`, `ck wait`, MCP `handoff`, `wait`.
+- Tests: session (handoff releases and idles, wait classifies and skips agent revisions, timeout 0), tool table, CLI/MCP parity.
 
 Run plan (autonomous run 12): step 9b.
 - `ck-server::session::sound`: pure `sound_plan(project, look)`: whooshes just before cuts on the video track, hits on text landings, risers before hook layers, room tone under cuts, duck suggestions for music under voice.

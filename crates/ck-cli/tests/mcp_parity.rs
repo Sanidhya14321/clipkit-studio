@@ -232,6 +232,21 @@ fn recipe_apply_answers_like_its_cli_twin() {
     assert_eq!(mcp.ok("sound_plan", Value::Null, caps::SOUND_PLAN), planned);
     let planned: Value = serde_json::from_str(&planned).unwrap();
     assert!(planned["cues"].is_array());
+
+    let handed = ok_line(d, &["handoff"], caps::HANDOFF);
+    assert_eq!(mcp.ok("handoff", Value::Null, caps::HANDOFF), handed);
+    let handed: Value = serde_json::from_str(&handed).unwrap();
+    assert_eq!(handed["rev"], 2);
+    let waited = ok_line(d, &["wait", "--since", "0", "--timeout", "0"], caps::WAIT);
+    assert_eq!(
+        mcp.ok("wait", json!({ "since": 0, "timeoutSecs": 0 }), caps::WAIT),
+        waited
+    );
+    assert_eq!(
+        serde_json::from_str::<Value>(&waited).unwrap()["events"],
+        json!([]),
+        "agent revisions are not user events"
+    );
     let verified: Value = serde_json::from_str(&verified).unwrap();
     assert_eq!(verified["ok"], false);
     assert!(

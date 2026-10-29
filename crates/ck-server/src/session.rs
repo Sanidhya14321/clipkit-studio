@@ -22,6 +22,7 @@ use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
 pub mod brief;
+pub mod handoff;
 pub mod layout;
 pub mod look;
 pub mod recipe;

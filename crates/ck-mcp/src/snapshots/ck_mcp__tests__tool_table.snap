@@ -748,5 +748,54 @@ expression: specs()
       "description": "`status` takes no input.",
       "type": "object"
     }
+  },
+  {
+    "name": "handoff",
+    "command": "ck handoff",
+    "description": "Hand the project to the user: release every agent lock and set the agent idle. Then reply in five lines or fewer and loop on wait with since = the returned rev.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "description": "What the studio shows for the agent while idle (default \"Waiting for you\").",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "wait",
+    "command": "ck wait",
+    "description": "Block until the user changes something after `since` (comments, brief edits, confirmations, layer edits), at most 25 s. Returns events oldest first; empty on timeout. Call again with since = the returned rev.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "since": {
+          "description": "Report revisions after this rev (from `handoff` or the last `wait`); omitted means the\ncurrent rev, so only new changes count.",
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "timeoutSecs": {
+          "description": "Seconds to block (default 20, at most 25); 0 checks once.",
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
   }
 ]
