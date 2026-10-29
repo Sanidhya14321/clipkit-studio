@@ -76,7 +76,7 @@ impl TasteFile {
 }
 
 /// Parses `[a, b, c]` into non-empty items.
-fn parse_list(value: &str) -> Option<Vec<String>> {
+pub(crate) fn parse_list(value: &str) -> Option<Vec<String>> {
     let inner = value.strip_prefix('[')?.strip_suffix(']')?;
     let items: Vec<String> = inner.split(',').map(|s| s.trim().to_owned()).collect();
     items.iter().all(|s| !s.is_empty()).then_some(items)

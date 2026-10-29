@@ -3,6 +3,7 @@
 //! Phase 4: loaders and validators for the starter taste library and looks (spec 7.1, 7.5), and
 //! the read ops over the built-in copy (`library`).
 
+pub mod card;
 pub mod color;
 pub mod layout;
 pub mod library;
@@ -14,6 +15,9 @@ use std::path::Path;
 
 use ck_core::{CkError, ErrorCode};
 
+pub use card::{
+    AssetKind, Card, CatalogEntry, Determinism, Grade, LicenseClass, LicenseMode, Runtime,
+};
 pub use look::{Colors, Easing, Fonts, Look, Motion, MotionPersonality, load_looks};
 pub use recipe::{Expansion, Recipe, load_recipes};
 pub use taste::{TasteFile, load_taste};

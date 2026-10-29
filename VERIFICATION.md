@@ -251,6 +251,13 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: studio transcript panel: click a word to seek, Delete/Backspace cuts it from the footage (human revision through `POST /api/cut/words` with the whole deleted set), same key restores at the clip edge; read-only while the agent holds the video track, and the server refuses (track lock now part of every footage rebuild) | PASS | `studio/e2e/phase5.spec.ts` (2 tests, `just e2e` 8 of 8 passed); `studio/src/transcript.test.ts` (deleted words from segment midpoints, toggle, source-to-timeline time); `ck-server` `tests::edit::studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock` (E_LOCK_HELD) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 254 of 254 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean; `just e2e` 8 of 8 |
 
+## Phase 8: assets at scale (2026-10-30, in progress)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Step 1: asset card format (spec 7.2 front matter with kinds, runtime, determinism, license, SPDX, license class, grade, deps, cost, duration, aspects, tags, collections, reviewed, attribution; the 11 body sections in order), parse, render, round trip, owner notes kept on regeneration, catalog line; license modes gate classes; original fixture packs (MIT, restricted non-commercial, hostile injection) | PASS | `ck-assets` `card::tests::*` (4); `fixtures/sources/` |
+| Step 1 run | PASS | 2026-10-30 `just check`: 298 of 298 nextest (1 skipped), hooks 41 of 41 |
+
 ## Phase 7: voice slice (2026-10-29, done; Fish Audio TTS, STT and cloning are PLACEHOLDER stubs)
 
 | Check | Result | Evidence |

@@ -1,0 +1,6 @@
+{
+  "name": "pack-mit",
+  "version": "1.0.0",
+  "license": "MIT",
+  "peerDependencies": { "remotion": "^4.0.0", "react": "^18.0.0" }
+}

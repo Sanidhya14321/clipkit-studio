@@ -512,3 +512,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Questions are memory-only UI state (like context), at most 8 open, up to 6 options, 500 bytes per text. The studio learns them from a new `asks` event (the whole list) and `GET /api/asks` on connect.
 - `ask` blocks like `wait` (default 20 s, at most 25 s). Unanswered, it returns the id; `ask --id <id>` keeps waiting. Each answer is delivered once, then forgotten.
 - The card's microphone uses the browser's speech recognition when present; otherwise the user types.
+
+## Phase 8 step 1: cards (2026-10-30)
+- Cards are parsed by hand like taste files (front matter `key: value`, lists `[a, b]`), capped at 2400 bytes; the 11 body sections are required in order and only Owner notes, Pairs well with and Adaptation presets may be empty. `icon` was added to the spec's kind list for Tabler and Simple Icons (wave 2).
+- License modes: commercial-safe allows permissive and attribution only; personal and any allow every class except unknown and reference-only (reference-only assets are re-implemented natively, never used).
+- Attribution-class cards must carry an `attribution` line (spec 14.1, CC BY).

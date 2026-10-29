@@ -51,6 +51,23 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
+## Phase 8: assets at scale (2026-10-30, in progress)
+
+Spec: 07, 09 (retrieval budget), 14 (wave 2 and 3, 14.7 checks). Owner approved network fetches and pipeline-first (2026-10-30). Proof: a vetted source is ingested into cards and ast.json without running its code, search returns it within the budget gate in the right license mode, a restricted fixture is blocked in commercial-safe mode, a derived copy carries tokens and instrumentation, and the export license report lists it.
+
+Steps:
+- [x] 1. Card format (spec 7.2 front matter and body), loader and validator; catalog.jsonl; original fixture source packs in `fixtures/sources/` (permissive pack, restricted BBC-style pack, prompt-injection pack).
+- [ ] 2. Sources registry over `sources.yaml` and `sources.lock`: `ck sources list|add|gaps`; unverified or disabled sources never searchable.
+- [ ] 3. Vetting without running code: shallow read-only fetch into `assets/quarantine/<id>` (hooks and submodules off) or local copy; license reading and classification; malware-lure and static dependency checks; `ck sources vet` writes the lock entry (commit, license hash, class, findings).
+- [ ] 4. Static AST extraction (oxc) for TS/TSX: exports, props, imports, animation primitives, outline; `ck sources ingest` writes cards, ast.json, per-source INDEX.md and catalog.jsonl.
+- [ ] 5. Tantivy search with filters (kind, tags, aspect, license mode, grade, collection) and the retrieval ladder with budget gate: `ck assets search|card|skeleton|slice|source` + MCP twins.
+- [ ] 6. License mode in the brief, respected by search, recipes and export; `ck license report` (asset, Remotion runtime, attribution and trademark notes).
+- [ ] 7. Derive with codemods: project-local copy with tokens, easing and data-ck instrumentation, props schema; provenance recorded; `ck assets derive`.
+- [ ] 8. Wave 2 for real: vet and ingest the sources whose license reads permissive from the original repo; everything else stays unverified.
+- [ ] 9. Proof run, self review, evidence.
+
+Versions (2026-10-30): tantivy 0.26.2 (2026-09-08; 0.27.0 is under two weeks old), oxc_parser/oxc_ast/oxc_allocator/oxc_span 0.154.0 (2026-10-13).
+
 ## Phase 7: voice slice (2026-10-29, done; Fish Audio provider calls carried)
 
 Spec: 06 (6.2 voice commands, 6.4 lanes), 08 (8.3). Proof: a script becomes voice slots, each slot gets a take (AI through a fake speaker in tests, recorded in the studio), takes are normalized and fit-checked, captions come from the active take, and push-to-talk runs a local command; `ck ask` returns the user's answer. Fish Audio calls (TTS, cloning) are PLACEHOLDER stubs until the owner adds the key (same as Phase 5 step 4b).

