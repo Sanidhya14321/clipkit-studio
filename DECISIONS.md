@@ -541,3 +541,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - A "decision" is the window until the project revision changes: the agent reads, decides, patches. The ledger is `.clipkit/retrieval.json`; outside a project there is no ledger and no gate.
 - Gate: at most 2 distinct cards and 1 full source per decision (E_BUDGET, HTTP 429); full source needs a reason of 10+ characters. Skeleton and slice are capped by size and counted, not refused. Tokens are estimated as output bytes / 4 and labeled as ck's own measure (spec 9.3).
 - Default license mode when the brief has none: commercial-safe.
+
+## Phase 8 step 6: license report (2026-10-30)
+- Used assets = `assetsUsed` plus every item's `provenance.sourceAsset`. Ids with a `recipe:` or `clip:` prefix or no source part are ClipKit originals (no third-party license). Hub assets are resolved through their card; a missing card or an unusable source is `unresolved` and makes the report not ok.
+- The Remotion runtime line points to remotion.dev/license instead of restating its terms (never invent license text).
+- Export writes the report beside the video as `<name>.licenses.json` and returns `licenseOk`; it does not refuse to export, so the user sees the problem with the file in hand.
+- Starter recipes are ClipKit originals, so recipe search needs no license filter until recipes can reference hub assets.

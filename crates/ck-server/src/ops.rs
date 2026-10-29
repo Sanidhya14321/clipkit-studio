@@ -427,6 +427,13 @@ impl Trim for ck_assets::ingest::IngestResult {
     }
 }
 
+impl Trim for ck_assets::report::LicenseReport {
+    type Entry = ck_assets::report::AssetLicense;
+    fn parts(&mut self) -> (&mut Vec<ck_assets::report::AssetLicense>, &mut usize) {
+        (&mut self.assets, &mut self.omitted)
+    }
+}
+
 impl Trim for VoiceScriptResult {
     type Entry = SlotSummary;
     fn parts(&mut self) -> (&mut Vec<SlotSummary>, &mut usize) {

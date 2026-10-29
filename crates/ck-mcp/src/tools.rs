@@ -9,6 +9,7 @@ use ck_assets::ingest::{self, IngestRequest};
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
+use ck_assets::report::{self, LicenseReportRequest};
 use ck_assets::retrieve::{
     self, AssetIdRequest, AssetSearchRequest, AssetSliceRequest, AssetSourceRequest, Retrieval,
 };
@@ -236,6 +237,14 @@ pub fn specs() -> Vec<ToolSpec> {
             "Step 5: the full source, only with a one-line reason; once per decision.",
             retrieve::caps::SOURCE,
         ),
+        spec::<LicenseReportRequest>(
+            "license_report",
+            "ck license report",
+            "Every asset the project uses with license, SPDX, class, attribution line and notes, \
+             checked against the license mode; ClipKit originals and the Remotion runtime \
+             license listed apart. ok=false means a blocked or unresolved asset.",
+            report::caps::REPORT,
+        ),
         spec::<IngestRequest>(
             "sources_ingest",
             "ck sources ingest",
@@ -450,6 +459,7 @@ pub fn is_offline(name: &str) -> bool {
             | "assets_skeleton"
             | "assets_slice"
             | "assets_source"
+            | "license_report"
     )
 }
 
@@ -458,10 +468,12 @@ fn capped_json<T: serde::Serialize>(what: &str, cap: usize, v: &T) -> CkResult<S
 }
 
 /// Tools over the built-in asset library and the Source Hub: they need no studio. `None` when
-/// `name` is not one. `root` is the project folder the hub is found from.
+/// `name` is not one. `root` is the project's `.clipkit` folder; the hub is found from the
+/// project folder.
 pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResult<String>> {
-    let hub = || Hub::locate(root);
-    let ladder = || Hub::locate(root).map(|h| Retrieval::new(h, root));
+    let project = project_dir(root);
+    let hub = || Hub::locate(project);
+    let ladder = || Hub::locate(project).map(|h| Retrieval::new(h, project));
     let out = match name {
         "taste_search" => parse(args).and_then(|r| json(&library::taste_search(&r)?)),
         "taste_read" => parse(args).and_then(|r| json(&library::taste_read(&r)?)),
@@ -521,6 +533,14 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
                 retrieve::caps::SOURCE,
                 &ladder()?.source(&r)?,
             )
+        }),
+        "license_report" => parse::<LicenseReportRequest>(args).and_then(|r| {
+            let out = report::license_report(&hub()?, &project.join(".clipkit"), &r)?;
+            json(&ck_server::ops::trimmed(
+                "license report",
+                report::caps::REPORT,
+                out,
+            )?)
         }),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)
             .and_then(|r| json(&sources::sources_gaps(&hub()?, &r)?)),

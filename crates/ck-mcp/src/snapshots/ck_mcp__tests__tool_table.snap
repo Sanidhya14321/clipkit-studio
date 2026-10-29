@@ -944,6 +944,40 @@ expression: specs()
     }
   },
   {
+    "name": "license_report",
+    "command": "ck license report",
+    "description": "Every asset the project uses with license, SPDX, class, attribution line and notes, checked against the license mode; ClipKit originals and the Remotion runtime license listed apart. ok=false means a blocked or unresolved asset.",
+    "cap": 8192,
+    "inputSchema": {
+      "$defs": {
+        "LicenseMode": {
+          "description": "License mode (spec 7.6): a brief field that search, recipes and export respect.",
+          "enum": [
+            "commercial-safe",
+            "personal",
+            "any"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LicenseMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Check against this mode instead of the brief's."
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "sources_ingest",
     "command": "ck sources ingest",
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",

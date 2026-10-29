@@ -34,8 +34,8 @@ use serde::Serialize;
 
 use args::{
     AssetsCommand, BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand,
-    LookCommand, ModeArg, PresetArg, ProjectCommand, RecipeCommand, SoundCommand, SourcesCommand,
-    TasteCommand, TranscriptCommand, VoiceCommand,
+    LicenseCommand, LookCommand, ModeArg, PresetArg, ProjectCommand, RecipeCommand, SoundCommand,
+    SourcesCommand, TasteCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -43,6 +43,7 @@ use ck_assets::ingest::{self, IngestRequest};
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
+use ck_assets::report::{self, LicenseReportRequest};
 use ck_assets::retrieve::{
     self, AssetIdRequest, AssetSearchRequest, AssetSliceRequest, AssetSourceRequest, Retrieval,
 };
@@ -320,6 +321,24 @@ fn run(cli: Cli) -> CkResult<()> {
                     ladder.source(&AssetSourceRequest { id, reason })?,
                 ),
             }
+        }
+        Command::License(LicenseCommand::Report { mode }) => {
+            let mode = mode
+                .map(|m| {
+                    LicenseMode::parse(&m)
+                        .ok_or_else(|| request_err(format!("--mode {m:?} is not known")))
+                })
+                .transpose()?;
+            let out = report::license_report(
+                &Hub::locate(&cli.dir)?,
+                &cli.dir.join(".clipkit"),
+                &LicenseReportRequest { mode },
+            )?;
+            print(&ck_server::ops::trimmed(
+                "license report",
+                report::caps::REPORT,
+                out,
+            )?)
         }
         Command::Sources(cmd) => {
             let hub = Hub::locate(&cli.dir)?;

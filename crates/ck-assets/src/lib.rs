@@ -13,6 +13,7 @@ pub mod library;
 pub mod license;
 pub mod look;
 pub mod recipe;
+pub mod report;
 pub mod retrieve;
 pub mod sources;
 pub mod taste;

@@ -56,6 +56,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("assets_skeleton", ck_assets::retrieve::caps::SKELETON),
         ("assets_slice", ck_assets::retrieve::caps::SLICE),
         ("assets_source", ck_assets::retrieve::caps::SOURCE),
+        ("license_report", ck_assets::report::caps::REPORT),
         ("sources_ingest", ck_assets::ingest::caps::INGEST),
         ("sources_gaps", ck_assets::sources::caps::SOURCES_GAPS),
         ("look_apply", caps::LOOK_APPLY),

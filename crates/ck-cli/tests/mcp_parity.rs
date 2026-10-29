@@ -522,6 +522,10 @@ fn sources_tools_answer_like_their_cli_twins_without_a_studio() {
         rc::SKELETON,
     );
     assert_eq!(tool, skeleton);
+    // No project in this folder: the license report refuses alike on both sides.
+    let refused = mcp.err("license_report", json!({}));
+    assert_eq!(refused, err_line(d, &["license", "report"]));
+
     let refused = mcp.err("assets_card", json!({ "id": "pack-a/nope" }));
     assert_eq!(code(&refused), "E_NOT_FOUND");
     assert_eq!(refused, err_line(d, &["assets", "card", "pack-a/nope"]));

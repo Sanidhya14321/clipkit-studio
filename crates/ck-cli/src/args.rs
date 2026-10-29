@@ -121,6 +121,9 @@ pub enum Command {
     /// Retrieval ladder over vetted assets: search, card, skeleton, slice, source.
     #[command(subcommand)]
     Assets(AssetsCommand),
+    /// License and attribution report for the assets the project uses.
+    #[command(subcommand)]
+    License(LicenseCommand),
     /// Source Hub: list, add and report gaps.
     #[command(subcommand)]
     Sources(SourcesCommand),
@@ -462,5 +465,15 @@ pub enum AssetsCommand {
         id: String,
         #[arg(long)]
         reason: String,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum LicenseCommand {
+    /// Every asset used, with license and attribution, checked against the license mode.
+    Report {
+        /// commercial-safe, personal or any (default: the brief's).
+        #[arg(long)]
+        mode: Option<String>,
     },
 }

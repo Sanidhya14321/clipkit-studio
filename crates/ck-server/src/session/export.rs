@@ -80,6 +80,12 @@ pub struct ExportResult {
     pub loudness: Loudness,
     /// True when integrated loudness is within tolerance and true peak at most the target.
     pub loudness_pass: bool,
+    /// License and attribution report written next to the video, when a Source Hub is found.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub license_report: Option<String>,
+    /// False when the report blocks an asset in the license mode.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub license_ok: Option<bool>,
 }
 
 /// A planned footage segment: input index, source in, source out, timeline start.
@@ -215,7 +221,29 @@ impl Session {
         let loudness = ck_media::measure_loudness(&out)?;
         let loudness_pass = (loudness.integrated - TARGET.integrated).abs() <= LOUDNESS_TOLERANCE
             && loudness.true_peak <= TARGET.true_peak;
+        // Spec 7.6: export prints a license and attribution report.
+        let (license_report, license_ok) = match ck_assets::hub::Hub::locate(&workdir) {
+            Ok(hub) => {
+                let report = ck_assets::report::license_report(
+                    &hub,
+                    self.store.root(),
+                    &ck_assets::report::LicenseReportRequest::default(),
+                )?;
+                let path = out.with_extension("licenses.json");
+                let text = serde_json::to_vec_pretty(&report)
+                    .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
+                ck_core::storage::atomic_write(&path, &text)?;
+                let shown = path.strip_prefix(&workdir).map_or_else(
+                    |_| path.to_string_lossy().into_owned(),
+                    |p| p.to_string_lossy().replace('\\', "/"),
+                );
+                (Some(shown), Some(report.ok))
+            }
+            Err(_) => (None, None),
+        };
         Ok(ExportResult {
+            license_report,
+            license_ok,
             path: rel.to_string_lossy().replace('\\', "/"),
             preset: req.preset,
             width,
