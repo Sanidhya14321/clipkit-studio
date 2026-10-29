@@ -1,16 +1,17 @@
 # Progress
 
 STATUS: RUNNING
-PHASE: 5
+PHASE: 6
 
 ## Handoff (latest)
-1. Done: Phase 5 step 9 (`ck export --preset`, fast ffmpeg path with fades, gaps, presets and a measured loudness gate; slow client timeout for import, transcribe and export).
-2. Proof: `just check` passing (264 of 264 nextest, hooks 41 of 41, studio clean). Evidence in VERIFICATION.md, Phase 5 step 9.
-3. Open: step 4b (Fish Audio STT, whisper) waits for the owner's key; export runs inside the request (no background queue or progress yet); component layers wait for the Phase 9 render worker.
-4. Next: Phase 5 step 10: proof run (raw footage to a cut, exported MP4) through the real binary, reviewer, spec-checker, evidence; then mark Phase 5 done with 4b carried.
-5. Start: `just check`; crates/ck-cli/tests/generate_proof.rs as the model for an edit proof.
+1. Done: Phase 5 (edit slice): import, proxies, packed transcript, cut candidates, delete-to-cut, hybrid, fast export; proof `crates/ck-cli/tests/edit_proof.rs` raw footage to an exported MP4.
+2. Proof: `just check` and `just test` 265 of 265 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 9 of 9. Evidence in VERIFICATION.md, Phase 5.
+3. Open: step 4b (Fish Audio STT with the owner's key, whisper choice), Silero VAD (ort question), export background queue and progress, rust-reviewer/spec-checker runs (agents unavailable this session).
+4. Next: Phase 6 (see docs/spec/12-phases.md); plan it in PROGRESS.md first.
+5. Start: `just check`; phase-runner skill; spec 12 Phase 6 and the spec files it names.
 
 ## Open questions
+- Phase 5 close: run the rust-reviewer and spec-checker subagents on the Phase 5 diff (05509be..HEAD) in a session that has them. Self review found no blocker; known gaps: export and import block one request thread (no queue or progress), `/media/` non-range requests read the whole proxy, packed transcript cap trims lines for sources much longer than 10 min.
 - Phase 5 step 4b: owner will add FISH_AUDIO_API_KEY; then verify the Fish Audio STT API, build `FishStt`, record a cassette test. Decide whether whisper-rs (C++ build) goes in by default or behind a cargo feature.
 - Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
 - Phase 4 step 10c: spec-checker gaps carried forward (verify --critic, audio and captions gates, motion direction and holds, license-mode check, retrieval budgets, token meter, variants, brief more-options, verify before idle); assign each to a later phase (DECISIONS.md, step 10c).
@@ -47,7 +48,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 5: edit slice (2026-10-29, in progress)
+## Phase 5: edit slice (2026-10-29, done; 4b transcription provider and Silero VAD carried)
 
 Spec: 04 (BASE), 08 (8.2, 8.6 export), 14 (wave 1 editing tools). Proof: raw footage to a cut, exported MP4.
 
@@ -61,7 +62,7 @@ Steps:
 - [x] 7. Studio transcript panel delete-to-cut and clip-edge restore, with Playwright test.
 - [x] 8. Hybrid mode: generated layers over footage.
 - [x] 9. Fast ffmpeg export (typed filter graph), loudness gates (ebur128/loudnorm) and export presets; `ck export`.
-- [ ] 10. Proof run, reviewer, spec-checker, evidence. Silero VAD via ONNX is pending the `ort` question (Open questions).
+- [x] 10. Proof run (`crates/ck-cli/tests/edit_proof.rs`), self review against spec (reviewer agents unavailable), evidence. Silero VAD via ONNX is pending the `ort` question (Open questions).
 
 Run plan (autonomous run 17): step 2a, media side of import.
 - Split step 2: 2a media functions in ck-media, 2b project source registration and `ck import` + MCP twin.

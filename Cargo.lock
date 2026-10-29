@@ -290,6 +290,7 @@ dependencies = [
  "ck-assets",
  "ck-core",
  "ck-mcp",
+ "ck-media",
  "ck-server",
  "clap",
  "serde",

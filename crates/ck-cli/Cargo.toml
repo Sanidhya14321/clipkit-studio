@@ -25,6 +25,8 @@ tracing-subscriber.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+# The edit proof probes the exported file.
+ck-media.workspace = true
 
 [lints]
 workspace = true
