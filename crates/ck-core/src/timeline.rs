@@ -100,6 +100,7 @@ mod tests {
             pass: None,
             asset_ref: None,
             brief_deps: vec![],
+            provenance: None,
             rev: 0,
             body: ItemBody::Clip {
                 clip_id: None,

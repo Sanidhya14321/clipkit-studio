@@ -19,8 +19,10 @@ use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
 
-use args::{BriefCommand, Cli, Command, LookCommand, ProjectCommand, TasteCommand};
-use ck_assets::library::{self, IdRequest, LookListRequest, TasteSearchRequest};
+use args::{BriefCommand, Cli, Command, LookCommand, ProjectCommand, RecipeCommand, TasteCommand};
+use ck_assets::library::{
+    self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
+};
 
 /// JSON log lines to stderr when `CK_LOG` is set (for example `CK_LOG=debug`). Off by default so
 /// command output stays small; fields follow ck_core::log.
@@ -123,6 +125,20 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::Look(LookCommand::List) => print(&library::look_list(&LookListRequest {})?),
         Command::Look(LookCommand::Get { id }) => print(&library::look_get(&IdRequest { id })?),
+        Command::Recipe(RecipeCommand::Search { query, limit }) => {
+            print(&library::recipe_search(&RecipeSearchRequest {
+                query,
+                limit,
+            })?)
+        }
+        Command::Recipe(RecipeCommand::Card { id }) => {
+            print(&library::recipe_card(&IdRequest { id })?)
+        }
+        Command::Recipe(RecipeCommand::Apply { file }) => {
+            let req = serde_json::from_str(&read_input(&file, "recipe apply")?)
+                .map_err(|e| request_err(format!("recipe apply JSON: {e}")))?;
+            print(&ops()?.recipe_apply(&req)?)
+        }
         Command::Init(args) => install::run(install::Mode::Init, &args, &cli.dir),
         Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args, &cli.dir),
         // Handled in main before run.

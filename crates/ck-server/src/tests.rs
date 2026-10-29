@@ -6,4 +6,5 @@ mod fixture;
 mod idle;
 mod live;
 mod ops;
+mod recipe;
 mod studio;

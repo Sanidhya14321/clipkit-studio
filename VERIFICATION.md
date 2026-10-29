@@ -175,6 +175,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 5a: expander builds named layers (`<prefix>-<layer>`), times from fractions, keeps token refs, drops unfilled optional props, records provenance and briefDeps | PASS | `recipes::expand_builds_named_layers_with_times_tokens_and_provenance`, `every_token_a_recipe_uses_resolves_in_every_look` |
 | Step 5a: bad slots, duration, `at` and source ids refused with E_REQUEST; malformed recipes with E_ASSET | PASS | `recipes::expand_checks_slots_and_duration`, `source_slots_need_a_project_source`, `recipe_refusals_carry_e_asset` |
 | Step 5a run | PASS | 2026-10-29 `just check`: 186 of 186 nextest (1 skipped), hooks 41 of 41 |
+| Step 5b: `ck recipe search` lists slots (`name*:kind<=chars`), ranks by query, search and every card stay under their caps; unknown id E_NOT_FOUND | PASS | `ck-assets` test `recipe_search_lists_slots_ranks_and_stays_under_its_cap` |
+| Step 5b: `ck recipe apply` adds named layers in one agent revision (new track when the kind is missing, next free prefix, provenance and briefDeps on items, tokens kept as refs, recipe in `assetsUsed`), look from request, brief or default; temporary locks released | PASS | `ck-server` tests `recipe::apply_adds_named_layers_with_provenance_and_tokens`, `apply_uses_the_brief_look_and_refuses_bad_input` |
+| Step 5b: a human holding the touched locks refuses apply (E_LOCK_HELD), nothing written | PASS | `recipe::apply_respects_a_human_lock` |
+| Step 5b: MCP twins `recipe_search|card|apply` answer like the CLI (search and card offline), caps in the tool table | PASS | `ck-cli` tests `mcp_parity::library_tools_answer_like_their_cli_twins_without_a_studio`, `recipe_apply_answers_like_its_cli_twin`; `ck-mcp` `every_tool_has_an_object_schema_and_its_cli_cap`, `tool_table` snapshot |
+| Step 5b run | PASS | 2026-10-29 `just check`: 191 of 191 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

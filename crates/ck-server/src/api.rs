@@ -16,6 +16,7 @@ use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use crate::session::recipe::RecipeApplyRequest;
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
 use crate::ws;
@@ -46,6 +47,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/brief/diff", get(brief_diff))
         .route("/api/brief/wait", get(brief_wait))
         .route("/api/looks", get(looks))
+        .route("/api/recipe/apply", post(recipe_apply))
         .route("/ws", get(ws::upgrade))
         // Runs after the token check, so only authorized calls keep the server alive.
         .layer(middleware::from_fn_with_state(session.clone(), idle::touch))
@@ -127,6 +129,14 @@ async fn brief_propose(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.brief_propose(&req)).await
+}
+
+async fn recipe_apply(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<RecipeApplyRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.recipe_apply(&req)).await
 }
 
 async fn brief_diff(

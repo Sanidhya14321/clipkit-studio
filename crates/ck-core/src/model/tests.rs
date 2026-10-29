@@ -32,6 +32,7 @@ pub(crate) fn sample() -> Project {
         pass: None,
         asset_ref: None,
         brief_deps: vec![],
+        provenance: None,
         rev: 0,
         body,
     };

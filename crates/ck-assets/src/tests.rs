@@ -165,6 +165,42 @@ fn taste_search_ranks_by_head_then_body_and_stays_under_its_cap() {
 }
 
 #[test]
+fn recipe_search_lists_slots_ranks_and_stays_under_its_cap() {
+    use library::{IdRequest, RecipeSearchRequest, caps};
+    let all = library::recipe_search(&RecipeSearchRequest {
+        query: String::new(),
+        limit: Some(library::MAX_HITS),
+    })
+    .unwrap();
+    assert_eq!((all.total, all.hits.len()), (10, 10));
+    let len = serde_json::to_string(&all).unwrap().len();
+    assert!(len <= caps::RECIPE_SEARCH, "{len}");
+
+    let hook = library::recipe_search(&RecipeSearchRequest {
+        query: "hook".into(),
+        limit: None,
+    })
+    .unwrap();
+    assert_eq!(hook.hits[0].id, "hook-title");
+    assert_eq!(
+        hook.hits[0].slots,
+        ["headline*:text<=48", "kicker:text<=24"]
+    );
+    assert_eq!(hook.hits[0].duration, 2.5);
+
+    for (id, _) in library::RECIPE_FILES {
+        let card = library::recipe_card(&IdRequest { id: (*id).into() }).unwrap();
+        let len = serde_json::to_string(&card).unwrap().len();
+        assert!(len <= caps::RECIPE_CARD, "{id} {len}");
+    }
+    let id = IdRequest { id: "nope".into() };
+    assert_eq!(
+        library::recipe_card(&id).unwrap_err().code,
+        ErrorCode::NotFound
+    );
+}
+
+#[test]
 fn reads_stay_under_their_caps_and_unknown_ids_are_not_found() {
     use library::{IdRequest, LookListRequest, caps};
     for f in library::taste().unwrap() {

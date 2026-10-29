@@ -42,6 +42,7 @@ fn decls(cfg: &Config) -> Vec<String> {
         TrackKind::decl(cfg),
         Item::decl(cfg),
         ItemBody::decl(cfg),
+        Provenance::decl(cfg),
         CaptionFrom::decl(cfg),
         TimeRange::decl(cfg),
         Source::decl(cfg),

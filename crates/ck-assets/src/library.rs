@@ -9,7 +9,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::look::{Look, MotionPersonality};
-use crate::recipe::Recipe;
+use crate::recipe::{Recipe, Slot, SlotKind};
 use crate::taste::TasteFile;
 
 /// Output caps in bytes of compact JSON, shared by each command and its MCP twin.
@@ -18,6 +18,8 @@ pub mod caps {
     pub const TASTE_READ: usize = 3 * 1024;
     pub const LOOK_LIST: usize = 2 * 1024;
     pub const LOOK_GET: usize = 2 * 1024;
+    pub const RECIPE_SEARCH: usize = 4 * 1024;
+    pub const RECIPE_CARD: usize = 6 * 1024;
 }
 
 macro_rules! embed {
@@ -133,6 +135,39 @@ pub struct LookListResult {
     pub looks: Vec<LookSummary>,
 }
 
+#[derive(Debug, Clone, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RecipeSearchRequest {
+    /// Words to look for in ids, names, tags and use-when lines; empty lists every recipe.
+    #[serde(default)]
+    pub query: String,
+    /// Most hits to return (default 5, at most 12).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub limit: Option<usize>,
+}
+
+/// One recipe in short: enough to pick it and fill its slots without reading the card.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct RecipeHit {
+    pub id: String,
+    pub name: String,
+    pub use_when: String,
+    /// Default scene duration in seconds.
+    pub duration: f64,
+    /// `name:kind`, with `*` when required and `<=N` for the character limit.
+    pub slots: Vec<String>,
+    pub score: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct RecipeSearchResult {
+    pub hits: Vec<RecipeHit>,
+    /// Recipes that matched before the limit.
+    pub total: usize,
+}
+
 /// Every built-in taste file, parsed and validated, sorted by id.
 pub fn taste() -> Result<Vec<TasteFile>, CkError> {
     TASTE_FILES
@@ -161,30 +196,38 @@ fn virtual_path(dir: &str, id: &str, ext: &str) -> std::path::PathBuf {
     Path::new("assets").join(dir).join(format!("{id}.{ext}"))
 }
 
-/// Ranks taste files by query words: 3 points per word in the id, title or tags, 1 in the body.
-/// Ties keep id order.
-pub fn taste_search(req: &TasteSearchRequest) -> Result<TasteSearchResult, CkError> {
-    let words: Vec<String> = req
-        .query
+fn query_words(query: &str) -> Vec<String> {
+    query
         .split(|c: char| !c.is_alphanumeric() && c != '-')
         .filter(|w| !w.is_empty())
         .map(str::to_lowercase)
-        .collect();
+        .collect()
+}
+
+/// 3 points per word in `head`, else 1 if in `body`.
+fn score(words: &[String], head: &str, body: &str) -> u32 {
+    let (head, body) = (head.to_lowercase(), body.to_lowercase());
+    words
+        .iter()
+        .map(|w| {
+            if head.contains(w.as_str()) {
+                3
+            } else {
+                u32::from(body.contains(w.as_str()))
+            }
+        })
+        .sum()
+}
+
+/// Ranks taste files by query words: 3 points per word in the id, title or tags, 1 in the body.
+/// Ties keep id order.
+pub fn taste_search(req: &TasteSearchRequest) -> Result<TasteSearchResult, CkError> {
+    let words = query_words(&req.query);
     let mut hits: Vec<TasteHit> = taste()?
         .into_iter()
         .filter_map(|f| {
-            let head = format!("{} {} {}", f.id, f.title, f.tags.join(" ")).to_lowercase();
-            let body = f.body.to_lowercase();
-            let score = words
-                .iter()
-                .map(|w| {
-                    if head.contains(w.as_str()) {
-                        3
-                    } else {
-                        u32::from(body.contains(w.as_str()))
-                    }
-                })
-                .sum();
+            let head = format!("{} {} {}", f.id, f.title, f.tags.join(" "));
+            let score = score(&words, &head, &f.body);
             (words.is_empty() || score > 0).then_some(TasteHit {
                 id: f.id,
                 title: f.title,
@@ -228,6 +271,67 @@ pub fn look_get(req: &IdRequest) -> Result<Look, CkError> {
         .into_iter()
         .find(|l| l.id == req.id)
         .ok_or_else(|| not_found("look", &req.id, "ck look list"))
+}
+
+/// Ranks recipes by query words: 3 points per word in the id, name or tags, 1 in the
+/// description or use-when line. Ties keep id order.
+pub fn recipe_search(req: &RecipeSearchRequest) -> Result<RecipeSearchResult, CkError> {
+    let words = query_words(&req.query);
+    let mut hits: Vec<RecipeHit> = recipes()?
+        .into_iter()
+        .filter_map(|r| {
+            let head = format!("{} {} {}", r.id, r.name, r.tags.join(" "));
+            let body = format!("{} {}", r.description, r.use_when);
+            let score = score(&words, &head, &body);
+            (words.is_empty() || score > 0).then(|| RecipeHit {
+                slots: r.slots.iter().map(slot_line).collect(),
+                id: r.id,
+                name: r.name,
+                use_when: r.use_when,
+                duration: r.duration.default,
+                score,
+            })
+        })
+        .collect();
+    hits.sort_by_key(|h| std::cmp::Reverse(h.score));
+    let total = hits.len();
+    hits.truncate(req.limit.unwrap_or(DEFAULT_HITS).clamp(1, MAX_HITS));
+    Ok(RecipeSearchResult { hits, total })
+}
+
+fn slot_line(s: &Slot) -> String {
+    let kind = match s.kind {
+        SlotKind::Text => "text",
+        SlotKind::Number => "number",
+        SlotKind::List => "list",
+        SlotKind::Source => "source",
+    };
+    let mut line = format!("{}{}:{kind}", s.name, if s.required { "*" } else { "" });
+    if let (Some(lo), Some(hi)) = (s.min_items, s.max_items) {
+        line.push_str(&format!("[{lo}-{hi}]"));
+    }
+    if let Some(n) = s.max_chars {
+        line.push_str(&format!("<={n}"));
+    }
+    line
+}
+
+/// One recipe in full: slots, layers and their props.
+pub fn recipe_card(req: &IdRequest) -> Result<Recipe, CkError> {
+    recipe_with_text(&req.id).map(|(r, _)| r)
+}
+
+/// One recipe and its file text (the text gives the provenance hash).
+pub fn recipe_with_text(id: &str) -> Result<(Recipe, &'static str), CkError> {
+    let text = RECIPE_FILES
+        .iter()
+        .find(|(rid, _)| *rid == id)
+        .map(|(_, t)| *t)
+        .ok_or_else(|| not_found("recipe", id, "ck recipe search"))?;
+    Ok((
+        Recipe::parse(&virtual_path("recipes", id, "json"), text)?,
+        text,
+    ))
 }
 
 fn not_found(what: &str, id: &str, list: &str) -> CkError {

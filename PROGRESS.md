@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 5a: `ck-assets/src/recipe.rs` (typed slots, validation, expander with named layers, token refs, provenance, briefDeps), 10 recipes in `assets/recipes/`, built in via `library::recipes()`, INDEX updated.
-2. Proof: `just check` 186 of 186 nextest (1 skipped), hooks 41 of 41; 6 new recipe tests. Evidence in VERIFICATION.md, step 5a.
-3. Open: the expander does not run the layout solver (step 6) or check license mode; the clip prop names are provisional until step 7 builds the clips. Stage gate for brief ops still not enforced.
-4. Next: Phase 4 step 5b, `ck recipe search|apply` with MCP twins, output caps and parity tests; apply turns an Expansion into an agent patch (tracks by kind, provenance on items).
-5. Start: `just check`; read `crates/ck-assets/src/recipe.rs` and DECISIONS.md step 5a.
+1. Done: Phase 4 step 5 (5b): `ck recipe search|card|apply` with MCP twins; apply is `POST /api/recipe/apply` (`ck-server/src/session/recipe.rs`), one agent revision; `Item.provenance` added to ck-core (schema, TS regenerated).
+2. Proof: `just check` 191 of 191 nextest (1 skipped), hooks 41 of 41; 5 new tests incl. CLI/MCP parity. Evidence in VERIFICATION.md, step 5b.
+3. Open: apply does not run the layout solver (step 6) or check license mode; clip prop names provisional until step 7. Stage gate for brief and recipe ops not enforced.
+4. Next: Phase 4 step 6, deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check` with MCP twin; then call it from recipe apply.
+5. Start: `just check`; read spec 07 (layout), `crates/ck-server/src/session/recipe.rs`, DECISIONS.md step 5b.
 
 ## Open questions
+- Phase 4 step 5b: recipe apply falls back to the `clean-product` look when neither the request nor the brief names one; revisit if the plan stage should pick it.
 - Phase 4 step 3: spec 6.2 lists `brief set`; not built (the studio confirms through a human patch). Add it if the agent needs to set user-requested values directly. Wire `Op::ProposeBrief` stage gating once stages are driven.
 - Phase 3 step 7: check Cursor's `~/.cursor/mcp.json` and `.cursor/rules/*.mdc` format, and whether a user-level rules file exists, against cursor.com/docs (DECISIONS.md, step 7).
 - Phase 3 step 6: run the real proof in an interactive session (Claude Code and Codex) and flip the BLOCKED rows in VERIFICATION.md.
@@ -46,14 +47,19 @@ Steps:
 - [x] 2. `ck taste search|read` and `ck look list|get` with MCP twins, output caps, parity tests; `assets/INDEX.md` (under 60 lines).
 - [x] 3. Brief Studio essentials: `ck brief propose|wait|diff|get` (inferred values only, field sources, at most three dynamic questions) and its MCP twins.
 - [x] 4. Studio brief panel (essentials form, pacing slider with numbers, look cards, confirm) with Playwright test.
-- [ ] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
+- [x] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
   - [x] 5a. Recipe model, validation, expander and the 10 recipes.
-  - [ ] 5b. `ck recipe search|apply` with MCP twins.
+  - [x] 5b. `ck recipe search|card|apply` with MCP twins.
 - [ ] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
 - [ ] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 6): step 5b.
+- `library::recipe_search|recipe_card` (offline, caps) and `Item.provenance` in ck-core.
+- Server op `recipe_apply`: expand with the request/brief/default look, add layers by track kind, provenance, `assetsUsed`, temporary agent locks; route, `Ops`, cap.
+- `ck recipe search|card|apply` and MCP twins; tests: library, server, tool table, CLI/MCP parity.
 
 Run plan (autonomous run 5): step 5a (recipe model, expander, 10 recipes; CLI is 5b).
 - Finish the uncommitted `ck-assets/src/recipe.rs` from run 4: wire it in, make it compile under clippy.

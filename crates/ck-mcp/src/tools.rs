@@ -4,13 +4,16 @@
 
 use std::path::Path;
 
-use ck_assets::library::{self, IdRequest, LookListRequest, TasteSearchRequest};
+use ck_assets::library::{
+    self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
+};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
 use serde::de::DeserializeOwned;
@@ -144,6 +147,26 @@ pub fn specs() -> Vec<ToolSpec> {
             "One look with all its design tokens (colors, fonts, type scale, motion).",
             library::caps::LOOK_GET,
         ),
+        spec::<RecipeSearchRequest>(
+            "recipe_search",
+            "ck recipe search",
+            "Rank the recipes by query words; each hit lists its slots (name*:kind<=chars). \
+             Prefer a recipe over hand-built layers when one fits.",
+            library::caps::RECIPE_SEARCH,
+        ),
+        spec::<IdRequest>(
+            "recipe_card",
+            "ck recipe card",
+            "One recipe in full: slots, layers and props.",
+            library::caps::RECIPE_CARD,
+        ),
+        spec::<RecipeApplyRequest>(
+            "recipe_apply",
+            "ck recipe apply",
+            "Fill a recipe's slots: adds its named layers (tokens, provenance, briefDeps) as \
+             one revision. Returns the layer ids.",
+            caps::RECIPE_APPLY,
+        ),
     ]
 }
 
@@ -151,7 +174,7 @@ pub fn specs() -> Vec<ToolSpec> {
 pub fn is_offline(name: &str) -> bool {
     matches!(
         name,
-        "taste_search" | "taste_read" | "look_list" | "look_get"
+        "taste_search" | "taste_read" | "look_list" | "look_get" | "recipe_search" | "recipe_card"
     )
 }
 
@@ -162,6 +185,8 @@ pub fn offline(name: &str, args: Value) -> Option<CkResult<String>> {
         "taste_read" => parse(args).and_then(|r| json(&library::taste_read(&r)?)),
         "look_list" => parse(args).and_then(|r| json(&library::look_list(&r)?)),
         "look_get" => parse(args).and_then(|r| json(&library::look_get(&r)?)),
+        "recipe_search" => parse(args).and_then(|r| json(&library::recipe_search(&r)?)),
+        "recipe_card" => parse(args).and_then(|r| json(&library::recipe_card(&r)?)),
         _ => return None,
     };
     Some(out)
@@ -219,6 +244,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_propose" => json(&ops.brief_propose(&parse(args)?)?),
         "brief_wait" => json(&ops.brief_wait(&parse(args)?)?),
         "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
+        "recipe_apply" => json(&ops.recipe_apply(&parse(args)?)?),
         "brief_get" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.brief_get()?)

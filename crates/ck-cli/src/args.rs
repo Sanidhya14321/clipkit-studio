@@ -76,6 +76,9 @@ pub enum Command {
     /// List and read the looks (design tokens plus motion personality).
     #[command(subcommand)]
     Look(LookCommand),
+    /// Search, read and apply recipes (pre-wired scenes with typed slots).
+    #[command(subcommand)]
+    Recipe(RecipeCommand),
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),
@@ -173,6 +176,24 @@ pub enum LookCommand {
     List,
     /// One look with all its design tokens.
     Get { id: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum RecipeCommand {
+    /// Rank the recipes by query words; each hit lists its slots (`name*:kind<=chars`).
+    Search {
+        /// Words to look for; empty lists every recipe.
+        #[arg(default_value = "")]
+        query: String,
+        /// Most hits to return (default 5, at most 12).
+        #[arg(long)]
+        limit: Option<usize>,
+    },
+    /// One recipe in full: slots, layers and props.
+    Card { id: String },
+    /// Expand a recipe into named layers: a JSON file {recipe, at?, duration?, slots, prefix?,
+    /// look?}, or - for stdin.
+    Apply { file: String },
 }
 
 #[derive(Debug, Args)]

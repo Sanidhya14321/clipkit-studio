@@ -13,6 +13,7 @@ use crate::session::brief::{
     BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
     BriefWaitRequest, BriefWaitResult,
 };
+use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
 
@@ -28,6 +29,7 @@ pub mod caps {
     /// The confirmed brief reaches the agent in about 600 tokens (spec 8.1).
     pub const BRIEF: usize = 4 * 1024;
     pub const BRIEF_PROPOSE: usize = 1024;
+    pub const RECIPE_APPLY: usize = 1024;
 }
 
 pub struct Ops {
@@ -118,6 +120,19 @@ impl Ops {
         let since = req.since.to_string();
         let reply = self.client.get("/api/brief/diff", &[("since", &since)])?;
         trimmed("brief diff", caps::BRIEF, reply)
+    }
+
+    /// `recipe apply`: expand a recipe with slot values into named layers, as one revision.
+    pub fn recipe_apply(&self, req: &RecipeApplyRequest) -> CkResult<RecipeApplyResult> {
+        let reply = self.client.post("/api/recipe/apply", req)?;
+        trimmed("recipe apply", caps::RECIPE_APPLY, reply)
+    }
+}
+
+impl Trim for RecipeApplyResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.layers, &mut self.omitted)
     }
 }
 

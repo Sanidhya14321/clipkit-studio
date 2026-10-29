@@ -11,7 +11,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-pub use item::{CaptionFrom, Item, ItemBody, TimeRange, Track, TrackKind};
+pub use item::{CaptionFrom, Item, ItemBody, Provenance, TimeRange, Track, TrackKind};
 pub use meta::{
     Anchor, Author, Brief, BriefField, BriefQuestion, BriefSource, BriefStatus, Comment,
     CommentStatus, Holder, Lock, MAX_BRIEF_QUESTIONS, Point, Reply, Source, SourceKind, VoiceMode,

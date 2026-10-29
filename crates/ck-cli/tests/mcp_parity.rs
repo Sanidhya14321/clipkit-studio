@@ -191,6 +191,34 @@ fn brief_tools_answer_like_their_cli_twins() {
 }
 
 #[test]
+fn recipe_apply_answers_like_its_cli_twin() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _studio = Studio::start(d);
+    let mut mcp = Mcp::start(d);
+
+    let req = json!({ "recipe": "hook-title", "slots": { "headline": "Ship faster" } });
+    let file = d.join("apply.json");
+    std::fs::write(&file, req.to_string()).unwrap();
+    let path = file.to_str().unwrap();
+    let cli: Value =
+        serde_json::from_str(&ok_line(d, &["recipe", "apply", path], caps::RECIPE_APPLY)).unwrap();
+    let tool: Value =
+        serde_json::from_str(&mcp.ok("recipe_apply", req, caps::RECIPE_APPLY)).unwrap();
+    // The second apply gets the next prefix and rev; otherwise the same answer.
+    assert_eq!((&cli["rev"], &tool["rev"]), (&json!(1), &json!(2)));
+    assert_eq!(cli["layers"][0], "hook-title-backdrop");
+    assert_eq!(tool["layers"][0], "hook-title-2-backdrop");
+    assert_eq!(cli["look"], tool["look"]);
+
+    let bad = json!({ "recipe": "hook-title", "slots": { "nope": 1 } });
+    std::fs::write(&file, bad.to_string()).unwrap();
+    let refused = mcp.err("recipe_apply", bad);
+    assert_eq!(code(&refused), "E_REQUEST");
+    assert_eq!(refused, err_line(d, &["recipe", "apply", path]));
+}
+
+#[test]
 fn tools_list_names_every_cli_twin_with_its_schema() {
     let dir = tempfile::tempdir().unwrap();
     let mut mcp = Mcp::start(dir.path());
@@ -447,6 +475,33 @@ fn library_tools_answer_like_their_cli_twins_without_a_studio() {
     assert_eq!(code(&missing), "E_NOT_FOUND");
     assert_eq!(missing, err_line(d, &["look", "get", "nope"]));
     assert_eq!(code(&mcp.err("taste_read", json!({}))), "E_REQUEST");
+    assert_eq!(
+        mcp.ok(
+            "recipe_search",
+            json!({ "query": "hook", "limit": 2 }),
+            lib::RECIPE_SEARCH
+        ),
+        ok_line(
+            d,
+            &["recipe", "search", "hook", "--limit", "2"],
+            lib::RECIPE_SEARCH
+        )
+    );
+    assert_eq!(
+        mcp.ok("recipe_search", Value::Null, lib::RECIPE_SEARCH),
+        ok_line(d, &["recipe", "search", "--limit", "5"], lib::RECIPE_SEARCH)
+    );
+    assert_eq!(
+        mcp.ok(
+            "recipe_card",
+            json!({ "id": "outro-cta" }),
+            lib::RECIPE_CARD
+        ),
+        ok_line(d, &["recipe", "card", "outro-cta"], lib::RECIPE_CARD)
+    );
+    let missing = mcp.err("recipe_card", json!({ "id": "nope" }));
+    assert_eq!(code(&missing), "E_NOT_FOUND");
+    assert_eq!(missing, err_line(d, &["recipe", "card", "nope"]));
     // None of these started a studio.
     assert!(!d.join(".clipkit/server.json").exists());
 }

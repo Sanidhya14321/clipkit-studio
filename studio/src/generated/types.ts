@@ -48,6 +48,10 @@ purpose: string, pass?: Pass | null, assetRef?: string | null,
  */
 briefDeps: Array<string>, 
 /**
+ * Where the layer came from, for recipe-expanded and asset-derived layers (spec 7.4).
+ */
+provenance?: Provenance | null, 
+/**
  * Project revision that last touched this layer. Set by the engine, never by patches.
  */
 rev: number, } & ({ "type": "footage", 
@@ -93,6 +97,20 @@ ref: string,
  * Caption style id (resolved against the project's tokens).
  */
 style: string, };
+
+export type Provenance = { 
+/**
+ * `recipe:<id>` or an asset id.
+ */
+sourceAsset: string, 
+/**
+ * Content hash of the asset file, hex.
+ */
+hash: string, mode: string, 
+/**
+ * What was adapted (for a recipe: the slots filled, in recipe order).
+ */
+adaptations: Array<string>, license: string, };
 
 export type CaptionFrom = "transcript" | "voice";
 

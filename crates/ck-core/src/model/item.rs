@@ -41,11 +41,28 @@ pub struct Item {
     /// Brief field names this layer depends on (drives re-planning when the brief changes).
     #[serde(default)]
     pub brief_deps: Vec<String>,
+    /// Where the layer came from, for recipe-expanded and asset-derived layers (spec 7.4).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provenance: Option<Provenance>,
     /// Project revision that last touched this layer. Set by the engine, never by patches.
     #[serde(default)]
     pub rev: u64,
     #[serde(flatten)]
     pub body: ItemBody,
+}
+
+/// Where a layer came from (spec 7.4: sourceAsset, hash, mode, adaptations, license).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct Provenance {
+    /// `recipe:<id>` or an asset id.
+    pub source_asset: String,
+    /// Content hash of the asset file, hex.
+    pub hash: String,
+    pub mode: String,
+    /// What was adapted (for a recipe: the slots filled, in recipe order).
+    pub adaptations: Vec<String>,
+    pub license: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]

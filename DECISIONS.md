@@ -4,6 +4,13 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 5b: `ck recipe search|card|apply` (spec 6.2, 7.1, 7.4)
+- `recipe card` is included because spec 6.2 lists it next to search and apply; search and card run offline over the built-in library like `taste`.
+- Provenance lives on the item: `Item.provenance` (optional, ck-core `Provenance`), so it survives edits and the evaluator can read it per layer. Schema and TS types regenerated.
+- Apply is a server op (`POST /api/recipe/apply`), one agent revision labelled `recipe: <id>`. Each layer goes on the first track of its kind, else a new `<kind>-<n>` track. The prefix defaults to the recipe id, then `-2`, `-3`...; an explicit prefix that collides is refused so retries never duplicate.
+- Look: request `look`, else the brief's `look` field, else `clean-product` (simplest fit; recorded as open question).
+- Like `brief propose`, apply briefly takes the locks the write touches (found by a dry run) unless the agent holds them, so a human lock refuses it. Adding items does not touch a track id; `assetsUsed` touches `@project`.
+
 ### Step 5a: recipe format and expander (spec 7.1, 7.4, 7.5)
 - Step 5 is split: 5a is the recipe model, expander and the 10 recipes; 5b is `ck recipe search|apply` with MCP twins.
 - Recipes are JSON (like looks), built into `ck`. Layers place a core clip (the 8 ids step 7 builds) at fractions of the scene duration. Props refer to slots as `"{slot}"` and to tokens as `"$role.name"` (colors, fonts, motion, size).

@@ -1,6 +1,6 @@
 ---
 source: crates/ck-core/src/model/tests.rs
-assertion_line: 98
+assertion_line: 99
 expression: "schemars::schema_for!(Project)"
 ---
 {
@@ -430,6 +430,17 @@ expression: "schemars::schema_for!(Project)"
             }
           ]
         },
+        "provenance": {
+          "description": "Where the layer came from, for recipe-expanded and asset-derived layers (spec 7.4).",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Provenance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "purpose": {
           "description": "Why this layer exists, in a few words (shown to the user and the agent).",
           "type": "string",
@@ -721,6 +732,40 @@ expression: "schemars::schema_for!(Project)"
       "required": [
         "x",
         "y"
+      ]
+    },
+    "Provenance": {
+      "description": "Where a layer came from (spec 7.4: sourceAsset, hash, mode, adaptations, license).",
+      "type": "object",
+      "properties": {
+        "adaptations": {
+          "description": "What was adapted (for a recipe: the slots filled, in recipe order).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hash": {
+          "description": "Content hash of the asset file, hex.",
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "sourceAsset": {
+          "description": "`recipe:<id>` or an asset id.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sourceAsset",
+        "hash",
+        "mode",
+        "adaptations",
+        "license"
       ]
     },
     "Reply": {

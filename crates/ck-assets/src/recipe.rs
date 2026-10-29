@@ -7,6 +7,7 @@
 
 use std::path::Path;
 
+pub use ck_core::model::Provenance;
 use ck_core::model::{Item, ItemBody, Pass, TrackKind};
 use ck_core::{CkError, ErrorCode};
 use schemars::JsonSchema;
@@ -141,20 +142,6 @@ pub struct LayerTemplate {
     #[serde(default)]
     pub props: serde_json::Map<String, Value>,
     pub brief_deps: Vec<String>,
-}
-
-/// Where a layer came from (spec 7.4: sourceAsset, hash, mode, adaptations, license).
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct Provenance {
-    /// `recipe:<id>`.
-    pub source_asset: String,
-    /// FNV-1a 64 of the recipe file, hex.
-    pub hash: String,
-    pub mode: String,
-    /// Slots filled, in recipe order.
-    pub adaptations: Vec<String>,
-    pub license: String,
 }
 
 /// A placed layer: the item and the kind of track it belongs on.
@@ -319,6 +306,14 @@ impl Recipe {
                 None => {}
             }
         }
+        // The hash is of the recipe file, so it is FNV-1a 64 of `text`.
+        let provenance = Provenance {
+            source_asset: format!("recipe:{}", self.id),
+            hash: fnv1a(text),
+            mode: "recipe".into(),
+            adaptations,
+            license: "original".into(),
+        };
         // Token references are kept as written; resolving them against the look proves they exist.
         let layers = self
             .layers
@@ -340,6 +335,7 @@ impl Recipe {
                         pass: Some(l.pass),
                         asset_ref: Some(format!("recipe:{}", self.id)),
                         brief_deps: l.brief_deps.clone(),
+                        provenance: Some(provenance.clone()),
                         rev: 0,
                         body: ItemBody::Clip {
                             clip_id: Some(l.clip.clone()),
@@ -352,16 +348,7 @@ impl Recipe {
                 })
             })
             .collect::<Result<_, CkError>>()?;
-        Ok(Expansion {
-            layers,
-            provenance: Provenance {
-                source_asset: format!("recipe:{}", self.id),
-                hash: fnv1a(text),
-                mode: "recipe".into(),
-                adaptations,
-                license: "original".into(),
-            },
-        })
+        Ok(Expansion { layers, provenance })
     }
 }
 

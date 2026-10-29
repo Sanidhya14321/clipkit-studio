@@ -594,5 +594,102 @@ expression: specs()
       ],
       "type": "object"
     }
+  },
+  {
+    "name": "recipe_search",
+    "command": "ck recipe search",
+    "description": "Rank the recipes by query words; each hit lists its slots (name*:kind<=chars). Prefer a recipe over hand-built layers when one fits.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "description": "Most hits to return (default 5, at most 12).",
+          "format": "uint",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "query": {
+          "default": "",
+          "description": "Words to look for in ids, names, tags and use-when lines; empty lists every recipe.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "recipe_card",
+    "command": "ck recipe card",
+    "description": "One recipe in full: slots, layers and props.",
+    "cap": 6144,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "recipe_apply",
+    "command": "ck recipe apply",
+    "description": "Fill a recipe's slots: adds its named layers (tokens, provenance, briefDeps) as one revision. Returns the layer ids.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "default": 0.0,
+          "description": "Scene start in seconds.",
+          "format": "double",
+          "type": "number"
+        },
+        "duration": {
+          "description": "Scene duration in seconds; the recipe default when omitted.",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "look": {
+          "description": "Look id whose tokens the layers use; defaults to the brief's look, then `clean-product`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prefix": {
+          "description": "Layer id prefix; layer ids are `<prefix>-<layer name>`. Defaults to the recipe id, with\n`-2`, `-3` ... added when that is taken.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recipe": {
+          "description": "Recipe id (from `recipe search`).",
+          "type": "string"
+        },
+        "slots": {
+          "additionalProperties": true,
+          "default": {},
+          "description": "Slot name to value (text, number, list of text, or a source id).",
+          "type": "object"
+        }
+      },
+      "required": [
+        "recipe"
+      ],
+      "type": "object"
+    }
   }
 ]
