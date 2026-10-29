@@ -222,6 +222,32 @@ export type CutWordsRequest = { source: string,
  */
 deleted: Array<number>, };
 
+export type CommentAddRequest = { text: string, anchor: Anchor, 
+/**
+ * Who writes it: the agent (uncertainties) or the human (the studio). Default agent.
+ */
+author?: Author | null, };
+
+export type StudioContext = { 
+/**
+ * Selected layer id.
+ */
+selection?: string | null, 
+/**
+ * Hovered element: layer id and, inside it, the element path (data-ck-path).
+ */
+hovered?: Hovered | null, 
+/**
+ * Playhead in seconds.
+ */
+playhead: number, 
+/**
+ * Loop range in seconds.
+ */
+loopRange?: [number, number] | null, };
+
+export type Hovered = { layerId: string, path?: string | null, };
+
 export type PatchRequest = { 
 /**
  * The project revision the patch was built against.

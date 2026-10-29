@@ -465,3 +465,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - `@structure` (spec 5.3 global lock) covers existing tracks reordered or removed and mode changes. Appending tracks and lengthening the timeline are not structural: they happen on every recipe apply and would freeze the editor constantly; item and track locks cover them.
 - Resolve's before/after is the list of content layers touched by revisions after the comment's `createdRev`; a full visual diff waits for history and branches (Phase 9).
 - `ck context` reads UI state the studio posts to `/api/context` (memory only, not a revision); comment text is cut to 80 characters; cap 1.5 KB.
+
+## Phase 6 step 5: studio comments and hover-select (2026-10-29)
+- Hover-select reads the existing clip instrumentation: the topmost `data-ck-part` under the pointer inside its `data-ck-layer` is the element, and the part name is the comment's `propPath` (spec 8.4 calls it data-ck-path; the clips have carried `data-ck-part` since Phase 4).
+- A click on the canvas picks the element (mini inspector) instead of toggling playback; play uses the Player's control. The Phase 4 clips test changed to match.
+- The studio posts its pointer state 250 ms after it settles. Loop range is reported as absent: the Player has no loop-range control yet.
+- Timeline drag, trim and split (spec 5.4) are not part of spec 12's Phase 6 list and stay out.

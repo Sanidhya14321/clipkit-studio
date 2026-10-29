@@ -67,6 +67,22 @@ export function Timeline({
           </div>
         </div>
       ))}
+      <div className="track" data-ck-pins>
+        <span className="track-label">pins</span>
+        <div className="track-lane">
+          {project.comments
+            .filter((c) => c.status !== "resolved" && c.anchor.tStart != null)
+            .map((c) => (
+              <span
+                key={c.id}
+                className="pin"
+                data-ck-pin={c.id}
+                title={c.text}
+                style={{ left: pct(c.anchor.tStart ?? 0) }}
+              />
+            ))}
+        </div>
+      </div>
       {project.tracks.length === 0 && <p className="muted">No tracks yet.</p>}
     </section>
   );

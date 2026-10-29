@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 6
 
 ## Handoff (latest)
-1. Done: Phase 6 steps 1 to 4: comments (`@comments` lock id, add/list/reply/resolve + MCP), scope gate (E_SCOPE), `@structure` global lock, `ck context` + MCP.
-2. Proof: `just check` 273 of 273 nextest (1 skipped), hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, Phase 6.
-3. Open: Phase 5 carried items (transcription provider, VAD, export queue, reviewer runs).
-4. Next: Phase 6 step 5: studio comments panel and pins, Send to agent, hover-select with Ask agent; studio posts its context; Playwright.
-5. Start: `just check`; studio-frontend skill; studio/src/App.tsx, preview/ProjectComposition.tsx, clips (data-ck-part).
+1. Done: Phase 6 step 5: studio comments panel and timeline pins, hover-select with mini inspector and Ask agent, studio context reporting.
+2. Proof: `just check` 273 of 273 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 11 of 11. Evidence in VERIFICATION.md, Phase 6.
+3. Open: loop range is always null (the Player has no loop-range UI yet); Phase 5 carried items.
+4. Next: Phase 6 step 6: brief tuning chips and diff re-planning (`brief diff` lists affected layers by briefDeps; impact preview); Playwright.
+5. Start: `just check`; crates/ck-server/src/session/brief.rs; studio/src/panels/BriefPanel.tsx, studio/src/brief.ts.
 
 ## Open questions
 - Phase 5 close: run the rust-reviewer and spec-checker subagents on the Phase 5 diff (05509be..HEAD) in a session that has them. Self review found no blocker; known gaps: export and import block one request thread (no queue or progress), `/media/` non-range requests read the whole proxy, packed transcript cap trims lines for sources much longer than 10 min.
@@ -57,7 +57,7 @@ Steps:
 - [x] 2. Scope gate (spec 4): an agent reply can start work on a comment with a declared scope; while a comment is working, agent patches may touch only the anchored layer, the declared dependents and comments; anything else is E_SCOPE.
 - [x] 3. Global structural lock (spec 5.3): track set/order, mode and total duration changes touch `@structure`; while the agent holds it every human patch is refused.
 - [x] 4. `ck context` + MCP: the studio reports selection, hovered element, playhead and loop range; the answer adds open comments, about 300 tokens.
-- [ ] 5. Studio comments panel and pins (moment, range, layer, element), Send to agent; hover-select on the preview (highlight with label, click selects, Ask agent anchors a comment to the path); Playwright.
+- [x] 5. Studio comments panel and pins (moment, range, layer, element), Send to agent; hover-select on the preview (highlight with label, click selects, Ask agent anchors a comment to the path); Playwright.
 - [ ] 6. Brief panel tuning chips (punchier, shorter, calmer, more premium) and diff re-planning: `brief diff` lists the layers whose briefDeps the change hits; impact preview in the studio; Playwright.
 - [ ] 7. Proof run, self review, evidence.
 

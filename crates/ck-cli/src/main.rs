@@ -196,6 +196,8 @@ fn run(cli: Cli) -> CkResult<()> {
             author: None,
         })?),
         Command::Comments(CommentsCommand::Reply { id, text, scope }) => {
+            // `--scope ""` declares an empty scope (only the anchored layer).
+            let scope = scope.map(|ids| ids.into_iter().filter(|i| !i.is_empty()).collect());
             print(&ops()?.comments_reply(&CommentReplyRequest {
                 id,
                 text,
