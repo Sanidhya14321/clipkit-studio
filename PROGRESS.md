@@ -1,16 +1,17 @@
 # Progress
 
 STATUS: RUNNING
-PHASE: 7
+PHASE: 8
 
 ## Handoff (latest)
-1. Done: Phase 6 (interaction slice): comments and pins, scope gate (E_SCOPE), `@structure` lock, hover-select with Ask agent, tuning chips with impact and `brief diff` affected layers, `ck context`; proof `crates/ck-cli/tests/interaction_proof.rs`.
-2. Proof: `just check` and `just test` 275 of 275 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 12 of 12. Evidence in VERIFICATION.md, Phase 6.
-3. Open: loop range not reported (no Player loop UI); Stop button / cooperative cancel (spec 5.2) still unbuilt; timeline drag/trim/split (spec 5.4) unbuilt; reviewer agents not run; Phase 5 carried items (Fish Audio key, VAD).
-4. Next: Phase 7 voice slice (voice slots, Fish Audio TTS, record-along, cloning with consent, loudness, captions from takes, studio push-to-talk, ck ask). Much of it needs the Fish Audio key and API check; plan it first.
-5. Start: `just check`; phase-runner skill; spec 06 (6.4) and 08 (8.3).
+1. Done: Phase 7 (voice slice): voice script/mode/speak/clone/captions with MCP twins, take processing (trim, -16 LUFS, fit), record-along studio panel, consent-gated cloning, captions from take timing, push-to-talk commands, `ck ask`; proof `crates/ck-cli/tests/voice_proof.rs`.
+2. Proof: `just check` and `just test` 294 of 294 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16. Evidence in VERIFICATION.md, Phase 7.
+3. Open: all Fish Audio calls (TTS, STT, cloning) are PLACEHOLDER stubs until the owner adds FISH_AUDIO_API_KEY and the API is verified; caption words are not drawn in the preview yet; crossfades and music ducking at mix time wait for the Phase 9 render path; reviewer agents not run.
+4. Next: Phase 8 assets at scale (card ingestion, AST extraction, tantivy search, retrieval ladder with budget gate, derive with codemods, Source Hub with vetting, license mode, collections). Plan it first; it touches third-party code and licenses, so read spec 07 and 14 closely.
+5. Start: `just check`; phase-runner and asset-pipeline skills; spec 07, 09, 14.
 
 ## Open questions
+- Phase 7 close: Fish Audio TTS (`FishTts`), STT (`FishStt`) and cloning are stubs; with the key, verify the API (spec 8.3), implement them behind the existing `Speaker` and `Transcriber` traits, and add cassette tests. Spec 8.3's crossfades and music ducking belong to the mix in the Phase 9 render path; the sound plan already emits duck cues.
 - Phase 7 step 6: `ck-server` `tests::idle::only_authorized_calls_count` uses 40 ms wall-clock margins and failed once under a loaded full run; move it to paused tokio time like the other idle tests.
 - Phase 6 close: self review against spec found these gaps outside spec 12's Phase 6 list, carried: Stop button with cooperative cancel (spec 5.2), timeline drag/trim/split/snapping/zoom (spec 5.4), loop range in the studio. Run the reviewer agents on e33924a^..HEAD when available.
 - Phase 5 close: run the rust-reviewer and spec-checker subagents on the Phase 5 diff (05509be..HEAD) in a session that has them. Self review found no blocker; known gaps: export and import block one request thread (no queue or progress), `/media/` non-range requests read the whole proxy, packed transcript cap trims lines for sources much longer than 10 min.
@@ -50,7 +51,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 7: voice slice (2026-10-29, in progress)
+## Phase 7: voice slice (2026-10-29, done; Fish Audio provider calls carried)
 
 Spec: 06 (6.2 voice commands, 6.4 lanes), 08 (8.3). Proof: a script becomes voice slots, each slot gets a take (AI through a fake speaker in tests, recorded in the studio), takes are normalized and fit-checked, captions come from the active take, and push-to-talk runs a local command; `ck ask` returns the user's answer. Fish Audio calls (TTS, cloning) are PLACEHOLDER stubs until the owner adds the key (same as Phase 5 step 4b).
 
@@ -62,7 +63,7 @@ Steps:
 - [x] 5. Captions from the active take's timing (transcriber over the take), as caption items.
 - [x] 6. Lane B push-to-talk: local command parser (play, pause, undo, redo, go to N seconds, split here), free-form phrases become comments at the selection or playhead.
 - [x] 7. Lane C `ck ask` + MCP twin: a question card with options in the studio, the answer returns as the tool result.
-- [ ] 8. Proof run, self review, evidence.
+- [x] 8. Proof run (`crates/ck-cli/tests/voice_proof.rs`), self review, evidence.
 
 ## Phase 6: interaction slice (2026-10-29, done)
 

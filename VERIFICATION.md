@@ -251,7 +251,7 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: studio transcript panel: click a word to seek, Delete/Backspace cuts it from the footage (human revision through `POST /api/cut/words` with the whole deleted set), same key restores at the clip edge; read-only while the agent holds the video track, and the server refuses (track lock now part of every footage rebuild) | PASS | `studio/e2e/phase5.spec.ts` (2 tests, `just e2e` 8 of 8 passed); `studio/src/transcript.test.ts` (deleted words from segment midpoints, toggle, source-to-timeline time); `ck-server` `tests::edit::studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock` (E_LOCK_HELD) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 254 of 254 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean; `just e2e` 8 of 8 |
 
-## Phase 7: voice slice (2026-10-29, in progress)
+## Phase 7: voice slice (2026-10-29, done; Fish Audio TTS, STT and cloning are PLACEHOLDER stubs)
 
 | Check | Result | Evidence |
 | --- | --- | --- |
@@ -268,6 +268,10 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 6 run | PASS | 2026-10-29 `just check`: 290 of 290 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 15 of 15. One run had `tests::idle::only_authorized_calls_count` fail under load (40 ms wall-clock margins, Phase 2); it passes alone and on rerun |
 | Step 7: `ck ask` + MCP twin (Lane C): a question with up to 6 options shows as a card in the studio (also when asked before the studio connected); the user picks an option, types or speaks an answer; the call blocks up to 25 s and returns the answer, or the id to resume with `--id`; answers are delivered once | PASS | `ck-server` `tests::ask::*` (3, including the HTTP call woken by an answer); `studio/e2e/phase7.spec.ts` ask test; `studio/src/state.test.ts` asks reducer; `mcp_parity::comment_tools_answer_like_their_cli_twins` (ask parity) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 293 of 293 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16 |
+| Step 8: Phase 7 proof through the real binary: script to 2 slots; `voice speak` without a key falls back to the placeholder (slot failed); a recording posted as the studio does becomes take t1 (10 s, fits its 10 s window); clone refused before consent (E_REQUEST); captions need the transcriber (E_VOICE); `ask` returns its id unanswered | PASS | `crates/ck-cli/tests/voice_proof.rs` `a_script_becomes_voiced_slots_with_studio_takes` |
+| Step 8: real Fish Audio TTS, STT and cloning | BLOCKED | Owner adds FISH_AUDIO_API_KEY later; the API must be verified first (spec 8.3) |
+| Step 8: rust-reviewer and spec-checker subagents | BLOCKED | Agent types unavailable in this session; self review in PROGRESS.md |
+| Phase 7 close run | PASS | 2026-10-29 `just check` and `just test`: 294 of 294 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16 |
 | Step 1 run | PASS | 2026-10-29 `just check`: 278 of 278 nextest (1 skipped), hooks 41 of 41 |
 
 ## Phase 6: interaction slice (2026-10-29, done)
