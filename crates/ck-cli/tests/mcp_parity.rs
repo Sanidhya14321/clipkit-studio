@@ -315,6 +315,22 @@ fn import_answers_like_its_cli_twin() {
     let refused = mcp.err("import", json!({ "path": "/no/such/clip.mp4" }));
     assert_eq!(code(&refused), "E_MEDIA");
     assert_eq!(refused, err_line(d, &["import", "/no/such/clip.mp4"]));
+
+    // Without a transcriber or a transcript, the edit tools refuse alike on both sides.
+    let id = cli["source"]["id"].as_str().unwrap();
+    let req = json!({ "source": id });
+    let refused = mcp.err("transcribe", req.clone());
+    assert_eq!(code(&refused), "E_VOICE");
+    assert_eq!(refused, err_line(d, &["transcribe", id]));
+    for (tool, args) in [
+        ("transcript_get", vec!["transcript", "get", id]),
+        ("cut_suggest", vec!["cut", "suggest", id]),
+        ("cut_apply", vec!["cut", "apply", id]),
+    ] {
+        let refused = mcp.err(tool, req.clone());
+        assert_eq!(code(&refused), "E_NOT_FOUND", "{tool}");
+        assert_eq!(refused, err_line(d, &args), "{tool}");
+    }
 }
 
 #[test]

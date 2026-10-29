@@ -4,8 +4,7 @@
 
 use std::path::{Path, PathBuf};
 
-use ck_core::model::{Author, Holder, Source, SourceKind};
-use ck_core::patch::{PROJECT_LAYER, PatchRequest};
+use ck_core::model::{Source, SourceKind};
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_media::{CachePaths, MediaInfo};
 use schemars::JsonSchema;
@@ -13,7 +12,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use super::Session;
-use crate::event::Event;
 
 /// Hex digits of the content hash used in a source id (`src-<8 hex>`).
 const ID_HASH_LEN: usize = 8;
@@ -63,10 +61,6 @@ fn stored_path(path: &Path, base: &Path) -> String {
     }
 }
 
-fn server_err(e: impl std::fmt::Display) -> CkError {
-    CkError::new(ErrorCode::Server, e.to_string())
-}
-
 impl Session {
     /// `import`: the media work runs before the project lock is taken, so a long proxy encode
     /// never blocks other calls.
@@ -106,7 +100,6 @@ impl Session {
         let audio_tracks = info.audio.len();
         let vfr = info.video.as_ref().is_some_and(|v| v.variable_frame_rate);
 
-        let now = self.now_ms();
         let mut doc = self.doc()?;
         let project = doc.project();
         if let Some(existing) = project.sources.iter().find(|s| s.hash == source.hash) {
@@ -118,38 +111,8 @@ impl Session {
                 vfr,
             });
         }
-        let ops = serde_json::from_value(json!([
-            { "op": "add", "path": "/sources/-", "value": source }
-        ]))
-        .map_err(server_err)?;
-        let patch = PatchRequest {
-            base_rev: project.rev,
-            layer_revs: Default::default(),
-            ops,
-            author: Author::Agent,
-            label: format!("import: {}", source.id),
-        };
-        let project_lock = [PROJECT_LAYER.to_owned()];
-        let held = project
-            .locks
-            .iter()
-            .any(|l| l.layer_id == PROJECT_LAYER && l.holder == Holder::Agent && l.is_live(now));
-        if !held {
-            doc.acquire(Holder::Agent, &project_lock, now)?;
-        }
-        let committed = doc.patch(&patch, now).cloned();
-        if !held {
-            doc.release(Holder::Agent, Some(&project_lock));
-        }
-        let rev = committed?;
-        self.persist(&mut doc)?;
-        self.publish(Event::Revision {
-            rev: rev.rev,
-            author: rev.author,
-            label: rev.label,
-            touched: rev.touched,
-        });
-        self.publish_snapshot(&doc);
+        let ops = json!([{ "op": "add", "path": "/sources/-", "value": source }]);
+        let rev = self.commit_agent(&mut doc, ops, format!("import: {}", source.id))?;
         Ok(ImportResult {
             rev: rev.rev,
             added: true,

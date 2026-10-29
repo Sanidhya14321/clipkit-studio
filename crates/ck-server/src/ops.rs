@@ -14,6 +14,10 @@ use crate::session::brief::{
     BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
     BriefWaitRequest, BriefWaitResult,
 };
+use crate::session::edit::{
+    CutApplyRequest, CutApplyResult, CutSuggestResult, SourceRequest, TranscribeResult,
+    TranscriptView,
+};
 use crate::session::handoff::{HandoffRequest, HandoffResult, WaitEvent, WaitRequest, WaitResult};
 use crate::session::import::{ImportRequest, ImportResult};
 use crate::session::layout::LayoutCheckResult;
@@ -44,6 +48,11 @@ pub mod caps {
     pub const HANDOFF: usize = 1024;
     pub const WAIT: usize = 4 * 1024;
     pub const IMPORT: usize = 1024;
+    pub const TRANSCRIBE: usize = 1024;
+    /// About 12 KB per 10 minutes of speech (spec 8); longer sources are trimmed.
+    pub const TRANSCRIPT: usize = 16 * 1024;
+    pub const CUT_SUGGEST: usize = 8 * 1024;
+    pub const CUT_APPLY: usize = 2 * 1024;
 }
 
 pub struct Ops {
@@ -180,6 +189,34 @@ impl Ops {
         )
     }
 
+    /// `transcribe`: word-level transcript of a source, stored on disk.
+    pub fn transcribe(&self, req: &SourceRequest) -> CkResult<TranscribeResult> {
+        let reply = self.client.post("/api/transcribe", req)?;
+        capped("transcribe", caps::TRANSCRIBE, reply)
+    }
+
+    /// `transcript get`: the packed transcript. Lines past the cap are counted in `omitted`.
+    pub fn transcript_get(&self, req: &SourceRequest) -> CkResult<TranscriptView> {
+        let reply = self
+            .client
+            .get("/api/transcript", &[("source", req.source.as_str())])?;
+        trimmed("transcript get", caps::TRANSCRIPT, reply)
+    }
+
+    /// `cut suggest`: cut candidates on word boundaries and scene changes.
+    pub fn cut_suggest(&self, req: &SourceRequest) -> CkResult<CutSuggestResult> {
+        let reply = self
+            .client
+            .get("/api/cut/suggest", &[("source", req.source.as_str())])?;
+        trimmed("cut suggest", caps::CUT_SUGGEST, reply)
+    }
+
+    /// `cut apply`: the chosen cuts become footage segments on the video track.
+    pub fn cut_apply(&self, req: &CutApplyRequest) -> CkResult<CutApplyResult> {
+        let reply = self.client.post("/api/cut/apply", req)?;
+        trimmed("cut apply", caps::CUT_APPLY, reply)
+    }
+
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.
     pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
         capped(
@@ -221,6 +258,27 @@ impl Trim for WaitResult {
     type Entry = WaitEvent;
     fn parts(&mut self) -> (&mut Vec<WaitEvent>, &mut usize) {
         (&mut self.events, &mut self.omitted)
+    }
+}
+
+impl Trim for TranscriptView {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.packed.lines, &mut self.packed.omitted)
+    }
+}
+
+impl Trim for CutSuggestResult {
+    type Entry = ck_voice::CutCandidate;
+    fn parts(&mut self) -> (&mut Vec<ck_voice::CutCandidate>, &mut usize) {
+        (&mut self.cuts, &mut self.omitted)
+    }
+}
+
+impl Trim for CutApplyResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.segments, &mut self.omitted)
     }
 }
 

@@ -58,6 +58,9 @@ pub enum ErrorCode {
     /// ffmpeg or ffprobe failed, timed out, or the media file is unreadable or unsupported.
     #[serde(rename = "E_MEDIA")]
     Media,
+    /// Transcription or speech failed, or the voice provider is not configured.
+    #[serde(rename = "E_VOICE")]
+    Voice,
 }
 
 impl ErrorCode {
@@ -80,6 +83,7 @@ impl ErrorCode {
         ErrorCode::OutputCap,
         ErrorCode::Asset,
         ErrorCode::Media,
+        ErrorCode::Voice,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -101,6 +105,7 @@ impl ErrorCode {
             ErrorCode::OutputCap => "E_OUTPUT_CAP",
             ErrorCode::Asset => "E_ASSET",
             ErrorCode::Media => "E_MEDIA",
+            ErrorCode::Voice => "E_VOICE",
         }
     }
 
@@ -130,6 +135,7 @@ impl ErrorCode {
             ErrorCode::Media => {
                 "Check the media file and that ffmpeg and ffprobe are on PATH (ck doctor)."
             }
+            ErrorCode::Voice => "Set FISH_AUDIO_API_KEY or install a local model (ck doctor).",
         }
     }
 }

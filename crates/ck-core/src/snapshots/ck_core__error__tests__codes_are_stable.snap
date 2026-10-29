@@ -70,5 +70,9 @@ expression: table
   [
     "E_MEDIA",
     "Check the media file and that ffmpeg and ffprobe are on PATH (ck doctor)."
+  ],
+  [
+    "E_VOICE",
+    "Set FISH_AUDIO_API_KEY or install a local model (ck doctor)."
   ]
 ]

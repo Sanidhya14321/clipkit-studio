@@ -16,6 +16,7 @@ use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use crate::session::edit::{CutApplyRequest, SourceRequest};
 use crate::session::handoff::{HandoffRequest, WaitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
@@ -52,6 +53,10 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/looks", get(looks))
         .route("/api/look/apply", post(look_apply))
         .route("/api/import", post(import))
+        .route("/api/transcribe", post(transcribe))
+        .route("/api/transcript", get(transcript_get))
+        .route("/api/cut/suggest", get(cut_suggest))
+        .route("/api/cut/apply", post(cut_apply))
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
         .route("/api/sound/plan", get(sound_plan))
@@ -159,6 +164,38 @@ async fn import(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.import(&req)).await
+}
+
+async fn transcribe(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<SourceRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.transcribe(&req)).await
+}
+
+async fn transcript_get(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<SourceRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    blocking(s, move |s| s.transcript_get(&req)).await
+}
+
+async fn cut_suggest(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<SourceRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    blocking(s, move |s| s.cut_suggest(&req)).await
+}
+
+async fn cut_apply(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<CutApplyRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.cut_apply(&req)).await
 }
 
 async fn look_apply(

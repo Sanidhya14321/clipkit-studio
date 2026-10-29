@@ -367,6 +367,7 @@ dependencies = [
  "ck-assets",
  "ck-core",
  "ck-media",
+ "ck-voice",
  "futures-util",
  "getrandom 0.4.3",
  "insta",
@@ -386,6 +387,13 @@ dependencies = [
 [[package]]
 name = "ck-voice"
 version = "0.0.0"
+dependencies = [
+ "ck-core",
+ "schemars",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
 
 [[package]]
 name = "clap"

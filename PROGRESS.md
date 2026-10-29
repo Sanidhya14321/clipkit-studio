@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 5
 
 ## Handoff (latest)
-1. Done: Phase 5 step 3 (`ck_media::{detect_silences, detect_scenes}`; scdet scores in RGB because the fixture's red and green have equal luma).
-2. Proof: `just check` passing, 244 of 244 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 5 step 3.
-3. Open: import runs ffmpeg inside the server request (blocking thread); fixture-backed tests skip without `just fixtures`; Phase 4 carries unchanged.
-4. Next: Phase 5 step 4: transcription. Fish Audio STT (verify the API first) with local whisper fallback; word timestamps; cassette tests.
-5. Start: `just check`; spec 08 transcription, spec 14 whisper-rs; researcher subagent for the Fish Audio STT API.
+1. Done: Phase 5 steps 4a, 5, 6: `ck transcribe`, `ck transcript get`, `ck cut suggest|apply` with MCP twins; ck-voice transcript, pack and cuts; `E_VOICE`.
+2. Proof: `just check` passing, 253 of 253 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 5 steps 4a to 6.
+3. Open: step 4b (Fish Audio STT, whisper) waits for the owner's key and an API check; fades at joins are left to export (step 9).
+4. Next: Phase 5 step 7: studio transcript panel delete-to-cut and clip-edge restore, with Playwright test.
+5. Start: `just check`; studio-frontend skill; spec 05 for the transcript panel.
 
 ## Open questions
+- Phase 5 step 4b: owner will add FISH_AUDIO_API_KEY; then verify the Fish Audio STT API, build `FishStt`, record a cassette test. Decide whether whisper-rs (C++ build) goes in by default or behind a cargo feature.
 - Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
 - Phase 4 step 10c: spec-checker gaps carried forward (verify --critic, audio and captions gates, motion direction and holds, license-mode check, retrieval budgets, token meter, variants, brief more-options, verify before idle); assign each to a later phase (DECISIONS.md, step 10c).
 - Phase 4 step 10b: the Phase 4 proof ends at a verified project; exporting the generated video waits for the Phase 9 render worker (DECISIONS.md, step 10). Confirm this is acceptable or pull a minimal render path forward.
@@ -54,9 +55,9 @@ Steps:
 - [x] 1. `ck-media` probe: `E_MEDIA` code, safe ffprobe call (argument array, timeout, `-` path refusal), typed `MediaInfo` (duration, video/audio streams, fps, VFR flag, rotation, audio track count) with fixture tests.
 - [x] 2. (2a media functions; 2b project source and `ck import`) Import: content hash, 720p proxy and audio extraction into `.clipkit/cache/`, source registered in the project; `ck import` with MCP twin.
 - [x] 3. Silence detection (silencedetect) and scene detection (ffmpeg scene score) as cut-candidate signals.
-- [ ] 4. Transcription: Fish Audio STT (verify API first) with local whisper fallback (whisper-rs, spec 14); word timestamps; cassette tests.
-- [ ] 5. Packed transcript (phrases, silences, fillers; about 12 KB per 10 min) and `ck transcript get`.
-- [ ] 6. Cut candidates (silences, fillers, false starts, repeated takes) on word boundaries with fades; `ck cut suggest|apply`.
+- [ ] 4. (4a core done; 4b BLOCKED: provider waits for the owner's key and API check) Transcription: Fish Audio STT (verify API first) with local whisper fallback (whisper-rs, spec 14); word timestamps; cassette tests.
+- [x] 5. Packed transcript (phrases, silences, fillers; about 12 KB per 10 min) and `ck transcript get`.
+- [x] 6. Cut candidates (silences, fillers, false starts, repeated takes) on word boundaries with fades; `ck cut suggest|apply`.
 - [ ] 7. Studio transcript panel delete-to-cut and clip-edge restore, with Playwright test.
 - [ ] 8. Hybrid mode: generated layers over footage.
 - [ ] 9. Fast ffmpeg export (typed filter graph), loudness gates (ebur128/loudnorm) and export presets; `ck export`.

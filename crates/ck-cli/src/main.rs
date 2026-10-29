@@ -15,6 +15,7 @@ use ck_server::api::BODY_LIMIT;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
+use ck_server::session::edit::{CutApplyRequest, SourceRequest};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
@@ -23,8 +24,8 @@ use clap::Parser;
 use serde::Serialize;
 
 use args::{
-    BriefCommand, Cli, Command, LayoutCommand, LookCommand, ProjectCommand, RecipeCommand,
-    SoundCommand, TasteCommand,
+    BriefCommand, Cli, Command, CutCommand, LayoutCommand, LookCommand, ProjectCommand,
+    RecipeCommand, SoundCommand, TasteCommand, TranscriptCommand,
 };
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
@@ -157,6 +158,16 @@ fn run(cli: Cli) -> CkResult<()> {
             print(&ops()?.import(&ImportRequest {
                 path: path.to_string_lossy().into_owned(),
             })?)
+        }
+        Command::Transcribe { source } => print(&ops()?.transcribe(&SourceRequest { source })?),
+        Command::Transcript(TranscriptCommand::Get { source }) => {
+            print(&ops()?.transcript_get(&SourceRequest { source })?)
+        }
+        Command::Cut(CutCommand::Suggest { source }) => {
+            print(&ops()?.cut_suggest(&SourceRequest { source })?)
+        }
+        Command::Cut(CutCommand::Apply { source, ids }) => {
+            print(&ops()?.cut_apply(&CutApplyRequest { source, ids })?)
         }
         Command::Handoff { label } => print(&ops()?.handoff(&HandoffRequest { label })?),
         Command::Wait { since, timeout } => print(&ops()?.wait(&WaitRequest {

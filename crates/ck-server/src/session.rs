@@ -7,10 +7,12 @@ use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, MutexGuard};
 
-use ck_core::model::{Holder, Item, Lock};
+use ck_core::history::Revision;
+use ck_core::model::{Author, Holder, Item, Lock};
 use ck_core::patch::PatchRequest;
 use ck_core::storage::Store;
 use ck_core::{CkError, CkResult, Document, ErrorCode, Project};
+use ck_voice::{FishStt, Transcriber};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use tokio::sync::broadcast;
@@ -22,6 +24,7 @@ use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
 pub mod brief;
+pub mod edit;
 pub mod handoff;
 pub mod import;
 pub mod layout;
@@ -87,6 +90,7 @@ pub struct Session {
     /// Set when a failed save could not be undone by reloading; every call then fails.
     degraded: AtomicBool,
     activity: Arc<Activity>,
+    transcriber: Arc<dyn Transcriber>,
 }
 
 impl Session {
@@ -102,7 +106,14 @@ impl Session {
             clock,
             degraded: AtomicBool::new(false),
             activity: Arc::default(),
+            transcriber: Arc::new(FishStt::from_env()),
         })
+    }
+
+    /// Use another transcriber (tests, or a local model once one is installed).
+    pub fn with_transcriber(mut self, transcriber: Arc<dyn Transcriber>) -> Self {
+        self.transcriber = transcriber;
+        self
     }
 
     /// Subscribe to the bus and return the current snapshot. Subscribing first means no change
@@ -203,6 +214,55 @@ impl Session {
                 .collect(),
             omitted: 0,
         })
+    }
+
+    /// Commit `ops` as one agent revision, persist it and publish it. Like `brief propose`, the
+    /// agent briefly takes the locks the write touches unless it holds them, so a human
+    /// mid-edit refuses the write.
+    fn commit_agent(
+        &self,
+        doc: &mut MutexGuard<'_, Document>,
+        ops: serde_json::Value,
+        label: String,
+    ) -> CkResult<Revision> {
+        let now = self.now_ms();
+        let project = doc.project();
+        let patch = PatchRequest {
+            base_rev: project.rev,
+            layer_revs: Default::default(),
+            ops: serde_json::from_value(ops)
+                .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?,
+            author: Author::Agent,
+            label,
+        };
+        // Dry run to learn the lock ids this write touches.
+        let touched = ck_core::patch::apply(project, &patch)?.touched;
+        let missing: Vec<String> = touched
+            .into_iter()
+            .filter(|id| {
+                !project
+                    .locks
+                    .iter()
+                    .any(|l| &l.layer_id == id && l.holder == Holder::Agent && l.is_live(now))
+            })
+            .collect();
+        if !missing.is_empty() {
+            doc.acquire(Holder::Agent, &missing, now)?;
+        }
+        let committed = doc.patch(&patch, now).cloned();
+        if !missing.is_empty() {
+            doc.release(Holder::Agent, Some(&missing));
+        }
+        let rev = committed?;
+        self.persist(doc)?;
+        self.publish(Event::Revision {
+            rev: rev.rev,
+            author: rev.author,
+            label: rev.label.clone(),
+            touched: rev.touched.clone(),
+        });
+        self.publish_snapshot(doc);
+        Ok(rev)
     }
 
     /// Save, or on failure restore the in-memory document from disk so memory never runs ahead

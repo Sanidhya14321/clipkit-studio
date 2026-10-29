@@ -787,6 +787,89 @@ expression: specs()
     }
   },
   {
+    "name": "transcribe",
+    "command": "ck transcribe",
+    "description": "Transcribe an imported source with word timestamps; the transcript stays on disk (read it with transcript_get).",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "description": "Source id (from `import`).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "transcript_get",
+    "command": "ck transcript get",
+    "description": "The packed transcript of a source: one line per phrase (#firstWord start-end text, fillers in parentheses) or silence (~ start-end silence).",
+    "cap": 16384,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "description": "Source id (from `import`).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "cut_suggest",
+    "command": "ck cut suggest",
+    "description": "Cut candidates for a source (silence, filler, retake) on word boundaries with confidence, plus scene changes. Apply with cut_apply.",
+    "cap": 8192,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "description": "Source id (from `import`).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "cut_apply",
+    "command": "ck cut apply",
+    "description": "Apply suggested cuts (ids, or all when empty): the source's footage on the video track becomes the kept segments, end to end, as one revision.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "ids": {
+          "default": [],
+          "description": "Cut ids from `cut suggest`; empty applies every suggested cut.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "wait",
     "command": "ck wait",
     "description": "Block until the user changes something after `since` (comments, brief edits, confirmations, layer edits), at most 25 s. Returns events oldest first; empty on timeout. Call again with since = the returned rev.",

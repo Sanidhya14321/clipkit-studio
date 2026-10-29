@@ -88,9 +88,16 @@ pub enum Command {
     /// Plan sound design: whooshes, hits, risers, room tone and ducking.
     #[command(subcommand)]
     Sound(SoundCommand),
-    /// Import a media file: probe, hash, 720p proxy and audio into the cache, then register it as
-    /// a project source.
+    /// Import a media file as a project source.
     Import { path: std::path::PathBuf },
+    /// Transcribe a source with word timestamps.
+    Transcribe { source: String },
+    /// Read a packed transcript.
+    #[command(subcommand)]
+    Transcript(TranscriptCommand),
+    /// Suggest and apply cuts.
+    #[command(subcommand)]
+    Cut(CutCommand),
     /// Hand the project to the user: release every agent lock and set the agent idle.
     Handoff {
         /// What the studio shows for the agent while idle.
@@ -106,11 +113,10 @@ pub enum Command {
         #[arg(long)]
         timeout: Option<u64>,
     },
-    /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
+    /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks.
     #[command(subcommand)]
     Hook(HookCommand),
-    /// Set ClipKit up in Claude Code, Codex, Cursor or any MCP client: show the plan, ask, then
-    /// write (spec 6.3).
+    /// Set ClipKit up in Claude Code, Codex, Cursor or any MCP client (spec 6.3).
     Init(InstallArgs),
     /// Remove everything ck init added.
     Uninstall(InstallArgs),
@@ -228,6 +234,25 @@ pub enum RecipeCommand {
     /// Expand a recipe into named layers: a JSON file {recipe, at?, duration?, slots, prefix?,
     /// look?}, or - for stdin.
     Apply { file: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum TranscriptCommand {
+    /// The packed transcript: phrases with times, silences and (fillers).
+    Get { source: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum CutCommand {
+    /// Cut candidates on word boundaries, with confidence, plus scene changes.
+    Suggest { source: String },
+    /// Apply suggested cuts as footage segments on the video track.
+    Apply {
+        source: String,
+        /// Cut ids from `cut suggest`, comma separated; default every suggested cut.
+        #[arg(long, value_delimiter = ',')]
+        ids: Vec<String>,
+    },
 }
 
 #[derive(Debug, Subcommand)]

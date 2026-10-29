@@ -13,6 +13,7 @@ use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
+use ck_server::session::edit::{CutApplyRequest, SourceRequest};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
@@ -215,6 +216,34 @@ pub fn specs() -> Vec<ToolSpec> {
              existing source.",
             caps::IMPORT,
         ),
+        spec::<SourceRequest>(
+            "transcribe",
+            "ck transcribe",
+            "Transcribe an imported source with word timestamps; the transcript stays on disk \
+             (read it with transcript_get).",
+            caps::TRANSCRIBE,
+        ),
+        spec::<SourceRequest>(
+            "transcript_get",
+            "ck transcript get",
+            "The packed transcript of a source: one line per phrase (#firstWord start-end text, \
+             fillers in parentheses) or silence (~ start-end silence).",
+            caps::TRANSCRIPT,
+        ),
+        spec::<SourceRequest>(
+            "cut_suggest",
+            "ck cut suggest",
+            "Cut candidates for a source (silence, filler, retake) on word boundaries with \
+             confidence, plus scene changes. Apply with cut_apply.",
+            caps::CUT_SUGGEST,
+        ),
+        spec::<CutApplyRequest>(
+            "cut_apply",
+            "ck cut apply",
+            "Apply suggested cuts (ids, or all when empty): the source's footage on the video \
+             track becomes the kept segments, end to end, as one revision.",
+            caps::CUT_APPLY,
+        ),
         spec::<WaitRequest>(
             "wait",
             "ck wait",
@@ -302,6 +331,10 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
+        "transcribe" => json(&ops.transcribe(&parse(args)?)?),
+        "transcript_get" => json(&ops.transcript_get(&parse(args)?)?),
+        "cut_suggest" => json(&ops.cut_suggest(&parse(args)?)?),
+        "cut_apply" => json(&ops.cut_apply(&parse(args)?)?),
         "recipe_apply" => json(&ops.recipe_apply(&parse(args)?)?),
         "brief_get" => {
             let StatusArgs {} = parse(args)?;

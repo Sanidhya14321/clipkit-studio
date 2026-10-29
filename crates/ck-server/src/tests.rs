@@ -2,6 +2,7 @@
 
 mod api;
 mod brief;
+mod edit;
 mod fixture;
 mod handoff;
 mod idle;
