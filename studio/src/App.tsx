@@ -10,7 +10,7 @@ import { Timeline } from "./panels/Timeline";
 import { TranscriptPanel } from "./panels/TranscriptPanel";
 import { ProjectComposition } from "./preview/ProjectComposition";
 import { PROJECT_LAYER, agentLocked, agentStopped, canEdit } from "./state";
-import { durationInFrames } from "./timeline";
+import { durationInFrames, mediaUrls } from "./timeline";
 import { useNow, useStudio } from "./useStudio";
 
 export function App({ token }: { token: string }) {
@@ -27,6 +27,7 @@ export function App({ token }: { token: string }) {
     );
   }, [token]);
 
+  const media = useMemo(() => mediaUrls(project, token), [project, token]);
   const stopped = agentStopped(locks, now);
   const agentLayers = useMemo(() => {
     const ids = agentLocked(locks, now);
@@ -60,6 +61,7 @@ export function App({ token }: { token: string }) {
                 agentLayers: [...agentLayers],
                 flash: lastRevision?.touched ?? [],
                 flashRev: lastRevision?.rev ?? 0,
+                media,
               }}
               durationInFrames={durationInFrames(project)}
               fps={project.settings.fps}

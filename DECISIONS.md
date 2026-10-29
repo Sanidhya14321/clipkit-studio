@@ -444,3 +444,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Delete-to-cut sends the whole deleted word set (`POST /api/cut/words`, studio only, no agent twin: the agent uses `cut apply`). The panel derives the deleted set from footage segments (a word is cut when no segment keeps its midpoint), so the server stores no extra state.
 - Delete/Backspace on a focused word toggles it; click seeks. A run of deleted words is cut from its first word's start to the next kept word's start.
 - Every footage rebuild (agent or human) also takes the video track's lock: replacing segments only touches item ids, so before this an agent's track lock did not refuse a human cut.
+
+## Phase 5 step 8: hybrid (2026-10-29)
+- Importing a video adds the whole source as one footage segment on a bottom video track `footage-1` (spec 4: video added mid-project inserts a base layer and keeps existing work). Mode: generate with any items becomes hybrid; empty generate becomes edit; other modes unchanged. Audio and images change nothing.
+- In a project with footage, recipe layers whose track kind is video go to an overlay track, so generated work never shares the footage track. Backdrops keep their authored look and may cover footage; the recipe choice is the agent's.
+- Footage cuts now target the track that holds the source, else `footage-1` (was the first video track).
+- `/media/<hash>.mp4` serves proxies with byte ranges (open ranges capped at 4 MB per reply). A `<video>` cannot send headers, so the token may ride in the query for `/media/` (as for `/ws`); Host and Origin checks still apply.

@@ -48,3 +48,18 @@ export function duration(project: Project): number {
 export function durationInFrames(project: Project): number {
   return Math.max(1, Math.ceil(duration(project) * project.settings.fps));
 }
+
+/** Proxy URL of every video source that has one. A `<video>` cannot send headers, so the
+ * session token rides in the query (the server accepts it there only for `/media/`). */
+export function mediaUrls(
+  project: Project | null,
+  token: string,
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const s of project?.sources ?? []) {
+    if (s.kind === "video" && s.proxyPath) {
+      out[s.id] = `/media/${s.hash}.mp4?token=${encodeURIComponent(token)}`;
+    }
+  }
+  return out;
+}

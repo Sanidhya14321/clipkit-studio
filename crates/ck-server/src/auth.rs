@@ -60,8 +60,10 @@ impl Guard {
             .headers()
             .get(TOKEN_HEADER)
             .and_then(|h| h.to_str().ok());
-        // Only the WebSocket may carry the token in the URL; API calls keep it out of URLs.
-        let from_query = (req.uri().path() == "/ws")
+        // Only the WebSocket and media (a `<video>` src) may carry the token in the URL; API
+        // calls keep it out of URLs.
+        let path = req.uri().path();
+        let from_query = (path == "/ws" || path.starts_with("/media/"))
             .then(|| req.uri().query())
             .flatten()
             .and_then(|q| q.split('&').find_map(|pair| pair.strip_prefix("token=")));

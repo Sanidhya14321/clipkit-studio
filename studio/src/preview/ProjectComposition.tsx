@@ -1,7 +1,14 @@
 // The preview composition: a pure function of the project (no fetches, no clocks). Core clip
-// items render through their native clip (src/clips); other layers (media from proxies arrives
-// with its phase) draw as a labelled box. Every layer is addressable by `data-ck-layer`.
-import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
+// items render through their native clip (src/clips); footage plays its source's proxy (the
+// URL comes in through `media`, so the composition never fetches); other layers draw as a
+// labelled box. Every layer is addressable by `data-ck-layer`.
+import {
+  AbsoluteFill,
+  Html5Video,
+  Sequence,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
 import type { Item, Look, Project, TrackKind } from "../generated/types";
 import { span } from "../timeline";
 import { CLIPS } from "../clips/clips";
@@ -16,6 +23,8 @@ export interface CompositionProps extends Record<string, unknown> {
   /** Layers the last patch touched, and that patch's rev (a new rev restarts the flash). */
   flash: string[];
   flashRev: number;
+  /** Proxy URL per source id (footage without one draws as a labelled box). */
+  media: Record<string, string>;
 }
 
 const KIND_COLOR: Record<TrackKind, string> = {
@@ -31,6 +40,7 @@ export function ProjectComposition({
   agentLayers,
   flash,
   flashRev,
+  media,
 }: CompositionProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -40,9 +50,43 @@ export function ProjectComposition({
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#111" }}>
+      {project.tracks.map((track) =>
+        track.items.map((item) =>
+          item.type === "footage" && media[item.src] ? (
+            <Sequence
+              key={item.id}
+              from={Math.round(item.at * fps)}
+              durationInFrames={Math.max(
+                1,
+                Math.round(((item.srcOut - item.srcIn) / item.speed) * fps),
+              )}
+              layout="none"
+            >
+              <AbsoluteFill data-ck-layer={item.id} data-ck-footage={item.src}>
+                <Html5Video
+                  src={media[item.src]}
+                  trimBefore={Math.round(item.srcIn * fps)}
+                  trimAfter={Math.round(item.srcOut * fps)}
+                  playbackRate={item.speed}
+                  volume={item.volume}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+              </AbsoluteFill>
+            </Sequence>
+          ) : null,
+        ),
+      )}
       {project.tracks.map((track, ti) =>
         track.items
-          .filter((item) => isVisibleAt(project, item, t))
+          .filter(
+            (item) =>
+              !(item.type === "footage" && media[item.src]) &&
+              isVisibleAt(project, item, t),
+          )
           .map((item) =>
             item.type === "clip" && isCoreClip(item.clipId) ? (
               <div

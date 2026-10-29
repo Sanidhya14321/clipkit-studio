@@ -13,6 +13,7 @@ pub mod http_error;
 pub mod idle;
 pub mod info;
 pub mod launch;
+pub mod media;
 pub mod ops;
 pub mod serve;
 pub mod session;

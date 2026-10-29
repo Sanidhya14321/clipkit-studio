@@ -89,7 +89,7 @@ fn transcribe_pack_suggest_and_apply_cuts() {
             ids: vec!["cut-1".into(), "cut-2".into()],
         })
         .unwrap();
-    assert_eq!(two.track, "video-1");
+    assert_eq!(two.track, "footage-1");
     let all = s
         .cut_apply(&CutApplyRequest {
             source: id.clone(),
@@ -191,7 +191,7 @@ fn studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock() {
 
     s.lock(&LockRequest {
         holder: Holder::Agent,
-        layer_ids: vec!["video-1".into()],
+        layer_ids: vec!["footage-1".into()],
     })
     .unwrap();
     let refused = s.cut_words(&words(vec![1])).unwrap_err();

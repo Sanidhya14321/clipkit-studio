@@ -3,7 +3,7 @@
 
 use std::path::{Path, PathBuf};
 
-use ck_core::model::{Holder, Item, ItemBody, Source, Track, TrackKind};
+use ck_core::model::{Holder, Item, ItemBody, Project, Source, Track, TrackKind};
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_media::CachePaths;
 use ck_voice::{CutCandidate, PackedTranscript, Transcript, kept_ranges, suggest_cuts};
@@ -14,8 +14,8 @@ use ts_rs::TS;
 
 use super::{Session, is_zero};
 
-/// Id of the video track `cut apply` creates when the project has none.
-pub const VIDEO_TRACK: &str = "video-1";
+/// Id of the video track that holds footage, created at the bottom when missing.
+pub const FOOTAGE_TRACK: &str = "footage-1";
 
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -282,71 +282,9 @@ impl Session {
         label: String,
     ) -> CkResult<CutApplyResult> {
         let kept = kept_ranges(cuts, duration);
-
         let mut doc = self.doc()?;
-        let project = doc.project();
-        let track_index = project
-            .tracks
-            .iter()
-            .position(|t| t.kind == TrackKind::Video);
-        let mut items: Vec<Item> = track_index
-            .map(|i| project.tracks[i].items.clone())
-            .unwrap_or_default();
-        let is_ours =
-            |i: &Item| matches!(&i.body, ItemBody::Footage { src: s, .. } if *s == src.id);
-        let start_at = items
-            .iter()
-            .filter(|i| is_ours(i))
-            .filter_map(|i| match i.body {
-                ItemBody::Footage { at, .. } => Some(at),
-                _ => None,
-            })
-            .fold(f64::INFINITY, f64::min);
-        let start_at = if start_at.is_finite() { start_at } else { 0.0 };
-        items.retain(|i| !is_ours(i));
-        let mut at = start_at;
-        let mut segments = Vec::new();
-        for (n, (s, e)) in kept.iter().enumerate() {
-            let id = format!("{}-seg-{}", src.id, n + 1);
-            items.push(Item {
-                id: id.clone(),
-                name: format!("Footage {}", n + 1),
-                purpose: "edit".into(),
-                pass: None,
-                asset_ref: None,
-                brief_deps: Vec::new(),
-                provenance: None,
-                rev: 0,
-                body: ItemBody::Footage {
-                    src: src.id.clone(),
-                    src_in: round3(*s),
-                    src_out: round3(*e),
-                    at: round3(at),
-                    speed: 1.0,
-                    volume: 1.0,
-                },
-            });
-            at += e - s;
-            segments.push(id);
-        }
-        items.sort_by(|a, b| item_at(a).total_cmp(&item_at(b)));
-        let (ops, track) = match track_index {
-            Some(i) => (
-                json!([{ "op": "replace", "path": format!("/tracks/{i}/items"), "value": items }]),
-                project.tracks[i].id.clone(),
-            ),
-            None => {
-                let t = Track {
-                    id: VIDEO_TRACK.into(),
-                    kind: TrackKind::Video,
-                    items,
-                };
-                (
-                    json!([{ "op": "add", "path": "/tracks/0", "value": t }]),
-                    VIDEO_TRACK.to_owned(),
-                )
-            }
-        };
+        let (ops, track, segments) = footage_ops(doc.project(), &src.id, &kept);
+        let ops = serde_json::Value::Array(ops);
         let rev = self.commit_as(&mut doc, holder, ops, label, std::slice::from_ref(&track))?;
         let removed: f64 = duration - kept.iter().map(|(s, e)| e - s).sum::<f64>();
         Ok(CutApplyResult {
@@ -357,6 +295,84 @@ impl Session {
             duration_sec: round3(duration - removed),
             omitted: 0,
         })
+    }
+}
+
+/// The track that holds `source`'s footage, else the footage track, as its index (None when
+/// it must be created).
+fn footage_track(project: &Project, source: &str) -> Option<usize> {
+    let ours = |i: &Item| matches!(&i.body, ItemBody::Footage { src, .. } if src == source);
+    project
+        .tracks
+        .iter()
+        .position(|t| t.items.iter().any(ours))
+        .or_else(|| project.tracks.iter().position(|t| t.id == FOOTAGE_TRACK))
+}
+
+/// Operations that make `source`'s footage the `kept` source ranges, laid end to end from
+/// where its first segment started (0 when it has none). Other items on the track stay. A new
+/// footage track goes to index 0 so generated layers draw over it (HYBRID). Returns the
+/// operations, the track id and the segment ids.
+pub fn footage_ops(
+    project: &Project,
+    source: &str,
+    kept: &[(f64, f64)],
+) -> (Vec<serde_json::Value>, String, Vec<String>) {
+    let index = footage_track(project, source);
+    let mut items: Vec<Item> = index
+        .map(|i| project.tracks[i].items.clone())
+        .unwrap_or_default();
+    let ours = |i: &Item| matches!(&i.body, ItemBody::Footage { src, .. } if src == source);
+    let start_at = items
+        .iter()
+        .filter(|i| ours(i))
+        .map(item_at)
+        .fold(f64::INFINITY, f64::min);
+    let mut at = if start_at.is_finite() { start_at } else { 0.0 };
+    items.retain(|i| !ours(i));
+    let mut segments = Vec::new();
+    for (n, (s, e)) in kept.iter().enumerate() {
+        let id = format!("{source}-seg-{}", n + 1);
+        items.push(Item {
+            id: id.clone(),
+            name: format!("Footage {}", n + 1),
+            purpose: "edit".into(),
+            pass: None,
+            asset_ref: None,
+            brief_deps: Vec::new(),
+            provenance: None,
+            rev: 0,
+            body: ItemBody::Footage {
+                src: source.to_owned(),
+                src_in: round3(*s),
+                src_out: round3(*e),
+                at: round3(at),
+                speed: 1.0,
+                volume: 1.0,
+            },
+        });
+        at += e - s;
+        segments.push(id);
+    }
+    items.sort_by(|a, b| item_at(a).total_cmp(&item_at(b)));
+    match index {
+        Some(i) => (
+            vec![json!({ "op": "replace", "path": format!("/tracks/{i}/items"), "value": items })],
+            project.tracks[i].id.clone(),
+            segments,
+        ),
+        None => {
+            let t = Track {
+                id: FOOTAGE_TRACK.into(),
+                kind: TrackKind::Video,
+                items,
+            };
+            (
+                vec![json!({ "op": "add", "path": "/tracks/0", "value": t })],
+                FOOTAGE_TRACK.to_owned(),
+                segments,
+            )
+        }
     }
 }
 

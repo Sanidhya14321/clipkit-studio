@@ -53,3 +53,15 @@ test("source time maps through the segments", () => {
   assert.ok(Math.abs((timelineTime(p, "src-1", 2.0) ?? 0) - 1.7) < 1e-9);
   assert.equal(timelineTime(project([]), "src-1", 3), 3);
 });
+
+test("media URLs carry the token for video sources with a proxy only", async () => {
+  const { mediaUrls } = await import("./timeline.ts");
+  const p = {
+    sources: [
+      { id: "v", kind: "video", path: "a.mp4", proxyPath: "x", hash: "ab" },
+      { id: "a", kind: "audio", path: "a.wav", hash: "cd" },
+    ],
+  } as unknown as Project;
+  assert.deepEqual(mediaUrls(p, "t k"), { v: "/media/ab.mp4?token=t%20k" });
+  assert.deepEqual(mediaUrls(null, "t"), {});
+});

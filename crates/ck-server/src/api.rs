@@ -67,6 +67,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/handoff", post(handoff))
         .route("/api/wait", get(wait))
         .route("/ws", get(ws::upgrade))
+        .route("/media/{name}", get(crate::media::proxy))
         // Runs after the token check, so only authorized calls keep the server alive.
         .layer(middleware::from_fn_with_state(session.clone(), idle::touch))
         .layer(middleware::from_fn_with_state(

@@ -133,6 +133,11 @@ impl Session {
         &self.activity
     }
 
+    /// `.clipkit/cache/`: proxies, extracted audio and transcripts.
+    pub fn cache_dir(&self) -> std::path::PathBuf {
+        self.store.root().join("cache")
+    }
+
     pub fn now_ms(&self) -> u64 {
         self.clock.now_ms()
     }

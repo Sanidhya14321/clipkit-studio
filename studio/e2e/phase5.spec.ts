@@ -1,7 +1,7 @@
 // Phase 5 step 7: the transcript panel. Deleting a word cuts it from the footage as a human
 // revision; the same key on a cut word restores it at the clip edge. While the agent holds the
 // video track the panel is read-only and the server refuses the edit.
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyFile, mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Page } from "@playwright/test";
@@ -106,7 +106,7 @@ test("while the agent holds the video track the panel is read-only", async ({
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
   const id = await importWithTranscript(page, studio);
   await studio.ck("cut", "apply", id, "--ids", "cut-1");
-  await studio.ck("lock", "video-1");
+  await studio.ck("lock", "footage-1");
 
   const panel = page.locator(`[data-ck-transcript="${id}"]`);
   await expect(panel).toHaveAttribute("data-ck-readonly", "true");
@@ -121,4 +121,37 @@ test("while the agent holds the video track the panel is read-only", async ({
 
   await studio.ck("unlock");
   await expect(panel).toHaveAttribute("data-ck-readonly", "false");
+});
+
+test("hybrid: footage plays under generated layers", async ({
+  page,
+  studio,
+}) => {
+  await page.goto(`${studio.url}#token=${studio.token}`);
+  await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
+  const file = join(studio.dir, "apply.json");
+  await writeFile(
+    file,
+    JSON.stringify({ recipe: "hook-title", slots: { headline: "Hi" } }),
+  );
+  await studio.ck("recipe", "apply", file);
+  const { source } = (await studio.ck(
+    "import",
+    join(FIXTURES, "av.mp4"),
+  )) as Imported;
+
+  const status = (await studio.ck("status")) as { mode: string };
+  expect(status.mode).toBe("hybrid");
+  const footage = page.locator(`[data-ck-footage="${source.id}"]`);
+  await expect(footage).toHaveCount(1);
+  // The proxy loads through the token-in-query media route.
+  await expect
+    .poll(() =>
+      footage.locator("video").evaluate((v: HTMLVideoElement) => v.readyState),
+    )
+    .toBeGreaterThanOrEqual(1);
+  // The generated backdrop is still there (preview and timeline both carry its id).
+  await expect(
+    page.locator('[data-ck-layer="hook-title-backdrop"]').first(),
+  ).toBeAttached();
 });

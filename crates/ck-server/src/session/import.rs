@@ -4,7 +4,7 @@
 
 use std::path::{Path, PathBuf};
 
-use ck_core::model::{Source, SourceKind};
+use ck_core::model::{Mode, Source, SourceKind};
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_media::{CachePaths, MediaInfo};
 use schemars::JsonSchema;
@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 use super::Session;
+use super::edit::footage_ops;
 
 /// Hex digits of the content hash used in a source id (`src-<8 hex>`).
 const ID_HASH_LEN: usize = 8;
@@ -111,7 +112,24 @@ impl Session {
                 vfr,
             });
         }
-        let ops = json!([{ "op": "add", "path": "/sources/-", "value": source }]);
+        let mut ops = vec![json!({ "op": "add", "path": "/sources/-", "value": source })];
+        // BASE (spec 4): a video becomes a base layer under any existing work. With generated
+        // work already there the project turns HYBRID; an empty generate project turns EDIT.
+        if kind == SourceKind::Video {
+            let full = [(0.0, info.duration)];
+            ops.extend(footage_ops(project, &source.id, &full).0);
+            let mode = match project.mode {
+                Mode::Generate if project.tracks.iter().any(|t| !t.items.is_empty()) => {
+                    Some(Mode::Hybrid)
+                }
+                Mode::Generate => Some(Mode::Edit),
+                _ => None,
+            };
+            if let Some(mode) = mode {
+                ops.push(json!({ "op": "replace", "path": "/mode", "value": mode }));
+            }
+        }
+        let ops = serde_json::Value::Array(ops);
         let rev = self.commit_agent(&mut doc, ops, format!("import: {}", source.id))?;
         Ok(ImportResult {
             rev: rev.rev,

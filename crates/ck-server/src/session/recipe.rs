@@ -147,13 +147,27 @@ fn place_text(platform: Platform, type_scale: f64, layers: &mut [ExpandedLayer])
     }
 }
 
+/// True when any track holds footage (EDIT or HYBRID base).
+pub fn has_footage(project: &Project) -> bool {
+    project
+        .tracks
+        .iter()
+        .flat_map(|t| &t.items)
+        .any(|i| matches!(i.body, ItemBody::Footage { .. }))
+}
+
 /// RFC 6902 operations that add the layers (and any missing track) and record the recipe.
 fn build_ops(project: &Project, layers: Vec<ExpandedLayer>, asset: &str) -> CkResult<Vec<Value>> {
     let mut ops = Vec::new();
     // New tracks are appended in first-use order; `new_tracks` holds each one's kind and index.
     let mut new_tracks: Vec<(TrackKind, usize)> = Vec::new();
     let mut track_ids: Vec<String> = project.tracks.iter().map(|t| t.id.clone()).collect();
-    for layer in layers {
+    // HYBRID (spec 4): generated layers go over the footage, never onto its track.
+    let over_footage = has_footage(project);
+    for mut layer in layers {
+        if over_footage && layer.track == TrackKind::Video {
+            layer.track = TrackKind::Overlay;
+        }
         let item = serde_json::to_value(&layer.item).map_err(server_err)?;
         let index = project
             .tracks
