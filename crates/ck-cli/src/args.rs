@@ -79,6 +79,9 @@ pub enum Command {
     /// Search, read and apply recipes (pre-wired scenes with typed slots).
     #[command(subcommand)]
     Recipe(RecipeCommand),
+    /// Check text layout: safe areas, collisions, grid, sizes, cut text.
+    #[command(subcommand)]
+    Layout(LayoutCommand),
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),
@@ -194,6 +197,12 @@ pub enum RecipeCommand {
     /// Expand a recipe into named layers: a JSON file {recipe, at?, duration?, slots, prefix?,
     /// look?}, or - for stdin.
     Apply { file: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum LayoutCommand {
+    /// Check the text layers against the layout rules for the brief's platform.
+    Check,
 }
 
 #[derive(Debug, Args)]

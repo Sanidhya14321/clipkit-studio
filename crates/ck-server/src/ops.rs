@@ -3,6 +3,7 @@
 
 use std::path::Path;
 
+use ck_assets::layout::LayoutIssue;
 use ck_core::model::{Item, Lock};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
@@ -13,6 +14,7 @@ use crate::session::brief::{
     BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
     BriefWaitRequest, BriefWaitResult,
 };
+use crate::session::layout::LayoutCheckResult;
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
@@ -30,6 +32,7 @@ pub mod caps {
     pub const BRIEF: usize = 4 * 1024;
     pub const BRIEF_PROPOSE: usize = 1024;
     pub const RECIPE_APPLY: usize = 1024;
+    pub const LAYOUT_CHECK: usize = 4 * 1024;
 }
 
 pub struct Ops {
@@ -126,6 +129,20 @@ impl Ops {
     pub fn recipe_apply(&self, req: &RecipeApplyRequest) -> CkResult<RecipeApplyResult> {
         let reply = self.client.post("/api/recipe/apply", req)?;
         trimmed("recipe apply", caps::RECIPE_APPLY, reply)
+    }
+
+    /// `layout check`: the layout rules the text layers break (safe area, overlap, gap, grid,
+    /// size, cut text, too many blocks). Issues past the cap are counted in `omitted`.
+    pub fn layout_check(&self) -> CkResult<LayoutCheckResult> {
+        let reply = self.client.get("/api/layout/check", &[])?;
+        trimmed("layout check", caps::LAYOUT_CHECK, reply)
+    }
+}
+
+impl Trim for LayoutCheckResult {
+    type Entry = LayoutIssue;
+    fn parts(&mut self) -> (&mut Vec<LayoutIssue>, &mut usize) {
+        (&mut self.issues, &mut self.omitted)
     }
 }
 

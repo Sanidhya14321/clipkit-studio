@@ -343,6 +343,73 @@ pub fn check(platform: Platform, placed: &[Placement]) -> Vec<LayoutIssue> {
     issues
 }
 
+/// The text block of a clip layer: its string `text` prop, with the role from a `role` prop
+/// (else `caption` when `size` is `small`, else `title`) and the align from `align` (else
+/// center). `None` when the layer shows no text.
+pub fn text_block(id: &str, at: f64, dur: f64, props: &serde_json::Value) -> Option<TextBlock> {
+    let text = props.get("text")?.as_str()?.trim();
+    if text.is_empty() {
+        return None;
+    }
+    let role = props
+        .get("role")
+        .and_then(|r| serde_json::from_value(r.clone()).ok())
+        .unwrap_or(
+            if props.get("size").and_then(|s| s.as_str()) == Some("small") {
+                TextRole::Caption
+            } else {
+                TextRole::Title
+            },
+        );
+    let align = props
+        .get("align")
+        .and_then(|a| serde_json::from_value(a.clone()).ok())
+        .unwrap_or(Align::Center);
+    Some(TextBlock {
+        id: id.into(),
+        text: text.into(),
+        role,
+        align,
+        at,
+        dur,
+    })
+}
+
+/// The placement written into a layer's props (`box`, `fontSize`, `lines`, `textCut`), or
+/// `None` when the layer has no `box` or `fontSize` yet.
+pub fn placement_from_props(block: &TextBlock, props: &serde_json::Value) -> Option<Placement> {
+    let rect: Rect = serde_json::from_value(props.get("box")?.clone()).ok()?;
+    let size = props.get("fontSize")?.as_f64()?;
+    let lines = props
+        .get("lines")
+        .and_then(|l| serde_json::from_value(l.clone()).ok())
+        .unwrap_or_default();
+    Some(Placement {
+        id: block.id.clone(),
+        rect,
+        size,
+        align: block.align,
+        at: block.at,
+        dur: block.dur,
+        lines,
+        shrunk: false,
+        cut: props.get("textCut").and_then(|c| c.as_bool()) == Some(true),
+    })
+}
+
+/// Writes a placement into a layer's props (the inverse of `placement_from_props`).
+pub fn write_props(p: &Placement, props: &mut serde_json::Map<String, serde_json::Value>) {
+    use serde_json::json;
+    props.insert("box".into(), json!(p.rect));
+    props.insert("fontSize".into(), json!(p.size));
+    props.insert("lines".into(), json!(p.lines));
+    if p.cut {
+        props.insert("textCut".into(), json!(true));
+    } else {
+        props.remove("textCut");
+    }
+}
+
 fn safe_overflow(platform: Platform, placed: &[Placement]) -> bool {
     let safe = platform.safe_area();
     time_groups(placed).iter().any(|g| {
@@ -560,6 +627,31 @@ mod tests {
         );
         assert_eq!(placed[0].rect.y, placed[1].rect.y);
         assert!(check(p, &placed).is_empty());
+    }
+
+    #[test]
+    fn props_round_trip_and_roles() {
+        use serde_json::json;
+        assert!(text_block("x", 0.0, 1.0, &json!({ "color": "#fff" })).is_none());
+        assert!(text_block("x", 0.0, 1.0, &json!({ "text": "  " })).is_none());
+        let small = text_block("s", 0.0, 1.0, &json!({ "text": "Hi", "size": "small" }));
+        assert_eq!(small.map(|b| b.role), Some(TextRole::Caption));
+        let b = text_block("d", 0.5, 2.0, &json!({ "text": "Ship", "role": "display" }));
+        let Some(b) = b else { panic!("text block") };
+        assert_eq!((b.role, b.align), (TextRole::Display, Align::Center));
+        assert!(placement_from_props(&b, &json!({ "text": "Ship" })).is_none());
+
+        let placed = solve(Platform::Landscape, 1.25, std::slice::from_ref(&b));
+        let mut props = serde_json::Map::new();
+        write_props(&placed[0], &mut props);
+        let back = placement_from_props(&b, &serde_json::Value::Object(props));
+        let Some(back) = back else {
+            panic!("placement")
+        };
+        assert_eq!(
+            (back.rect, back.size, &back.lines),
+            (placed[0].rect, placed[0].size, &placed[0].lines)
+        );
     }
 
     #[test]

@@ -19,7 +19,10 @@ use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
 
-use args::{BriefCommand, Cli, Command, LookCommand, ProjectCommand, RecipeCommand, TasteCommand};
+use args::{
+    BriefCommand, Cli, Command, LayoutCommand, LookCommand, ProjectCommand, RecipeCommand,
+    TasteCommand,
+};
 use ck_assets::library::{
     self, IdRequest, LookListRequest, RecipeSearchRequest, TasteSearchRequest,
 };
@@ -139,6 +142,7 @@ fn run(cli: Cli) -> CkResult<()> {
                 .map_err(|e| request_err(format!("recipe apply JSON: {e}")))?;
             print(&ops()?.recipe_apply(&req)?)
         }
+        Command::Layout(LayoutCommand::Check) => print(&ops()?.layout_check()?),
         Command::Init(args) => install::run(install::Mode::Init, &args, &cli.dir),
         Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args, &cli.dir),
         // Handled in main before run.

@@ -691,5 +691,16 @@ expression: specs()
       ],
       "type": "object"
     }
+  },
+  {
+    "name": "layout_check",
+    "command": "ck layout check",
+    "description": "Check the text layers against the layout rules (safe area, overlap, gap, grid, size, cut text, at most 3 blocks) for the brief's platform. Returns the issues.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "description": "`status` takes no input.",
+      "type": "object"
+    }
   }
 ]

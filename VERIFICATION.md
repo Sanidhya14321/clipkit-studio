@@ -184,6 +184,10 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 6a: text fitting shrinks one type step, then cuts words (flagged), never below the label size | PASS | `layout::tests::fitting_shrinks_then_cuts_never_below_label` |
 | Step 6a: checker reports safe-area, too-small, off-grid, overlap, gap, too-many-blocks, text-cut | PASS | `layout::tests::check_reports_each_rule` |
 | Step 6a run | PASS | 2026-10-29 `just check`: 196 of 196 nextest (1 skipped), hooks 41 of 41 |
+| Step 6b: layer props to text blocks (role/size/align defaults) and placement round trip through `box`, `fontSize`, `lines`, `textCut` | PASS | `layout::tests::props_round_trip_and_roles` |
+| Step 6b: recipe apply writes the solved placement into text layers only, using the brief platform; `layout check` reads the brief platform, checks written placements, solves unplaced ones, reports overlap between two concurrent scenes | PASS | `ck-server` test `recipe::apply_places_text_and_layout_check_reads_it` |
+| Step 6b: `ck layout check` and MCP `layout_check` give the same line under the 4 KiB cap; tool table snapshot and cap test include it | PASS | `ck-cli` test `mcp_parity::recipe_apply_answers_like_its_cli_twin`, `ck-mcp` `tool_table_snapshot` and caps test |
+| Step 6b run | PASS | 2026-10-29 `just check` exit 0: 198 of 198 nextest (1 skipped), hooks 41 of 41, studio checks clean |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

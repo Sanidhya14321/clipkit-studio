@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 step 6a: pure layout solver and checker `ck-assets/src/layout.rs` (`Platform`, `TextRole`, `solve`, `check`, rules safe-area/overlap/gap/too-many-blocks/too-small/off-grid/text-cut).
-2. Proof: `just check` 196 of 196 nextest (1 skipped), hooks 41 of 41; 5 new layout tests. Evidence in VERIFICATION.md, step 6a.
-3. Open: not yet wired anywhere; text width is a 0.55 em estimate (no font metrics); recipe apply still skips layout and license mode; stage gate not enforced.
-4. Next: step 6b: `ck layout check` (reads clip items' text props and a `box` prop, platform from the brief) with MCP twin, cap and parity tests; recipe apply calls `solve` and writes `box`/`size` into text-layer props.
-5. Start: `just check`; read `crates/ck-assets/src/layout.rs`, `crates/ck-server/src/session/recipe.rs`, DECISIONS.md step 6a.
+1. Done: Phase 4 step 6 (6b): `ck layout check` + MCP `layout_check` (`crates/ck-server/src/session/layout.rs`, `GET /api/layout/check`, cap 4 KiB); recipe apply writes `box`, `fontSize`, `lines`, `textCut` into text-layer props.
+2. Proof: `just check` exit 0, 198 of 198 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, step 6b.
+3. Open: recipe apply places only its own scene (concurrent scenes show as overlap); list/quote/stat text not placed; text width is a 0.55 em estimate; license mode and stage gate not enforced.
+4. Next: step 7: 8 native core Remotion clips (CORE_CLIPS in `ck-assets/src/recipe.rs`), instrumented, rendering `box`/`fontSize`/`lines`; the studio Player renders them.
+5. Start: `just check`; read spec 07 and 04 sections on core clips, `studio/src` preview code, DECISIONS.md steps 6a and 6b.
 
 ## Open questions
+- Phase 4 step 6b: text-layer role defaults to `title` (recipes carry no `role`), and recipe apply does not re-solve layers of other scenes on screen at the same time; revisit with step 7 rendering (DECISIONS.md, step 6b).
 - Phase 4 step 5b: recipe apply falls back to the `clean-product` look when neither the request nor the brief names one; revisit if the plan stage should pick it.
 - Phase 4 step 3: spec 6.2 lists `brief set`; not built (the studio confirms through a human patch). Add it if the agent needs to set user-requested values directly. Wire `Op::ProposeBrief` stage gating once stages are driven.
 - Phase 3 step 7: check Cursor's `~/.cursor/mcp.json` and `.cursor/rules/*.mdc` format, and whether a user-level rules file exists, against cursor.com/docs (DECISIONS.md, step 7).
@@ -50,13 +51,19 @@ Steps:
 - [x] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
   - [x] 5a. Recipe model, validation, expander and the 10 recipes.
   - [x] 5b. `ck recipe search|card|apply` with MCP twins.
-- [ ] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
+- [x] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
   - [x] 6a. Pure solver and checker in `ck-assets::layout` with tests.
-  - [ ] 6b. `ck layout check` with MCP twin; recipe apply runs the solver.
+  - [x] 6b. `ck layout check` with MCP twin; recipe apply runs the solver.
 - [ ] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 8): step 6b.
+- `ck-assets::layout::blocks_from_items`: text layers are clip items with a string `text` prop; role from a `role` prop (else `caption` when `size` is `small`, else `title`).
+- Server `layout_check` (read-only): platform from the brief, `check` on the placements written in props (`box`, `fontSize`, `lines`), or solved when absent; reply capped.
+- `recipe apply` runs `solve` over the scene's text layers and writes `box`, `fontSize`, `lines` into their props.
+- `ck layout check` + MCP `layout_check`; tests: ck-assets, server, tool table, CLI/MCP parity.
 
 Run plan (autonomous run 7): step 6a (solver; CLI and wiring are 6b).
 - `ck-assets::layout`: platforms and safe areas, grid, type sizes from the taste files, frame-fraction geometry.

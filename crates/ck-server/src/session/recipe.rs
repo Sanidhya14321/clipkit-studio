@@ -4,9 +4,10 @@
 
 use std::collections::BTreeMap;
 
+use ck_assets::layout::{self, Platform, TextBlock};
 use ck_assets::library;
-use ck_assets::recipe::ExpandInput;
-use ck_core::model::{Author, Holder, Project, TrackKind};
+use ck_assets::recipe::{ExpandInput, ExpandedLayer};
+use ck_core::model::{Author, Holder, ItemBody, Project, TrackKind};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use schemars::JsonSchema;
@@ -130,12 +131,31 @@ fn kind_name(kind: TrackKind) -> &'static str {
     }
 }
 
+/// Solves the scene's text layers together and writes each placement (`box`, `fontSize`,
+/// `lines`, `textCut`) into its props.
+fn place_text(platform: Platform, type_scale: f64, layers: &mut [ExpandedLayer]) {
+    let blocks: Vec<TextBlock> = layers
+        .iter()
+        .filter_map(|l| match &l.item.body {
+            ItemBody::Clip { at, dur, props, .. } => {
+                layout::text_block(&l.item.id, *at, *dur, props)
+            }
+            _ => None,
+        })
+        .collect();
+    for p in layout::solve(platform, type_scale, &blocks) {
+        let props = layers.iter_mut().find_map(|l| match &mut l.item.body {
+            ItemBody::Clip { props, .. } if l.item.id == p.id => props.as_object_mut(),
+            _ => None,
+        });
+        if let Some(props) = props {
+            layout::write_props(&p, props);
+        }
+    }
+}
+
 /// RFC 6902 operations that add the layers (and any missing track) and record the recipe.
-fn build_ops(
-    project: &Project,
-    layers: Vec<ck_assets::recipe::ExpandedLayer>,
-    asset: &str,
-) -> CkResult<Vec<Value>> {
+fn build_ops(project: &Project, layers: Vec<ExpandedLayer>, asset: &str) -> CkResult<Vec<Value>> {
     let mut ops = Vec::new();
     // New tracks are appended in first-use order; `new_tracks` holds each one's kind and index.
     let mut new_tracks: Vec<(TrackKind, usize)> = Vec::new();
@@ -206,12 +226,14 @@ impl Session {
                 sources: &sources,
             },
         )?;
-        let layer_ids: Vec<String> = expansion.layers.iter().map(|l| l.item.id.clone()).collect();
-        let ops = build_ops(
-            project,
-            expansion.layers,
-            &expansion.provenance.source_asset,
-        )?;
+        let mut layers = expansion.layers;
+        place_text(
+            super::layout::platform(project),
+            look.type_scale,
+            &mut layers,
+        );
+        let layer_ids: Vec<String> = layers.iter().map(|l| l.item.id.clone()).collect();
+        let ops = build_ops(project, layers, &expansion.provenance.source_asset)?;
         let patch = PatchRequest {
             base_rev: project.rev,
             layer_revs: Default::default(),

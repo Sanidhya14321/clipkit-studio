@@ -4,6 +4,12 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 6b: `ck layout check` and recipe placement (spec 6.2, 7.4, 8.5)
+- A text layer is a clip item with a non-empty string `text` prop. Recipes carry no role, so the role comes from a `role` prop, else `caption` when `size` is `small`, else `title`; align from `align`, else center. Simplest rule that fits the 10 recipes; recipes can add `role` later.
+- The placement is stored in the layer's props as `box` ({x,y,w,h} frame fractions), `fontSize`, `lines` and `textCut` (only when cut), so the clip renderer (step 7) and the checker read the same data. `size` was already a recipe prop, hence `fontSize`.
+- Recipe apply solves only the scene's own text layers (with the look's typeScale and the brief platform); it does not move existing layers. A scene applied over another at the same time therefore shows as `overlap` in `layout check`; the agent fixes it. List and quote text (bullet-list, quote-card, stat-counter labels) is not placed yet.
+- `layout check` is read-only; layers without a placement are solved together at type scale 1.25 (the default look's) for the check, and counted in `solved`. Issues past the 4 KiB cap are trimmed and counted in `omitted`.
+
 ### Step 6a: layout solver (spec 7.4, 8.5; taste files layout, typography, platform-specs)
 - Step 6 is split: 6a is the pure solver and checker in `ck-assets::layout`; 6b is `ck layout check` with its MCP twin and the call from recipe apply.
 - Geometry is in frame fractions (x and w of width; y, h and type size of height), like the look tokens. Numbers are copied from the taste files into code; the taste files stay the readable source.

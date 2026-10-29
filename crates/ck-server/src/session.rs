@@ -22,6 +22,7 @@ use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
 pub mod brief;
+pub mod layout;
 pub mod recipe;
 
 /// Events buffered per subscriber before it lags (a lagging studio gets a fresh snapshot).

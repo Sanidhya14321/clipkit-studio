@@ -59,6 +59,46 @@ fn apply_adds_named_layers_with_provenance_and_tokens() {
 }
 
 #[test]
+fn apply_places_text_and_layout_check_reads_it() {
+    let live = Live::start();
+    let ops = live.ops();
+    let before = ops.layout_check().unwrap();
+    assert!(before.ok);
+
+    ops.brief_propose(
+        &serde_json::from_value(json!({ "fields": { "platform": "landscape" } })).unwrap(),
+    )
+    .unwrap();
+    ops.recipe_apply(&hook("Ship video in minutes")).unwrap();
+    let p = live.f.session.project().unwrap();
+    let ItemBody::Clip { props, .. } = &p.item("hook-title-headline").unwrap().body else {
+        panic!("clip expected");
+    };
+    // Landscape safe area sides are 0.05; the title fits on one line at full size.
+    assert_eq!(props["box"]["x"], 0.05);
+    assert_eq!(props["lines"], json!(["Ship video in minutes"]));
+    assert!(props["fontSize"].as_f64().unwrap() > 0.0);
+    let ItemBody::Clip { props, .. } = &p.item("hook-title-backdrop").unwrap().body else {
+        panic!("clip expected");
+    };
+    assert!(props.get("box").is_none(), "no text, no placement");
+
+    let checked = ops.layout_check().unwrap();
+    assert_eq!(serde_json::to_value(checked.platform).unwrap(), "landscape");
+    assert_eq!(
+        (checked.checked, checked.solved),
+        (before.checked + 1, before.solved)
+    );
+    assert!(checked.ok, "{:?}", checked.issues);
+
+    // A second scene at the same time is placed alone, so the two titles collide.
+    ops.recipe_apply(&hook("Again")).unwrap();
+    let checked = ops.layout_check().unwrap();
+    assert!(!checked.ok);
+    assert_eq!(checked.issues[0].rule, "overlap");
+}
+
+#[test]
 fn apply_uses_the_brief_look_and_refuses_bad_input() {
     let live = Live::start();
     let ops = live.ops();

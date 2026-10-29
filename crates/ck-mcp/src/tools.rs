@@ -167,6 +167,13 @@ pub fn specs() -> Vec<ToolSpec> {
              one revision. Returns the layer ids.",
             caps::RECIPE_APPLY,
         ),
+        spec::<StatusArgs>(
+            "layout_check",
+            "ck layout check",
+            "Check the text layers against the layout rules (safe area, overlap, gap, grid, \
+             size, cut text, at most 3 blocks) for the brief's platform. Returns the issues.",
+            caps::LAYOUT_CHECK,
+        ),
     ]
 }
 
@@ -248,6 +255,10 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_get" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.brief_get()?)
+        }
+        "layout_check" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.layout_check()?)
         }
         other => Err(request_err(format!("no tool named {other:?}"))),
     }

@@ -211,6 +211,19 @@ fn recipe_apply_answers_like_its_cli_twin() {
     assert_eq!(tool["layers"][0], "hook-title-2-backdrop");
     assert_eq!(cli["look"], tool["look"]);
 
+    // Two hook titles on screen together, each solved alone: the checker sees them overlap.
+    let checked = ok_line(d, &["layout", "check"], caps::LAYOUT_CHECK);
+    assert_eq!(
+        mcp.ok("layout_check", Value::Null, caps::LAYOUT_CHECK),
+        checked
+    );
+    let checked: Value = serde_json::from_str(&checked).unwrap();
+    assert_eq!(
+        (&checked["checked"], &checked["ok"]),
+        (&json!(2), &json!(false))
+    );
+    assert_eq!(checked["issues"][0]["rule"], "overlap");
+
     let bad = json!({ "recipe": "hook-title", "slots": { "nope": 1 } });
     std::fs::write(&file, bad.to_string()).unwrap();
     let refused = mcp.err("recipe_apply", bad);
