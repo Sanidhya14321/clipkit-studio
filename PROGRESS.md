@@ -58,7 +58,7 @@ Steps:
 - [x] 3. Global structural lock (spec 5.3): track set/order, mode and total duration changes touch `@structure`; while the agent holds it every human patch is refused.
 - [x] 4. `ck context` + MCP: the studio reports selection, hovered element, playhead and loop range; the answer adds open comments, about 300 tokens.
 - [x] 5. Studio comments panel and pins (moment, range, layer, element), Send to agent; hover-select on the preview (highlight with label, click selects, Ask agent anchors a comment to the path); Playwright.
-- [ ] 6. Brief panel tuning chips (punchier, shorter, calmer, more premium) and diff re-planning: `brief diff` lists the layers whose briefDeps the change hits; impact preview in the studio; Playwright.
+- [x] 6. Brief panel tuning chips (punchier, shorter, calmer, more premium) and diff re-planning: `brief diff` lists the layers whose briefDeps the change hits; impact preview in the studio; Playwright.
 - [ ] 7. Proof run, self review, evidence.
 
 Crates: ck-core (comments lock id, scope gate, structure lock, model field `scope`), ck-server (sessions, routes, context), ck-mcp, ck-cli, studio.

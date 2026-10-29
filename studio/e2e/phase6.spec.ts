@@ -112,3 +112,76 @@ test("hover-select outlines an element; Ask agent anchors a comment to it", asyn
     )
     .toBe(layer);
 });
+
+test("tuning chips show their impact and re-plan only dependent layers", async ({
+  page,
+  studio,
+}) => {
+  await open(page, studio);
+  const brief = join(studio.dir, "brief.json");
+  await writeFile(
+    brief,
+    JSON.stringify({
+      fields: {
+        platform: "youtube",
+        length: 15,
+        pacing: "lively",
+        look: "clean-product",
+      },
+      questions: [],
+    }),
+  );
+  const proposed = (await studio.ck("brief", "propose", brief)) as {
+    rev: number;
+  };
+  await studio.ck(
+    "project",
+    "patch",
+    JSON.stringify({
+      baseRev: proposed.rev,
+      author: "human",
+      ops: [{ op: "replace", path: "/brief/status", value: "confirmed" }],
+    }),
+  );
+  const file = join(studio.dir, "apply.json");
+  await writeFile(
+    file,
+    JSON.stringify({
+      recipe: "kinetic-list",
+      slots: { title: "Why", items: ["One", "Two"] },
+    }),
+  );
+  await studio.ck("recipe", "apply", file);
+  await studio.ck("handoff");
+  const before = ((await studio.ck("status")) as { rev: number }).rev;
+
+  const chips = page.locator("[data-ck-chips]");
+  const punchier = chips.locator('[data-ck-chip="punchier"]');
+  await expect(punchier).toBeEnabled();
+  // Only kinetic-list's pacing-bound layer depends on pacing.
+  const impact = (await punchier.getAttribute("data-ck-impact")) ?? "";
+  expect(impact.split(" ").filter(Boolean).length).toBe(1);
+  await punchier.click();
+
+  await expect
+    .poll(async () => {
+      const diff = (await studio.ck(
+        "brief",
+        "diff",
+        "--since",
+        String(before),
+      )) as {
+        changes: { field: string; to: unknown }[];
+        affected: string[];
+      };
+      return { changes: diff.changes, affected: diff.affected.join(" ") };
+    })
+    .toEqual({
+      changes: [{ field: "pacing", from: "lively", to: 4, source: "user" }],
+      affected: impact,
+    });
+
+  // More premium re-themes at once through the stored look.
+  await chips.locator('[data-ck-chip="premium"]').click();
+  await expect(chips.locator('[data-ck-chip="premium"]')).toBeDisabled();
+});

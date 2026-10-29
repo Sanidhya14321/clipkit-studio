@@ -471,3 +471,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - A click on the canvas picks the element (mini inspector) instead of toggling playback; play uses the Player's control. The Phase 4 clips test changed to match.
 - The studio posts its pointer state 250 ms after it settles. Loop range is reported as absent: the Player has no loop-range control yet.
 - Timeline drag, trim and split (spec 5.4) are not part of spec 12's Phase 6 list and stay out.
+
+## Phase 6 step 6: tuning chips (2026-10-29)
+- Chip mapping (not in the spec): punchier and calmer move pacing one level on the 5-level scale; shorter keeps 80% of the length (rounded, at least 1 s); more premium sets the look to `cinematic` and writes `tokens.look` so the video re-themes through tokens with zero agent tokens (spec 8.1). A chip at the end of its range is disabled.
+- The impact preview is computed in the studio from items' briefDeps; `brief diff` returns the same set as `affected`, so the agent re-plans only those layers. `affected` is not trimmed under the brief cap (layer counts are small).

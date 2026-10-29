@@ -190,6 +190,7 @@ fn brief_replies_stay_under_their_caps() {
         since: 0,
         rev: 1,
         changes,
+        affected: Vec::new(),
         omitted: 0,
     };
     let out = trimmed("brief diff", caps::BRIEF, big).unwrap();
@@ -206,4 +207,26 @@ fn brief_replies_stay_under_their_caps() {
         .unwrap();
     let got = ops.brief_get().unwrap();
     assert!(serde_json::to_vec(&got).unwrap().len() <= caps::BRIEF);
+}
+
+#[test]
+fn diff_names_only_the_layers_whose_brief_deps_changed() {
+    use crate::session::brief::{BriefChange, affected};
+
+    let mut p = ck_core::Project::new("p1", "Demo", ck_core::model::Mode::Generate);
+    p.tracks = serde_json::from_value(json!([{ "id": "t1", "kind": "overlay", "items": [
+        { "id": "bg", "type": "clip", "at": 0.0, "dur": 2.0, "briefDeps": ["look"] },
+        { "id": "head", "type": "clip", "at": 0.0, "dur": 2.0, "briefDeps": ["pacing", "look"] },
+        { "id": "cta", "type": "clip", "at": 2.0, "dur": 2.0, "briefDeps": ["cta"] }
+    ]}]))
+    .unwrap();
+    let change = |field: &str| BriefChange {
+        field: field.into(),
+        from: None,
+        to: Some(json!(4)),
+        source: None,
+    };
+    assert_eq!(affected(&p, &[change("pacing")]), ["head"]);
+    assert_eq!(affected(&p, &[change("look")]), ["bg", "head"]);
+    assert!(affected(&p, &[change("length")]).is_empty());
 }

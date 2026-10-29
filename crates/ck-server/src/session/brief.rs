@@ -139,9 +139,27 @@ pub struct BriefDiff {
     pub since: u64,
     pub rev: u64,
     pub changes: Vec<BriefChange>,
+    /// Layers whose briefDeps name a changed field: the only ones to re-plan (spec 8.1).
+    #[serde(default)]
+    pub affected: Vec<String>,
     /// Changes left out of `changes` to keep the reply under its size cap.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub omitted: usize,
+}
+
+/// Layer ids, in track order, whose briefDeps name a changed field.
+pub fn affected(project: &ck_core::Project, changes: &[BriefChange]) -> Vec<String> {
+    project
+        .tracks
+        .iter()
+        .flat_map(|t| &t.items)
+        .filter(|i| {
+            i.brief_deps
+                .iter()
+                .any(|d| changes.iter().any(|c| &c.field == d))
+        })
+        .map(|i| i.id.clone())
+        .collect()
 }
 
 fn request_err(message: String) -> CkError {
@@ -466,10 +484,13 @@ impl Session {
                 .map_err(|e| CkError::new(ErrorCode::Server, format!("old brief: {e}")))?,
             None => Brief::default(),
         };
+        let project = doc.project();
+        let changes = changes(&old, &project.brief);
         Ok(BriefDiff {
             since: req.since,
-            rev: doc.project().rev,
-            changes: changes(&old, &doc.project().brief),
+            rev: project.rev,
+            affected: affected(project, &changes),
+            changes,
             omitted: 0,
         })
     }

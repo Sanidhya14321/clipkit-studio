@@ -3,6 +3,7 @@
 // a confirm that goes to the server as one human patch on `/brief`. While the agent holds the
 // project lock every control is disabled, and the server refuses the patch anyway.
 import { useEffect, useState } from "react";
+import { TuningChips } from "./TuningChips";
 import { ApiError, request } from "../api";
 import {
   ESSENTIALS,
@@ -226,6 +227,9 @@ export function BriefPanel({
       >
         {brief.status === "proposed" ? "Confirm brief" : "Save brief"}
       </button>
+      {brief.status !== "proposed" && (
+        <TuningChips token={token} project={project} readOnly={readOnly} />
+      )}
       {error && (
         <p className="error" role="alert" data-ck-error>
           {error}
