@@ -9,6 +9,7 @@ import { Inspector } from "./panels/Inspector";
 import { Timeline } from "./panels/Timeline";
 import { TranscriptPanel } from "./panels/TranscriptPanel";
 import { CommentsPanel } from "./panels/CommentsPanel";
+import { VoicePanel } from "./panels/VoicePanel";
 import { HoverSelect, type Target } from "./preview/HoverSelect";
 import type { Pointer } from "./comments";
 import type { StudioContext } from "./generated/types";
@@ -24,6 +25,7 @@ export function App({ token }: { token: string }) {
   const [looks, setLooks] = useState<Look[]>([]);
   const [looksFailed, setLooksFailed] = useState(false);
   const player = useRef<PlayerRef>(null);
+  const contextQueue = useRef<Promise<unknown>>(Promise.resolve());
   const [playhead, setPlayhead] = useState(0);
   const [hovered, setHovered] = useState<Target | null>(null);
   const [element, setElement] = useState<Target | null>(null);
@@ -57,10 +59,13 @@ export function App({ token }: { token: string }) {
       playhead: Math.round(playhead * 1000) / 1000,
     };
     const timer = setTimeout(() => {
-      request(token, "/api/context", {
-        method: "POST",
-        body: JSON.stringify(ctx),
-      }).catch(() => undefined);
+      // One post at a time, in order, so an older state never lands last.
+      contextQueue.current = contextQueue.current.then(() =>
+        request(token, "/api/context", {
+          method: "POST",
+          body: JSON.stringify(ctx),
+        }).catch(() => undefined),
+      );
     }, 250);
     return () => clearTimeout(timer);
   }, [token, selected, hovered?.layerId, hovered?.path, playhead]);
@@ -163,6 +168,11 @@ export function App({ token }: { token: string }) {
                   Math.round(seconds * project.settings.fps),
                 )
               }
+            />
+            <VoicePanel
+              token={token}
+              project={project}
+              readOnly={!canEdit(locks, PROJECT_LAYER, now)}
             />
             <CommentsPanel token={token} project={project} pointer={pointer} />
             <ActivityFeed feed={feed} />

@@ -56,7 +56,7 @@ Spec: 06 (6.2 voice commands, 6.4 lanes), 08 (8.3). Proof: a script becomes voic
 Steps:
 - [x] 1. `ck voice script` (script to slots with target windows) and `ck voice mode <slot> ai|recorded|cloned`, MCP twins.
 - [x] 2. Speaker interface (Fish TTS stub, E_VOICE), audio cache by content hash, take processing (silence trim, loudness to the voice target, fit check: time-stretch within 8%, else options); `ck voice speak <slot>` + MCP twin.
-- [ ] 3. Record-along: the studio uploads a recorded take per slot (teleprompter, countdown, takes list, active take); server converts, trims, normalizes, fit-checks; Playwright with a fake microphone.
+- [x] 3. Record-along: the studio uploads a recorded take per slot (teleprompter, countdown, takes list, active take); server converts, trims, normalizes, fit-checks; Playwright with a fake microphone.
 - [ ] 4. Cloning with consent: only from takes recorded in the studio, after a consent record; Fish clone stub; refusal tests. `ck voice clone` + MCP twin.
 - [ ] 5. Captions from the active take's timing (transcriber over the take), as caption items.
 - [ ] 6. Lane B push-to-talk: local command parser (play, pause, undo, redo, go to N seconds, split here), free-form phrases become comments at the selection or playhead.

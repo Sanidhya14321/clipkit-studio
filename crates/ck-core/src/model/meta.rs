@@ -58,6 +58,9 @@ pub struct VoiceTake {
     pub id: String,
     pub path: String,
     pub duration_sec: f64,
+    /// Recorded with the studio microphone (the only audio cloning may use, spec 8.3).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub recorded: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]

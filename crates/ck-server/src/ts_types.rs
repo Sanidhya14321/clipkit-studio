@@ -75,6 +75,8 @@ fn decls(cfg: &Config) -> Vec<String> {
         crate::session::edit::CutWordsRequest::decl(cfg),
         crate::session::comments::CommentAddRequest::decl(cfg),
         crate::session::context::StudioContext::decl(cfg),
+        crate::session::voice::VoiceModeRequest::decl(cfg),
+        crate::session::voice::ActiveTakeRequest::decl(cfg),
         crate::session::context::Hovered::decl(cfg),
         PatchRequest::decl(cfg),
         PatchResult::decl(cfg),

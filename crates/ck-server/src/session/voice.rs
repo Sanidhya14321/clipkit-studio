@@ -61,7 +61,7 @@ pub struct VoiceScriptResult {
     pub omitted: usize,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, ts_rs::TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct VoiceModeRequest {
     pub slot: String,
@@ -295,6 +295,7 @@ impl Session {
         slot_id: &str,
         audio: &std::path::Path,
         holder: ck_core::model::Holder,
+        recorded: bool,
         label: String,
     ) -> CkResult<TakeResult> {
         let slot = {
@@ -318,6 +319,7 @@ impl Session {
             id: take_id.clone(),
             path: rel,
             duration_sec: (info.duration_sec * 1000.0).round() / 1000.0,
+            recorded,
         };
         let mut doc = self.doc()?;
         let i = slot_index(doc.project(), slot_id)?;
@@ -393,6 +395,7 @@ impl Session {
             &slot.id,
             &cached,
             ck_core::model::Holder::Agent,
+            false,
             format!("voice speak: {}", slot.id),
         )?;
         result.cached = hit;
@@ -421,6 +424,74 @@ impl Session {
             placeholder: true,
             reason: Some(reason),
             cached: false,
+        })
+    }
+}
+
+/// Largest studio recording accepted, in bytes.
+pub const MAX_RECORDING: usize = 50 * 1024 * 1024;
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct TakeQuery {
+    pub slot: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, ts_rs::TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ActiveTakeRequest {
+    pub slot: String,
+    pub take: String,
+}
+
+impl Session {
+    /// Record-along: a take recorded in the studio for `slot` (audio bytes as the browser
+    /// recorded them). Stored, then trimmed, normalized and fit like any take, as a human
+    /// revision; the take is marked recorded.
+    pub fn voice_record(&self, slot: &str, bytes: &[u8], ext: &str) -> CkResult<TakeResult> {
+        if bytes.is_empty() || bytes.len() > MAX_RECORDING {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                format!("a recording is 1 byte to {MAX_RECORDING} bytes"),
+            ));
+        }
+        {
+            let doc = self.doc()?;
+            slot_index(doc.project(), slot)?;
+        }
+        let dir = self.cache_dir().join("recordings");
+        let io = |e: std::io::Error| CkError::new(ErrorCode::Storage, e.to_string());
+        std::fs::create_dir_all(&dir).map_err(io)?;
+        let raw = dir.join(format!("{slot}-{}.{ext}", self.now_ms()));
+        ck_core::storage::atomic_write(&raw, bytes)?;
+        self.add_take(
+            slot,
+            &raw,
+            ck_core::model::Holder::Human,
+            true,
+            format!("record: {slot}"),
+        )
+    }
+
+    /// Pick the active take of a slot (studio takes list), as a human revision.
+    pub fn voice_active_take(&self, req: &ActiveTakeRequest) -> CkResult<VoiceModeResult> {
+        let mut doc = self.doc()?;
+        let p = doc.project();
+        let i = slot_index(p, &req.slot)?;
+        let slot = p.voice_slots[i].clone();
+        if !slot.takes.iter().any(|t| t.id == req.take) {
+            return Err(CkError::new(
+                ErrorCode::NotFound,
+                format!("slot {:?} has no take {:?}", req.slot, req.take),
+            ));
+        }
+        let ops = json!([{ "op": "add", "path": format!("/voiceSlots/{i}/activeTake"),
+                           "value": req.take }]);
+        let label = format!("active take: {} {}", req.slot, req.take);
+        let rev = self.commit_as(&mut doc, ck_core::model::Holder::Human, ops, label, &[])?;
+        Ok(VoiceModeResult {
+            rev: rev.rev,
+            slot: summary(&slot),
         })
     }
 }

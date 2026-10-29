@@ -9,5 +9,20 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   timeout: 30_000,
   use: { trace: "retain-on-failure" },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // Record-along tests (Phase 7) use Chromium's fake microphone (a beep).
+        permissions: ["microphone"],
+        launchOptions: {
+          args: [
+            "--use-fake-ui-for-media-stream",
+            "--use-fake-device-for-media-stream",
+          ],
+        },
+      },
+    },
+  ],
 });

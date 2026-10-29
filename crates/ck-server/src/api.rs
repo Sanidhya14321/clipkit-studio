@@ -26,7 +26,9 @@ use crate::session::handoff::{HandoffRequest, WaitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
-use crate::session::voice::{SlotRequest, VoiceModeRequest, VoiceScriptRequest};
+use crate::session::voice::{
+    ActiveTakeRequest, MAX_RECORDING, SlotRequest, TakeQuery, VoiceModeRequest, VoiceScriptRequest,
+};
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
 use crate::ws;
@@ -68,6 +70,12 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/voice/script", post(voice_script))
         .route("/api/voice/mode", post(voice_mode))
         .route("/api/voice/speak", post(voice_speak))
+        // Studio only: record-along uploads and the takes list.
+        .route(
+            "/api/voice/take",
+            post(voice_record).layer(DefaultBodyLimit::max(MAX_RECORDING)),
+        )
+        .route("/api/voice/active", post(voice_active_take))
         .route("/api/context", get(context).post(set_context))
         .route("/api/comments/add", post(comments_add))
         .route("/api/comments/reply", post(comments_reply))
@@ -308,6 +316,35 @@ async fn voice_speak(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.voice_speak(&req)).await
+}
+
+async fn voice_record(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<TakeQuery>, QueryRejection>,
+    headers: axum::http::HeaderMap,
+    body: axum::body::Bytes,
+) -> ApiResult {
+    let req = query(q)?;
+    let kind = headers
+        .get(axum::http::header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    let ext = if kind.starts_with("audio/ogg") {
+        "ogg"
+    } else if kind.starts_with("audio/wav") || kind.starts_with("audio/x-wav") {
+        "wav"
+    } else {
+        "webm"
+    };
+    blocking(s, move |s| s.voice_record(&req.slot, &body, ext)).await
+}
+
+async fn voice_active_take(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<ActiveTakeRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.voice_active_take(&req)).await
 }
 
 async fn look_apply(

@@ -405,3 +405,25 @@ body {
   border-radius: 999px;
   padding: 2px 10px;
 }
+
+.teleprompter {
+  background: #0f172a;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.teleprompter-line {
+  font-size: 1.4rem;
+}
+
+.countdown {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.slots {
+  list-style: none;
+  padding: 0;
+}

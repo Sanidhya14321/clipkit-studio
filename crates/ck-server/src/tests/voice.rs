@@ -84,6 +84,7 @@ fn unchanged_lines_keep_their_takes() {
         id: "t1".into(),
         path: "a.wav".into(),
         duration_sec: 1.0,
+        recorded: false,
     });
     old[0].active_take = Some("t1".into());
     let changed = VoiceScriptRequest {
@@ -246,4 +247,67 @@ fn without_a_speaker_the_slot_falls_back_to_the_placeholder() {
             .unwrap_err();
         assert_eq!(err.code, code);
     }
+}
+
+#[test]
+fn a_studio_recording_becomes_a_recorded_take_and_takes_can_be_switched() {
+    use crate::session::voice::ActiveTakeRequest;
+
+    let fx = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../fixtures/generated/tones.wav");
+    if !fx.is_file() {
+        eprintln!("skipped: run `just fixtures` first");
+        return;
+    }
+    let f = Fixture::new();
+    f.session
+        .voice_script(&VoiceScriptRequest {
+            lines: vec![line("Record me.")],
+            mode: Some(VoiceMode::Recorded),
+        })
+        .unwrap();
+    let bytes = std::fs::read(&fx).unwrap();
+    let first = f.session.voice_record("v1", &bytes, "wav").unwrap();
+    let second = f.session.voice_record("v1", &bytes, "wav").unwrap();
+    assert_eq!(
+        (first.take.as_deref(), second.take.as_deref()),
+        (Some("t1"), Some("t2"))
+    );
+    let p = f.session.project().unwrap();
+    let v1 = &p.voice_slots[0];
+    assert!(v1.takes.iter().all(|t| t.recorded));
+    assert_eq!(v1.active_take.as_deref(), Some("t2"));
+    // 10 s of tone in a 0.8 s window: kept and reported too long.
+    assert_eq!(first.info.unwrap().fit, ck_media::Fit::TooLong);
+
+    f.session
+        .voice_active_take(&ActiveTakeRequest {
+            slot: "v1".into(),
+            take: "t1".into(),
+        })
+        .unwrap();
+    assert_eq!(
+        f.session.project().unwrap().voice_slots[0]
+            .active_take
+            .as_deref(),
+        Some("t1")
+    );
+    let missing = f
+        .session
+        .voice_active_take(&ActiveTakeRequest {
+            slot: "v1".into(),
+            take: "t9".into(),
+        })
+        .unwrap_err();
+    assert_eq!(missing.code, ErrorCode::NotFound);
+
+    let empty = f.session.voice_record("v1", &[], "wav").unwrap_err();
+    assert_eq!(empty.code, ErrorCode::Request);
+    let junk = f
+        .session
+        .voice_record("v1", b"not audio", "wav")
+        .unwrap_err();
+    assert_eq!(junk.code, ErrorCode::Media);
+    let unknown = f.session.voice_record("v9", &bytes, "wav").unwrap_err();
+    assert_eq!(unknown.code, ErrorCode::NotFound);
 }

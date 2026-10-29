@@ -485,3 +485,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Fit: a take within 8% of its window is time-stretched to it with `atempo`; outside that the take is kept and reported `tooLong` or `tooShort`, and the agent or user picks the spec's options (extend visuals, shorten the line, re-record).
 - Speech cache key: SHA-256 over provider, voice ref and text, length-prefixed. Cached audio is used offline and when the speaker fails. With neither, `voice speak` answers `placeholder: true`, marks the slot failed, and the studio plays a labeled browser speech placeholder (no error, so the build continues).
 - `FishTts` is a PLACEHOLDER until the owner adds the key and the API is verified (same as STT, Phase 5 step 4b).
+
+## Phase 7 step 3: record-along (2026-10-29)
+- Recordings upload as raw bytes (`POST /api/voice/take?slot=`, 50 MB route limit) in the browser's MediaRecorder format; the extension comes from the content type (webm by default). ffmpeg reads them, so a broken upload is E_MEDIA.
+- `VoiceTake.recorded` marks studio recordings: the only takes cloning may use (step 4).
+- Per-line punch-in is recording one slot; multiple takes accumulate and the user picks the active one. Silence trim, loudness and fit run on every take.
+- Playwright runs Chromium with its fake microphone (`--use-fake-device-for-media-stream`).

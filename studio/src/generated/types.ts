@@ -134,7 +134,11 @@ export type VoiceMode = "ai" | "recorded" | "cloned";
 
 export type VoiceSlotStatus = "empty" | "pending" | "ready" | "failed";
 
-export type VoiceTake = { id: string, path: string, durationSec: number, };
+export type VoiceTake = { id: string, path: string, durationSec: number, 
+/**
+ * Recorded with the studio microphone (the only audio cloning may use, spec 8.3).
+ */
+recorded?: boolean, };
 
 export type Comment = { id: string, author: Author, anchor: Anchor, text: string, status: CommentStatus, createdRev: number, resolvedRev?: number | null, replies: Array<Reply>, 
 /**
@@ -245,6 +249,14 @@ playhead: number,
  * Loop range in seconds.
  */
 loopRange?: [number, number] | null, };
+
+export type VoiceModeRequest = { slot: string, mode: VoiceMode, 
+/**
+ * Who switches it: the agent (default) or the human (the studio badge).
+ */
+author?: Author | null, };
+
+export type ActiveTakeRequest = { slot: string, take: string, };
 
 export type Hovered = { layerId: string, path?: string | null, };
 
