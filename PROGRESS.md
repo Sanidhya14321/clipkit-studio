@@ -11,6 +11,7 @@ PHASE: 7
 5. Start: `just check`; phase-runner skill; spec 06 (6.4) and 08 (8.3).
 
 ## Open questions
+- Phase 7 step 6: `ck-server` `tests::idle::only_authorized_calls_count` uses 40 ms wall-clock margins and failed once under a loaded full run; move it to paused tokio time like the other idle tests.
 - Phase 6 close: self review against spec found these gaps outside spec 12's Phase 6 list, carried: Stop button with cooperative cancel (spec 5.2), timeline drag/trim/split/snapping/zoom (spec 5.4), loop range in the studio. Run the reviewer agents on e33924a^..HEAD when available.
 - Phase 5 close: run the rust-reviewer and spec-checker subagents on the Phase 5 diff (05509be..HEAD) in a session that has them. Self review found no blocker; known gaps: export and import block one request thread (no queue or progress), `/media/` non-range requests read the whole proxy, packed transcript cap trims lines for sources much longer than 10 min.
 - Phase 5 step 4b: owner will add FISH_AUDIO_API_KEY; then verify the Fish Audio STT API, build `FishStt`, record a cassette test. Decide whether whisper-rs (C++ build) goes in by default or behind a cargo feature.
@@ -59,7 +60,7 @@ Steps:
 - [x] 3. Record-along: the studio uploads a recorded take per slot (teleprompter, countdown, takes list, active take); server converts, trims, normalizes, fit-checks; Playwright with a fake microphone.
 - [x] 4. Cloning with consent: only from takes recorded in the studio, after a consent record; Fish clone stub; refusal tests. `ck voice clone` + MCP twin.
 - [x] 5. Captions from the active take's timing (transcriber over the take), as caption items.
-- [ ] 6. Lane B push-to-talk: local command parser (play, pause, undo, redo, go to N seconds, split here), free-form phrases become comments at the selection or playhead.
+- [x] 6. Lane B push-to-talk: local command parser (play, pause, undo, redo, go to N seconds, split here), free-form phrases become comments at the selection or playhead.
 - [ ] 7. Lane C `ck ask` + MCP twin: a question card with options in the studio, the answer returns as the tool result.
 - [ ] 8. Proof run, self review, evidence.
 

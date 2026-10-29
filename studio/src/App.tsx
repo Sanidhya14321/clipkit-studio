@@ -10,6 +10,7 @@ import { Timeline } from "./panels/Timeline";
 import { TranscriptPanel } from "./panels/TranscriptPanel";
 import { CommentsPanel } from "./panels/CommentsPanel";
 import { VoicePanel } from "./panels/VoicePanel";
+import { PushToTalk } from "./panels/PushToTalk";
 import { HoverSelect, type Target } from "./preview/HoverSelect";
 import type { Pointer } from "./comments";
 import type { StudioContext } from "./generated/types";
@@ -163,6 +164,18 @@ export function App({ token }: { token: string }) {
                   now,
                 )
               }
+              onSeek={(seconds) =>
+                player.current?.seekTo(
+                  Math.round(seconds * project.settings.fps),
+                )
+              }
+            />
+            <PushToTalk
+              token={token}
+              selection={selected}
+              playhead={playhead}
+              onPlay={() => player.current?.play()}
+              onPause={() => player.current?.pause()}
               onSeek={(seconds) =>
                 player.current?.seekTo(
                   Math.round(seconds * project.settings.fps),

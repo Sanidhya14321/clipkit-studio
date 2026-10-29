@@ -501,3 +501,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Each take keeps its own word timings on disk (`VoiceTake.transcriptPath`), made once by the transcriber; switching the active take switches the captions with no new call.
 - Caption items reference the slot (`from: voice`, `ref: <slot>`) and take their span from the slot's voice item; word times are relative to the take. Rendering words in the preview and export waits for the caption renderer (Phase 9 render path); the fast export path still refuses caption layers.
 - Real timing needs the transcriber (Fish STT stub until the key), so without one `voice captions` is E_VOICE rather than guessing even spacing.
+
+## Phase 7 step 6: push-to-talk (2026-10-29)
+- Speech to text in the browser uses the Web Speech API when present (Chromium sends audio to its vendor's service; the studio says so nowhere yet: add to README voice privacy in Phase 9). A typed field is the fallback and drives the tests.
+- Local commands: play, pause, undo, redo, go/jump/seek to <time> (12, 12 s, 1:05, 1 minute 5 seconds), split here. "Split here" needs a selected clip or footage layer and cuts it into `<id>` and `<id>-b` at the playhead.
+- Undo, redo and split are studio routes (not agent tools; the agent edits by patch). They run as the human or voice author and the lock gate applies.
+- Voice revisions hold locks as the human (`commit_by`); the revision author stays `voice`.

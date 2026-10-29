@@ -23,6 +23,7 @@ use crate::session::context::StudioContext;
 use crate::session::edit::{CutApplyRequest, CutWordsRequest, SourceRequest};
 use crate::session::export::ExportRequest;
 use crate::session::handoff::{HandoffRequest, WaitRequest};
+use crate::session::history::{HistoryRequest, SplitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
@@ -80,6 +81,10 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/voice/consent", post(voice_consent))
         .route("/api/voice/clone", post(voice_clone))
         .route("/api/voice/captions", post(voice_captions))
+        // Studio only: keyboard and push-to-talk commands.
+        .route("/api/undo", post(undo))
+        .route("/api/redo", post(redo))
+        .route("/api/split", post(split))
         .route("/api/context", get(context).post(set_context))
         .route("/api/comments/add", post(comments_add))
         .route("/api/comments/reply", post(comments_reply))
@@ -373,6 +378,30 @@ async fn voice_captions(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.voice_captions(&req)).await
+}
+
+async fn undo(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<HistoryRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.undo(&req)).await
+}
+
+async fn redo(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<HistoryRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.redo(&req)).await
+}
+
+async fn split(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<SplitRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.split(&req)).await
 }
 
 async fn look_apply(

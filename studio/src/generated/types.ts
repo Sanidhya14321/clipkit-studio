@@ -272,6 +272,18 @@ export type ConsentRequest = { slot: string, take: string,
  */
 consent: boolean, };
 
+export type HistoryRequest = { 
+/**
+ * `human` (keyboard) or `voice` (push-to-talk); default human.
+ */
+author?: Author | null, };
+
+export type SplitRequest = { layerId: string, 
+/**
+ * Timeline time to split at, in seconds.
+ */
+at: number, author?: Author | null, };
+
 export type Hovered = { layerId: string, path?: string | null, };
 
 export type PatchRequest = { 

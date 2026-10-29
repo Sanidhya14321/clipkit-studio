@@ -29,6 +29,7 @@ pub mod context;
 pub mod edit;
 pub mod export;
 pub mod handoff;
+pub mod history;
 pub mod import;
 pub mod layout;
 pub mod look;
@@ -262,6 +263,23 @@ impl Session {
         let author = match holder {
             Holder::Agent => Author::Agent,
             Holder::Human => Author::Human,
+        };
+        self.commit_by(doc, author, ops, label, extra)
+    }
+
+    /// [`Session::commit_as`] with the author named (the voice lane writes as `voice` and holds
+    /// locks as the human).
+    fn commit_by(
+        &self,
+        doc: &mut MutexGuard<'_, Document>,
+        author: Author,
+        ops: serde_json::Value,
+        label: String,
+        extra: &[String],
+    ) -> CkResult<Revision> {
+        let holder = match author {
+            Author::Agent => Holder::Agent,
+            Author::Human | Author::Voice => Holder::Human,
         };
         let now = self.now_ms();
         let project = doc.project();

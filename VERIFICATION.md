@@ -264,6 +264,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 4 run | PASS | 2026-10-29 `just check`: 286 of 286 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 14 of 14 three times |
 | Step 5: `ck voice captions` + MCP twin: the transcriber runs once per active take (words saved on disk, `transcriptPath` on the take), one caption item per slot on `captions-1` whose span follows the slot's voice item; slots without a take are skipped; a repeat is a no-op; no transcriber is E_VOICE | PASS | `ck-server` `tests::voice::captions_follow_the_active_take_timing`, `captions_need_a_transcriber` |
 | Step 5 run | PASS | 2026-10-29 `just check`: 288 of 288 nextest (1 skipped), hooks 41 of 41 |
+| Step 6: Lane B push-to-talk: the browser's speech recognition when present, a typed fallback otherwise; local commands play, pause, undo, redo (shared history, author voice), go to N seconds (several spoken time forms), split here (selected layer at the playhead); other phrases become voice comments anchored to the selection or playhead; studio routes `/api/undo`, `/api/redo`, `/api/split` honour locks | PASS | `studio/src/voiceCommands.test.ts` (3); `ck-server` `tests::history::*` (split, undo, redo by voice; bad times, agent author, agent lock E_LOCK_HELD, empty history); `studio/e2e/phase7.spec.ts` push-to-talk test |
+| Step 6 run | PASS | 2026-10-29 `just check`: 290 of 290 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 15 of 15. One run had `tests::idle::only_authorized_calls_count` fail under load (40 ms wall-clock margins, Phase 2); it passes alone and on rerun |
 | Step 1 run | PASS | 2026-10-29 `just check`: 278 of 278 nextest (1 skipped), hooks 41 of 41 |
 
 ## Phase 6: interaction slice (2026-10-29, done)

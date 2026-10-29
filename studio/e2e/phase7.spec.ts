@@ -92,3 +92,45 @@ test("a slot without speech offers the labeled placeholder", async ({
     "recorded",
   );
 });
+
+test("push-to-talk: seek, split here, undo locally; other phrases become comments", async ({
+  page,
+  studio,
+}) => {
+  await open(page, studio);
+  const file = join(studio.dir, "apply.json");
+  await writeFile(
+    file,
+    JSON.stringify({ recipe: "hook-title", slots: { headline: "Hi there" } }),
+  );
+  await studio.ck("recipe", "apply", file);
+
+  const timeline = page.locator("[data-ck-timeline]");
+  await timeline.locator('[data-ck-layer="hook-title-backdrop"]').click();
+  const say = async (phrase: string) => {
+    const box = page.locator("[data-ck-ptt-text]");
+    await box.fill(phrase);
+    await box.press("Enter");
+    await expect(page.locator("[data-ck-ptt-last]")).toContainText(phrase);
+  };
+
+  await say("go to 1 second");
+  await say("split here");
+  await expect(
+    timeline.locator('[data-ck-layer="hook-title-backdrop-b"]'),
+  ).toHaveCount(1);
+  await say("undo");
+  await expect(
+    timeline.locator('[data-ck-layer="hook-title-backdrop-b"]'),
+  ).toHaveCount(0);
+
+  await say("Make the background warmer");
+  const bundle = (await studio.ck("comments", "list")) as {
+    comments: { author: string; text: string; anchor: { layerId?: string } }[];
+  };
+  expect(bundle.comments[0]).toMatchObject({
+    author: "voice",
+    text: "Make the background warmer",
+    anchor: { layerId: "hook-title-backdrop" },
+  });
+});

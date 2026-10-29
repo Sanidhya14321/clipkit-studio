@@ -6,6 +6,7 @@ mod comments;
 mod edit;
 mod fixture;
 mod handoff;
+mod history;
 mod idle;
 mod import;
 mod live;
