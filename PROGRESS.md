@@ -1,16 +1,17 @@
 # Progress
 
 STATUS: RUNNING
-PHASE: 6
+PHASE: 7
 
 ## Handoff (latest)
-1. Done: Phase 6 step 5: studio comments panel and timeline pins, hover-select with mini inspector and Ask agent, studio context reporting.
-2. Proof: `just check` 273 of 273 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 11 of 11. Evidence in VERIFICATION.md, Phase 6.
-3. Open: loop range is always null (the Player has no loop-range UI yet); Phase 5 carried items.
-4. Next: Phase 6 step 6: brief tuning chips and diff re-planning (`brief diff` lists affected layers by briefDeps; impact preview); Playwright.
-5. Start: `just check`; crates/ck-server/src/session/brief.rs; studio/src/panels/BriefPanel.tsx, studio/src/brief.ts.
+1. Done: Phase 6 (interaction slice): comments and pins, scope gate (E_SCOPE), `@structure` lock, hover-select with Ask agent, tuning chips with impact and `brief diff` affected layers, `ck context`; proof `crates/ck-cli/tests/interaction_proof.rs`.
+2. Proof: `just check` and `just test` 275 of 275 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 12 of 12. Evidence in VERIFICATION.md, Phase 6.
+3. Open: loop range not reported (no Player loop UI); Stop button / cooperative cancel (spec 5.2) still unbuilt; timeline drag/trim/split (spec 5.4) unbuilt; reviewer agents not run; Phase 5 carried items (Fish Audio key, VAD).
+4. Next: Phase 7 voice slice (voice slots, Fish Audio TTS, record-along, cloning with consent, loudness, captions from takes, studio push-to-talk, ck ask). Much of it needs the Fish Audio key and API check; plan it first.
+5. Start: `just check`; phase-runner skill; spec 06 (6.4) and 08 (8.3).
 
 ## Open questions
+- Phase 6 close: self review against spec found these gaps outside spec 12's Phase 6 list, carried: Stop button with cooperative cancel (spec 5.2), timeline drag/trim/split/snapping/zoom (spec 5.4), loop range in the studio. Run the reviewer agents on e33924a^..HEAD when available.
 - Phase 5 close: run the rust-reviewer and spec-checker subagents on the Phase 5 diff (05509be..HEAD) in a session that has them. Self review found no blocker; known gaps: export and import block one request thread (no queue or progress), `/media/` non-range requests read the whole proxy, packed transcript cap trims lines for sources much longer than 10 min.
 - Phase 5 step 4b: owner will add FISH_AUDIO_API_KEY; then verify the Fish Audio STT API, build `FishStt`, record a cassette test. Decide whether whisper-rs (C++ build) goes in by default or behind a cargo feature.
 - Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
@@ -48,7 +49,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 6: interaction slice (2026-10-29, in progress)
+## Phase 6: interaction slice (2026-10-29, done)
 
 Spec: 05 (5.3, 5.4), 08 (8.4), 04 (scope gate), 06 (comments CLI, ck context). Proof: the user comments on a layer, the agent picks it up through `ck wait`, fixes it inside the scope gate, and resolves it with a before/after diff; hover-select and tuning chips work in the studio.
 
@@ -59,7 +60,7 @@ Steps:
 - [x] 4. `ck context` + MCP: the studio reports selection, hovered element, playhead and loop range; the answer adds open comments, about 300 tokens.
 - [x] 5. Studio comments panel and pins (moment, range, layer, element), Send to agent; hover-select on the preview (highlight with label, click selects, Ask agent anchors a comment to the path); Playwright.
 - [x] 6. Brief panel tuning chips (punchier, shorter, calmer, more premium) and diff re-planning: `brief diff` lists the layers whose briefDeps the change hits; impact preview in the studio; Playwright.
-- [ ] 7. Proof run, self review, evidence.
+- [x] 7. Proof run (`crates/ck-cli/tests/interaction_proof.rs`), self review, evidence.
 
 Crates: ck-core (comments lock id, scope gate, structure lock, model field `scope`), ck-server (sessions, routes, context), ck-mcp, ck-cli, studio.
 
