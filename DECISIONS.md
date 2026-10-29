@@ -4,6 +4,12 @@ Newest first within each section. Each entry: what, why, and the source when it 
 
 ## Phase 4 (2026-10-29)
 
+### Step 2: taste and look commands (spec 6.2)
+- **`ck taste read`, not `get`**: spec 6.2 names `taste search, read`; the Phase 4 plan said get. Looks have no spec 6.2 entry; `ck look list|get` were added because the brief's look cards (spec 8.1) and re-theming need them.
+- **Built into the binary**: taste files and looks are embedded with `include_str!` so an installed `ck` needs no repo `assets/` folder; a test checks the embedded copy equals the folder. Adding a file means adding it to the table in `ck-assets/src/library.rs`.
+- **Search is word scoring, not tantivy**: 12 files do not need an index; 3 points per query word found in id, title or tags, 1 in the body, ties in id order. Default 5 hits, at most 12. Tantivy arrives with cards (Phase 8).
+- **No studio needed**: these four commands and their MCP twins read the built-in library and never start the studio. Unknown ids are `E_NOT_FOUND` (its generic hint names `ck project get`; the message names the right list command).
+
 ### Step 1: taste library and looks (spec 7.1, 7.5)
 - **Twelve taste files**: the ten topics spec 7.1 names (pacing, hooks, typography, color, motion, transitions, captions, platform specs, audio mixing, recipes for common video types as `video-types`) plus `layout` and `sound-design`, which spec 8.5 (layout solver, sound placement) needs numbers for. All numbers are ClipKit's own authored defaults, not platform-official figures; `platform-specs` says so.
 - **Taste format**: front matter with only `id`, `title`, `tags: [..]` parsed by hand (no YAML crate), id equals file name, at most 2400 bytes (about 600 tokens) and the body must contain numbers.

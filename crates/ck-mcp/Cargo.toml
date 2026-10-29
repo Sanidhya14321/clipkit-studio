@@ -9,6 +9,7 @@ publish = false
 
 [dependencies]
 ck-core.workspace = true
+ck-assets.workspace = true
 ck-server.workspace = true
 rmcp.workspace = true
 schemars.workspace = true

@@ -286,6 +286,7 @@ dependencies = [
 name = "ck-cli"
 version = "0.0.0"
 dependencies = [
+ "ck-assets",
  "ck-core",
  "ck-mcp",
  "ck-server",
@@ -323,6 +324,7 @@ version = "0.0.0"
 name = "ck-mcp"
 version = "0.0.0"
 dependencies = [
+ "ck-assets",
  "ck-core",
  "ck-server",
  "insta",

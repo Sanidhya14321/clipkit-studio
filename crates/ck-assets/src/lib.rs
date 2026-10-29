@@ -1,8 +1,10 @@
 //! Asset ingestion, cards, catalog, search index, AST extraction and Source Hub.
 //!
-//! Phase 4 step 1: loaders and validators for the starter taste library and looks (spec 7.1, 7.5).
+//! Phase 4: loaders and validators for the starter taste library and looks (spec 7.1, 7.5), and
+//! the read ops over the built-in copy (`library`).
 
 pub mod color;
+pub mod library;
 pub mod look;
 pub mod taste;
 

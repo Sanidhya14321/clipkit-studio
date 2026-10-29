@@ -4,6 +4,7 @@
 
 use std::path::Path;
 
+use ck_assets::library::{self, IdRequest, LookListRequest, TasteSearchRequest};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_server::idle::DEFAULT_IDLE_SECS;
@@ -91,7 +92,51 @@ pub fn specs() -> Vec<ToolSpec> {
             "Renew the holder's live locks so they do not expire; returns them.",
             caps::LOCK,
         ),
+        spec::<TasteSearchRequest>(
+            "taste_search",
+            "ck taste search",
+            "Rank the taste files by query words (id, title, tags); read at most 3 of them.",
+            library::caps::TASTE_SEARCH,
+        ),
+        spec::<IdRequest>(
+            "taste_read",
+            "ck taste read",
+            "One taste file in full: direction with concrete numbers.",
+            library::caps::TASTE_READ,
+        ),
+        spec::<LookListRequest>(
+            "look_list",
+            "ck look list",
+            "The looks in short: id, name, description and motion personality.",
+            library::caps::LOOK_LIST,
+        ),
+        spec::<IdRequest>(
+            "look_get",
+            "ck look get",
+            "One look with all its design tokens (colors, fonts, type scale, motion).",
+            library::caps::LOOK_GET,
+        ),
     ]
+}
+
+/// Whether `name` runs over the built-in asset library, without a studio.
+pub fn is_offline(name: &str) -> bool {
+    matches!(
+        name,
+        "taste_search" | "taste_read" | "look_list" | "look_get"
+    )
+}
+
+/// Tools over the built-in asset library: they need no studio. `None` when `name` is not one.
+pub fn offline(name: &str, args: Value) -> Option<CkResult<String>> {
+    let out = match name {
+        "taste_search" => parse(args).and_then(|r| json(&library::taste_search(&r)?)),
+        "taste_read" => parse(args).and_then(|r| json(&library::taste_read(&r)?)),
+        "look_list" => parse(args).and_then(|r| json(&library::look_list(&r)?)),
+        "look_get" => parse(args).and_then(|r| json(&library::look_get(&r)?)),
+        _ => return None,
+    };
+    Some(out)
 }
 
 fn spec<T: JsonSchema>(

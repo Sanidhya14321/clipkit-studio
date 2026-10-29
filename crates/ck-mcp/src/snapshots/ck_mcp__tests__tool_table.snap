@@ -398,5 +398,77 @@ expression: specs()
       ],
       "type": "object"
     }
+  },
+  {
+    "name": "taste_search",
+    "command": "ck taste search",
+    "description": "Rank the taste files by query words (id, title, tags); read at most 3 of them.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "description": "Most hits to return (default 5, at most 12).",
+          "format": "uint",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "query": {
+          "default": "",
+          "description": "Words to look for in ids, titles, tags and bodies; empty lists every file.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "taste_read",
+    "command": "ck taste read",
+    "description": "One taste file in full: direction with concrete numbers.",
+    "cap": 3072,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "look_list",
+    "command": "ck look list",
+    "description": "The looks in short: id, name, description and motion personality.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  {
+    "name": "look_get",
+    "command": "ck look get",
+    "description": "One look with all its design tokens (colors, fonts, type scale, motion).",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
   }
 ]

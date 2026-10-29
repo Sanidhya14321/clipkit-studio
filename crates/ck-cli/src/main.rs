@@ -18,7 +18,8 @@ use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
 
-use args::{Cli, Command, ProjectCommand};
+use args::{Cli, Command, LookCommand, ProjectCommand, TasteCommand};
+use ck_assets::library::{self, IdRequest, LookListRequest, TasteSearchRequest};
 
 /// JSON log lines to stderr when `CK_LOG` is set (for example `CK_LOG=debug`). Off by default so
 /// command output stays small; fields follow ck_core::log.
@@ -95,6 +96,18 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Heartbeat { holder } => print(&ops()?.heartbeat(&HeartbeatRequest {
             holder: holder.holder,
         })?),
+        // Built-in asset library: no studio needed.
+        Command::Taste(TasteCommand::Search { query, limit }) => {
+            print(&library::taste_search(&TasteSearchRequest {
+                query,
+                limit,
+            })?)
+        }
+        Command::Taste(TasteCommand::Read { id }) => {
+            print(&library::taste_read(&IdRequest { id })?)
+        }
+        Command::Look(LookCommand::List) => print(&library::look_list(&LookListRequest {})?),
+        Command::Look(LookCommand::Get { id }) => print(&library::look_get(&IdRequest { id })?),
         Command::Init(args) => install::run(install::Mode::Init, &args, &cli.dir),
         Command::Uninstall(args) => install::run(install::Mode::Uninstall, &args, &cli.dir),
         // Handled in main before run.

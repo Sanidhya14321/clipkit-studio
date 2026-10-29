@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 4 plan (10 steps) and step 1: 12 taste files in `assets/taste/`, 4 looks in `assets/looks/`, `ck-assets` loaders `load_taste`/`load_looks` with validation, new error code `E_ASSET`.
-2. Proof: `just check` 167 of 167 nextest (1 skipped), hooks 41 of 41, studio OK. 6 new tests in `crates/ck-assets/src/tests.rs`. Evidence in VERIFICATION.md, Phase 4 step 1.
-3. Open: font families are named but not bundled (DECISIONS.md, Phase 4 step 1). Phase 3 interactive items stay BLOCKED.
-4. Next: Phase 4 step 2, `ck taste search|get` and `ck look list|get` with MCP twins, schema, output cap and parity tests, plus `assets/INDEX.md` (rust-conventions skill: adding a CLI command with its MCP twin).
-5. Start: `just check`. Asset tests: `cargo nextest run -p ck-assets`.
+1. Done: Phase 4 step 2: built-in library (`ck-assets/src/library.rs`, embedded), `ck taste search|read`, `ck look list|get` and MCP twins `taste_search`, `taste_read`, `look_list`, `look_get` (no studio needed), `assets/INDEX.md`.
+2. Proof: `just check` 173 of 173 nextest (1 skipped), hooks 41 of 41, studio exit 0. Evidence in VERIFICATION.md, Phase 4 step 2.
+3. Open: `taste read` follows spec 6.2 instead of the plan's `get`; looks commands are an addition for the brief (DECISIONS.md, step 2). Fonts still not bundled. Phase 3 interactive items stay BLOCKED.
+4. Next: Phase 4 step 3, Brief Studio essentials `ck brief propose|wait|diff|get` with MCP twins (spec 8.1, 9).
+5. Start: `just check`. Library tests: `cargo nextest run -p ck-assets -p ck-mcp`.
 
 ## Open questions
 - Phase 3 step 7: check Cursor's `~/.cursor/mcp.json` and `.cursor/rules/*.mdc` format, and whether a user-level rules file exists, against cursor.com/docs (DECISIONS.md, step 7).
@@ -42,7 +42,7 @@ Spec: 00, 04 (4.3), 07, 08 (8.1, 8.5), 09. Proof: prompt to brief to a 15 second
 
 Steps:
 - [x] 1. Starter taste library (12 files with concrete numbers) and 4 looks (design tokens plus motion personality) in `assets/`, authored originally; `ck-assets` loaders with validation (front matter, size caps, contrast, at most two font families).
-- [ ] 2. `ck taste search|get` and `ck look list|get` with MCP twins, output caps, parity tests; `assets/INDEX.md` (under 60 lines).
+- [x] 2. `ck taste search|read` and `ck look list|get` with MCP twins, output caps, parity tests; `assets/INDEX.md` (under 60 lines).
 - [ ] 3. Brief Studio essentials: `ck brief propose|wait|diff|get` (inferred values only, field sources, at most three dynamic questions) and its MCP twins.
 - [ ] 4. Studio brief panel (essentials form, pacing slider with numbers, look cards, confirm) with Playwright test.
 - [ ] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
@@ -51,6 +51,12 @@ Steps:
 - [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
 - [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
 - [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 2): step 2.
+- Embed the starter taste files and looks in `ck-assets` (`include_str!`), so an installed `ck` needs no assets folder; a test keeps the table in step with `assets/`.
+- Library ops `taste_search`, `taste_read` (spec 6.2 name; the plan said get), `look_list`, `look_get` with request types and caps.
+- `ck taste search|read`, `ck look list|get` and MCP twins (no studio needed); schema snapshot, caps, parity test.
+- `assets/INDEX.md` under 60 lines, with a test.
 
 Run plan (autonomous run 1): step 1.
 - Author 12 taste markdown files (front matter: id, title, tags; body with numbers) under `assets/taste/`.

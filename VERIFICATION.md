@@ -154,6 +154,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 1: 4 looks (spec 7.5) with readable contrast and at most two font families (spec 4.3) | PASS | `starter_looks_are_the_four_of_spec_7_5`; `look_refusals_carry_e_asset` (low contrast, bad hex, wrong id, out-of-range motion, empty or third font refused); `contrast_matches_wcag_reference_values` |
 | Step 1: refusals carry a stable code | PASS | `taste_parse_refusals_carry_e_asset`, `missing_dir_is_e_storage`; `ck_core::error::tests::codes_are_stable` snapshot gains `E_ASSET` |
 | Step 1 run | PASS | 2026-10-29 `just check`: 167 of 167 nextest (1 skipped), hooks 41 of 41, studio OK |
+| Step 2: built-in library equals `assets/` | PASS | `built_in_library_matches_the_assets_folder` |
+| Step 2: `ck taste search|read`, `ck look list|get` within caps, unknown id is `E_NOT_FOUND` | PASS | `taste_search_ranks_by_head_then_body_and_stays_under_its_cap`, `reads_stay_under_their_caps_and_unknown_ids_are_not_found` |
+| Step 2: MCP twins (schema, cap, parity, no studio started) | PASS | `ck_mcp` `tool_table_snapshot` (4 tools added), `every_tool_has_an_object_schema_and_its_cli_cap`, `offline_tools_are_exactly_the_library_tools`; `crates/ck-cli/tests/mcp_parity.rs` `library_tools_answer_like_their_cli_twins_without_a_studio` |
+| Step 2: `assets/INDEX.md` under 60 lines, names every built-in file | PASS | `assets_index_is_short_and_names_every_built_in_file` |
+| Step 2 run | PASS | 2026-10-29 `just check`: 173 of 173 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and unit tests exit 0 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

@@ -349,3 +349,45 @@ fn studio_tool_ensures_like_ck_studio_ensure() {
         (&json!(false), &started["port"])
     );
 }
+
+#[test]
+fn library_tools_answer_like_their_cli_twins_without_a_studio() {
+    use ck_assets::library::caps as lib;
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let mut mcp = Mcp::start(d);
+    assert_eq!(
+        mcp.ok(
+            "taste_search",
+            json!({ "query": "pacing", "limit": 3 }),
+            lib::TASTE_SEARCH
+        ),
+        ok_line(
+            d,
+            &["taste", "search", "pacing", "--limit", "3"],
+            lib::TASTE_SEARCH
+        )
+    );
+    assert_eq!(
+        mcp.ok("taste_search", Value::Null, lib::TASTE_SEARCH),
+        ok_line(d, &["taste", "search"], lib::TASTE_SEARCH)
+    );
+    assert_eq!(
+        mcp.ok("taste_read", json!({ "id": "pacing" }), lib::TASTE_READ),
+        ok_line(d, &["taste", "read", "pacing"], lib::TASTE_READ)
+    );
+    assert_eq!(
+        mcp.ok("look_list", json!({}), lib::LOOK_LIST),
+        ok_line(d, &["look", "list"], lib::LOOK_LIST)
+    );
+    assert_eq!(
+        mcp.ok("look_get", json!({ "id": "cinematic" }), lib::LOOK_GET),
+        ok_line(d, &["look", "get", "cinematic"], lib::LOOK_GET)
+    );
+    let missing = mcp.err("look_get", json!({ "id": "nope" }));
+    assert_eq!(code(&missing), "E_NOT_FOUND");
+    assert_eq!(missing, err_line(d, &["look", "get", "nope"]));
+    assert_eq!(code(&mcp.err("taste_read", json!({}))), "E_REQUEST");
+    // None of these started a studio.
+    assert!(!d.join(".clipkit/server.json").exists());
+}

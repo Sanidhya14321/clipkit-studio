@@ -67,6 +67,12 @@ pub enum Command {
         #[command(flatten)]
         holder: HolderArg,
     },
+    /// Search and read the taste files (direction with concrete numbers).
+    #[command(subcommand)]
+    Taste(TasteCommand),
+    /// List and read the looks (design tokens plus motion personality).
+    #[command(subcommand)]
+    Look(LookCommand),
     /// Claude Code plugin hooks: read the hook JSON on stdin; exit 2 blocks (spec 6.1).
     #[command(subcommand)]
     Hook(HookCommand),
@@ -122,6 +128,29 @@ pub enum ProjectCommand {
     },
     /// Apply a patch: a JSON object {baseRev, ops, author, label?, layerRevs?}, or - for stdin.
     Patch { patch: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum TasteCommand {
+    /// Rank the taste files by query words (id, title, tags); read at most 3 of them.
+    Search {
+        /// Words to look for; empty lists every file.
+        #[arg(default_value = "")]
+        query: String,
+        /// Most hits to return (default 5, at most 12).
+        #[arg(long)]
+        limit: Option<usize>,
+    },
+    /// One taste file in full.
+    Read { id: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum LookCommand {
+    /// The looks in short.
+    List,
+    /// One look with all its design tokens.
+    Get { id: String },
 }
 
 #[derive(Debug, Args)]

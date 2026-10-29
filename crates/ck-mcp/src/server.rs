@@ -94,6 +94,8 @@ impl ServerHandler for CkMcp {
         let root = self.root.clone();
         let outcome = tokio::task::spawn_blocking(move || match name.as_str() {
             "studio" => tools::studio(&root, args),
+            _ if tools::is_offline(&name) => tools::offline(&name, args)
+                .unwrap_or_else(|| Err(server_err(format!("no tool named {name:?}")))),
             _ => tools::connect(&root).and_then(|ops| tools::call(&ops, &name, args)),
         })
         .await

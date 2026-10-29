@@ -13,6 +13,7 @@ path = "src/main.rs"
 
 [dependencies]
 ck-core.workspace = true
+ck-assets.workspace = true
 ck-server.workspace = true
 ck-mcp.workspace = true
 clap.workspace = true

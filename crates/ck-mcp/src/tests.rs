@@ -1,5 +1,6 @@
 use std::collections::BTreeSet;
 
+use ck_assets::library;
 use ck_server::ops::caps;
 
 use crate::server::tool_list;
@@ -37,6 +38,10 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("lock", caps::LOCK),
         ("unlock", caps::LOCK),
         ("heartbeat", caps::LOCK),
+        ("taste_search", library::caps::TASTE_SEARCH),
+        ("taste_read", library::caps::TASTE_READ),
+        ("look_list", library::caps::LOOK_LIST),
+        ("look_get", library::caps::LOOK_GET),
     ];
     let table: Vec<(&str, usize)> = specs().iter().map(|s| (s.name, s.cap)).collect();
     assert_eq!(table, expected);
@@ -44,6 +49,20 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         assert_eq!(s.input_schema["type"], "object", "{}", s.name);
         assert!(!s.description.is_empty());
     }
+}
+
+#[test]
+fn offline_tools_are_exactly_the_library_tools() {
+    for s in specs() {
+        let offline = crate::tools::offline(s.name, serde_json::json!({ "id": "nope" }));
+        assert_eq!(
+            offline.is_some(),
+            crate::tools::is_offline(s.name),
+            "{}",
+            s.name
+        );
+    }
+    assert!(crate::tools::offline("status", serde_json::Value::Null).is_none());
 }
 
 #[test]

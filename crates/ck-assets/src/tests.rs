@@ -122,3 +122,80 @@ fn missing_dir_is_e_storage() {
     let err = load_looks(&dir.path().join("nope")).unwrap_err();
     assert_eq!(err.code, ErrorCode::Storage);
 }
+
+#[test]
+fn built_in_library_matches_the_assets_folder() {
+    assert_eq!(
+        library::taste().unwrap(),
+        load_taste(&assets_dir().join("taste")).unwrap()
+    );
+    assert_eq!(
+        library::looks().unwrap(),
+        load_looks(&assets_dir().join("looks")).unwrap()
+    );
+}
+
+#[test]
+fn taste_search_ranks_by_head_then_body_and_stays_under_its_cap() {
+    use library::{TasteSearchRequest, caps, taste_search};
+    let all = taste_search(&TasteSearchRequest::default()).unwrap();
+    assert_eq!(all.total, 12);
+    assert_eq!(all.hits.len(), library::DEFAULT_HITS);
+    let found = taste_search(&TasteSearchRequest {
+        query: "Pacing".into(),
+        limit: Some(100),
+    })
+    .unwrap();
+    assert_eq!(found.hits[0].id, "pacing");
+    assert_eq!(found.hits[0].score, 3);
+    assert!(found.hits.len() <= library::MAX_HITS);
+    let none = taste_search(&TasteSearchRequest {
+        query: "zzqx".into(),
+        limit: None,
+    })
+    .unwrap();
+    assert_eq!(none.total, 0);
+    let widest = taste_search(&TasteSearchRequest {
+        query: String::new(),
+        limit: Some(library::MAX_HITS),
+    })
+    .unwrap();
+    let len = serde_json::to_string(&widest).unwrap().len();
+    assert!(len <= caps::TASTE_SEARCH, "{len}");
+}
+
+#[test]
+fn reads_stay_under_their_caps_and_unknown_ids_are_not_found() {
+    use library::{IdRequest, LookListRequest, caps};
+    for f in library::taste().unwrap() {
+        let got = library::taste_read(&IdRequest { id: f.id.clone() }).unwrap();
+        let len = serde_json::to_string(&got).unwrap().len();
+        assert!(len <= caps::TASTE_READ, "{} {len}", f.id);
+    }
+    for l in library::looks().unwrap() {
+        let got = library::look_get(&IdRequest { id: l.id.clone() }).unwrap();
+        let len = serde_json::to_string(&got).unwrap().len();
+        assert!(len <= caps::LOOK_GET, "{} {len}", l.id);
+    }
+    let list = library::look_list(&LookListRequest {}).unwrap();
+    assert_eq!(list.looks.len(), 4);
+    assert!(serde_json::to_string(&list).unwrap().len() <= caps::LOOK_LIST);
+    let id = IdRequest { id: "nope".into() };
+    assert_eq!(
+        library::taste_read(&id).unwrap_err().code,
+        ErrorCode::NotFound
+    );
+    assert_eq!(
+        library::look_get(&id).unwrap_err().code,
+        ErrorCode::NotFound
+    );
+}
+
+#[test]
+fn assets_index_is_short_and_names_every_built_in_file() {
+    let index = std::fs::read_to_string(assets_dir().join("INDEX.md")).unwrap();
+    assert!(index.lines().count() < 60);
+    for (id, _) in library::TASTE_FILES.iter().chain(library::LOOK_FILES) {
+        assert!(index.contains(id), "INDEX.md misses {id}");
+    }
+}
