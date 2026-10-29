@@ -218,6 +218,13 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 10c: rust-reviewer and spec-checker run; trimmed `wait` resumes after the last kept event; handoff label capped at 80 chars | PASS | `ops::tests::trimmed_wait_resumes_after_the_last_kept_event`, `handoff::tests::handoff_label_is_capped_and_defaulted`; 2026-10-29 `just check` exit 0 (220 of 220 nextest, 1 skipped; hooks 41 of 41; studio clean). Carried gaps in DECISIONS.md step 10c |
 | Step 10a run | PASS | 2026-10-29 `just check`: 218 of 218 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
 
+## Phase 5: edit slice (2026-10-29, in progress)
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| Step 1: `E_MEDIA` code; ffprobe as an argument array with a 30 s timeout; `-`-prefixed and empty paths refused; typed `MediaInfo` (VFR flag, rotation from side data or tag with display size swap, several audio tracks, cover art skipped, duration fallback) | PASS | `ck-media` `probe::tests::*` (8 tests); `probes_fixture_media_against_ground_truth` ran against `fixtures/generated/` (counter, av, tones durations, size, fps, sample rate from ground-truth.json); error-code table snapshot updated |
+| Step 1 run | PASS | 2026-10-29 `just check`: 228 of 228 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
+
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 
 | Item | Status | Evidence |

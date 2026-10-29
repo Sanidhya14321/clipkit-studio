@@ -2,6 +2,14 @@
 
 Newest first within each section. Each entry: what, why, and the source when it is a verified fact.
 
+## Phase 5 (2026-10-29)
+
+### Step 1: probe
+- New stable code `E_MEDIA` (HTTP 422) for ffmpeg/ffprobe failures, timeouts and unusable media; a `-`-prefixed path is `E_REQUEST`.
+- Tool calls are synchronous `std::process` with a polling timeout and an 8 MiB output cap per stream; async callers wrap them in `spawn_blocking`. Simplest option; no new dependency.
+- VFR = average and nominal frame rates differ by more than 1 percent (a heuristic; ffprobe has no direct flag). Rotation is read from `side_data_list[].rotation`, else the legacy `tags.rotate`, rounded to a quarter turn.
+- The fixture-backed probe test skips with a message when `fixtures/generated/ground-truth.json` is absent (the CI test job does not run `just fixtures`); the parse tests cover the logic without fixtures. Open: run fixtures in the CI test job.
+
 ## Phase 4 (2026-10-29)
 
 ### Step 10c: review fixes and carried gaps; Phase 4 closed

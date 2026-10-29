@@ -55,6 +55,9 @@ pub enum ErrorCode {
     /// A knowledge base file (taste, look, recipe or card) is malformed or fails validation.
     #[serde(rename = "E_ASSET")]
     Asset,
+    /// ffmpeg or ffprobe failed, timed out, or the media file is unreadable or unsupported.
+    #[serde(rename = "E_MEDIA")]
+    Media,
 }
 
 impl ErrorCode {
@@ -76,6 +79,7 @@ impl ErrorCode {
         ErrorCode::Server,
         ErrorCode::OutputCap,
         ErrorCode::Asset,
+        ErrorCode::Media,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -96,6 +100,7 @@ impl ErrorCode {
             ErrorCode::Server => "E_SERVER",
             ErrorCode::OutputCap => "E_OUTPUT_CAP",
             ErrorCode::Asset => "E_ASSET",
+            ErrorCode::Media => "E_MEDIA",
         }
     }
 
@@ -122,6 +127,9 @@ impl ErrorCode {
             ErrorCode::Server => "Run ck studio --ensure to start the server, then retry.",
             ErrorCode::OutputCap => "Ask for less: read one layer with ck project get --layer.",
             ErrorCode::Asset => "Fix the asset file and field named in the message, then retry.",
+            ErrorCode::Media => {
+                "Check the media file and that ffmpeg and ffprobe are on PATH (ck doctor)."
+            }
         }
     }
 }

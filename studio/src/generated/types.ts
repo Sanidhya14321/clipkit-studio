@@ -254,7 +254,7 @@ export type CkError = { code: ErrorCode, message: string, hint: string,
  */
 layerIds?: Array<string>, };
 
-export type ErrorCode = "E_STAGE" | "E_RETRY" | "E_LOCK_HELD" | "E_LOCK_NOT_HELD" | "E_PATCH_STALE" | "E_PATCH_INVALID" | "E_SCHEMA" | "E_HISTORY_EMPTY" | "E_STORAGE" | "E_MIGRATION" | "E_AUTH" | "E_NOT_FOUND" | "E_REQUEST" | "E_SERVER" | "E_OUTPUT_CAP" | "E_ASSET";
+export type ErrorCode = "E_STAGE" | "E_RETRY" | "E_LOCK_HELD" | "E_LOCK_NOT_HELD" | "E_PATCH_STALE" | "E_PATCH_INVALID" | "E_SCHEMA" | "E_HISTORY_EMPTY" | "E_STORAGE" | "E_MIGRATION" | "E_AUTH" | "E_NOT_FOUND" | "E_REQUEST" | "E_SERVER" | "E_OUTPUT_CAP" | "E_ASSET" | "E_MEDIA";
 
 export type Look = { id: string, name: string, description: string, colors: Colors, fonts: Fonts, 
 /**

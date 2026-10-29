@@ -340,6 +340,12 @@ dependencies = [
 [[package]]
 name = "ck-media"
 version = "0.0.0"
+dependencies = [
+ "ck-core",
+ "schemars",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "ck-pipeline"

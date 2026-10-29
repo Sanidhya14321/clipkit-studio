@@ -66,5 +66,9 @@ expression: table
   [
     "E_ASSET",
     "Fix the asset file and field named in the message, then retry."
+  ],
+  [
+    "E_MEDIA",
+    "Check the media file and that ffmpeg and ffprobe are on PATH (ck doctor)."
   ]
 ]

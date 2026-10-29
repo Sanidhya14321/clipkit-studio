@@ -20,7 +20,9 @@ pub fn status_of(code: ErrorCode) -> StatusCode {
         ErrorCode::Request => StatusCode::BAD_REQUEST,
         ErrorCode::PatchStale => StatusCode::CONFLICT,
         ErrorCode::LockHeld | ErrorCode::LockNotHeld => StatusCode::LOCKED,
-        ErrorCode::PatchInvalid | ErrorCode::Schema => StatusCode::UNPROCESSABLE_ENTITY,
+        ErrorCode::PatchInvalid | ErrorCode::Schema | ErrorCode::Media => {
+            StatusCode::UNPROCESSABLE_ENTITY
+        }
         ErrorCode::Stage | ErrorCode::Retry | ErrorCode::HistoryEmpty => StatusCode::CONFLICT,
         ErrorCode::Storage
         | ErrorCode::Migration

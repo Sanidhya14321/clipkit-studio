@@ -4,13 +4,14 @@ STATUS: RUNNING
 PHASE: 5
 
 ## Handoff (latest)
-1. Done: Phase 4 closed (step 10c): rust-reviewer and spec-checker ran; trimmed `wait` resumes after the last kept event; handoff label capped at 80 chars.
-2. Proof: `just check` exit 0, 220 of 220 nextest, hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, step 10c.
-3. Open: generated-video export (10b) carried to Phase 9; spec-checker gaps carried in DECISIONS.md step 10c.
-4. Next: Phase 5 (edit slice): write the phase step list from spec 12 Phase 5 and spec 14 additions, then step 1.
-5. Start: `just check`; docs/spec/12-phases.md Phase 5; docs/spec/INDEX.md for its files.
+1. Done: Phase 5 step list written; step 1 (`E_MEDIA`, safe ffprobe runner in `ck-media::run`, typed `ck_media::probe`).
+2. Proof: `just check` passing, 228 of 228 nextest (1 skipped), hooks 41 of 41, studio clean. Evidence in VERIFICATION.md, Phase 5 step 1.
+3. Open: fixture-backed tests skip when `just fixtures` has not run (CI test job); Phase 4 carries unchanged.
+4. Next: Phase 5 step 2 (import: content hash, 720p proxy, audio extract into `.clipkit/cache/`, source in the project, `ck import` + MCP twin). A hash crate needs a researcher version check.
+5. Start: `just check`; docs/spec/03-layout-and-model.md for sources and cache layout; media-ffmpeg skill.
 
 ## Open questions
+- Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
 - Phase 4 step 10c: spec-checker gaps carried forward (verify --critic, audio and captions gates, motion direction and holds, license-mode check, retrieval budgets, token meter, variants, brief more-options, verify before idle); assign each to a later phase (DECISIONS.md, step 10c).
 - Phase 4 step 10b: the Phase 4 proof ends at a verified project; exporting the generated video waits for the Phase 9 render worker (DECISIONS.md, step 10). Confirm this is acceptable or pull a minimal render path forward.
 - Phase 4 step 9c: verify how Claude Code and Codex handle long-running MCP tool calls and tune the `wait` timeout (default 20 s, at most 25 s) (DECISIONS.md, step 9c).
@@ -44,6 +45,28 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 8 (assets at scale): wave 2 ingestion (RenderComp Free, cliphou.se, RemotionUI, Remotion Bits, Kenney, Tabler, Simple Icons, IWLTBAP free LUTs) and Pixabay; frame-clock adapter with determinism tests BEFORE any wrappable card (GSAP, Motion, Origin UI, Launch UI); LYGIA and BBC-style restricted fixtures for license mode; site-license snapshots, custom-license and trademark notes.
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
+
+## Phase 5: edit slice (2026-10-29, in progress)
+
+Spec: 04 (BASE), 08 (8.2, 8.6 export), 14 (wave 1 editing tools). Proof: raw footage to a cut, exported MP4.
+
+Steps:
+- [x] 1. `ck-media` probe: `E_MEDIA` code, safe ffprobe call (argument array, timeout, `-` path refusal), typed `MediaInfo` (duration, video/audio streams, fps, VFR flag, rotation, audio track count) with fixture tests.
+- [ ] 2. Import: content hash, 720p proxy and audio extraction into `.clipkit/cache/`, source registered in the project; `ck import` with MCP twin.
+- [ ] 3. Silence detection (silencedetect) and scene detection (ffmpeg scene score) as cut-candidate signals.
+- [ ] 4. Transcription: Fish Audio STT (verify API first) with local whisper fallback (whisper-rs, spec 14); word timestamps; cassette tests.
+- [ ] 5. Packed transcript (phrases, silences, fillers; about 12 KB per 10 min) and `ck transcript get`.
+- [ ] 6. Cut candidates (silences, fillers, false starts, repeated takes) on word boundaries with fades; `ck cut suggest|apply`.
+- [ ] 7. Studio transcript panel delete-to-cut and clip-edge restore, with Playwright test.
+- [ ] 8. Hybrid mode: generated layers over footage.
+- [ ] 9. Fast ffmpeg export (typed filter graph), loudness gates (ebur128/loudnorm) and export presets; `ck export`.
+- [ ] 10. Proof run, reviewer, spec-checker, evidence. Silero VAD via ONNX is pending the `ort` question (Open questions).
+
+Run plan (autonomous run 16): step list and step 1.
+- Write the Phase 5 step list above from spec 12 and spec 14.
+- Add `ErrorCode::Media` (`E_MEDIA`) to ck-core and update the pinned code table.
+- Build `ck_media::probe` over ffprobe JSON with typed output; tests against `fixtures/generated/`.
+- `just check`, evidence, commit.
 
 ## Phase 4: generate slice (2026-10-29, done; export carried to Phase 9)
 
