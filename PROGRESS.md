@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 5
 
 ## Handoff (latest)
-1. Done: Phase 5 step 2b (`ck import <path>` and MCP `import`: probe, hash, proxy, audio, `Source` registered as one agent revision; stills probe with duration 0).
-2. Proof: `just check` passing, 240 of 240 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 5 step 2b.
+1. Done: Phase 5 step 3 (`ck_media::{detect_silences, detect_scenes}`; scdet scores in RGB because the fixture's red and green have equal luma).
+2. Proof: `just check` passing, 244 of 244 nextest (1 skipped), hooks 41 of 41. Evidence in VERIFICATION.md, Phase 5 step 3.
 3. Open: import runs ffmpeg inside the server request (blocking thread); fixture-backed tests skip without `just fixtures`; Phase 4 carries unchanged.
-4. Next: Phase 5 step 3: silence detection (silencedetect) and scene detection (scene score) as cut-candidate signals in ck-media.
-5. Start: `just check`; docs/spec/04 (BASE edit) and spec 14 wave 1 scene detection; media-ffmpeg skill.
+4. Next: Phase 5 step 4: transcription. Fish Audio STT (verify the API first) with local whisper fallback; word timestamps; cassette tests.
+5. Start: `just check`; spec 08 transcription, spec 14 whisper-rs; researcher subagent for the Fish Audio STT API.
 
 ## Open questions
 - Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
@@ -53,7 +53,7 @@ Spec: 04 (BASE), 08 (8.2, 8.6 export), 14 (wave 1 editing tools). Proof: raw foo
 Steps:
 - [x] 1. `ck-media` probe: `E_MEDIA` code, safe ffprobe call (argument array, timeout, `-` path refusal), typed `MediaInfo` (duration, video/audio streams, fps, VFR flag, rotation, audio track count) with fixture tests.
 - [x] 2. (2a media functions; 2b project source and `ck import`) Import: content hash, 720p proxy and audio extraction into `.clipkit/cache/`, source registered in the project; `ck import` with MCP twin.
-- [ ] 3. Silence detection (silencedetect) and scene detection (ffmpeg scene score) as cut-candidate signals.
+- [x] 3. Silence detection (silencedetect) and scene detection (ffmpeg scene score) as cut-candidate signals.
 - [ ] 4. Transcription: Fish Audio STT (verify API first) with local whisper fallback (whisper-rs, spec 14); word timestamps; cassette tests.
 - [ ] 5. Packed transcript (phrases, silences, fillers; about 12 KB per 10 min) and `ck transcript get`.
 - [ ] 6. Cut candidates (silences, fillers, false starts, repeated takes) on word boundaries with fades; `ck cut suggest|apply`.

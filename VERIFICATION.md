@@ -228,6 +228,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 2a run | PASS | 2026-10-29 `just check`: 235 of 235 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
 | Step 2b: `ck import` probes, hashes, proxies (video), extracts audio and registers a `Source` (id `src-<8 hex>`, kind, path, proxyPath, hash, durationSec) as one agent revision; same content twice is a no-op; stills probe with duration 0 | PASS | `ck-server` `tests::import::*` (3): av.mp4 to a video source with cached proxy and WAV, re-import keeps rev 1; tones.wav to audio, square.png to image without duration; relative path `E_REQUEST`, missing file `E_MEDIA`. `ck-media` `probe::tests::still_images_have_no_duration_and_are_not_refused`. `ck-cli` `mcp_parity::import_answers_like_its_cli_twin`; `ck-mcp` tool table and caps (`import`, 1 KB) |
 | Step 2b run | PASS | 2026-10-29 `just check`: 240 of 240 nextest (1 skipped), hooks 41 of 41 |
+| Step 3: silences (`silencedetect`, -40 dB, 0.3 s) and hard scene changes (`scdet` in RGB, threshold 10) read from filter metadata on stdout | PASS | `ck-media` `detect::tests::*` (4): `finds_fixture_silences_and_scene_changes` matches `ground-truth.json` (5 silences of tones.wav within 0.05 s; scene changes of scenes.mp4 at 2, 4, 6, 8 s); parsers pair silences and close an open one at the end; option-like paths refused |
+| Step 3 run | PASS | 2026-10-29 `just check`: 244 of 244 nextest (1 skipped), hooks 41 of 41 |
 
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 

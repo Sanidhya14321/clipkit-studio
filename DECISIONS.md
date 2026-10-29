@@ -428,3 +428,6 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 | jq | 1.8.1 local | hooks depend on it |
 | ffmpeg | not installed locally; Ubuntu candidate 8.0.1 | CI installs it from apt |
 | Node | 24.21.0 local | studio and render worker arrive in Phases 2 and 9 |
+
+## Phase 5 step 3: scene detection in RGB (2026-10-29)
+- `scdet` runs after `format=gbrp`: the fixture's red and green scenes have nearly equal luma, and the default YUV score missed that cut. Threshold 10 (scdet's default scale 0 to 100). Silence defaults -40 dB and 0.3 s are choices; revisit with real footage.
