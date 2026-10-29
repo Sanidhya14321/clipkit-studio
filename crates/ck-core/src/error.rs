@@ -52,6 +52,9 @@ pub enum ErrorCode {
     /// The answer would exceed the command's documented output size cap.
     #[serde(rename = "E_OUTPUT_CAP")]
     OutputCap,
+    /// A knowledge base file (taste, look, recipe or card) is malformed or fails validation.
+    #[serde(rename = "E_ASSET")]
+    Asset,
 }
 
 impl ErrorCode {
@@ -72,6 +75,7 @@ impl ErrorCode {
         ErrorCode::Request,
         ErrorCode::Server,
         ErrorCode::OutputCap,
+        ErrorCode::Asset,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -91,6 +95,7 @@ impl ErrorCode {
             ErrorCode::Request => "E_REQUEST",
             ErrorCode::Server => "E_SERVER",
             ErrorCode::OutputCap => "E_OUTPUT_CAP",
+            ErrorCode::Asset => "E_ASSET",
         }
     }
 
@@ -116,6 +121,7 @@ impl ErrorCode {
             ErrorCode::Request => "Fix the request body or arguments named in the message.",
             ErrorCode::Server => "Run ck studio --ensure to start the server, then retry.",
             ErrorCode::OutputCap => "Ask for less: read one layer with ck project get --layer.",
+            ErrorCode::Asset => "Fix the asset file and field named in the message, then retry.",
         }
     }
 }

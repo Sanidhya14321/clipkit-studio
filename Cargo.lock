@@ -274,6 +274,13 @@ dependencies = [
 [[package]]
 name = "ck-assets"
 version = "0.0.0"
+dependencies = [
+ "ck-core",
+ "schemars",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
 
 [[package]]
 name = "ck-cli"

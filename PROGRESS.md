@@ -4,11 +4,11 @@ STATUS: RUNNING
 PHASE: 4
 
 ## Handoff (latest)
-1. Done: Phase 3 step 7, so Phase 3 is DONE (the interactive items stay BLOCKED). `ck init`/`ck uninstall --agent cursor` merge `mcpServers.clipkit` into `~/.cursor/mcp.json` and write `.cursor/rules/clipkit.mdc` in the project folder. `--agent mcp` writes `~/.clipkit/mcp/{mcp.json,RULES.md}` for any MCP client.
-2. Proof: `just check` 161 of 161 nextest (1 skipped), hooks 41 of 41, studio OK. 4 new tests in cli_install (18 of 18). The evidence is in VERIFICATION.md, Phase 3 step 7.
-3. Open: the Cursor format is UNVERIFIED (docs could not be fetched headless). The real Claude Code, Codex and Cursor sessions and `plugin/.mcp.json` are BLOCKED until an interactive session.
-4. Next: Phase 4, the generate slice (spec 00, 04 4.3, 07, 08 8.1 and 8.5, 09). Read those spec files, then write the step list in PROGRESS.md and start step 1.
-5. Start: `just check`. E2E: `just e2e`. Install tests: `cargo nextest run -p ck-cli -E 'binary(cli_install)'`.
+1. Done: Phase 4 plan (10 steps) and step 1: 12 taste files in `assets/taste/`, 4 looks in `assets/looks/`, `ck-assets` loaders `load_taste`/`load_looks` with validation, new error code `E_ASSET`.
+2. Proof: `just check` 167 of 167 nextest (1 skipped), hooks 41 of 41, studio OK. 6 new tests in `crates/ck-assets/src/tests.rs`. Evidence in VERIFICATION.md, Phase 4 step 1.
+3. Open: font families are named but not bundled (DECISIONS.md, Phase 4 step 1). Phase 3 interactive items stay BLOCKED.
+4. Next: Phase 4 step 2, `ck taste search|get` and `ck look list|get` with MCP twins, schema, output cap and parity tests, plus `assets/INDEX.md` (rust-conventions skill: adding a CLI command with its MCP twin).
+5. Start: `just check`. Asset tests: `cargo nextest run -p ck-assets`.
 
 ## Open questions
 - Phase 3 step 7: check Cursor's `~/.cursor/mcp.json` and `.cursor/rules/*.mdc` format, and whether a user-level rules file exists, against cursor.com/docs (DECISIONS.md, step 7).
@@ -35,6 +35,28 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 8 (assets at scale): wave 2 ingestion (RenderComp Free, cliphou.se, RemotionUI, Remotion Bits, Kenney, Tabler, Simple Icons, IWLTBAP free LUTs) and Pixabay; frame-clock adapter with determinism tests BEFORE any wrappable card (GSAP, Motion, Origin UI, Launch UI); LYGIA and BBC-style restricted fixtures for license mode; site-license snapshots, custom-license and trademark notes.
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
+
+## Phase 4: generate slice (2026-10-29, in progress)
+
+Spec: 00, 04 (4.3), 07, 08 (8.1, 8.5), 09. Proof: prompt to brief to a 15 second generated video to export.
+
+Steps:
+- [x] 1. Starter taste library (12 files with concrete numbers) and 4 looks (design tokens plus motion personality) in `assets/`, authored originally; `ck-assets` loaders with validation (front matter, size caps, contrast, at most two font families).
+- [ ] 2. `ck taste search|get` and `ck look list|get` with MCP twins, output caps, parity tests; `assets/INDEX.md` (under 60 lines).
+- [ ] 3. Brief Studio essentials: `ck brief propose|wait|diff|get` (inferred values only, field sources, at most three dynamic questions) and its MCP twins.
+- [ ] 4. Studio brief panel (essentials form, pacing slider with numbers, look cards, confirm) with Playwright test.
+- [ ] 5. Recipes (10, typed slots) and `ck recipe search|apply`: expander builds named layers, applies tokens, records provenance and briefDeps.
+- [ ] 6. Deterministic layout solver (safe areas, collisions, text fitting, grid) and `ck layout check`.
+- [ ] 7. 8 native core Remotion clips, instrumented, used by the recipes; studio Player renders them.
+- [ ] 8. Quality gates of spec 4.3 that apply to GENERATE in `ck verify` (schema, gaps, overlaps, duration, safe area, size, contrast, fonts, motion limits, reuse, provenance, no placeholders).
+- [ ] 9. Look re-theme through tokens with zero agent tokens, sound placement (`ck sound plan`), handoff and `ck wait`.
+- [ ] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
+
+Run plan (autonomous run 1): step 1.
+- Author 12 taste markdown files (front matter: id, title, tags; body with numbers) under `assets/taste/`.
+- Author 4 looks as `assets/looks/<id>.json` (colors, type scale, two fonts max, radius, spacing, motion personality).
+- `ck-assets`: `taste` and `look` modules with error enum (`E_*` codes), loaders and validators (WCAG contrast at least 4.5 for text on background).
+- Tests: all 12 taste files and 4 looks load and pass validation; each taste file under its token cap; a bad look is refused with its code.
 
 ## Phase 3: plugin and auto-launch (2026-10-29) - DONE (interactive proof BLOCKED)
 

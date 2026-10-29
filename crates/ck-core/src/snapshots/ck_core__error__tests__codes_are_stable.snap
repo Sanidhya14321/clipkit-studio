@@ -62,5 +62,9 @@ expression: table
   [
     "E_OUTPUT_CAP",
     "Ask for less: read one layer with ck project get --layer."
+  ],
+  [
+    "E_ASSET",
+    "Fix the asset file and field named in the message, then retry."
   ]
 ]

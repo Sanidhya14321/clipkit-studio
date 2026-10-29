@@ -1,0 +1,24 @@
+{
+  "id": "clean-product",
+  "name": "Clean product",
+  "description": "Light, airy and precise. Neutral surfaces, one blue accent, calm confident motion.",
+  "colors": {
+    "background": "#F7F7F5",
+    "surface": "#FFFFFF",
+    "text": "#16181D",
+    "mutedText": "#5A5F6B",
+    "accent": "#2F5BEA",
+    "accentText": "#FFFFFF"
+  },
+  "fonts": { "display": "Inter", "text": "Inter" },
+  "typeScale": 1.25,
+  "radius": 0.012,
+  "spacingUnit": 0.01,
+  "motion": {
+    "personality": "smooth",
+    "durationScale": 1.0,
+    "enterEasing": "cubic-out",
+    "exitEasing": "quad-in",
+    "stagger": 0.08
+  }
+}

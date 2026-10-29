@@ -2,6 +2,15 @@
 
 Newest first within each section. Each entry: what, why, and the source when it is a verified fact.
 
+## Phase 4 (2026-10-29)
+
+### Step 1: taste library and looks (spec 7.1, 7.5)
+- **Twelve taste files**: the ten topics spec 7.1 names (pacing, hooks, typography, color, motion, transitions, captions, platform specs, audio mixing, recipes for common video types as `video-types`) plus `layout` and `sound-design`, which spec 8.5 (layout solver, sound placement) needs numbers for. All numbers are ClipKit's own authored defaults, not platform-official figures; `platform-specs` says so.
+- **Taste format**: front matter with only `id`, `title`, `tags: [..]` parsed by hand (no YAML crate), id equals file name, at most 2400 bytes (about 600 tokens) and the body must contain numbers.
+- **Look format**: JSON (serde, `deny_unknown_fields`) with six color roles, two font roles (so at most two families, spec 4.3), type scale ratio, radius and spacing as fractions of frame height, and motion (personality, duration scale, enter/exit easing, stagger). Validation: every text role on its background reaches WCAG 4.5 to 1.
+- **Fonts** are named Google Fonts families (Inter, Archivo Black, Playfair Display, Source Serif 4, Source Sans 3); no font files are bundled yet. Licenses and files are checked when fonts are ingested (Phase 8) or loaded by the render path (step 7).
+- **New error code `E_ASSET`** (HTTP 500) for malformed knowledge base files; file read failures stay `E_STORAGE`.
+
 ## Phase 3 (2026-10-29)
 
 ### Step 7: Cursor and any MCP client (spec 6.3)

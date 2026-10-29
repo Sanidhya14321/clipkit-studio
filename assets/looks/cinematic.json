@@ -1,0 +1,24 @@
+{
+  "id": "cinematic",
+  "name": "Cinematic",
+  "description": "Deep shadows, warm off-white serif titles, a muted gold accent and slow deliberate motion.",
+  "colors": {
+    "background": "#0B0D10",
+    "surface": "#171A1F",
+    "text": "#EDE6DA",
+    "mutedText": "#A39C90",
+    "accent": "#C8A15A",
+    "accentText": "#0B0D10"
+  },
+  "fonts": { "display": "Playfair Display", "text": "Inter" },
+  "typeScale": 1.414,
+  "radius": 0.0,
+  "spacingUnit": 0.012,
+  "motion": {
+    "personality": "slow",
+    "durationScale": 1.4,
+    "enterEasing": "sine-in-out",
+    "exitEasing": "sine-in-out",
+    "stagger": 0.12
+  }
+}

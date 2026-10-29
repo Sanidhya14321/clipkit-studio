@@ -144,6 +144,17 @@ Tests in `crates/ck-cli/tests/cli_ensure.rs` and `mcp_parity.rs` unless named ot
 | Step 7: Cursor file format | UNVERIFIED | Cursor docs could not be fetched headless (DECISIONS.md, step 7). A real Cursor session loading the server and rule is BLOCKED (interactive) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 161 of 161 nextest (1 skipped), hooks 41 of 41, studio typecheck and unit tests, no recipe error |
 
+## Phase 4: generate slice (2026-10-29, in progress)
+
+Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Step 1: 12 taste files with concrete numbers (spec 7.5) | PASS | `starter_taste_library_has_twelve_valid_files`: all 12 parse, id matches file name, under the 2400 byte cap, body has numbers |
+| Step 1: 4 looks (spec 7.5) with readable contrast and at most two font families (spec 4.3) | PASS | `starter_looks_are_the_four_of_spec_7_5`; `look_refusals_carry_e_asset` (low contrast, bad hex, wrong id, out-of-range motion, empty or third font refused); `contrast_matches_wcag_reference_values` |
+| Step 1: refusals carry a stable code | PASS | `taste_parse_refusals_carry_e_asset`, `missing_dir_is_e_storage`; `ck_core::error::tests::codes_are_stable` snapshot gains `E_ASSET` |
+| Step 1 run | PASS | 2026-10-29 `just check`: 167 of 167 nextest (1 skipped), hooks 41 of 41, studio OK |
+
 ## Asset supply expansion checks (spec 14.7, added 2026-10-28)
 
 | Item | Status | Evidence |

@@ -1,0 +1,24 @@
+{
+  "id": "bold-social",
+  "name": "Bold social",
+  "description": "Dark, loud and fast. Heavy display type, a yellow accent and snappy motion for short vertical video.",
+  "colors": {
+    "background": "#0E0E12",
+    "surface": "#1C1C24",
+    "text": "#FFFFFF",
+    "mutedText": "#B4B4C2",
+    "accent": "#FFD23F",
+    "accentText": "#0E0E12"
+  },
+  "fonts": { "display": "Archivo Black", "text": "Inter" },
+  "typeScale": 1.333,
+  "radius": 0.02,
+  "spacingUnit": 0.01,
+  "motion": {
+    "personality": "snappy",
+    "durationScale": 0.8,
+    "enterEasing": "expo-out",
+    "exitEasing": "quad-in",
+    "stagger": 0.06
+  }
+}

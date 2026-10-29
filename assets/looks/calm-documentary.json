@@ -1,0 +1,24 @@
+{
+  "id": "calm-documentary",
+  "name": "Calm documentary",
+  "description": "Warm paper tones, a deep green accent, readable text type and gentle unhurried motion.",
+  "colors": {
+    "background": "#F2EEE6",
+    "surface": "#FBF8F2",
+    "text": "#2B2A27",
+    "mutedText": "#66625A",
+    "accent": "#3F6B5C",
+    "accentText": "#FFFFFF"
+  },
+  "fonts": { "display": "Source Serif 4", "text": "Source Sans 3" },
+  "typeScale": 1.2,
+  "radius": 0.006,
+  "spacingUnit": 0.012,
+  "motion": {
+    "personality": "calm",
+    "durationScale": 1.3,
+    "enterEasing": "cubic-out",
+    "exitEasing": "cubic-in",
+    "stagger": 0.1
+  }
+}
