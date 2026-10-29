@@ -86,6 +86,7 @@ fn unchanged_lines_keep_their_takes() {
         duration_sec: 1.0,
         recorded: false,
         consented: false,
+        transcript_path: None,
     });
     old[0].active_take = Some("t1".into());
     let changed = VoiceScriptRequest {
@@ -397,4 +398,73 @@ fn cloning_needs_a_consented_studio_recording() {
         })
         .unwrap_err();
     assert_eq!(err.code, ErrorCode::Request);
+}
+
+/// Three words over the first 1.2 s of any take; counts its calls.
+#[derive(Default)]
+struct WordsTranscriber(std::sync::atomic::AtomicUsize);
+
+impl ck_voice::Transcriber for WordsTranscriber {
+    fn transcribe(&self, wav: &std::path::Path) -> ck_core::CkResult<ck_voice::Transcript> {
+        assert!(wav.is_file());
+        self.0.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        Ok(serde_json::from_value(json!({ "language": "en", "words": [
+            { "i": 0, "text": "One", "start": 0.0, "end": 0.4 },
+            { "i": 1, "text": "two", "start": 0.4, "end": 0.8 },
+            { "i": 2, "text": "three", "start": 0.8, "end": 1.2 }
+        ] }))
+        .unwrap())
+    }
+}
+
+#[test]
+fn captions_follow_the_active_take_timing() {
+    use crate::session::voice::{CAPTION_TRACK, CaptionsRequest, SlotRequest};
+
+    let words = std::sync::Arc::new(WordsTranscriber::default());
+    let (_dir, s) = speaking_session();
+    let s = s.with_transcriber(words.clone());
+    s.voice_script(&VoiceScriptRequest {
+        lines: vec![line("One two three."), line("Not spoken yet.")],
+        mode: None,
+    })
+    .unwrap();
+    s.voice_speak(&SlotRequest { slot: "v1".into() }).unwrap();
+
+    let r = s.voice_captions(&CaptionsRequest {}).unwrap();
+    assert_eq!(r.captions.len(), 1);
+    assert_eq!(
+        (r.captions[0].slot.as_str(), r.captions[0].words),
+        ("v1", 3)
+    );
+    assert_eq!(r.skipped, ["v2"]);
+    let p = s.project().unwrap();
+    assert!(p.voice_slots[0].takes[0].transcript_path.is_some());
+    let track = p.tracks.iter().find(|t| t.id == CAPTION_TRACK).unwrap();
+    let caption = &track.items[0];
+    let voice = p.item("voice-v1").unwrap();
+    assert_eq!(
+        ck_core::timeline::span(&p, caption),
+        ck_core::timeline::span(&p, voice)
+    );
+
+    // Again: no new transcription and no new revision.
+    let again = s.voice_captions(&CaptionsRequest {}).unwrap();
+    assert_eq!(again.rev, r.rev);
+    assert_eq!(words.0.load(std::sync::atomic::Ordering::SeqCst), 1);
+}
+
+#[test]
+fn captions_need_a_transcriber() {
+    use crate::session::voice::{CaptionsRequest, SlotRequest};
+
+    let (_dir, s) = speaking_session();
+    s.voice_script(&VoiceScriptRequest {
+        lines: vec![line("Hello.")],
+        mode: None,
+    })
+    .unwrap();
+    s.voice_speak(&SlotRequest { slot: "v1".into() }).unwrap();
+    let err = s.voice_captions(&CaptionsRequest {}).unwrap_err();
+    assert_eq!(err.code, ErrorCode::Voice);
 }

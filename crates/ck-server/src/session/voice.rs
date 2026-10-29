@@ -325,6 +325,7 @@ impl Session {
             duration_sec: (info.duration_sec * 1000.0).round() / 1000.0,
             recorded,
             consented: false,
+            transcript_path: None,
         };
         let mut doc = self.doc()?;
         let i = slot_index(doc.project(), slot_id)?;
@@ -619,6 +620,137 @@ impl Session {
             rev: rev.rev,
             slot: s,
             voice_ref,
+        })
+    }
+}
+
+/// Id of the track that holds the voice captions.
+pub const CAPTION_TRACK: &str = "captions-1";
+
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CaptionsRequest {}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct SlotCaption {
+    pub slot: String,
+    pub take: String,
+    pub words: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CaptionsResult {
+    pub rev: u64,
+    pub captions: Vec<SlotCaption>,
+    /// Slots left without captions because they have no active take yet.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub skipped: Vec<String>,
+    #[serde(default, skip_serializing_if = "super::is_zero")]
+    pub omitted: usize,
+}
+
+impl Session {
+    /// `voice captions`: captions from each slot's active take with its real word timing (the
+    /// transcriber runs once per take; the words stay on disk). One caption item per slot on
+    /// the caption track follows the slot's voice item.
+    pub fn voice_captions(&self, _req: &CaptionsRequest) -> CkResult<CaptionsResult> {
+        let slots = self.project()?.voice_slots;
+        let mut captions = Vec::new();
+        let mut skipped = Vec::new();
+        let mut paths: Vec<(usize, usize, String)> = Vec::new();
+        for (i, slot) in slots.iter().enumerate() {
+            let Some((t, take)) = slot
+                .takes
+                .iter()
+                .enumerate()
+                .find(|(_, t)| Some(&t.id) == slot.active_take.as_ref())
+            else {
+                skipped.push(slot.id.clone());
+                continue;
+            };
+            let words = match &take.transcript_path {
+                Some(p) => ck_voice::load(&self.resolve(p))?.words.len(),
+                None => {
+                    let transcript = self.transcriber.transcribe(&self.resolve(&take.path))?;
+                    let out = self
+                        .cache_dir()
+                        .join("transcripts")
+                        .join(format!("take-{}-{}.json", slot.id, take.id));
+                    ck_voice::save(&out, &transcript)?;
+                    let rel = out.strip_prefix(self.workdir()).map_or_else(
+                        |_| out.to_string_lossy().into_owned(),
+                        |p| p.to_string_lossy().replace('\\', "/"),
+                    );
+                    paths.push((i, t, rel));
+                    transcript.words.len()
+                }
+            };
+            captions.push(SlotCaption {
+                slot: slot.id.clone(),
+                take: take.id.clone(),
+                words,
+            });
+        }
+        let track = Track {
+            id: CAPTION_TRACK.into(),
+            kind: TrackKind::Caption,
+            items: captions
+                .iter()
+                .map(|c| Item {
+                    id: format!("caption-{}", c.slot),
+                    name: format!("Captions {}", c.slot),
+                    purpose: "captions".into(),
+                    pass: None,
+                    asset_ref: None,
+                    brief_deps: Vec::new(),
+                    provenance: None,
+                    rev: 0,
+                    body: ItemBody::Caption {
+                        from: ck_core::model::CaptionFrom::Voice,
+                        reference: c.slot.clone(),
+                        style: "default".into(),
+                    },
+                })
+                .collect(),
+        };
+        let mut doc = self.doc()?;
+        let p = doc.project();
+        let mut ops: Vec<serde_json::Value> = paths
+            .iter()
+            .map(|(i, t, rel)| {
+                json!({ "op": "add", "path": format!("/voiceSlots/{i}/takes/{t}/transcriptPath"),
+                        "value": rel })
+            })
+            .collect();
+        match p.tracks.iter().position(|t| t.id == CAPTION_TRACK) {
+            Some(i) => {
+                let same = p.tracks[i].items.len() == track.items.len()
+                    && p.tracks[i]
+                        .items
+                        .iter()
+                        .zip(&track.items)
+                        .all(|(a, b)| a.id == b.id && a.body == b.body);
+                if !same {
+                    ops.push(json!({ "op": "replace", "path": format!("/tracks/{i}"),
+                                     "value": track }));
+                }
+            }
+            None => ops.push(json!({ "op": "add", "path": "/tracks/-", "value": track })),
+        }
+        let rev = if ops.is_empty() {
+            p.rev
+        } else {
+            let label = format!("voice captions: {} slots", captions.len());
+            self.commit_agent(&mut doc, serde_json::Value::Array(ops), label)?
+                .rev
+        };
+        Ok(CaptionsResult {
+            rev,
+            captions,
+            skipped,
+            omitted: 0,
         })
     }
 }

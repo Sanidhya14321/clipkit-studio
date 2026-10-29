@@ -24,7 +24,7 @@ use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::voice::{
-    SlotRequest, VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
+    CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
 };
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use schemars::JsonSchema;
@@ -289,6 +289,14 @@ pub fn specs() -> Vec<ToolSpec> {
              generated audio is refused.",
             caps::VOICE_WRITE,
         ),
+        spec::<CaptionsRequest>(
+            "voice_captions",
+            "ck voice captions",
+            "Captions from each slot's active take with its real word timing (transcribed once \
+             per take); one caption item per slot follows its voice item. Slots without a \
+             take are listed in skipped.",
+            caps::VOICE_SCRIPT,
+        ),
         spec::<ContextRequest>(
             "context",
             "ck context",
@@ -418,6 +426,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "voice_mode" => json(&ops.voice_mode(&parse(args)?)?),
         "voice_speak" => json(&ops.voice_speak(&parse(args)?)?),
         "voice_clone" => json(&ops.voice_clone(&parse(args)?)?),
+        "voice_captions" => json(&ops.voice_captions(&parse::<CaptionsRequest>(args)?)?),
         "context" => {
             let _: ContextRequest = parse(args)?;
             json(&ops.context()?)

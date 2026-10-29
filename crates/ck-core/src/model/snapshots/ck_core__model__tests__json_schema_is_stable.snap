@@ -1025,6 +1025,13 @@ expression: "schemars::schema_for!(Project)"
         "recorded": {
           "description": "Recorded with the studio microphone (the only audio cloning may use, spec 8.3).",
           "type": "boolean"
+        },
+        "transcriptPath": {
+          "description": "Word timings of this take, on disk (captions follow them).",
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "required": [

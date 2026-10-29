@@ -27,8 +27,8 @@ use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::voice::{
-    ActiveTakeRequest, ConsentRequest, MAX_RECORDING, SlotRequest, TakeQuery, VoiceCloneRequest,
-    VoiceModeRequest, VoiceScriptRequest,
+    ActiveTakeRequest, CaptionsRequest, ConsentRequest, MAX_RECORDING, SlotRequest, TakeQuery,
+    VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
 };
 use crate::session::{HeartbeatRequest, LockRequest, Session, UnlockRequest};
 use crate::studio::{self, Assets};
@@ -79,6 +79,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/voice/active", post(voice_active_take))
         .route("/api/voice/consent", post(voice_consent))
         .route("/api/voice/clone", post(voice_clone))
+        .route("/api/voice/captions", post(voice_captions))
         .route("/api/context", get(context).post(set_context))
         .route("/api/comments/add", post(comments_add))
         .route("/api/comments/reply", post(comments_reply))
@@ -364,6 +365,14 @@ async fn voice_clone(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.voice_clone(&req)).await
+}
+
+async fn voice_captions(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<CaptionsRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.voice_captions(&req)).await
 }
 
 async fn look_apply(

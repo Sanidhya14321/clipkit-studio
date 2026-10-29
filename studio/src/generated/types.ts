@@ -142,7 +142,11 @@ recorded?: boolean,
 /**
  * The speaker agreed to cloning this recording (set by a human only; spec 8.3).
  */
-consented?: boolean, };
+consented?: boolean, 
+/**
+ * Word timings of this take, on disk (captions follow them).
+ */
+transcriptPath?: string | null, };
 
 export type Comment = { id: string, author: Author, anchor: Anchor, text: string, status: CommentStatus, createdRev: number, resolvedRev?: number | null, replies: Array<Reply>, 
 /**

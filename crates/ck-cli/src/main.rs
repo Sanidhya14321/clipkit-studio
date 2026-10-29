@@ -24,7 +24,9 @@ use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
-use ck_server::session::voice::{SlotRequest, VoiceCloneRequest, VoiceModeRequest};
+use ck_server::session::voice::{
+    CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest,
+};
 use ck_server::session::{HeartbeatRequest, LockRequest, UnlockRequest};
 use clap::Parser;
 use serde::Serialize;
@@ -187,6 +189,9 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::Voice(VoiceCommand::Clone { slot, take }) => {
             print(&ops()?.voice_clone(&VoiceCloneRequest { slot, take })?)
+        }
+        Command::Voice(VoiceCommand::Captions) => {
+            print(&ops()?.voice_captions(&CaptionsRequest {})?)
         }
         Command::Voice(VoiceCommand::Mode { slot, mode }) => {
             let mode = match mode {

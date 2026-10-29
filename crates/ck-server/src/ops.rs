@@ -32,8 +32,9 @@ use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::verify::{VerifyIssue, VerifyResult};
 use crate::session::voice::{
-    SlotRequest, SlotSummary, TakeResult, VoiceCloneRequest, VoiceCloneResult, VoiceModeRequest,
-    VoiceModeResult, VoiceScriptRequest, VoiceScriptResult,
+    CaptionsRequest, CaptionsResult, SlotCaption, SlotRequest, SlotSummary, TakeResult,
+    VoiceCloneRequest, VoiceCloneResult, VoiceModeRequest, VoiceModeResult, VoiceScriptRequest,
+    VoiceScriptResult,
 };
 use crate::session::{HeartbeatRequest, LockRequest, LockResult, PatchResult, UnlockRequest};
 use crate::view::{Status, Summary};
@@ -299,6 +300,12 @@ impl Ops {
         capped("voice clone", caps::VOICE_WRITE, reply)
     }
 
+    /// `voice captions`: captions from each slot's active take timing.
+    pub fn voice_captions(&self, req: &CaptionsRequest) -> CkResult<CaptionsResult> {
+        let reply = self.client.post_slow("/api/voice/captions", req)?;
+        trimmed("voice captions", caps::VOICE_SCRIPT, reply)
+    }
+
     /// `voice mode`: switch a slot between ai, recorded and cloned.
     pub fn voice_mode(&self, req: &VoiceModeRequest) -> CkResult<VoiceModeResult> {
         let reply = self.client.post("/api/voice/mode", req)?;
@@ -395,6 +402,13 @@ impl Trim for VoiceScriptResult {
     type Entry = SlotSummary;
     fn parts(&mut self) -> (&mut Vec<SlotSummary>, &mut usize) {
         (&mut self.slots, &mut self.omitted)
+    }
+}
+
+impl Trim for CaptionsResult {
+    type Entry = SlotCaption;
+    fn parts(&mut self) -> (&mut Vec<SlotCaption>, &mut usize) {
+        (&mut self.captions, &mut self.omitted)
     }
 }
 

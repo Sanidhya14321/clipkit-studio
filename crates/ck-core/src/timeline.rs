@@ -1,7 +1,7 @@
 //! Timeline math: seconds <-> frames, item spans and overlap detection.
 //! Times are stored in seconds; frames exist only at render time (spec 3.2).
 
-use crate::model::{Item, ItemBody, Project, TimeRange, Track};
+use crate::model::{CaptionFrom, Item, ItemBody, Project, TimeRange, Track};
 
 /// Two times closer than this are treated as equal (touching items do not overlap).
 pub const EPS: f64 = 1e-9;
@@ -44,6 +44,17 @@ pub fn span(project: &Project, item: &Item) -> Option<TimeRange> {
             (*at, take.duration_sec)
         }
         ItemBody::Audio { at, ranges, .. } => (*at, ranges.iter().map(|r| r.end - r.start).sum()),
+        // Voice captions run with the slot's voice item (its active take).
+        ItemBody::Caption {
+            from: CaptionFrom::Voice,
+            reference,
+            ..
+        } => {
+            let voice = project.items().find(
+                |i| matches!(&i.body, ItemBody::Voice { slot_id, .. } if slot_id == reference),
+            )?;
+            return span(project, voice);
+        }
         ItemBody::Caption { .. } => return None,
     };
     (start.is_finite() && len.is_finite() && len >= 0.0).then_some(TimeRange {
@@ -156,6 +167,7 @@ mod tests {
             duration_sec: 1.25,
             recorded: false,
             consented: false,
+            transcript_path: None,
         });
         p.voice_slots[0].active_take = Some("k1".into());
         assert_eq!(span(&p, &item).unwrap().end, 2.25);

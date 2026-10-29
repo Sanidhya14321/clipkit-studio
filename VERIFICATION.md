@@ -262,6 +262,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 3 run | PASS | 2026-10-29 `just check`: 285 of 285 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 14 of 14 twice (context posts are now sent in order; a race made the Phase 6 hover test flaky under load) |
 | Step 4: cloning with consent: `ck voice clone` + MCP twin only from a take recorded in the studio that the user consented to; consent is a studio route (human revision) and ck-core refuses any agent patch that changes consent; generated takes and unconsented recordings are E_REQUEST; Fish clone is a PLACEHOLDER stub (E_VOICE); a cloned slot speaks through its voice ref | PASS | `ck-server` `tests::voice::cloning_needs_a_consented_studio_recording` (agent raw patch E_PATCH_INVALID, consent then clone, generated take refused, consent on a generated take refused); `studio/e2e/phase7.spec.ts` record-along test (E_REQUEST before consent, E_VOICE stub after) |
 | Step 4 run | PASS | 2026-10-29 `just check`: 286 of 286 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 14 of 14 three times |
+| Step 5: `ck voice captions` + MCP twin: the transcriber runs once per active take (words saved on disk, `transcriptPath` on the take), one caption item per slot on `captions-1` whose span follows the slot's voice item; slots without a take are skipped; a repeat is a no-op; no transcriber is E_VOICE | PASS | `ck-server` `tests::voice::captions_follow_the_active_take_timing`, `captions_need_a_transcriber` |
+| Step 5 run | PASS | 2026-10-29 `just check`: 288 of 288 nextest (1 skipped), hooks 41 of 41 |
 | Step 1 run | PASS | 2026-10-29 `just check`: 278 of 278 nextest (1 skipped), hooks 41 of 41 |
 
 ## Phase 6: interaction slice (2026-10-29, done)

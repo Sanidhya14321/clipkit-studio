@@ -1102,6 +1102,16 @@ expression: specs()
     }
   },
   {
+    "name": "voice_captions",
+    "command": "ck voice captions",
+    "description": "Captions from each slot's active take with its real word timing (transcribed once per take); one caption item per slot follows its voice item. Slots without a take are listed in skipped.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  {
     "name": "context",
     "command": "ck context",
     "description": "What the user points at in the studio: selected layer, hovered element, playhead, loop range and open comments. Call it first when the user says this, here or that.",

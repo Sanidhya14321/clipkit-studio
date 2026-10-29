@@ -496,3 +496,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Consent lives on the take (`VoiceTake.consented`), set only through the studio's consent checkbox (a human revision). ck-core refuses any agent patch that changes the set of consented takes (E_PATCH_INVALID), so the agent cannot consent for the user even with a raw patch and the lock.
 - `voice clone` uses the slot's active take unless one is named, and requires recorded and consented; the provider call is the Speaker's `clone_voice` (Fish stub until the key and API check). Success stores `voiceRef` and switches the slot to cloned.
 - E2E context polls allow 15 s: under a full parallel run the context post can land after the default 5 s poll.
+
+## Phase 7 step 5: captions from takes (2026-10-29)
+- Each take keeps its own word timings on disk (`VoiceTake.transcriptPath`), made once by the transcriber; switching the active take switches the captions with no new call.
+- Caption items reference the slot (`from: voice`, `ref: <slot>`) and take their span from the slot's voice item; word times are relative to the take. Rendering words in the preview and export waits for the caption renderer (Phase 9 render path); the fast export path still refuses caption layers.
+- Real timing needs the transcriber (Fish STT stub until the key), so without one `voice captions` is E_VOICE rather than guessing even spacing.

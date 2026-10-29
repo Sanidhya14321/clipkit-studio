@@ -356,6 +356,8 @@ pub enum VoiceCommand {
         #[arg(long)]
         take: Option<String>,
     },
+    /// Captions from each slot's active take timing.
+    Captions,
     /// Switch a slot between ai, recorded and cloned.
     Mode {
         slot: String,

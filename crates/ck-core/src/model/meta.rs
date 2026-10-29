@@ -64,6 +64,9 @@ pub struct VoiceTake {
     /// The speaker agreed to cloning this recording (set by a human only; spec 8.3).
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub consented: bool,
+    /// Word timings of this take, on disk (captions follow them).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transcript_path: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
