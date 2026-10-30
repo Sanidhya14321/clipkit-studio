@@ -29,7 +29,9 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: just,cargo-nextest
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq jq
+      # ffmpeg for the media engine; without it and the fixtures, media tests skip.
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq jq ffmpeg
+      - run: just fixtures
       # `just check` includes the studio typecheck and prettier check.
       - uses: pnpm/action-setup@v4
         with:
@@ -42,7 +44,7 @@ jobs:
   e2e:
     name: studio e2e (Playwright, Chromium)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - run: rustup show active-toolchain
@@ -56,8 +58,13 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+      # Record-along processes takes with ffmpeg; the footage tests need the fixtures.
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq jq ffmpeg
+      - run: just fixtures
       - run: pnpm --dir studio install --frozen-lockfile
       - run: pnpm --dir studio exec playwright install --with-deps chromium
+      # The storyboard test renders through the worker (Remotion downloads its own Chrome).
+      - run: just worker
       - run: just e2e
 
   fixtures:

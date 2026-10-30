@@ -169,6 +169,14 @@ impl ck_voice::Speaker for ToneSpeaker {
     }
 }
 
+/// The tone speaker needs ffmpeg; tests using it skip without it (like the fixture tests).
+fn has_ffmpeg() -> bool {
+    std::process::Command::new("ffmpeg")
+        .arg("-version")
+        .output()
+        .is_ok_and(|o| o.status.success())
+}
+
 fn speaking_session() -> (tempfile::TempDir, crate::session::Session) {
     let dir = tempfile::tempdir().unwrap();
     ck_core::storage::Store::new(dir.path())
@@ -185,6 +193,10 @@ fn speaking_session() -> (tempfile::TempDir, crate::session::Session) {
 
 #[test]
 fn speak_makes_a_trimmed_fitted_cached_take() {
+    if !has_ffmpeg() {
+        eprintln!("skipped: ffmpeg not found");
+        return;
+    }
     use crate::session::voice::SlotRequest;
 
     let (dir, s) = speaking_session();
@@ -321,6 +333,10 @@ fn a_studio_recording_becomes_a_recorded_take_and_takes_can_be_switched() {
 
 #[test]
 fn cloning_needs_a_consented_studio_recording() {
+    if !has_ffmpeg() {
+        eprintln!("skipped: ffmpeg not found");
+        return;
+    }
     use crate::session::voice::{ConsentRequest, SlotRequest, VoiceCloneRequest};
     use ck_core::patch::PatchRequest;
 
@@ -419,6 +435,10 @@ impl ck_voice::Transcriber for WordsTranscriber {
 
 #[test]
 fn captions_follow_the_active_take_timing() {
+    if !has_ffmpeg() {
+        eprintln!("skipped: ffmpeg not found");
+        return;
+    }
     use crate::session::voice::{CAPTION_TRACK, CaptionsRequest, SlotRequest};
 
     let words = std::sync::Arc::new(WordsTranscriber::default());
@@ -456,6 +476,10 @@ fn captions_follow_the_active_take_timing() {
 
 #[test]
 fn captions_need_a_transcriber() {
+    if !has_ffmpeg() {
+        eprintln!("skipped: ffmpeg not found");
+        return;
+    }
     use crate::session::voice::{CaptionsRequest, SlotRequest};
 
     let (_dir, s) = speaking_session();
