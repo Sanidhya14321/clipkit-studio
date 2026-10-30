@@ -251,7 +251,7 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: studio transcript panel: click a word to seek, Delete/Backspace cuts it from the footage (human revision through `POST /api/cut/words` with the whole deleted set), same key restores at the clip edge; read-only while the agent holds the video track, and the server refuses (track lock now part of every footage rebuild) | PASS | `studio/e2e/phase5.spec.ts` (2 tests, `just e2e` 8 of 8 passed); `studio/src/transcript.test.ts` (deleted words from segment midpoints, toggle, source-to-timeline time); `ck-server` `tests::edit::studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock` (E_LOCK_HELD) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 254 of 254 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean; `just e2e` 8 of 8 |
 
-## Phase 9: polish and proof (2026-10-30, in progress)
+## Phase 9: polish and proof (2026-10-30, done; sound design, critic pass, bench results and some studio views carried)
 
 | Check | Result | Evidence |
 | --- | --- | --- |
@@ -267,6 +267,11 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: benchmark results (A0, A1, B on the headline scenarios) | BLOCKED | PLACEHOLDER: needs real agent runs (tokens) and the owner-supplied talking-head clip and voice sample; `bench/run.sh` has not been run |
 | Step 8: `ck history` (newest first), `ck branch save|list|switch` (saved content; a switch is one undoable revision; no-op when equal), `ck variants` (2 or 3 looks, one still each at a frame through the worker; pick with `look apply`) + MCP twins | PASS | `ck-server` `tests::branch::*` (3, including undo of a switch); `generate_proof` renders cinematic and bold-social stills through the real worker |
 | Step 8: studio views for history, branches and side-by-side variants | BLOCKED | Not built (CLI and MCP only) |
+| Step 9: Phase 9 proof through the real binary: the generated project exports via the render worker (15 s, audio track), is deterministic frame to frame, renders look variants and re-exports from the cache (`generate_proof`); the edit export scores 100 in `ck eval` (`edit_proof`); replay and a redacted trace bundle (`interaction_proof`); the demo resets in 39 ms | PASS | `crates/ck-cli/tests/generate_proof.rs`, `edit_proof.rs`, `interaction_proof.rs`; `ck-server` `demo::tests` |
+| Step 9: sound design placement and the critic pass (spec 12 Phase 9) | BLOCKED | Sound design needs a vetted CC0 sound set (none has a confirmed source yet; `ck sound plan` already places cues); the critic pass is not built |
+| Step 9: spec 14.7 Phase 9 tools (remotion-qa, audio-bed-check, tesseract.js) | BLOCKED | Each needs its license checked from the original source first; not vetted |
+| Step 9: rust-reviewer and spec-checker subagents | BLOCKED | Agent types unavailable in this session |
+| Phase 9 close run | PASS | 2026-10-30 `just check` and `just test`: 347 of 347 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16 |
 | Step 1: render worker (`render-worker/`, @remotion/renderer and @remotion/bundler 4.0.535): `pnpm bundle` bundles the studio's ProjectComposition with React and Remotion aliased to one copy; `src/render.mjs` renders a job from stdin (video muted, or a still) with JSON progress lines | PASS | Manual run 2026-10-30: a hook-title project rendered 30 frames to H.264 in 14 s; frame at 0.9 s shows "Ship faster" in the clean-product look. Automated through `ck export` in step 2 |
 
 ## Phase 8: assets at scale (2026-10-30, done; wave 3 adapters, previews and SVG/LUT/sfx ingest carried)

@@ -1,16 +1,17 @@
 # Progress
 
 STATUS: RUNNING
-PHASE: 9
+PHASE: 10
 
 ## Handoff (latest)
-1. Done: Phase 8 (assets at scale): cards and catalog, Source Hub registry, vetting without running code (quarantine, license from text, lure and dependency checks, sources.lock), oxc AST extraction and ingest, tantivy search with the retrieval ladder and budget gate (E_BUDGET), license mode and `ck license report`, derive with codemods; wave 2: rendercomp-free ingested (62 cards), simple-icons vetted. Proof `crates/ck-cli/tests/assets_proof.rs`.
-2. Proof: `just check` and `just test` 329 of 329 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16. Evidence in VERIFICATION.md, Phase 8.
-3. Open: wave 3 frame-clock adapter and determinism tests, preview.webp and the derived copy's type check and first render (all need the Phase 9 render worker); icon, LUT and sfx ingest; tabler-icons too large for the quarantine limits; reviewer agents not run; Fish Audio provider calls (Phase 5 and 7).
-4. Next: Phase 9 polish and proof (Node render worker with Remotion, render cache, history and branches, variants, sound design, critic pass, eval and bench harness, trace bundle, replay and bisect, demo reset). Plan it first.
-5. Start: `just check`; phase-runner skill; spec 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7).
+1. Done: Phase 9: render worker (Remotion) and full export path with audio mix and render cache (closes Phase 4 step 10b); `ck render check` determinism; `ck eval`; `ck replay`, `ck bisect`, `ck trace bundle`; `ck demo reset` (39 ms); README; bench harness and `ck bench report`; history, branches, variants.
+2. Proof: `just check` and `just test` 347 of 347 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16. Evidence in VERIFICATION.md, Phase 9.
+3. Open: sound design placement (no vetted CC0 sound set), critic pass, bench results (PLACEHOLDER: real agent runs and owner media), studio views for history/branches/variants, frame-clock adapter and card previews, Fish Audio provider calls, reviewer agents not run, packaged installers.
+4. Next: Phase 10 stretch (storyboard checkpoint, reference match, taste profile, OTIO export, sub-agent roles, more agents, Demucs opt-in). The cut line drops Phase 10 first; confirm with the owner which items are worth building.
+5. Start: `just check`; spec 12 Phase 10, 14 (Demucs).
 
 ## Open questions
+- Phase 9 close: not built: sound design placement (needs a vetted CC0 sound set), the critic pass, studio views for history, branches and variants, `ck repro`, per-layer render cache (whole-video cache built), original-resolution media for the render path (proxies used), audio items (music beds) in the mix, C-arm ablation switches for the bench. Bench results are PLACEHOLDER until real agent runs.
 - Phase 8 close: the Phase 9 render worker must also cover the wave 3 frame-clock adapter with determinism tests (same frame twice, out of order) before any wrappable card goes live, card previews (preview.webp) and the derived copy's type check and first render. Non-code ingest (SVG icons, LUTs, sfx) and a path filter for very large repos (tabler-icons) are not built.
 - Phase 7 close: Fish Audio TTS (`FishTts`), STT (`FishStt`) and cloning are stubs; with the key, verify the API (spec 8.3), implement them behind the existing `Speaker` and `Transcriber` traits, and add cassette tests. Spec 8.3's crossfades and music ducking belong to the mix in the Phase 9 render path; the sound plan already emits duck cues.
 - Phase 7 step 6: `ck-server` `tests::idle::only_authorized_calls_count` uses 40 ms wall-clock margins and failed once under a loaded full run; move it to paused tokio time like the other idle tests.
@@ -52,7 +53,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 9: polish and proof (2026-10-30, in progress)
+## Phase 9: polish and proof (2026-10-30, done; sound design, critic pass, bench results carried)
 
 Spec: 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7). Owner approved Remotion rendering (2026-10-30). Proof: a generated project exports to MP4 through the render worker; the evaluator scores outputs; trace, replay and bisect work; the demo resets in under 10 s. Order follows the cut line (branches and variants last).
 
@@ -65,7 +66,7 @@ Steps:
 - [x] 6. Demo reset (seeded project in under 10 s) and README (install, requirements, demo, voice privacy, Remotion licensing, asset licenses).
 - [x] 7. Bench harness (results PLACEHOLDER until real runs) for A0/A1/B (scenarios, arms, report format); real runs need agents and tokens: results PLACEHOLDER until run.
 - [x] 8. History and branches, variants (CLI and MCP; studio views not built) (cut-line items).
-- [ ] 9. Proof run, self review, evidence.
+- [x] 9. Proof run, self review, evidence.
 
 ## Phase 8: assets at scale (2026-10-30, done; wave 3 adapters, previews and non-code ingest carried)
 
