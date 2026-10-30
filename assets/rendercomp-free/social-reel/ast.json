@@ -1,0 +1,235 @@
+{
+  "file": "src/components/social-reel/SocialReel.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Sequence",
+        "Easing",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "SocialReelProps",
+    "defaultSocialReelProps",
+    "SocialReel",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "SocialReelProps",
+      "fields": [
+        {
+          "name": "brandName",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "handle",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "headline",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "headlineAccent",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "secondCopy",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "infoLines",
+          "type": "string[]",
+          "optional": false
+        },
+        {
+          "name": "ctaText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bgFrom",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bgVia",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bgTo",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "caption",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "likeCount",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "Easing",
+    "Sequence",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 31,
+      "endLine": 31,
+      "doc": "Social Reel — generic short-form social video player promo A neutral \"vertical video player\" UI (avatar / handle / like-comment-share rail / progress bar) wrapped in a landscape stage, cycling through a catch-copy -> second-copy -> info-panel -> CTA sequence. Motion preserved from the source template: - FadeIn-up entrances (opacity + translateY via interpolate) - AccentLine scaleX wipe (left/center grow) - PulseButton sin-wave scale pulse on the CTA after a spring entrance - Ken-Burns slow zoom on the backdrop Self-contained: react / remotion only, Latin system fonts, no external CDN, no brand colors/logos/wordmarks — fully fictional (\"Streamly\" / @aria.studio)."
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 32,
+      "endLine": 32
+    },
+    {
+      "name": "SANS",
+      "kind": "const",
+      "exported": false,
+      "startLine": 34,
+      "endLine": 34
+    },
+    {
+      "name": "SocialReelProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 36,
+      "endLine": 50
+    },
+    {
+      "name": "defaultSocialReelProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 52,
+      "endLine": 66
+    },
+    {
+      "name": "FadeIn",
+      "kind": "const",
+      "exported": false,
+      "startLine": 69,
+      "endLine": 86
+    },
+    {
+      "name": "AccentLine",
+      "kind": "const",
+      "exported": false,
+      "startLine": 89,
+      "endLine": 114
+    },
+    {
+      "name": "PulseButton",
+      "kind": "const",
+      "exported": false,
+      "startLine": 117,
+      "endLine": 151
+    },
+    {
+      "name": "HeartGlyph",
+      "kind": "const",
+      "exported": false,
+      "startLine": 154,
+      "endLine": 163
+    },
+    {
+      "name": "CommentGlyph",
+      "kind": "const",
+      "exported": false,
+      "startLine": 165,
+      "endLine": 174
+    },
+    {
+      "name": "ShareGlyph",
+      "kind": "const",
+      "exported": false,
+      "startLine": 176,
+      "endLine": 185
+    },
+    {
+      "name": "ActionRail",
+      "kind": "const",
+      "exported": false,
+      "startLine": 187,
+      "endLine": 235
+    },
+    {
+      "name": "TopBar",
+      "kind": "const",
+      "exported": false,
+      "startLine": 238,
+      "endLine": 296
+    },
+    {
+      "name": "BottomChrome",
+      "kind": "const",
+      "exported": false,
+      "startLine": 299,
+      "endLine": 342
+    },
+    {
+      "name": "PlayerBody",
+      "kind": "const",
+      "exported": false,
+      "startLine": 345,
+      "endLine": 473
+    },
+    {
+      "name": "SocialReel",
+      "kind": "const",
+      "exported": true,
+      "startLine": 475,
+      "endLine": 503
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 505,
+      "endLine": 505
+    }
+  ],
+  "errors": 0
+}

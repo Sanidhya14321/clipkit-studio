@@ -1,0 +1,204 @@
+{
+  "file": "src/components/ink-spread-transition/InkSpreadTransition.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Easing",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "InkSpreadTransitionProps",
+    "defaultInkSpreadTransitionProps",
+    "InkSpreadTransition",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "InkSpreadTransitionProps",
+      "fields": [
+        {
+          "name": "colorBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "colorAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 23,
+      "endLine": 23
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 24,
+      "endLine": 24
+    },
+    {
+      "name": "INK_START",
+      "kind": "const",
+      "exported": false,
+      "startLine": 32,
+      "endLine": 32
+    },
+    {
+      "name": "INK_END",
+      "kind": "const",
+      "exported": false,
+      "startLine": 33,
+      "endLine": 33
+    },
+    {
+      "name": "LABEL_IN",
+      "kind": "const",
+      "exported": false,
+      "startLine": 34,
+      "endLine": 34
+    },
+    {
+      "name": "LABEL_FULL",
+      "kind": "const",
+      "exported": false,
+      "startLine": 35,
+      "endLine": 35
+    },
+    {
+      "name": "DROP_COUNT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 36,
+      "endLine": 36
+    },
+    {
+      "name": "SPECK_COUNT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 37,
+      "endLine": 37
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 39,
+      "endLine": 39
+    },
+    {
+      "name": "easeInOut",
+      "kind": "const",
+      "exported": false,
+      "startLine": 43,
+      "endLine": 43
+    },
+    {
+      "name": "seededRandom",
+      "kind": "const",
+      "exported": false,
+      "startLine": 46,
+      "endLine": 49
+    },
+    {
+      "name": "InkSpreadTransitionProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 51,
+      "endLine": 57
+    },
+    {
+      "name": "defaultInkSpreadTransitionProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 59,
+      "endLine": 65
+    },
+    {
+      "name": "PageLayer",
+      "kind": "const",
+      "exported": false,
+      "startLine": 68,
+      "endLine": 94
+    },
+    {
+      "name": "Drop",
+      "kind": "type",
+      "exported": false,
+      "startLine": 96,
+      "endLine": 96
+    },
+    {
+      "name": "buildDrops",
+      "kind": "const",
+      "exported": false,
+      "startLine": 100,
+      "endLine": 128
+    },
+    {
+      "name": "buildSpecks",
+      "kind": "const",
+      "exported": false,
+      "startLine": 131,
+      "endLine": 151
+    },
+    {
+      "name": "InkSpreadTransition",
+      "kind": "const",
+      "exported": true,
+      "startLine": 153,
+      "endLine": 344
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 346,
+      "endLine": 346
+    }
+  ],
+  "errors": 0
+}

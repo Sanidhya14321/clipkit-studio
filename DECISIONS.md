@@ -553,3 +553,10 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Props schema: string, number and boolean become JSON types; anything else keeps its TypeScript text as a description.
 - Derive is a studio op so the asset joins `assetsUsed` as an agent revision; the files are written by ck (the guard hook keeps agents from editing `.clipkit/` directly).
 - Type check and first render need Node: carried to the Phase 9 render worker.
+
+## Phase 8 step 8: wave 2 (2026-10-30)
+- Vetted from the original repos: rendercomp-free (MIT, 62 cards), simple-icons (CC0-1.0; trademark note stays in its licenseNote for the export report). Not vetted: tabler-icons (over 5000 files / 64 MB; needs a path filter such as `icons/` only, not built), and every wave 2 source with no confirmed repo.
+- Install scripts are blockers only when obfuscated (eval, base64, downloads, escape sequences); a plain `prepare` script is a warning. `child_process` in code is a warning (build tooling). `eval`, `new Function` and base64 decoding stay blockers. ck never runs any of it.
+- Ingest: component names need a lowercase letter (no `FPS`-style constants) and `*Root` registries are skipped; a name exported from two files gets a `-<file>` suffix; asset folders a re-ingest no longer produces are removed; the source LICENSE is copied beside its cards because the cards keep copies of the original files.
+- `assets/quarantine/*` is gitignored (re-fetchable from the pinned commit); cards, ast.json and file copies are committed with the license.
+- serde_json `preserve_order` is on workspace-wide so `sources.yaml` saves keep the owner's key order; snapshot contents are unchanged (key order only).

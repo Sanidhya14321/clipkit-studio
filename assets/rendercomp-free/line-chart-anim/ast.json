@@ -1,0 +1,136 @@
+{
+  "file": "src/components/line-chart-anim/LineChartAnim.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "LinePoint",
+    "LineChartAnimProps",
+    "defaultLineChartAnimProps",
+    "LineChartAnim",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "LineChartAnimProps",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "points",
+          "type": "LinePoint[]",
+          "optional": false
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "titleColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "lineColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "gridColor",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "FONT_STACK",
+      "kind": "const",
+      "exported": false,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "LinePoint",
+      "kind": "type",
+      "exported": true,
+      "startLine": 19,
+      "endLine": 22
+    },
+    {
+      "name": "LineChartAnimProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 25,
+      "endLine": 33
+    },
+    {
+      "name": "defaultLineChartAnimProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 35,
+      "endLine": 50
+    },
+    {
+      "name": "LineChartAnim",
+      "kind": "const",
+      "exported": true,
+      "startLine": 52,
+      "endLine": 247
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 249,
+      "endLine": 249
+    }
+  ],
+  "errors": 0
+}

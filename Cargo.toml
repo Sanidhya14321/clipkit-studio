@@ -16,7 +16,7 @@ ck-assets = { path = "crates/ck-assets" }
 ck-media = { path = "crates/ck-media" }
 ck-voice = { path = "crates/ck-voice" }
 serde = { version = "1.0.229", features = ["derive"] }
-serde_json = { version = "1.0.154", features = ["float_roundtrip"] }
+serde_json = { version = "1.0.154", features = ["float_roundtrip", "preserve_order"] }
 json-patch = { version = "4.2.0", features = ["schemars"] }
 schemars = "1.2.3"
 thiserror = "2.0.21"

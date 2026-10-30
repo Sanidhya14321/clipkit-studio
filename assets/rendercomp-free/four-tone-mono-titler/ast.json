@@ -1,0 +1,299 @@
+{
+  "file": "src/components/four-tone-mono-titler/FourToneMonoTitler.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "useCurrentFrame"
+      ]
+    },
+    {
+      "from": "../../pixel-kit",
+      "names": [
+        "PixelStage",
+        "layoutText",
+        "measureText",
+        "seed",
+        "seed2",
+        "rgb",
+        "RGB"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "FourToneMonoTitlerProps",
+    "defaultFourToneMonoTitlerProps",
+    "FourToneMonoTitler",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "FourToneMonoTitlerProps",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "tone0",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "tone1",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "tone2",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "tone3",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "titleCell",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "subtitleCell",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "wipeFrames",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "shimmerSpeed",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "ditherDensity",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "showAmbient",
+          "type": "boolean",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "IW",
+      "kind": "const",
+      "exported": false,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "IH",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "snap",
+      "kind": "const",
+      "exported": false,
+      "startLine": 19,
+      "endLine": 19
+    },
+    {
+      "name": "clamp01",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "easeInOutCubic",
+      "kind": "const",
+      "exported": false,
+      "startLine": 21,
+      "endLine": 21
+    },
+    {
+      "name": "BAYER4",
+      "kind": "const",
+      "exported": false,
+      "startLine": 24,
+      "endLine": 29
+    },
+    {
+      "name": "ditherOn",
+      "kind": "const",
+      "exported": false,
+      "startLine": 31,
+      "endLine": 32
+    },
+    {
+      "name": "hexToRgb",
+      "kind": "const",
+      "exported": false,
+      "startLine": 34,
+      "endLine": 37
+    },
+    {
+      "name": "rgbToHex",
+      "kind": "const",
+      "exported": false,
+      "startLine": 38,
+      "endLine": 39
+    },
+    {
+      "name": "PANEL_TOP",
+      "kind": "const",
+      "exported": false,
+      "startLine": 42,
+      "endLine": 42
+    },
+    {
+      "name": "PANEL_BOT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 43,
+      "endLine": 43
+    },
+    {
+      "name": "SHADE_Y0",
+      "kind": "const",
+      "exported": false,
+      "startLine": 44,
+      "endLine": 44
+    },
+    {
+      "name": "SHADE_H",
+      "kind": "const",
+      "exported": false,
+      "startLine": 45,
+      "endLine": 45
+    },
+    {
+      "name": "KICKER_X",
+      "kind": "const",
+      "exported": false,
+      "startLine": 46,
+      "endLine": 46
+    },
+    {
+      "name": "TITLE_X0",
+      "kind": "const",
+      "exported": false,
+      "startLine": 47,
+      "endLine": 47
+    },
+    {
+      "name": "TITLE_Y0",
+      "kind": "const",
+      "exported": false,
+      "startLine": 48,
+      "endLine": 48
+    },
+    {
+      "name": "DIVIDER_Y",
+      "kind": "const",
+      "exported": false,
+      "startLine": 49,
+      "endLine": 49
+    },
+    {
+      "name": "SUB_X0",
+      "kind": "const",
+      "exported": false,
+      "startLine": 50,
+      "endLine": 50
+    },
+    {
+      "name": "SUB_Y0",
+      "kind": "const",
+      "exported": false,
+      "startLine": 51,
+      "endLine": 51
+    },
+    {
+      "name": "DUST_COUNT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 52,
+      "endLine": 52
+    },
+    {
+      "name": "FourToneMonoTitlerProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 54,
+      "endLine": 67
+    },
+    {
+      "name": "HANDHELD_4TONE",
+      "kind": "const",
+      "exported": false,
+      "startLine": 72,
+      "endLine": 74
+    },
+    {
+      "name": "defaultFourToneMonoTitlerProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 77,
+      "endLine": 91
+    },
+    {
+      "name": "FourToneMonoTitler",
+      "kind": "const",
+      "exported": true,
+      "startLine": 93,
+      "endLine": 254
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 256,
+      "endLine": 256
+    }
+  ],
+  "errors": 0
+}

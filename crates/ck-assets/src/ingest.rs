@@ -102,7 +102,11 @@ fn components(map: &AstMap) -> Vec<&Symbol> {
                     .chars()
                     .next()
                     .is_some_and(|c| c.is_ascii_uppercase())
+                // PascalCase, not SCREAMING_CASE constants like `FPS`.
+                && s.name.chars().any(|c| c.is_ascii_lowercase())
                 && !s.name.ends_with("Props")
+                // `RemotionRoot` and similar register compositions; they are not assets.
+                && !s.name.ends_with("Root")
         })
         .collect()
 }
@@ -290,6 +294,25 @@ fn card_for(ctx: &Ctx<'_>, rel: &str, map: &AstMap, sym: &Symbol) -> Card {
     }
 }
 
+/// Removes a folder that may hold read-only files.
+fn clear_dir(dir: &Path) -> CkResult<()> {
+    let mut stack = vec![dir.to_path_buf()];
+    while let Some(d) = stack.pop() {
+        for e in std::fs::read_dir(&d).map_err(|e| io(&d, e))? {
+            let p = e.map_err(|e| io(&d, e))?.path();
+            if p.is_dir() {
+                stack.push(p);
+            } else if let Ok(meta) = std::fs::metadata(&p) {
+                let mut perm = meta.permissions();
+                #[allow(clippy::permissions_set_readonly_false)]
+                perm.set_readonly(false);
+                let _ = std::fs::set_permissions(&p, perm);
+            }
+        }
+    }
+    std::fs::remove_dir_all(dir).map_err(|e| io(dir, e))
+}
+
 fn write_ro(path: &Path, bytes: &[u8], read_only: bool) -> CkResult<()> {
     if let Some(dir) = path.parent() {
         std::fs::create_dir_all(dir).map_err(|e| io(dir, e))?;
@@ -372,7 +395,7 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
         license: &source.license,
     };
     let out_dir = hub.assets().join(&source.id);
-    let mut assets = Vec::new();
+    let mut assets: Vec<String> = Vec::new();
     let mut skipped = Vec::new();
     let mut index = Vec::new();
     for path in files(&quarantine)? {
@@ -393,7 +416,15 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
             continue;
         }
         for sym in comps {
-            let card = card_for(&ctx, &rel, &map, sym);
+            let mut card = card_for(&ctx, &rel, &map, sym);
+            if assets.contains(&card.id) {
+                // The same name exported from another file: tell them apart by file.
+                let stem = Path::new(&rel)
+                    .file_stem()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("file");
+                card.id = format!("{}-{}", card.id, kebab(stem));
+            }
             let name = card.id.rsplit('/').next().unwrap_or("").to_owned();
             let dir = out_dir.join(&name);
             let card_path = dir.join("asset.md");
@@ -420,6 +451,24 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
             assets.push(card.id);
         }
     }
+    // Asset folders this run did not produce are stale (renamed or removed upstream).
+    if out_dir.is_dir() {
+        for e in std::fs::read_dir(&out_dir).map_err(|e| io(&out_dir, e))? {
+            let p = e.map_err(|e| io(&out_dir, e))?.path();
+            let name = p
+                .file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or("")
+                .to_owned();
+            if p.is_dir()
+                && !assets
+                    .iter()
+                    .any(|a| a.rsplit('/').next() == Some(name.as_str()))
+            {
+                clear_dir(&p)?;
+            }
+        }
+    }
     let source_md = format!(
         "# {}\n\n- License: {} (SPDX: {}, class: {})\n- Commit: {}\n- Vetted: {}\n- Runtime: \
          Remotion components run in the render path; others are derive-only.\n",
@@ -435,6 +484,23 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
         entry.vetted_at
     );
     write_ro(&out_dir.join("SOURCE.md"), source_md.as_bytes(), false)?;
+    // The license travels with the copied files (MIT and similar require the notice).
+    for e in std::fs::read_dir(&quarantine).map_err(|e| io(&quarantine, e))? {
+        let p = e.map_err(|e| io(&quarantine, e))?.path();
+        let name = p
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("")
+            .to_uppercase();
+        if p.is_file()
+            && ["LICENSE", "LICENCE", "COPYING"]
+                .iter()
+                .any(|l| name.starts_with(l))
+        {
+            let text = std::fs::read(&p).map_err(|e| io(&p, e))?;
+            write_ro(&out_dir.join("LICENSE"), &text, false)?;
+        }
+    }
     let index_md = format!("# {} assets\n\n{}\n", source.id, index.join("\n"));
     write_ro(&out_dir.join("INDEX.md"), index_md.as_bytes(), false)?;
     let catalog = rebuild_catalog(hub)?;

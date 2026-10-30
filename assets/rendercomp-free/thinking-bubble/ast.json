@@ -1,0 +1,137 @@
+{
+  "file": "src/components/thinking-bubble/ThinkingBubble.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "ThinkingBubbleProps",
+    "defaultThinkingBubbleProps",
+    "ThinkingBubble",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "ThinkingBubbleProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "characterColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bubbleColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bubbleBorder",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "dotColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "thoughtText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "showText",
+          "type": "boolean",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "ThinkingBubbleProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 18,
+      "endLine": 27
+    },
+    {
+      "name": "defaultThinkingBubbleProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 29,
+      "endLine": 38
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 40,
+      "endLine": 40
+    },
+    {
+      "name": "ThinkingBubble",
+      "kind": "const",
+      "exported": true,
+      "startLine": 42,
+      "endLine": 282
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 284,
+      "endLine": 284
+    }
+  ],
+  "errors": 0
+}

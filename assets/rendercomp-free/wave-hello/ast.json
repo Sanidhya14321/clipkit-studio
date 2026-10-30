@@ -1,0 +1,130 @@
+{
+  "file": "src/components/wave-hello/WaveHello.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "WaveHelloProps",
+    "defaultWaveHelloProps",
+    "WaveHello",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "WaveHelloProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "skinColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bodyColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "WaveHelloProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 17,
+      "endLine": 25
+    },
+    {
+      "name": "defaultWaveHelloProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 27,
+      "endLine": 35
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 37,
+      "endLine": 37
+    },
+    {
+      "name": "WaveHello",
+      "kind": "const",
+      "exported": true,
+      "startLine": 39,
+      "endLine": 254
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 256,
+      "endLine": 256
+    }
+  ],
+  "errors": 0
+}

@@ -1,0 +1,130 @@
+{
+  "file": "src/components/starfield/Starfield.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "StarfieldProps",
+    "defaultStarfieldProps",
+    "Starfield",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "StarfieldProps",
+      "fields": [
+        {
+          "name": "count",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "starColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "baseColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "warpSpeed",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "labelColor",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "FONT_SANS",
+      "kind": "const",
+      "exported": false,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "seededRandom",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 21
+    },
+    {
+      "name": "StarfieldProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 23,
+      "endLine": 36
+    },
+    {
+      "name": "defaultStarfieldProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 38,
+      "endLine": 45
+    },
+    {
+      "name": "Starfield",
+      "kind": "const",
+      "exported": true,
+      "startLine": 47,
+      "endLine": 126
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 128,
+      "endLine": 128
+    }
+  ],
+  "errors": 0
+}

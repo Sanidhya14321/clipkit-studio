@@ -1,0 +1,109 @@
+{
+  "file": "src/components/loop-grid-wave/LoopGridWave.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "LoopGridWaveProps",
+    "defaultLoopGridWaveProps",
+    "LoopGridWave",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "LoopGridWaveProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "dotColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "amplitude",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 10,
+      "endLine": 10
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 11,
+      "endLine": 11
+    },
+    {
+      "name": "LoopGridWaveProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 19
+    },
+    {
+      "name": "defaultLoopGridWaveProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 21,
+      "endLine": 27
+    },
+    {
+      "name": "LoopGridWave",
+      "kind": "const",
+      "exported": true,
+      "startLine": 29,
+      "endLine": 79
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 81,
+      "endLine": 81
+    }
+  ],
+  "errors": 0
+}

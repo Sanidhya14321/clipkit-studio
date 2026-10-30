@@ -69,6 +69,8 @@ fn a_vetted_source_becomes_cards_ast_maps_and_catalog_lines() {
             .readonly()
     );
     assert!(hub.assets().join("pack-mit/SOURCE.md").is_file());
+    let license = std::fs::read_to_string(hub.assets().join("pack-mit/LICENSE")).unwrap();
+    assert!(license.starts_with("MIT License"));
     let index = std::fs::read_to_string(hub.assets().join("pack-mit/INDEX.md")).unwrap();
     assert_eq!(index.lines().filter(|l| l.starts_with("- ")).count(), 2);
 }
@@ -108,6 +110,16 @@ fn rejected_and_unvetted_sources_are_not_ingested() {
     assert!(!hub.assets().join("pack-injection").exists());
     let catalog = std::fs::read_to_string(hub.assets().join("catalog.jsonl")).unwrap();
     assert!(!catalog.contains("pack-injection"));
+}
+
+#[test]
+fn constants_and_roots_are_not_assets() {
+    let map = extract(
+        "Root.tsx",
+        "export const FPS = 30;\nexport const RemotionRoot = () => null;\nexport const Clip = () => null;",
+    );
+    let names: Vec<&str> = components(&map).iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(names, ["Clip"]);
 }
 
 #[test]

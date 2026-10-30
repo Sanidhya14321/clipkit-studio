@@ -30,3 +30,7 @@ CLAUDE.local.md
 
 # Autonomous build loop logs
 .autobuild/
+
+# Quarantined third-party sources: fetched again from the pinned commit in sources.lock
+/assets/quarantine/*
+!/assets/quarantine/README.md

@@ -1,0 +1,130 @@
+{
+  "file": "src/components/logo-split-reveal/LogoSplitReveal.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "LogoSplitRevealProps",
+    "defaultLogoSplitRevealProps",
+    "LogoSplitReveal",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "LogoSplitRevealProps",
+      "fields": [
+        {
+          "name": "logoText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "splitOffset",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "revealDuration",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "logoColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "fontSize",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 30,
+      "endLine": 30
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 31,
+      "endLine": 31
+    },
+    {
+      "name": "FONT_STACK",
+      "kind": "const",
+      "exported": false,
+      "startLine": 34,
+      "endLine": 34
+    },
+    {
+      "name": "LogoSplitRevealProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 36,
+      "endLine": 51
+    },
+    {
+      "name": "defaultLogoSplitRevealProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 53,
+      "endLine": 61
+    },
+    {
+      "name": "LogoSplitReveal",
+      "kind": "const",
+      "exported": true,
+      "startLine": 63,
+      "endLine": 186
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 188,
+      "endLine": 188
+    }
+  ],
+  "errors": 0
+}

@@ -1,0 +1,145 @@
+{
+  "file": "src/components/typewriter/Typewriter.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "TypewriterProps",
+    "defaultTypewriterProps",
+    "Typewriter",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "TypewriterProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "machineColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "machineDarkColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "keyColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "ribbonColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "paperColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "messageText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subText",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "TypewriterProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 26
+    },
+    {
+      "name": "defaultTypewriterProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 28,
+      "endLine": 39
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 41,
+      "endLine": 41
+    },
+    {
+      "name": "Typewriter",
+      "kind": "const",
+      "exported": true,
+      "startLine": 43,
+      "endLine": 190
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 192,
+      "endLine": 192
+    }
+  ],
+  "errors": 0
+}

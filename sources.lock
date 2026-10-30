@@ -1,0 +1,44 @@
+{
+  "rendercomp-free": {
+    "commit": "f648980e528defb7594e24c6447055f0540f340b",
+    "licenseHash": "3e0f0f2895a6bf2b5aa9d03aa4a6b68679a7d037d54f24177f99748084a58444",
+    "licenseClass": "permissive",
+    "spdx": "MIT",
+    "vettedAt": "2026-10-29",
+    "findings": [
+      {
+        "severity": "warning",
+        "rule": "large-file",
+        "path": "docs/hero-50-templates.gif",
+        "detail": "3139981 bytes, not copied"
+      }
+    ]
+  },
+  "simple-icons": {
+    "commit": "90646e4bf7f3b89df6c37e65baf3e7bc759a517c",
+    "licenseHash": "9046848b63a5c92bff14e4accca80bd987e0623b74adf9226ce5198d312b79d5",
+    "licenseClass": "permissive",
+    "spdx": "CC0-1.0",
+    "vettedAt": "2026-10-29",
+    "findings": [
+      {
+        "severity": "warning",
+        "rule": "symlink",
+        "path": ".nvmrc",
+        "detail": "skipped"
+      },
+      {
+        "severity": "warning",
+        "rule": "install-script",
+        "path": "package.json",
+        "detail": "`prepare`: node -e \"process.exit(process.env.CI ? 0 : 1)\" || prek install"
+      },
+      {
+        "severity": "warning",
+        "rule": "spawns-processes",
+        "path": "scripts/release/update-sdk-ts-defs.js",
+        "detail": "child_process"
+      }
+    ]
+  }
+}

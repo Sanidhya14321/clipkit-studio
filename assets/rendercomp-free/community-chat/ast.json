@@ -1,0 +1,149 @@
+{
+  "file": "src/components/community-chat/CommunityChat.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Sequence",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "CommunityChatMessage",
+    "CommunityChatProps",
+    "CommunityChat",
+    "defaultCommunityChatProps",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "CommunityChatProps",
+      "fields": [
+        {
+          "name": "workspaceName",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "channelName",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "messages",
+          "type": "CommunityChatMessage[]",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "Sequence",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 24,
+      "endLine": 24,
+      "doc": "Community chat screen animation (generic team-chat UI) - Workspace icon rail + channel list + message area - Messages appear sequentially with a spring entrance - Reactions are added after each message settles - Whole window tilts via rotateX + rotateY for a 3D feel Self-contained, Latin system fonts only. Neutral palette — no brand colors."
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 25,
+      "endLine": 25
+    },
+    {
+      "name": "SANS",
+      "kind": "const",
+      "exported": false,
+      "startLine": 27,
+      "endLine": 27
+    },
+    {
+      "name": "C",
+      "kind": "const",
+      "exported": false,
+      "startLine": 30,
+      "endLine": 45
+    },
+    {
+      "name": "CommunityChatMessage",
+      "kind": "type",
+      "exported": true,
+      "startLine": 47,
+      "endLine": 54
+    },
+    {
+      "name": "CommunityChatProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 56,
+      "endLine": 60
+    },
+    {
+      "name": "Message",
+      "kind": "const",
+      "exported": false,
+      "startLine": 62,
+      "endLine": 155
+    },
+    {
+      "name": "WorkspaceIcon",
+      "kind": "const",
+      "exported": false,
+      "startLine": 157,
+      "endLine": 194
+    },
+    {
+      "name": "ChatWindow",
+      "kind": "const",
+      "exported": false,
+      "startLine": 196,
+      "endLine": 381
+    },
+    {
+      "name": "CommunityChat",
+      "kind": "const",
+      "exported": true,
+      "startLine": 383,
+      "endLine": 398
+    },
+    {
+      "name": "defaultCommunityChatProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 400,
+      "endLine": 438
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 440,
+      "endLine": 440
+    }
+  ],
+  "errors": 0
+}

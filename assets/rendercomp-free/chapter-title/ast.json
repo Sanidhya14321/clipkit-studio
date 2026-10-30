@@ -1,0 +1,139 @@
+{
+  "file": "src/components/chapter-title/ChapterTitle.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "ChapterTitleProps",
+    "defaultChapterTitleProps",
+    "ChapterTitle",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "ChapterTitleProps",
+      "fields": [
+        {
+          "name": "chapterLabel",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "chapterColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "titleColor",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "FONT_FAMILY",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "ChapterTitleProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 22,
+      "endLine": 35
+    },
+    {
+      "name": "defaultChapterTitleProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 37,
+      "endLine": 44
+    },
+    {
+      "name": "FloatFadeIn",
+      "kind": "const",
+      "exported": false,
+      "startLine": 49,
+      "endLine": 71
+    },
+    {
+      "name": "TitleReveal",
+      "kind": "const",
+      "exported": false,
+      "startLine": 74,
+      "endLine": 136
+    },
+    {
+      "name": "ChapterTitle",
+      "kind": "const",
+      "exported": true,
+      "startLine": 138,
+      "endLine": 237
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 239,
+      "endLine": 239
+    }
+  ],
+  "errors": 0
+}

@@ -1,0 +1,123 @@
+{
+  "file": "src/components/bokeh-circles/BokehCircles.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "BokehCirclesProps",
+    "defaultBokehCirclesProps",
+    "BokehCircles",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "BokehCirclesProps",
+      "fields": [
+        {
+          "name": "colors",
+          "type": "string[]",
+          "optional": false
+        },
+        {
+          "name": "baseColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "labelColor",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 7,
+      "endLine": 7
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 8,
+      "endLine": 8
+    },
+    {
+      "name": "FONT_STACK",
+      "kind": "const",
+      "exported": false,
+      "startLine": 10,
+      "endLine": 10
+    },
+    {
+      "name": "BokehCirclesProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 23
+    },
+    {
+      "name": "seededRandom",
+      "kind": "const",
+      "exported": false,
+      "startLine": 25,
+      "endLine": 28
+    },
+    {
+      "name": "defaultBokehCirclesProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 30,
+      "endLine": 36
+    },
+    {
+      "name": "BokehCircles",
+      "kind": "const",
+      "exported": true,
+      "startLine": 38,
+      "endLine": 110
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 112,
+      "endLine": 112
+    }
+  ],
+  "errors": 0
+}

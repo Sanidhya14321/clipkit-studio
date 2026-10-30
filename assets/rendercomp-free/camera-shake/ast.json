@@ -1,0 +1,149 @@
+{
+  "file": "src/components/camera-shake/CameraShake.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "CameraShakeProps",
+    "defaultCameraShakeProps",
+    "CameraShake",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "CameraShakeProps",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "maxIntensity",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "impactAt",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "shakeDuration",
+          "type": "number",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "FONT_EN",
+      "kind": "const",
+      "exported": false,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "CameraShakeProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 19,
+      "endLine": 36
+    },
+    {
+      "name": "defaultCameraShakeProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 38,
+      "endLine": 47
+    },
+    {
+      "name": "pseudoRand",
+      "kind": "const",
+      "exported": false,
+      "startLine": 50,
+      "endLine": 53
+    },
+    {
+      "name": "ImpactRays",
+      "kind": "const",
+      "exported": false,
+      "startLine": 55,
+      "endLine": 95
+    },
+    {
+      "name": "CameraShake",
+      "kind": "const",
+      "exported": true,
+      "startLine": 97,
+      "endLine": 242
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 244,
+      "endLine": 244
+    }
+  ],
+  "errors": 0
+}

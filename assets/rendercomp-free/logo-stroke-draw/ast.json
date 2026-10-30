@@ -1,0 +1,120 @@
+{
+  "file": "src/components/logo-stroke-draw/LogoStrokeDraw.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "LogoStrokeDrawProps",
+    "defaultLogoStrokeDrawProps",
+    "LogoStrokeDraw",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "LogoStrokeDrawProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "monogram",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "brandText",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "LogoStrokeDrawProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 21
+    },
+    {
+      "name": "defaultLogoStrokeDrawProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 23,
+      "endLine": 29
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 31,
+      "endLine": 31
+    },
+    {
+      "name": "LogoStrokeDraw",
+      "kind": "const",
+      "exported": true,
+      "startLine": 33,
+      "endLine": 225
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 227,
+      "endLine": 227
+    }
+  ],
+  "errors": 0
+}

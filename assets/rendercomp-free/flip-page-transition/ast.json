@@ -1,0 +1,169 @@
+{
+  "file": "src/components/flip-page-transition/FlipPageTransition.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Easing",
+        "Sequence",
+        "interpolate",
+        "useCurrentFrame"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "FlipPageTransitionProps",
+    "defaultFlipPageTransitionProps",
+    "FlipPageTransition",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "FlipPageTransitionProps",
+      "fields": [
+        {
+          "name": "colorBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "colorAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "Sequence",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 19,
+      "endLine": 19
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 22,
+      "endLine": 22
+    },
+    {
+      "name": "SCENE_EASING",
+      "kind": "const",
+      "exported": false,
+      "startLine": 26,
+      "endLine": 26
+    },
+    {
+      "name": "FLIP_DELAY",
+      "kind": "const",
+      "exported": false,
+      "startLine": 30,
+      "endLine": 30
+    },
+    {
+      "name": "FLIP_DURATION",
+      "kind": "const",
+      "exported": false,
+      "startLine": 31,
+      "endLine": 31
+    },
+    {
+      "name": "PRE_LIFT_FRAMES",
+      "kind": "const",
+      "exported": false,
+      "startLine": 34,
+      "endLine": 34
+    },
+    {
+      "name": "FlipPageTransitionProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 36,
+      "endLine": 42
+    },
+    {
+      "name": "defaultFlipPageTransitionProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 44,
+      "endLine": 50
+    },
+    {
+      "name": "PageLayer",
+      "kind": "const",
+      "exported": false,
+      "startLine": 53,
+      "endLine": 79
+    },
+    {
+      "name": "flipProgress",
+      "kind": "const",
+      "exported": false,
+      "startLine": 84,
+      "endLine": 94
+    },
+    {
+      "name": "FlipPage",
+      "kind": "const",
+      "exported": false,
+      "startLine": 104,
+      "endLine": 179
+    },
+    {
+      "name": "FlipPageTransition",
+      "kind": "const",
+      "exported": true,
+      "startLine": 181,
+      "endLine": 258
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 260,
+      "endLine": 260
+    }
+  ],
+  "errors": 0
+}

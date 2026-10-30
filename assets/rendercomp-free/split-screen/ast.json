@@ -1,0 +1,212 @@
+{
+  "file": "src/components/split-screen/SplitScreen.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "Easing"
+      ]
+    },
+    {
+      "from": "react",
+      "names": [
+        "CSSProperties",
+        "ReactNode"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "SplitScreenProps",
+    "defaultSplitScreenProps",
+    "SplitScreen",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "SplitScreenProps",
+      "fields": [
+        {
+          "name": "direction",
+          "type": "\"horizontal\" | \"vertical\"",
+          "optional": false
+        },
+        {
+          "name": "panelA",
+          "type": "SplitScreenPanel",
+          "optional": false
+        },
+        {
+          "name": "panelB",
+          "type": "SplitScreenPanel",
+          "optional": false
+        },
+        {
+          "name": "dividerColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "dividerWidth",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "backdropColor",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "SplitScreenRevealProps",
+      "fields": [
+        {
+          "name": "direction",
+          "type": "\"horizontal\" | \"vertical\"",
+          "optional": true
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "dividerColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "dividerWidth",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "optional": false
+        },
+        {
+          "name": "style",
+          "type": "CSSProperties",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 21,
+      "endLine": 21
+    },
+    {
+      "name": "FONT_LATIN",
+      "kind": "const",
+      "exported": false,
+      "startLine": 24,
+      "endLine": 24
+    },
+    {
+      "name": "EASE_OUT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 27,
+      "endLine": 27
+    },
+    {
+      "name": "SplitScreenPanel",
+      "kind": "type",
+      "exported": false,
+      "startLine": 31,
+      "endLine": 40
+    },
+    {
+      "name": "SplitScreenProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 42,
+      "endLine": 59
+    },
+    {
+      "name": "DEFAULT_BACKDROP",
+      "kind": "const",
+      "exported": false,
+      "startLine": 61,
+      "endLine": 61
+    },
+    {
+      "name": "defaultSplitScreenProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 63,
+      "endLine": 80
+    },
+    {
+      "name": "SplitScreenRevealProps",
+      "kind": "type",
+      "exported": false,
+      "startLine": 87,
+      "endLine": 95
+    },
+    {
+      "name": "SplitScreenReveal",
+      "kind": "const",
+      "exported": false,
+      "startLine": 97,
+      "endLine": 211
+    },
+    {
+      "name": "Panel",
+      "kind": "const",
+      "exported": false,
+      "startLine": 216,
+      "endLine": 285
+    },
+    {
+      "name": "SplitScreen",
+      "kind": "const",
+      "exported": true,
+      "startLine": 289,
+      "endLine": 318
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 320,
+      "endLine": 320
+    }
+  ],
+  "errors": 0
+}

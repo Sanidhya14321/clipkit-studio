@@ -1,0 +1,170 @@
+{
+  "file": "src/components/pixel-typewriter-quote/PixelTypewriterQuote.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "useCurrentFrame"
+      ]
+    },
+    {
+      "from": "../../pixel-kit",
+      "names": [
+        "PixelStage",
+        "PixelDither",
+        "CrtScanlines",
+        "CrtVignette",
+        "CrtNoise",
+        "layoutText",
+        "GLYPH_W",
+        "GLYPH_H",
+        "lerpRGB",
+        "rgb",
+        "RGB"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "PixelTypewriterQuoteProps",
+    "defaultPixelTypewriterQuoteProps",
+    "PixelTypewriterQuote",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "PixelTypewriterQuoteProps",
+      "fields": [
+        {
+          "name": "quote",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "attribution",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "inkColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "cps",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "IW",
+      "kind": "const",
+      "exported": false,
+      "startLine": 19,
+      "endLine": 19
+    },
+    {
+      "name": "IH",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "snap",
+      "kind": "const",
+      "exported": false,
+      "startLine": 21,
+      "endLine": 21
+    },
+    {
+      "name": "PixelTypewriterQuoteProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 23,
+      "endLine": 30
+    },
+    {
+      "name": "defaultPixelTypewriterQuoteProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 32,
+      "endLine": 39
+    },
+    {
+      "name": "hexToRgb",
+      "kind": "const",
+      "exported": false,
+      "startLine": 41,
+      "endLine": 44
+    },
+    {
+      "name": "wrapWords",
+      "kind": "function",
+      "exported": false,
+      "startLine": 47,
+      "endLine": 62
+    },
+    {
+      "name": "drawChar",
+      "kind": "function",
+      "exported": false,
+      "startLine": 65,
+      "endLine": 81
+    },
+    {
+      "name": "PixelTypewriterQuote",
+      "kind": "const",
+      "exported": true,
+      "startLine": 83,
+      "endLine": 236
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 238,
+      "endLine": 238
+    }
+  ],
+  "errors": 0
+}

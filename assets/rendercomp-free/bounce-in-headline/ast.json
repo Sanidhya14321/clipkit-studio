@@ -1,0 +1,126 @@
+{
+  "file": "src/components/bounce-in-headline/BounceInHeadline.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "BounceInHeadlineProps",
+    "defaultBounceInHeadlineProps",
+    "BounceInHeadline",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "BounceInHeadlineProps",
+      "fields": [
+        {
+          "name": "headline",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bounces",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FONT_SANS",
+      "kind": "const",
+      "exported": false,
+      "startLine": 10,
+      "endLine": 10
+    },
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "BounceInHeadlineProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 27
+    },
+    {
+      "name": "defaultBounceInHeadlineProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 29,
+      "endLine": 37
+    },
+    {
+      "name": "BounceInHeadline",
+      "kind": "const",
+      "exported": true,
+      "startLine": 39,
+      "endLine": 92
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 94,
+      "endLine": 94
+    }
+  ],
+  "errors": 0
+}

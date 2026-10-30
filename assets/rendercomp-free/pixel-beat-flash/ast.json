@@ -1,0 +1,153 @@
+{
+  "file": "src/pixel-kit/fx.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "useCurrentFrame"
+      ]
+    },
+    {
+      "from": "./palette",
+      "names": [
+        "cyclePalette",
+        "rgb",
+        "RGB"
+      ]
+    },
+    {
+      "from": "./font",
+      "names": [
+        "layoutText",
+        "measureText",
+        "GLYPH_H"
+      ]
+    }
+  ],
+  "exports": [
+    "BitmapText",
+    "TEXT_H",
+    "PixelBeatFlash",
+    "PixelSparkle",
+    "PixelDither",
+    "fxSvgStyle",
+    "CrtScanlines",
+    "CrtVignette",
+    "CrtNoise",
+    "ChromaShift",
+    "ApertureGrille"
+  ],
+  "props": [],
+  "primitives": [
+    "useCurrentFrame",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "snap",
+      "kind": "const",
+      "exported": false,
+      "startLine": 19,
+      "endLine": 19
+    },
+    {
+      "name": "hseed",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 23
+    },
+    {
+      "name": "BitmapText",
+      "kind": "const",
+      "exported": true,
+      "startLine": 29,
+      "endLine": 48
+    },
+    {
+      "name": "TEXT_H",
+      "kind": "const",
+      "exported": true,
+      "startLine": 50,
+      "endLine": 50
+    },
+    {
+      "name": "PixelBeatFlash",
+      "kind": "const",
+      "exported": true,
+      "startLine": 55,
+      "endLine": 80
+    },
+    {
+      "name": "PixelSparkle",
+      "kind": "const",
+      "exported": true,
+      "startLine": 85,
+      "endLine": 112
+    },
+    {
+      "name": "BAYER4",
+      "kind": "const",
+      "exported": false,
+      "startLine": 118,
+      "endLine": 123
+    },
+    {
+      "name": "PixelDither",
+      "kind": "const",
+      "exported": true,
+      "startLine": 124,
+      "endLine": 142
+    },
+    {
+      "name": "fxSvgStyle",
+      "kind": "function",
+      "exported": true,
+      "startLine": 144,
+      "endLine": 150
+    },
+    {
+      "name": "CrtScanlines",
+      "kind": "const",
+      "exported": true,
+      "startLine": 155,
+      "endLine": 164
+    },
+    {
+      "name": "CrtVignette",
+      "kind": "const",
+      "exported": true,
+      "startLine": 166,
+      "endLine": 173
+    },
+    {
+      "name": "CrtNoise",
+      "kind": "const",
+      "exported": true,
+      "startLine": 175,
+      "endLine": 188
+    },
+    {
+      "name": "ChromaShift",
+      "kind": "const",
+      "exported": true,
+      "startLine": 190,
+      "endLine": 199
+    },
+    {
+      "name": "ApertureGrille",
+      "kind": "const",
+      "exported": true,
+      "startLine": 202,
+      "endLine": 212
+    }
+  ],
+  "errors": 0
+}

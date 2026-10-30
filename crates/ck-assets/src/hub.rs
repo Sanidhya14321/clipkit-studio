@@ -46,8 +46,9 @@ pub struct SourceEntry {
     pub status: SourceStatus,
     #[serde(default)]
     pub enabled: bool,
-    /// `owner/name` on GitHub, or null when unresolved (never guessed).
-    #[serde(default)]
+    /// `owner/name` on GitHub, or null when unresolved (never guessed). A null the owner wrote
+    /// survives a save because unknown keys are kept in place.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub repo: Option<String>,
     #[serde(flatten)]
     pub extra: BTreeMap<String, serde_json::Value>,
@@ -139,11 +140,36 @@ impl Hub {
             .map_err(|e| CkError::new(ErrorCode::Asset, format!("{}: {e}", path.display())))
     }
 
+    /// Writes `sources`, keeping each existing entry's key order and the entries' order (the
+    /// owner edits this file by hand), so a change shows as a small diff.
     pub fn save_sources(&self, sources: &[SourceEntry]) -> CkResult<()> {
-        let mut text = serde_json::to_string_pretty(sources)
-            .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
+        let path = self.root.join(SOURCES_FILE);
+        let server = |e: serde_json::Error| CkError::new(ErrorCode::Server, e.to_string());
+        let old: Vec<serde_json::Value> = std::fs::read_to_string(&path)
+            .ok()
+            .and_then(|t| serde_json::from_str(&t).ok())
+            .unwrap_or_default();
+        let mut out = Vec::with_capacity(sources.len());
+        for s in sources {
+            let new = serde_json::to_value(s).map_err(server)?;
+            let merged = match old.iter().find(|o| o.get("id") == new.get("id")) {
+                Some(serde_json::Value::Object(o)) => {
+                    let mut o = o.clone();
+                    if let serde_json::Value::Object(n) = &new {
+                        o.retain(|k, v| n.contains_key(k) || v.is_null());
+                        for (k, v) in n {
+                            o.insert(k.clone(), v.clone());
+                        }
+                    }
+                    serde_json::Value::Object(o)
+                }
+                _ => new,
+            };
+            out.push(merged);
+        }
+        let mut text = serde_json::to_string_pretty(&out).map_err(server)?;
         text.push('\n');
-        ck_core::storage::atomic_write(&self.root.join(SOURCES_FILE), text.as_bytes())
+        ck_core::storage::atomic_write(&path, text.as_bytes())
     }
 
     pub fn lock(&self) -> CkResult<BTreeMap<String, LockEntry>> {

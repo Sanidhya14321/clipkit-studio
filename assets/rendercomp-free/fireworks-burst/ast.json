@@ -1,0 +1,135 @@
+{
+  "file": "src/components/fireworks-burst/FireworksBurst.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "FireworksBurstProps",
+    "defaultFireworksBurstProps",
+    "FireworksBurst",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "FireworksBurstProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "burstColors",
+          "type": "string[]",
+          "optional": false
+        },
+        {
+          "name": "trailColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "sparkColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "messageText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subText",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "FireworksBurstProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 24
+    },
+    {
+      "name": "defaultFireworksBurstProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 26,
+      "endLine": 35
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 37,
+      "endLine": 37
+    },
+    {
+      "name": "FireworksBurst",
+      "kind": "const",
+      "exported": true,
+      "startLine": 39,
+      "endLine": 158
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 160,
+      "endLine": 160
+    }
+  ],
+  "errors": 0
+}

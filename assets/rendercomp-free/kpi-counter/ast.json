@@ -1,0 +1,211 @@
+{
+  "file": "src/components/kpi-counter/KpiCounter.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "KpiMetric",
+    "KpiCounterProps",
+    "defaultKpiCounterProps",
+    "KpiCounter",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "KpiCounterProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "cardColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtextColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "metrics",
+          "type": "KpiMetric[]",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "KpiMetric",
+      "kind": "type",
+      "exported": true,
+      "startLine": 20,
+      "endLine": 28
+    },
+    {
+      "name": "KpiCounterProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 30,
+      "endLine": 39
+    },
+    {
+      "name": "defaultKpiCounterProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 41,
+      "endLine": 55
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 57,
+      "endLine": 57
+    },
+    {
+      "name": "NumberFormat",
+      "kind": "type",
+      "exported": false,
+      "startLine": 67,
+      "endLine": 74
+    },
+    {
+      "name": "formatFor",
+      "kind": "function",
+      "exported": false,
+      "startLine": 76,
+      "endLine": 84
+    },
+    {
+      "name": "DIGIT_CELL_RATIO",
+      "kind": "const",
+      "exported": false,
+      "startLine": 87,
+      "endLine": 87,
+      "doc": "Drum window height and column advance, as multiples of the font size."
+    },
+    {
+      "name": "DIGIT_WIDTH_RATIO",
+      "kind": "const",
+      "exported": false,
+      "startLine": 88,
+      "endLine": 88
+    },
+    {
+      "name": "DRUM_MASK",
+      "kind": "const",
+      "exported": false,
+      "startLine": 89,
+      "endLine": 90
+    },
+    {
+      "name": "DigitDrum",
+      "kind": "const",
+      "exported": false,
+      "startLine": 96,
+      "endLine": 143,
+      "doc": "One digit column. `pos` is a continuous wheel position in [0,10): the strip holds 0-9 plus a repeated 0 so the wrap from 9 back to 0 is seamless."
+    },
+    {
+      "name": "wheelPos",
+      "kind": "function",
+      "exported": false,
+      "startLine": 151,
+      "endLine": 157,
+      "doc": "Mechanical-odometer wheel position for the digit at decimal place `p`. The ones wheel turns continuously with the value; every wheel above it only turns during the last tenth of the wheel below (9 -> 0), so each digit rotates and then locks. At progress 1 every fraction is zero, which means all wheels rest exactly on their final digit."
+    },
+    {
+      "name": "RollingNumber",
+      "kind": "const",
+      "exported": false,
+      "startLine": 159,
+      "endLine": 222
+    },
+    {
+      "name": "MetricCard",
+      "kind": "const",
+      "exported": false,
+      "startLine": 224,
+      "endLine": 378
+    },
+    {
+      "name": "KpiCounter",
+      "kind": "const",
+      "exported": true,
+      "startLine": 380,
+      "endLine": 508
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 510,
+      "endLine": 510
+    }
+  ],
+  "errors": 0
+}

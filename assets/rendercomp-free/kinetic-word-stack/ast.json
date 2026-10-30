@@ -1,0 +1,115 @@
+{
+  "file": "src/components/kinetic-word-stack/KineticWordStack.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "KineticWordStackProps",
+    "defaultKineticWordStackProps",
+    "KineticWordStack",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "KineticWordStackProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "words",
+          "type": "string[]",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "KineticWordStackProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 20
+    },
+    {
+      "name": "defaultKineticWordStackProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 22,
+      "endLine": 27
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 29,
+      "endLine": 29
+    },
+    {
+      "name": "KineticWordStack",
+      "kind": "const",
+      "exported": true,
+      "startLine": 31,
+      "endLine": 169
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 171,
+      "endLine": 171
+    }
+  ],
+  "errors": 0
+}

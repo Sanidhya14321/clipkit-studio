@@ -10,14 +10,14 @@ expression: specs()
     "cap": 1024,
     "inputSchema": {
       "additionalProperties": false,
-      "description": "`studio` (MCP) / `ck studio --ensure` input.",
       "properties": {
         "open": {
-          "default": false,
           "description": "Open the studio in the browser, once per server.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       },
+      "description": "`studio` (MCP) / `ck studio --ensure` input.",
       "type": "object"
     }
   },
@@ -28,8 +28,8 @@ expression: specs()
     "cap": 4096,
     "inputSchema": {
       "additionalProperties": false,
-      "description": "`status` takes no input.",
-      "type": "object"
+      "type": "object",
+      "description": "`status` takes no input."
     }
   },
   {
@@ -39,21 +39,21 @@ expression: specs()
     "cap": 16384,
     "inputSchema": {
       "additionalProperties": false,
-      "description": "`project get`: the summary (default) or one layer in full.",
       "properties": {
+        "summary": {
+          "description": "Ids, kinds and spans per track (the default).",
+          "type": "boolean",
+          "default": false
+        },
         "layer": {
           "description": "One layer by id.",
           "type": [
             "string",
             "null"
           ]
-        },
-        "summary": {
-          "default": false,
-          "description": "Ids, kinds and spans per track (the default).",
-          "type": "boolean"
         }
       },
+      "description": "`project get`: the summary (default) or one layer in full.",
       "type": "object"
     }
   },
@@ -64,8 +64,105 @@ expression: specs()
     "cap": 4096,
     "inputSchema": {
       "$defs": {
+        "Patch": {
+          "description": "Representation of JSON Patch (list of patch operations)",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PatchOperation"
+          }
+        },
+        "PatchOperation": {
+          "description": "JSON Patch single patch operation",
+          "oneOf": [
+            {
+              "description": "'add' operation",
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "const": "add"
+                }
+              },
+              "$ref": "#/$defs/AddOperation",
+              "required": [
+                "op"
+              ]
+            },
+            {
+              "description": "'remove' operation",
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "const": "remove"
+                }
+              },
+              "$ref": "#/$defs/RemoveOperation",
+              "required": [
+                "op"
+              ]
+            },
+            {
+              "description": "'replace' operation",
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "const": "replace"
+                }
+              },
+              "$ref": "#/$defs/ReplaceOperation",
+              "required": [
+                "op"
+              ]
+            },
+            {
+              "description": "'move' operation",
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "const": "move"
+                }
+              },
+              "$ref": "#/$defs/MoveOperation",
+              "required": [
+                "op"
+              ]
+            },
+            {
+              "description": "'copy' operation",
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "const": "copy"
+                }
+              },
+              "$ref": "#/$defs/CopyOperation",
+              "required": [
+                "op"
+              ]
+            },
+            {
+              "description": "'test' operation",
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "const": "test"
+                }
+              },
+              "$ref": "#/$defs/TestOperation",
+              "required": [
+                "op"
+              ]
+            }
+          ]
+        },
         "AddOperation": {
           "description": "JSON Patch 'add' operation representation",
+          "type": "object",
           "properties": {
             "path": {
               "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
@@ -78,37 +175,41 @@ expression: specs()
           "required": [
             "path",
             "value"
-          ],
-          "type": "object"
+          ]
         },
-        "Author": {
-          "enum": [
-            "human",
-            "agent",
-            "voice"
-          ],
-          "type": "string"
-        },
-        "CopyOperation": {
-          "description": "JSON Patch 'copy' operation representation",
+        "RemoveOperation": {
+          "description": "JSON Patch 'remove' operation representation",
+          "type": "object",
           "properties": {
-            "from": {
-              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nto copy value from.",
-              "type": "string"
-            },
             "path": {
               "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
               "type": "string"
             }
           },
           "required": [
-            "from",
             "path"
-          ],
-          "type": "object"
+          ]
+        },
+        "ReplaceOperation": {
+          "description": "JSON Patch 'replace' operation representation",
+          "type": "object",
+          "properties": {
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Value to replace with."
+            }
+          },
+          "required": [
+            "path",
+            "value"
+          ]
         },
         "MoveOperation": {
           "description": "JSON Patch 'move' operation representation",
+          "type": "object",
           "properties": {
             "from": {
               "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nto move value from.",
@@ -122,137 +223,29 @@ expression: specs()
           "required": [
             "from",
             "path"
-          ],
-          "type": "object"
-        },
-        "Patch": {
-          "description": "Representation of JSON Patch (list of patch operations)",
-          "items": {
-            "$ref": "#/$defs/PatchOperation"
-          },
-          "type": "array"
-        },
-        "PatchOperation": {
-          "description": "JSON Patch single patch operation",
-          "oneOf": [
-            {
-              "$ref": "#/$defs/AddOperation",
-              "description": "'add' operation",
-              "properties": {
-                "op": {
-                  "const": "add",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "op"
-              ],
-              "type": "object"
-            },
-            {
-              "$ref": "#/$defs/RemoveOperation",
-              "description": "'remove' operation",
-              "properties": {
-                "op": {
-                  "const": "remove",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "op"
-              ],
-              "type": "object"
-            },
-            {
-              "$ref": "#/$defs/ReplaceOperation",
-              "description": "'replace' operation",
-              "properties": {
-                "op": {
-                  "const": "replace",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "op"
-              ],
-              "type": "object"
-            },
-            {
-              "$ref": "#/$defs/MoveOperation",
-              "description": "'move' operation",
-              "properties": {
-                "op": {
-                  "const": "move",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "op"
-              ],
-              "type": "object"
-            },
-            {
-              "$ref": "#/$defs/CopyOperation",
-              "description": "'copy' operation",
-              "properties": {
-                "op": {
-                  "const": "copy",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "op"
-              ],
-              "type": "object"
-            },
-            {
-              "$ref": "#/$defs/TestOperation",
-              "description": "'test' operation",
-              "properties": {
-                "op": {
-                  "const": "test",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "op"
-              ],
-              "type": "object"
-            }
           ]
         },
-        "RemoveOperation": {
-          "description": "JSON Patch 'remove' operation representation",
+        "CopyOperation": {
+          "description": "JSON Patch 'copy' operation representation",
+          "type": "object",
           "properties": {
-            "path": {
-              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "path"
-          ],
-          "type": "object"
-        },
-        "ReplaceOperation": {
-          "description": "JSON Patch 'replace' operation representation",
-          "properties": {
-            "path": {
-              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+            "from": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nto copy value from.",
               "type": "string"
             },
-            "value": {
-              "description": "Value to replace with."
+            "path": {
+              "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
+              "type": "string"
             }
           },
           "required": [
-            "path",
-            "value"
-          ],
-          "type": "object"
+            "from",
+            "path"
+          ]
         },
         "TestOperation": {
           "description": "JSON Patch 'test' operation representation",
+          "type": "object",
           "properties": {
             "path": {
               "description": "JSON-Pointer value [RFC6901](https://tools.ietf.org/html/rfc6901) that references a location\nwithin the target document where the operation is performed.",
@@ -265,35 +258,15 @@ expression: specs()
           "required": [
             "path",
             "value"
-          ],
-          "type": "object"
-        }
-      },
-      "properties": {
-        "author": {
-          "$ref": "#/$defs/Author"
+          ]
         },
-        "baseRev": {
-          "description": "The project revision the patch was built against.",
-          "format": "uint64",
-          "minimum": 0,
-          "type": "integer"
-        },
-        "label": {
-          "default": "",
-          "type": "string"
-        },
-        "layerRevs": {
-          "additionalProperties": {
-            "format": "uint64",
-            "minimum": 0,
-            "type": "integer"
-          },
-          "description": "Optional per-layer revisions the caller read; any mismatch makes the patch stale.",
-          "type": "object"
-        },
-        "ops": {
-          "$ref": "#/$defs/Patch"
+        "Author": {
+          "type": "string",
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ]
         }
       },
       "required": [
@@ -301,7 +274,34 @@ expression: specs()
         "ops",
         "author"
       ],
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "baseRev": {
+          "description": "The project revision the patch was built against.",
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "layerRevs": {
+          "description": "Optional per-layer revisions the caller read; any mismatch makes the patch stale.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "uint64",
+            "minimum": 0
+          }
+        },
+        "ops": {
+          "$ref": "#/$defs/Patch"
+        },
+        "author": {
+          "$ref": "#/$defs/Author"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        }
+      }
     }
   },
   {
@@ -312,29 +312,29 @@ expression: specs()
     "inputSchema": {
       "$defs": {
         "Holder": {
+          "type": "string",
           "enum": [
             "agent",
             "human"
-          ],
-          "type": "string"
-        }
-      },
-      "properties": {
-        "holder": {
-          "$ref": "#/$defs/Holder"
-        },
-        "layerIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+          ]
         }
       },
       "required": [
         "holder",
         "layerIds"
       ],
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "holder": {
+          "$ref": "#/$defs/Holder"
+        },
+        "layerIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   {
@@ -345,32 +345,32 @@ expression: specs()
     "inputSchema": {
       "$defs": {
         "Holder": {
+          "type": "string",
           "enum": [
             "agent",
             "human"
-          ],
-          "type": "string"
-        }
-      },
-      "properties": {
-        "holder": {
-          "$ref": "#/$defs/Holder"
-        },
-        "layerIds": {
-          "description": "Layers to release; omitted means every lock of the holder.",
-          "items": {
-            "type": "string"
-          },
-          "type": [
-            "array",
-            "null"
           ]
         }
       },
       "required": [
         "holder"
       ],
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "holder": {
+          "$ref": "#/$defs/Holder"
+        },
+        "layerIds": {
+          "description": "Layers to release; omitted means every lock of the holder.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   {
@@ -381,22 +381,22 @@ expression: specs()
     "inputSchema": {
       "$defs": {
         "Holder": {
+          "type": "string",
           "enum": [
             "agent",
             "human"
-          ],
-          "type": "string"
-        }
-      },
-      "properties": {
-        "holder": {
-          "$ref": "#/$defs/Holder"
+          ]
         }
       },
       "required": [
         "holder"
       ],
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "holder": {
+          "$ref": "#/$defs/Holder"
+        }
+      }
     }
   },
   {
@@ -408,65 +408,65 @@ expression: specs()
       "$defs": {
         "BriefQuestion": {
           "description": "A question the agent adds to the brief, stating which fields its answer affects.",
+          "type": "object",
           "properties": {
-            "affects": {
-              "description": "Brief fields or parts of the video the answer changes (never empty).",
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "answer": {
-              "description": "The user's answer, once given."
-            },
             "id": {
               "type": "string"
             },
             "text": {
               "type": "string"
+            },
+            "affects": {
+              "description": "Brief fields or parts of the video the answer changes (never empty).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "answer": {
+              "description": "The user's answer, once given."
             }
           },
           "required": [
             "id",
             "text",
             "affects"
-          ],
-          "type": "object"
-        }
-      },
-      "additionalProperties": false,
-      "description": "`brief propose`: inferred values only. Fields the user already set are kept as they are.",
-      "properties": {
-        "auto": {
-          "default": false,
-          "description": "The user asked for no questions or autopilot is on: mark the brief auto, so planning can\nstart; the studio shows it afterwards as an editable card.",
-          "type": "boolean"
-        },
-        "confidence": {
-          "additionalProperties": {
-            "format": "double",
-            "type": "number"
-          },
-          "description": "Optional confidence (0 to 1) per field; 0.5 when omitted.",
-          "type": "object"
-        },
-        "fields": {
-          "additionalProperties": true,
-          "description": "Field name (goal, cta, audience, platform, aspect, length, pacing, look, voice, ...) to\nthe inferred value.",
-          "type": "object"
-        },
-        "questions": {
-          "description": "At most three dynamic questions, each naming what it affects.",
-          "items": {
-            "$ref": "#/$defs/BriefQuestion"
-          },
-          "type": "array"
+          ]
         }
       },
       "required": [
         "fields"
       ],
-      "type": "object"
+      "description": "`brief propose`: inferred values only. Fields the user already set are kept as they are.",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "description": "Field name (goal, cta, audience, platform, aspect, length, pacing, look, voice, ...) to\nthe inferred value.",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "confidence": {
+          "description": "Optional confidence (0 to 1) per field; 0.5 when omitted.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "questions": {
+          "description": "At most three dynamic questions, each naming what it affects.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BriefQuestion"
+          }
+        },
+        "auto": {
+          "description": "The user asked for no questions or autopilot is on: mark the brief auto, so planning can\nstart; the studio shows it afterwards as an editable card.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false
     }
   },
   {
@@ -479,12 +479,12 @@ expression: specs()
       "properties": {
         "timeoutSecs": {
           "description": "Seconds to block (default 20, at most 25); 0 checks once.",
-          "format": "uint64",
-          "minimum": 0,
           "type": [
             "integer",
             "null"
-          ]
+          ],
+          "format": "uint64",
+          "minimum": 0
         }
       },
       "type": "object"
@@ -496,19 +496,19 @@ expression: specs()
     "description": "Only what changed in the brief since a rev you read; patch only layers whose briefDeps changed.",
     "cap": 4096,
     "inputSchema": {
-      "additionalProperties": false,
-      "properties": {
-        "since": {
-          "description": "The rev of the brief the agent last read (from `brief get` or `brief wait`).",
-          "format": "uint64",
-          "minimum": 0,
-          "type": "integer"
-        }
-      },
       "required": [
         "since"
       ],
-      "type": "object"
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "since": {
+          "description": "The rev of the brief the agent last read (from `brief get` or `brief wait`).",
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        }
+      }
     }
   },
   {
@@ -518,8 +518,8 @@ expression: specs()
     "cap": 4096,
     "inputSchema": {
       "additionalProperties": false,
-      "description": "`status` takes no input.",
-      "type": "object"
+      "type": "object",
+      "description": "`status` takes no input."
     }
   },
   {
@@ -530,19 +530,19 @@ expression: specs()
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
+        "query": {
+          "description": "Words to look for in ids, titles, tags and bodies; empty lists every file.",
+          "type": "string",
+          "default": ""
+        },
         "limit": {
           "description": "Most hits to return (default 5, at most 12).",
-          "format": "uint",
-          "minimum": 0,
           "type": [
             "integer",
             "null"
-          ]
-        },
-        "query": {
-          "default": "",
-          "description": "Words to look for in ids, titles, tags and bodies; empty lists every file.",
-          "type": "string"
+          ],
+          "format": "uint",
+          "minimum": 0
         }
       },
       "type": "object"
@@ -554,16 +554,16 @@ expression: specs()
     "description": "One taste file in full: direction with concrete numbers.",
     "cap": 3072,
     "inputSchema": {
+      "required": [
+        "id"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
-      },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -582,16 +582,16 @@ expression: specs()
     "description": "One look with all its design tokens (colors, fonts, type scale, motion).",
     "cap": 2048,
     "inputSchema": {
+      "required": [
+        "id"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
-      },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -602,19 +602,19 @@ expression: specs()
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
+        "query": {
+          "description": "Words to look for in ids, names, tags and use-when lines; empty lists every recipe.",
+          "type": "string",
+          "default": ""
+        },
         "limit": {
           "description": "Most hits to return (default 5, at most 12).",
-          "format": "uint",
-          "minimum": 0,
           "type": [
             "integer",
             "null"
-          ]
-        },
-        "query": {
-          "default": "",
-          "description": "Words to look for in ids, names, tags and use-when lines; empty lists every recipe.",
-          "type": "string"
+          ],
+          "format": "uint",
+          "minimum": 0
         }
       },
       "type": "object"
@@ -626,16 +626,16 @@ expression: specs()
     "description": "One recipe in full: slots, layers and props.",
     "cap": 6144,
     "inputSchema": {
+      "required": [
+        "id"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
-      },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -649,27 +649,29 @@ expression: specs()
           "description": "Vetting status of a source.",
           "oneOf": [
             {
+              "type": "string",
               "enum": [
                 "unverified"
-              ],
-              "type": "string"
+              ]
             },
             {
-              "const": "vetted",
               "description": "Vetting ran and passed; the license was read from the source.",
-              "type": "string"
+              "type": "string",
+              "const": "vetted"
             },
             {
-              "const": "rejected",
               "description": "Vetting ran and found a blocker.",
-              "type": "string"
+              "type": "string",
+              "const": "rejected"
             }
           ]
         }
       },
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "status": {
+          "description": "Only sources with this status.",
           "anyOf": [
             {
               "$ref": "#/$defs/SourceStatus"
@@ -677,11 +679,9 @@ expression: specs()
             {
               "type": "null"
             }
-          ],
-          "description": "Only sources with this status."
+          ]
         }
-      },
-      "type": "object"
+      }
     }
   },
   {
@@ -690,22 +690,22 @@ expression: specs()
     "description": "Register a source (unverified, disabled, license unknown until vetted). Never guess a repo: leave it out when unknown.",
     "cap": 1024,
     "inputSchema": {
+      "required": [
+        "id",
+        "kind"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "description": "Lowercase id: letters, digits and dashes.",
           "type": "string"
         },
-        "kind": {
-          "type": "string"
-        },
-        "license": {
-          "default": "",
-          "description": "The license the listing claims (recorded as a claim, not a finding).",
-          "type": "string"
-        },
         "name": {
-          "default": "",
+          "type": "string",
+          "default": ""
+        },
+        "kind": {
           "type": "string"
         },
         "repo": {
@@ -714,13 +714,13 @@ expression: specs()
             "string",
             "null"
           ]
+        },
+        "license": {
+          "description": "The license the listing claims (recorded as a claim, not a finding).",
+          "type": "string",
+          "default": ""
         }
-      },
-      "required": [
-        "id",
-        "kind"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -729,23 +729,23 @@ expression: specs()
     "description": "Vet a source without running its code: shallow read-only fetch into quarantine (or `from` a local folder), license read from its text, malware-lure and dependency checks. Pass: vetted and enabled; blocker: rejected; unknown license: stays unverified. Pins the result in sources.lock.",
     "cap": 4096,
     "inputSchema": {
+      "required": [
+        "id"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "from": {
           "description": "Vet a local folder instead of cloning the repo (fixtures, manual downloads).",
           "type": [
             "string",
             "null"
           ]
-        },
-        "id": {
-          "type": "string"
         }
-      },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -757,6 +757,7 @@ expression: specs()
       "$defs": {
         "AssetKind": {
           "description": "What an asset is.",
+          "type": "string",
           "enum": [
             "remotion-clip",
             "react-component",
@@ -770,52 +771,32 @@ expression: specs()
             "icon",
             "ae-reference",
             "premiere-reference"
-          ],
-          "type": "string"
-        },
-        "Grade": {
-          "enum": [
-            "A",
-            "B",
-            "C"
-          ],
-          "type": "string"
+          ]
         },
         "LicenseMode": {
           "description": "License mode (spec 7.6): a brief field that search, recipes and export respect.",
+          "type": "string",
           "enum": [
             "commercial-safe",
             "personal",
             "any"
-          ],
-          "type": "string"
+          ]
+        },
+        "Grade": {
+          "type": "string",
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ]
         }
       },
       "additionalProperties": false,
+      "type": "object",
       "properties": {
-        "aspect": {
-          "description": "For example `9:16`; assets with no aspects listed match any.",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "collection": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "grade": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Grade"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Lowest grade accepted (A is best)."
+        "query": {
+          "type": "string",
+          "default": ""
         },
         "kind": {
           "anyOf": [
@@ -827,16 +808,21 @@ expression: specs()
             }
           ]
         },
-        "limit": {
-          "description": "At most 5.",
-          "format": "uint",
-          "minimum": 0,
+        "tag": {
           "type": [
-            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "aspect": {
+          "description": "For example `9:16`; assets with no aspects listed match any.",
+          "type": [
+            "string",
             "null"
           ]
         },
         "mode": {
+          "description": "Default: the brief's licenseMode, else commercial-safe.",
           "anyOf": [
             {
               "$ref": "#/$defs/LicenseMode"
@@ -844,21 +830,35 @@ expression: specs()
             {
               "type": "null"
             }
-          ],
-          "description": "Default: the brief's licenseMode, else commercial-safe."
+          ]
         },
-        "query": {
-          "default": "",
-          "type": "string"
+        "grade": {
+          "description": "Lowest grade accepted (A is best).",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Grade"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
-        "tag": {
+        "collection": {
           "type": [
             "string",
             "null"
           ]
+        },
+        "limit": {
+          "description": "At most 5.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint",
+          "minimum": 0
         }
-      },
-      "type": "object"
+      }
     }
   },
   {
@@ -867,16 +867,16 @@ expression: specs()
     "description": "Step 2: one asset card. At most 2 distinct cards per decision (E_BUDGET after).",
     "cap": 3072,
     "inputSchema": {
+      "required": [
+        "id"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
-      },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -885,16 +885,16 @@ expression: specs()
     "description": "Step 3: props, animation primitives, imports and the outline with line ranges (about 600 tokens).",
     "cap": 2656,
     "inputSchema": {
+      "required": [
+        "id"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
-      },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -903,7 +903,12 @@ expression: specs()
     "description": "Step 4: one symbol's source from the outline (about 800 tokens).",
     "cap": 3456,
     "inputSchema": {
+      "required": [
+        "id",
+        "symbol"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
@@ -912,12 +917,7 @@ expression: specs()
           "description": "Symbol name from the skeleton's outline.",
           "type": "string"
         }
-      },
-      "required": [
-        "id",
-        "symbol"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -926,7 +926,12 @@ expression: specs()
     "description": "Step 5: the full source, only with a one-line reason; once per decision.",
     "cap": 16384,
     "inputSchema": {
+      "required": [
+        "id",
+        "reason"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
@@ -935,12 +940,7 @@ expression: specs()
           "description": "Why the card, skeleton and slice are not enough (one line, at least 10 characters).",
           "type": "string"
         }
-      },
-      "required": [
-        "id",
-        "reason"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -952,17 +952,19 @@ expression: specs()
       "$defs": {
         "LicenseMode": {
           "description": "License mode (spec 7.6): a brief field that search, recipes and export respect.",
+          "type": "string",
           "enum": [
             "commercial-safe",
             "personal",
             "any"
-          ],
-          "type": "string"
+          ]
         }
       },
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "mode": {
+          "description": "Check against this mode instead of the brief's.",
           "anyOf": [
             {
               "$ref": "#/$defs/LicenseMode"
@@ -970,11 +972,9 @@ expression: specs()
             {
               "type": "null"
             }
-          ],
-          "description": "Check against this mode instead of the brief's."
+          ]
         }
-      },
-      "type": "object"
+      }
     }
   },
   {
@@ -983,16 +983,16 @@ expression: specs()
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",
     "cap": 4096,
     "inputSchema": {
+      "required": [
+        "id"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
-      },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1011,22 +1011,22 @@ expression: specs()
     "description": "Re-theme the project with a look: one write, layers keep their token refs. Returns the previous look and the layers that change; dryRun only previews.",
     "cap": 2048,
     "inputSchema": {
-      "additionalProperties": false,
-      "properties": {
-        "dryRun": {
-          "default": false,
-          "description": "Only preview the impact; write nothing.",
-          "type": "boolean"
-        },
-        "look": {
-          "description": "Look id (from `look list`).",
-          "type": "string"
-        }
-      },
       "required": [
         "look"
       ],
-      "type": "object"
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "look": {
+          "description": "Look id (from `look list`).",
+          "type": "string"
+        },
+        "dryRun": {
+          "description": "Only preview the impact; write nothing.",
+          "type": "boolean",
+          "default": false
+        }
+      }
     }
   },
   {
@@ -1035,19 +1035,40 @@ expression: specs()
     "description": "Fill a recipe's slots: adds its named layers (tokens, provenance, briefDeps) as one revision. Returns the layer ids.",
     "cap": 1024,
     "inputSchema": {
+      "required": [
+        "recipe"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
+        "recipe": {
+          "description": "Recipe id (from `recipe search`).",
+          "type": "string"
+        },
         "at": {
-          "default": 0.0,
           "description": "Scene start in seconds.",
+          "type": "number",
           "format": "double",
-          "type": "number"
+          "default": 0.0
         },
         "duration": {
           "description": "Scene duration in seconds; the recipe default when omitted.",
-          "format": "double",
           "type": [
             "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "slots": {
+          "description": "Slot name to value (text, number, list of text, or a source id).",
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
+        "prefix": {
+          "description": "Layer id prefix; layer ids are `<prefix>-<layer name>`. Defaults to the recipe id, with\n`-2`, `-3` ... added when that is taken.",
+          "type": [
+            "string",
             "null"
           ]
         },
@@ -1057,29 +1078,8 @@ expression: specs()
             "string",
             "null"
           ]
-        },
-        "prefix": {
-          "description": "Layer id prefix; layer ids are `<prefix>-<layer name>`. Defaults to the recipe id, with\n`-2`, `-3` ... added when that is taken.",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "recipe": {
-          "description": "Recipe id (from `recipe search`).",
-          "type": "string"
-        },
-        "slots": {
-          "additionalProperties": true,
-          "default": {},
-          "description": "Slot name to value (text, number, list of text, or a source id).",
-          "type": "object"
         }
-      },
-      "required": [
-        "recipe"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1089,8 +1089,8 @@ expression: specs()
     "cap": 4096,
     "inputSchema": {
       "additionalProperties": false,
-      "description": "`status` takes no input.",
-      "type": "object"
+      "type": "object",
+      "description": "`status` takes no input."
     }
   },
   {
@@ -1100,8 +1100,8 @@ expression: specs()
     "cap": 4096,
     "inputSchema": {
       "additionalProperties": false,
-      "description": "`status` takes no input.",
-      "type": "object"
+      "type": "object",
+      "description": "`status` takes no input."
     }
   },
   {
@@ -1111,8 +1111,8 @@ expression: specs()
     "cap": 4096,
     "inputSchema": {
       "additionalProperties": false,
-      "description": "`status` takes no input.",
-      "type": "object"
+      "type": "object",
+      "description": "`status` takes no input."
     }
   },
   {
@@ -1140,17 +1140,17 @@ expression: specs()
     "description": "Import a media file by absolute path: probe, hash, 720p proxy and 48 kHz audio into the cache, then register it as a project source. Same content twice returns the existing source.",
     "cap": 1024,
     "inputSchema": {
+      "required": [
+        "path"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "path": {
           "description": "Absolute path of the media file.",
           "type": "string"
         }
-      },
-      "required": [
-        "path"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1159,17 +1159,17 @@ expression: specs()
     "description": "Transcribe an imported source with word timestamps; the transcript stays on disk (read it with transcript_get).",
     "cap": 1024,
     "inputSchema": {
+      "required": [
+        "source"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "source": {
           "description": "Source id (from `import`).",
           "type": "string"
         }
-      },
-      "required": [
-        "source"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1178,17 +1178,17 @@ expression: specs()
     "description": "The packed transcript of a source: one line per phrase (#firstWord start-end text, fillers in parentheses) or silence (~ start-end silence).",
     "cap": 16384,
     "inputSchema": {
+      "required": [
+        "source"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "source": {
           "description": "Source id (from `import`).",
           "type": "string"
         }
-      },
-      "required": [
-        "source"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1197,17 +1197,17 @@ expression: specs()
     "description": "Cut candidates for a source (silence, filler, retake) on word boundaries with confidence, plus scene changes. Apply with cut_apply.",
     "cap": 8192,
     "inputSchema": {
+      "required": [
+        "source"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "source": {
           "description": "Source id (from `import`).",
           "type": "string"
         }
-      },
-      "required": [
-        "source"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1216,24 +1216,24 @@ expression: specs()
     "description": "Apply suggested cuts (ids, or all when empty): the source's footage on the video track becomes the kept segments, end to end, as one revision.",
     "cap": 2048,
     "inputSchema": {
-      "additionalProperties": false,
-      "properties": {
-        "ids": {
-          "default": [],
-          "description": "Cut ids from `cut suggest`; empty applies every suggested cut.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "source": {
-          "type": "string"
-        }
-      },
       "required": [
         "source"
       ],
-      "type": "object"
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "ids": {
+          "description": "Cut ids from `cut suggest`; empty applies every suggested cut.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      }
     }
   },
   {
@@ -1242,7 +1242,12 @@ expression: specs()
     "description": "Adaptation rung 3: a project-local copy of an asset with colours lifted into tokens, data-ck-layer instrumentation and a props schema; provenance recorded and the asset added to assetsUsed. Refused when the license mode does not allow it.",
     "cap": 2048,
     "inputSchema": {
+      "required": [
+        "id",
+        "name"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "id": {
           "description": "Asset id from `assets search`.",
@@ -1252,12 +1257,7 @@ expression: specs()
           "description": "Folder name for the copy (lowercase, digits, dashes).",
           "type": "string"
         }
-      },
-      "required": [
-        "id",
-        "name"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1270,48 +1270,48 @@ expression: specs()
         "Preset": {
           "oneOf": [
             {
-              "const": "source",
               "description": "The project's own frame size.",
-              "type": "string"
+              "type": "string",
+              "const": "source"
             },
             {
-              "const": "youtube",
               "description": "1920x1080.",
-              "type": "string"
+              "type": "string",
+              "const": "youtube"
             },
             {
-              "const": "tiktok",
               "description": "1080x1920.",
-              "type": "string"
+              "type": "string",
+              "const": "tiktok"
             },
             {
-              "const": "reels",
               "description": "1080x1920.",
-              "type": "string"
+              "type": "string",
+              "const": "reels"
             },
             {
-              "const": "shorts",
               "description": "1080x1920.",
-              "type": "string"
+              "type": "string",
+              "const": "shorts"
             }
           ]
         }
       },
       "additionalProperties": false,
+      "type": "object",
       "properties": {
+        "preset": {
+          "$ref": "#/$defs/Preset",
+          "default": "source"
+        },
         "out": {
           "description": "Output path relative to the project folder; default `exports/<project>-<preset>.mp4`.",
           "type": [
             "string",
             "null"
           ]
-        },
-        "preset": {
-          "$ref": "#/$defs/Preset",
-          "default": "source"
         }
-      },
-      "type": "object"
+      }
     }
   },
   {
@@ -1322,12 +1322,13 @@ expression: specs()
     "inputSchema": {
       "$defs": {
         "ScriptLine": {
-          "additionalProperties": false,
+          "type": "object",
           "properties": {
             "text": {
               "type": "string"
             },
             "window": {
+              "description": "Target window; estimated from the word count when absent.",
               "anyOf": [
                 {
                   "$ref": "#/$defs/TimeRange"
@@ -1335,52 +1336,55 @@ expression: specs()
                 {
                   "type": "null"
                 }
-              ],
-              "description": "Target window; estimated from the word count when absent."
+              ]
             }
           },
+          "additionalProperties": false,
           "required": [
             "text"
-          ],
-          "type": "object"
+          ]
         },
         "TimeRange": {
           "description": "A half-open time range in seconds, `[start, end)`.",
+          "type": "object",
           "properties": {
-            "end": {
-              "format": "double",
-              "type": "number"
-            },
             "start": {
-              "format": "double",
-              "type": "number"
+              "type": "number",
+              "format": "double"
+            },
+            "end": {
+              "type": "number",
+              "format": "double"
             }
           },
           "required": [
             "start",
             "end"
-          ],
-          "type": "object"
+          ]
         },
         "VoiceMode": {
+          "type": "string",
           "enum": [
             "ai",
             "recorded",
             "cloned"
-          ],
-          "type": "string"
+          ]
         }
       },
-      "additionalProperties": false,
+      "required": [
+        "lines"
+      ],
+      "type": "object",
       "properties": {
         "lines": {
           "description": "One slot per line, in order. Replaces the current slots; a slot whose text and mode are\nunchanged keeps its takes.",
+          "type": "array",
           "items": {
             "$ref": "#/$defs/ScriptLine"
-          },
-          "type": "array"
+          }
         },
         "mode": {
+          "description": "Mode for new slots (default ai).",
           "anyOf": [
             {
               "$ref": "#/$defs/VoiceMode"
@@ -1388,14 +1392,10 @@ expression: specs()
             {
               "type": "null"
             }
-          ],
-          "description": "Mode for new slots (default ai)."
+          ]
         }
       },
-      "required": [
-        "lines"
-      ],
-      "type": "object"
+      "additionalProperties": false
     }
   },
   {
@@ -1405,26 +1405,37 @@ expression: specs()
     "cap": 1024,
     "inputSchema": {
       "$defs": {
-        "Author": {
-          "enum": [
-            "human",
-            "agent",
-            "voice"
-          ],
-          "type": "string"
-        },
         "VoiceMode": {
+          "type": "string",
           "enum": [
             "ai",
             "recorded",
             "cloned"
-          ],
-          "type": "string"
+          ]
+        },
+        "Author": {
+          "type": "string",
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ]
         }
       },
-      "additionalProperties": false,
+      "required": [
+        "slot",
+        "mode"
+      ],
+      "type": "object",
       "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/VoiceMode"
+        },
         "author": {
+          "description": "Who switches it: the agent (default) or the human (the studio badge).",
           "anyOf": [
             {
               "$ref": "#/$defs/Author"
@@ -1432,21 +1443,10 @@ expression: specs()
             {
               "type": "null"
             }
-          ],
-          "description": "Who switches it: the agent (default) or the human (the studio badge)."
-        },
-        "mode": {
-          "$ref": "#/$defs/VoiceMode"
-        },
-        "slot": {
-          "type": "string"
+          ]
         }
       },
-      "required": [
-        "slot",
-        "mode"
-      ],
-      "type": "object"
+      "additionalProperties": false
     }
   },
   {
@@ -1455,16 +1455,16 @@ expression: specs()
     "description": "Generate speech for an ai or cloned slot (cached by text and voice); the take is trimmed, normalized and fit to the window. placeholder=true means no audio could be made: the studio plays a labeled browser voice.",
     "cap": 1024,
     "inputSchema": {
+      "required": [
+        "slot"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "slot": {
           "type": "string"
         }
-      },
-      "required": [
-        "slot"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1473,7 +1473,11 @@ expression: specs()
     "description": "Clone the speaker's voice from a take recorded in the studio that the user consented to (default the active take); the slot becomes cloned. Uploaded or generated audio is refused.",
     "cap": 1024,
     "inputSchema": {
+      "required": [
+        "slot"
+      ],
       "additionalProperties": false,
+      "type": "object",
       "properties": {
         "slot": {
           "type": "string"
@@ -1485,11 +1489,7 @@ expression: specs()
             "null"
           ]
         }
-      },
-      "required": [
-        "slot"
-      ],
-      "type": "object"
+      }
     }
   },
   {
@@ -1510,20 +1510,6 @@ expression: specs()
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
-        "id": {
-          "description": "Keep waiting for the answer to this earlier question.",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "options": {
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
         "question": {
           "description": "The question; omit it with `id` to keep waiting on an earlier one.",
           "type": [
@@ -1531,14 +1517,28 @@ expression: specs()
             "null"
           ]
         },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "id": {
+          "description": "Keep waiting for the answer to this earlier question.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "timeoutSecs": {
           "description": "Seconds to block (default 20, at most 25); 0 checks once.",
-          "format": "uint64",
-          "minimum": 0,
           "type": [
             "integer",
             "null"
-          ]
+          ],
+          "format": "uint64",
+          "minimum": 0
         }
       },
       "type": "object"
@@ -1563,9 +1563,9 @@ expression: specs()
       "additionalProperties": false,
       "properties": {
         "all": {
-          "default": false,
           "description": "Include resolved comments.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       },
       "type": "object"
@@ -1580,8 +1580,29 @@ expression: specs()
       "$defs": {
         "Anchor": {
           "description": "Where a comment points: a time range, a layer, a property and/or a point on the frame.",
+          "type": "object",
           "properties": {
+            "tStart": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            },
+            "tEnd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            },
             "layerId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "propPath": {
               "type": [
                 "string",
                 "null"
@@ -1596,63 +1617,49 @@ expression: specs()
                   "type": "null"
                 }
               ]
-            },
-            "propPath": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "tEnd": {
-              "format": "double",
-              "type": [
-                "number",
-                "null"
-              ]
-            },
-            "tStart": {
-              "format": "double",
-              "type": [
-                "number",
-                "null"
-              ]
             }
-          },
-          "type": "object"
-        },
-        "Author": {
-          "enum": [
-            "human",
-            "agent",
-            "voice"
-          ],
-          "type": "string"
+          }
         },
         "Point": {
+          "type": "object",
           "properties": {
             "x": {
-              "format": "double",
-              "type": "number"
+              "type": "number",
+              "format": "double"
             },
             "y": {
-              "format": "double",
-              "type": "number"
+              "type": "number",
+              "format": "double"
             }
           },
           "required": [
             "x",
             "y"
-          ],
-          "type": "object"
+          ]
+        },
+        "Author": {
+          "type": "string",
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ]
         }
       },
-      "additionalProperties": false,
+      "required": [
+        "text"
+      ],
+      "type": "object",
       "properties": {
+        "text": {
+          "type": "string"
+        },
         "anchor": {
           "$ref": "#/$defs/Anchor",
           "default": {}
         },
         "author": {
+          "description": "Who writes it: the agent (uncertainties) or the human (the studio). Default agent.",
           "anyOf": [
             {
               "$ref": "#/$defs/Author"
@@ -1660,17 +1667,10 @@ expression: specs()
             {
               "type": "null"
             }
-          ],
-          "description": "Who writes it: the agent (uncertainties) or the human (the studio). Default agent."
-        },
-        "text": {
-          "type": "string"
+          ]
         }
       },
-      "required": [
-        "text"
-      ],
-      "type": "object"
+      "additionalProperties": false
     }
   },
   {
@@ -1681,16 +1681,36 @@ expression: specs()
     "inputSchema": {
       "$defs": {
         "Author": {
+          "type": "string",
           "enum": [
             "human",
             "agent",
             "voice"
-          ],
-          "type": "string"
+          ]
         }
       },
-      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "scope": {
+          "description": "Layers the agent will change besides the anchored one (replaces the declared scope).",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
         "author": {
           "anyOf": [
             {
@@ -1700,29 +1720,9 @@ expression: specs()
               "type": "null"
             }
           ]
-        },
-        "id": {
-          "type": "string"
-        },
-        "scope": {
-          "description": "Layers the agent will change besides the anchored one (replaces the declared scope).",
-          "items": {
-            "type": "string"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        },
-        "text": {
-          "type": "string"
         }
       },
-      "required": [
-        "id",
-        "text"
-      ],
-      "type": "object"
+      "additionalProperties": false
     }
   },
   {
@@ -1733,26 +1733,19 @@ expression: specs()
     "inputSchema": {
       "$defs": {
         "Author": {
+          "type": "string",
           "enum": [
             "human",
             "agent",
             "voice"
-          ],
-          "type": "string"
+          ]
         }
       },
-      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "type": "object",
       "properties": {
-        "author": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Author"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "id": {
           "type": "string"
         },
@@ -1762,12 +1755,19 @@ expression: specs()
             "string",
             "null"
           ]
+        },
+        "author": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Author"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
-      "required": [
-        "id"
-      ],
-      "type": "object"
+      "additionalProperties": false
     }
   },
   {
@@ -1780,21 +1780,21 @@ expression: specs()
       "properties": {
         "since": {
           "description": "Report revisions after this rev (from `handoff` or the last `wait`); omitted means the\ncurrent rev, so only new changes count.",
-          "format": "uint64",
-          "minimum": 0,
           "type": [
             "integer",
             "null"
-          ]
+          ],
+          "format": "uint64",
+          "minimum": 0
         },
         "timeoutSecs": {
           "description": "Seconds to block (default 20, at most 25); 0 checks once.",
-          "format": "uint64",
-          "minimum": 0,
           "type": [
             "integer",
             "null"
-          ]
+          ],
+          "format": "uint64",
+          "minimum": 0
         }
       },
       "type": "object"

@@ -1,0 +1,249 @@
+{
+  "file": "src/components/pixel-candlestick-ohlc/PixelCandlestickOhlc.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "useCurrentFrame"
+      ]
+    },
+    {
+      "from": "../../pixel-kit",
+      "names": [
+        "PixelStage",
+        "PixelDither",
+        "CrtScanlines",
+        "CrtVignette",
+        "CrtNoise",
+        "BitmapText",
+        "cyclePalette",
+        "lerpRGB",
+        "rgb",
+        "quantizeToCell",
+        "seed",
+        "RGB"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "PixelCandlestickOhlcProps",
+    "defaultPixelCandlestickOhlcProps",
+    "PixelCandlestickOhlc",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "PixelCandlestickOhlcProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "gridColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bullColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "bearColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "candleCount",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "volatility",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "cycleSpeed",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "IW",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "IH",
+      "kind": "const",
+      "exported": false,
+      "startLine": 19,
+      "endLine": 19
+    },
+    {
+      "name": "snap",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "PLOT_X0",
+      "kind": "const",
+      "exported": false,
+      "startLine": 23,
+      "endLine": 23
+    },
+    {
+      "name": "PLOT_X1",
+      "kind": "const",
+      "exported": false,
+      "startLine": 24,
+      "endLine": 24
+    },
+    {
+      "name": "PLOT_Y0",
+      "kind": "const",
+      "exported": false,
+      "startLine": 25,
+      "endLine": 25
+    },
+    {
+      "name": "PLOT_Y1",
+      "kind": "const",
+      "exported": false,
+      "startLine": 26,
+      "endLine": 26
+    },
+    {
+      "name": "PLOT_W",
+      "kind": "const",
+      "exported": false,
+      "startLine": 27,
+      "endLine": 27
+    },
+    {
+      "name": "PLOT_H",
+      "kind": "const",
+      "exported": false,
+      "startLine": 28,
+      "endLine": 28
+    },
+    {
+      "name": "hexToRgb",
+      "kind": "const",
+      "exported": false,
+      "startLine": 30,
+      "endLine": 33
+    },
+    {
+      "name": "PixelCandlestickOhlcProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 35,
+      "endLine": 45
+    },
+    {
+      "name": "defaultPixelCandlestickOhlcProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 47,
+      "endLine": 59
+    },
+    {
+      "name": "Ohlc",
+      "kind": "type",
+      "exported": false,
+      "startLine": 61,
+      "endLine": 61
+    },
+    {
+      "name": "buildSeries",
+      "kind": "function",
+      "exported": false,
+      "startLine": 64,
+      "endLine": 88
+    },
+    {
+      "name": "seedFrac",
+      "kind": "const",
+      "exported": false,
+      "startLine": 90,
+      "endLine": 90
+    },
+    {
+      "name": "seedSigned",
+      "kind": "const",
+      "exported": false,
+      "startLine": 92,
+      "endLine": 92
+    },
+    {
+      "name": "priceToY",
+      "kind": "const",
+      "exported": false,
+      "startLine": 95,
+      "endLine": 95
+    },
+    {
+      "name": "PixelCandlestickOhlc",
+      "kind": "const",
+      "exported": true,
+      "startLine": 97,
+      "endLine": 245
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 247,
+      "endLine": 247
+    }
+  ],
+  "errors": 0
+}

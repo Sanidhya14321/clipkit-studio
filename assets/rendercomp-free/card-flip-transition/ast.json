@@ -1,0 +1,137 @@
+{
+  "file": "src/components/card-flip-transition/CardFlipTransition.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "CardFlipTransitionProps",
+    "defaultCardFlipTransitionProps",
+    "CardFlipTransition",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "CardFlipTransitionProps",
+      "fields": [
+        {
+          "name": "colorBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "colorAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "backdropColor",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 10,
+      "endLine": 10
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 11,
+      "endLine": 11
+    },
+    {
+      "name": "FONT_EN",
+      "kind": "const",
+      "exported": false,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "CardFlipTransitionProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 26
+    },
+    {
+      "name": "DEFAULT_BACKDROP",
+      "kind": "const",
+      "exported": false,
+      "startLine": 28,
+      "endLine": 28
+    },
+    {
+      "name": "defaultCardFlipTransitionProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 30,
+      "endLine": 37
+    },
+    {
+      "name": "Face",
+      "kind": "const",
+      "exported": false,
+      "startLine": 39,
+      "endLine": 70
+    },
+    {
+      "name": "CardFlipTransition",
+      "kind": "const",
+      "exported": true,
+      "startLine": 72,
+      "endLine": 155
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 157,
+      "endLine": 157
+    }
+  ],
+  "errors": 0
+}

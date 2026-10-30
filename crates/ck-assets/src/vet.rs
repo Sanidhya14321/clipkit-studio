@@ -285,11 +285,19 @@ pub fn scan(dir: &Path) -> CkResult<Vec<Finding>> {
                 ("atob(", "base64 decode"),
                 ("'base64')", "base64 decode"),
                 ("\"base64\")", "base64 decode"),
-                ("child_process", "child_process"),
             ] {
                 if lower.contains(needle) {
                     out.push(finding(Severity::Blocker, "dynamic-code", &rel, what));
                 }
+            }
+            // Build tooling often spawns processes; it is reported, never run.
+            if lower.contains("child_process") {
+                out.push(finding(
+                    Severity::Warning,
+                    "spawns-processes",
+                    &rel,
+                    "child_process",
+                ));
             }
             for (needle, what) in [("math.random(", "Math.random"), ("date.now(", "Date.now")] {
                 if lower.contains(needle) {
@@ -321,14 +329,26 @@ fn scan_package(rel: &str, text: &str, out: &mut Vec<Finding>) {
     };
     if let Some(scripts) = pkg.get("scripts").and_then(|s| s.as_object()) {
         for name in INSTALL_SCRIPTS {
-            if scripts.contains_key(*name) {
-                out.push(finding(
-                    Severity::Blocker,
-                    "install-script",
-                    rel,
-                    format!("`{name}` script"),
-                ));
-            }
+            let Some(body) = scripts.get(*name).and_then(|b| b.as_str()) else {
+                continue;
+            };
+            // Spec 7.6 names obfuscated install scripts as the lure; a plain one is reported
+            // (ck never runs it either way).
+            let lower = body.to_lowercase();
+            let obfuscated = ["eval", "base64", "curl", "wget", "http", "\\x", "atob"]
+                .iter()
+                .any(|m| lower.contains(m));
+            let severity = if obfuscated {
+                Severity::Blocker
+            } else {
+                Severity::Warning
+            };
+            out.push(finding(
+                severity,
+                "install-script",
+                rel,
+                format!("`{name}`: {body}"),
+            ));
         }
     }
     for table in [
@@ -477,7 +497,10 @@ pub fn vet(hub: &Hub, req: &VetRequest) -> CkResult<VetResult> {
                 ));
             }
             std::fs::create_dir_all(&dest).map_err(|e| io(&dest, e))?;
-            copy_local(&from, &dest, &mut findings)?;
+            if let Err(e) = copy_local(&from, &dest, &mut findings) {
+                clear(&dest)?;
+                return Err(e);
+            }
             format!("local-{}", &tree_hash(&dest)?[..16])
         }
         (None, Some(repo)) => {
@@ -489,6 +512,9 @@ pub fn vet(hub: &Hub, req: &VetRequest) -> CkResult<VetResult> {
             std::fs::create_dir_all(&dest).map_err(|e| io(&dest, e))?;
             let copied = copy_local(&staged, &dest, &mut findings);
             clear(&staged)?;
+            if copied.is_err() {
+                clear(&dest)?;
+            }
             copied?;
             commit
         }

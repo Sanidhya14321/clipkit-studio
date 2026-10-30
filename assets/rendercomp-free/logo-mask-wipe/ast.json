@@ -1,0 +1,120 @@
+{
+  "file": "src/components/logo-mask-wipe/LogoMaskWipe.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "LogoMaskWipeProps",
+    "defaultLogoMaskWipeProps",
+    "LogoMaskWipe",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "LogoMaskWipeProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "monogram",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "brandText",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "LogoMaskWipeProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 21
+    },
+    {
+      "name": "defaultLogoMaskWipeProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 23,
+      "endLine": 29
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 31,
+      "endLine": 31
+    },
+    {
+      "name": "LogoMaskWipe",
+      "kind": "const",
+      "exported": true,
+      "startLine": 33,
+      "endLine": 210
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 212,
+      "endLine": 212
+    }
+  ],
+  "errors": 0
+}

@@ -1,0 +1,142 @@
+{
+  "file": "src/components/shatter-reveal/ShatterReveal.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Easing",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "ShatterRevealProps",
+    "defaultShatterRevealProps",
+    "ShatterReveal",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "ShatterRevealProps",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "pieces",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "spread",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "tileBackground",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "seededRandom",
+      "kind": "function",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 26
+    },
+    {
+      "name": "ShatterRevealProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 28,
+      "endLine": 45
+    },
+    {
+      "name": "defaultShatterRevealProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 47,
+      "endLine": 57
+    },
+    {
+      "name": "ShatterReveal",
+      "kind": "const",
+      "exported": true,
+      "startLine": 59,
+      "endLine": 227
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 229,
+      "endLine": 229
+    }
+  ],
+  "errors": 0
+}

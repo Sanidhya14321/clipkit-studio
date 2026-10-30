@@ -1,0 +1,143 @@
+{
+  "file": "src/components/brush-stroke-reveal/BrushStrokeReveal.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Easing",
+        "interpolate",
+        "useCurrentFrame"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "BrushStrokeRevealProps",
+    "defaultBrushStrokeRevealProps",
+    "BrushStrokeReveal",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "BrushStrokeRevealProps",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "strokes",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "direction",
+          "type": "\"left\" | \"right\"",
+          "optional": true
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 10,
+      "endLine": 10
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 11,
+      "endLine": 11
+    },
+    {
+      "name": "FONT_STACK",
+      "kind": "const",
+      "exported": false,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "EASE_OUT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "BrushStrokeRevealProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 18,
+      "endLine": 33
+    },
+    {
+      "name": "defaultBrushStrokeRevealProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 35,
+      "endLine": 43
+    },
+    {
+      "name": "BrushReveal",
+      "kind": "const",
+      "exported": false,
+      "startLine": 51,
+      "endLine": 113,
+      "doc": "Inlined brush-stroke reveal atom. Splits children into `strokes` horizontal bands; each band is clipped to its slice and revealed with a slightly staggered scaleX wipe, so the content appears to be painted on by successive brush passes."
+    },
+    {
+      "name": "BrushStrokeReveal",
+      "kind": "const",
+      "exported": true,
+      "startLine": 115,
+      "endLine": 188
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 190,
+      "endLine": 190
+    }
+  ],
+  "errors": 0
+}

@@ -8,6 +8,8 @@ The taste files and looks below are built into `ck`; this folder is their source
 - `ck taste read <id>`: one taste file in full.
 - `ck look list`: the looks in short. `ck look get <id>`: one look with all its tokens.
 - MCP twins: `taste_search`, `taste_read`, `look_list`, `look_get`.
+- `ck assets search "<words>"`: top 5 cards from vetted sources (license mode applies); then
+  `ck assets card|skeleton|slice <id>`; full source only with `--reason`, once per decision.
 
 ## Categories and counts
 | Category | Count | Folder |
@@ -15,7 +17,7 @@ The taste files and looks below are built into `ck`; this folder is their source
 | Taste files | 12 | `taste/` |
 | Looks | 4 | `looks/` |
 | Recipes | 10 | `recipes/` |
-| Cards | 0 (Phase 8) | `<source>/` |
+| Cards | 62 (rendercomp-free) | `<source>/`, listed in `catalog.jsonl` |
 
 ## Taste files (taste/)
 - audio-mixing: Audio mixing and loudness

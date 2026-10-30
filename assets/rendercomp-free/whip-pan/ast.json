@@ -1,0 +1,124 @@
+{
+  "file": "src/components/whip-pan/WhipPan.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "WhipPanProps",
+    "defaultWhipPanProps",
+    "WhipPan",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "WhipPanProps",
+      "fields": [
+        {
+          "name": "scenes",
+          "type": "WhipPanScene[]",
+          "optional": false
+        },
+        {
+          "name": "panLeft",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "maxBlur",
+          "type": "number",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "FONT_SANS",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "WhipPanScene",
+      "kind": "type",
+      "exported": false,
+      "startLine": 21,
+      "endLine": 30
+    },
+    {
+      "name": "WhipPanProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 32,
+      "endLine": 39
+    },
+    {
+      "name": "defaultWhipPanProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 41,
+      "endLine": 49
+    },
+    {
+      "name": "ScenePane",
+      "kind": "const",
+      "exported": false,
+      "startLine": 52,
+      "endLine": 101
+    },
+    {
+      "name": "WhipPan",
+      "kind": "const",
+      "exported": true,
+      "startLine": 103,
+      "endLine": 184
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 186,
+      "endLine": 186
+    }
+  ],
+  "errors": 0
+}

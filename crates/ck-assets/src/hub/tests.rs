@@ -73,6 +73,26 @@ fn add_records_an_unverified_disabled_source_and_list_shows_it() {
 }
 
 #[test]
+fn saving_keeps_the_owners_key_order() {
+    let (d, hub) = hub_with(serde_json::json!([]));
+    let text = "[\n  {\n    \"id\": \"a\",\n    \"tier\": 1,\n    \"status\": \"unverified\",\n    \"licenseClass\": \"unknown\",\n    \"enabled\": false\n  }\n]\n";
+    std::fs::write(d.path().join(SOURCES_FILE), text).unwrap();
+    let mut s = hub.source("a").unwrap();
+    s.enabled = true;
+    hub.put_source(s).unwrap();
+    let after = std::fs::read_to_string(d.path().join(SOURCES_FILE)).unwrap();
+    let keys: Vec<&str> = after
+        .lines()
+        .filter_map(|l| l.trim().strip_prefix('"')?.split('"').next())
+        .collect();
+    assert_eq!(
+        &keys[..5],
+        ["id", "tier", "status", "licenseClass", "enabled"]
+    );
+    assert!(after.contains("\"enabled\": true"));
+}
+
+#[test]
 fn gaps_count_only_usable_sources() {
     let (_d, hub) = hub_with(serde_json::json!([
         { "id": "a", "licenseClass": "permissive", "status": "vetted", "enabled": true },

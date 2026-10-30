@@ -1,0 +1,144 @@
+{
+  "file": "src/components/character-jumping/CharacterJumping.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "CharacterJumpingProps",
+    "defaultCharacterJumpingProps",
+    "CharacterJumping",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "CharacterJumpingProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "characterColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "shadowColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "groundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "jumpCount",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "CharacterJumpingProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 18,
+      "endLine": 27
+    },
+    {
+      "name": "defaultCharacterJumpingProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 29,
+      "endLine": 38
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 40,
+      "endLine": 40
+    },
+    {
+      "name": "jumpHeight",
+      "kind": "function",
+      "exported": false,
+      "startLine": 43,
+      "endLine": 46
+    },
+    {
+      "name": "CharacterJumping",
+      "kind": "const",
+      "exported": true,
+      "startLine": 48,
+      "endLine": 303
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 305,
+      "endLine": 305
+    }
+  ],
+  "errors": 0
+}

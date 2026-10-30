@@ -1,0 +1,125 @@
+{
+  "file": "src/components/glitch-text/GlitchText.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "random",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "GlitchTextProps",
+    "defaultGlitchTextProps",
+    "GlitchText",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "GlitchTextProps",
+      "fields": [
+        {
+          "name": "text",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "glitchColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "intensity",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "fontSize",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "FONT_EN",
+      "kind": "const",
+      "exported": false,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "GlitchTextProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 18,
+      "endLine": 31
+    },
+    {
+      "name": "defaultGlitchTextProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 33,
+      "endLine": 40
+    },
+    {
+      "name": "GlitchText",
+      "kind": "const",
+      "exported": true,
+      "startLine": 50,
+      "endLine": 228,
+      "doc": "Glitch text reveal. - Stacks R/G/B layers and offsets each layer with frame-driven randomness - random(seed) gives reproducible random values (Remotion built-in) - Uses only useCurrentFrame() + interpolate() (no CSS transition / keyframes) - System fonts only (no external CDN reference)"
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 230,
+      "endLine": 230
+    }
+  ],
+  "errors": 0
+}

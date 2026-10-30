@@ -1,0 +1,173 @@
+{
+  "file": "src/components/pixel-waterfall-cycle/PixelWaterfallCycle.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "useCurrentFrame"
+      ]
+    },
+    {
+      "from": "../../pixel-kit",
+      "names": [
+        "PixelStage",
+        "SkyBands",
+        "PixelDither",
+        "CrtScanlines",
+        "CrtVignette",
+        "CrtNoise",
+        "cyclePalette",
+        "rgb",
+        "lerpRGB",
+        "WATER_RAMP",
+        "particleField",
+        "RGB"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "PixelWaterfallCycleProps",
+    "defaultPixelWaterfallCycleProps",
+    "PixelWaterfallCycle",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "PixelWaterfallCycleProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "cliffColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "cycleSpeed",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "showMist",
+          "type": "boolean",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "IW",
+      "kind": "const",
+      "exported": false,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "IH",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "HORIZON",
+      "kind": "const",
+      "exported": false,
+      "startLine": 19,
+      "endLine": 19
+    },
+    {
+      "name": "snap",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "seed",
+      "kind": "const",
+      "exported": false,
+      "startLine": 21,
+      "endLine": 24
+    },
+    {
+      "name": "PixelWaterfallCycleProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 26,
+      "endLine": 32
+    },
+    {
+      "name": "defaultPixelWaterfallCycleProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 34,
+      "endLine": 40
+    },
+    {
+      "name": "hexToRgb",
+      "kind": "const",
+      "exported": false,
+      "startLine": 42,
+      "endLine": 45
+    },
+    {
+      "name": "cliffRects",
+      "kind": "function",
+      "exported": false,
+      "startLine": 48,
+      "endLine": 66
+    },
+    {
+      "name": "PixelWaterfallCycle",
+      "kind": "const",
+      "exported": true,
+      "startLine": 68,
+      "endLine": 139
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 141,
+      "endLine": 141
+    }
+  ],
+  "errors": 0
+}

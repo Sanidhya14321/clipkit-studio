@@ -1,0 +1,210 @@
+{
+  "file": "src/components/scramble-text/ScrambleText.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "ScrambleTextProps",
+    "defaultScrambleTextProps",
+    "ScrambleText",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "ScrambleTextProps",
+      "fields": [
+        {
+          "name": "text",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "scrambleDuration",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "charset",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "ScrambleProps",
+      "fields": [
+        {
+          "name": "text",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "charset",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "fontSize",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "fontFamily",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 11,
+      "endLine": 11
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "ScrambleTextProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 29
+    },
+    {
+      "name": "defaultScrambleTextProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 31,
+      "endLine": 39
+    },
+    {
+      "name": "FONT_DISPLAY",
+      "kind": "const",
+      "exported": false,
+      "startLine": 41,
+      "endLine": 41
+    },
+    {
+      "name": "FONT_MONO",
+      "kind": "const",
+      "exported": false,
+      "startLine": 42,
+      "endLine": 42
+    },
+    {
+      "name": "EASE_OUT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 45,
+      "endLine": 45
+    },
+    {
+      "name": "seededRandom",
+      "kind": "const",
+      "exported": false,
+      "startLine": 48,
+      "endLine": 51
+    },
+    {
+      "name": "shiftLightness",
+      "kind": "function",
+      "exported": false,
+      "startLine": 54,
+      "endLine": 60
+    },
+    {
+      "name": "ScrambleProps",
+      "kind": "type",
+      "exported": false,
+      "startLine": 64,
+      "endLine": 72
+    },
+    {
+      "name": "Scramble",
+      "kind": "const",
+      "exported": false,
+      "startLine": 74,
+      "endLine": 119
+    },
+    {
+      "name": "ScrambleText",
+      "kind": "const",
+      "exported": true,
+      "startLine": 121,
+      "endLine": 212
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 214,
+      "endLine": 214
+    }
+  ],
+  "errors": 0
+}

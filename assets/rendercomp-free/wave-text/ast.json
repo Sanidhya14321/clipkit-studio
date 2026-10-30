@@ -1,0 +1,149 @@
+{
+  "file": "src/components/wave-text/WaveText.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "WaveTextProps",
+    "defaultWaveTextProps",
+    "WaveText",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "WaveTextProps",
+      "fields": [
+        {
+          "name": "text",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subTextColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "amplitude",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "waveSpeed",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "wavelength",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "WaveTextProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 32
+    },
+    {
+      "name": "defaultWaveTextProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 34,
+      "endLine": 43
+    },
+    {
+      "name": "FONT_FAMILY",
+      "kind": "const",
+      "exported": false,
+      "startLine": 45,
+      "endLine": 45
+    },
+    {
+      "name": "shade",
+      "kind": "function",
+      "exported": false,
+      "startLine": 48,
+      "endLine": 64,
+      "doc": "Adjust a HEX color's brightness by a percentage (-100..100)."
+    },
+    {
+      "name": "WaveWord",
+      "kind": "const",
+      "exported": false,
+      "startLine": 70,
+      "endLine": 133,
+      "doc": "Inlined shared WaveText atom: each character oscillates on a sine wave with a per-character phase offset, while the whole word fades in."
+    },
+    {
+      "name": "WaveText",
+      "kind": "const",
+      "exported": true,
+      "startLine": 135,
+      "endLine": 200
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 202,
+      "endLine": 202
+    }
+  ],
+  "errors": 0
+}

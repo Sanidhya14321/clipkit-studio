@@ -1,0 +1,191 @@
+{
+  "file": "src/components/racing-chart/RacingChart.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "RacingChartDatum",
+    "RacingChartProps",
+    "defaultRacingChartProps",
+    "RacingChart",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "RacingChartProps",
+      "fields": [
+        {
+          "name": "data",
+          "type": "RacingChartDatum[]",
+          "optional": false
+        },
+        {
+          "name": "frames",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "titleColor",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "RacingBarsProps",
+      "fields": [
+        {
+          "name": "data",
+          "type": "RacingChartDatum[]",
+          "optional": false
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "frameDuration",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "fontFamily",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "SPACE",
+      "kind": "const",
+      "exported": false,
+      "startLine": 21,
+      "endLine": 27
+    },
+    {
+      "name": "TYPE_SCALE",
+      "kind": "const",
+      "exported": false,
+      "startLine": 29,
+      "endLine": 31
+    },
+    {
+      "name": "TEXT_BREAK_STYLES",
+      "kind": "const",
+      "exported": false,
+      "startLine": 34,
+      "endLine": 38
+    },
+    {
+      "name": "FONT_STACK",
+      "kind": "const",
+      "exported": false,
+      "startLine": 40,
+      "endLine": 40
+    },
+    {
+      "name": "RacingChartDatum",
+      "kind": "type",
+      "exported": true,
+      "startLine": 45,
+      "endLine": 49
+    },
+    {
+      "name": "RacingChartProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 51,
+      "endLine": 62
+    },
+    {
+      "name": "defaultRacingChartProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 64,
+      "endLine": 76
+    },
+    {
+      "name": "RacingBarsProps",
+      "kind": "type",
+      "exported": false,
+      "startLine": 81,
+      "endLine": 87
+    },
+    {
+      "name": "RacingBars",
+      "kind": "const",
+      "exported": false,
+      "startLine": 89,
+      "endLine": 228
+    },
+    {
+      "name": "RacingChart",
+      "kind": "const",
+      "exported": true,
+      "startLine": 233,
+      "endLine": 284
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 286,
+      "endLine": 286
+    }
+  ],
+  "errors": 0
+}

@@ -1,0 +1,104 @@
+{
+  "file": "src/pixel-kit/render.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    },
+    {
+      "from": "./palette",
+      "names": [
+        "cyclePalette",
+        "rgb",
+        "RGB"
+      ]
+    }
+  ],
+  "exports": [
+    "PixelStage",
+    "BeatEvent",
+    "computePulse",
+    "idlePulse",
+    "idleBeats",
+    "GridFloor",
+    "SkyBands"
+  ],
+  "props": [],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "snap",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "PixelStage",
+      "kind": "const",
+      "exported": true,
+      "startLine": 24,
+      "endLine": 58
+    },
+    {
+      "name": "BeatEvent",
+      "kind": "type",
+      "exported": true,
+      "startLine": 63,
+      "endLine": 63
+    },
+    {
+      "name": "computePulse",
+      "kind": "function",
+      "exported": true,
+      "startLine": 66,
+      "endLine": 77,
+      "doc": "Attack -> decay pulse from explicit beat events (MV dual-use: inject real onsets)."
+    },
+    {
+      "name": "idlePulse",
+      "kind": "function",
+      "exported": true,
+      "startLine": 80,
+      "endLine": 85,
+      "doc": "Deterministic 4-on-the-floor pulse for catalog (no audio) versions."
+    },
+    {
+      "name": "idleBeats",
+      "kind": "function",
+      "exported": true,
+      "startLine": 88,
+      "endLine": 93,
+      "doc": "Generate evenly-spaced beat events (for catalog idle drive of beat-synced templates)."
+    },
+    {
+      "name": "GridFloor",
+      "kind": "const",
+      "exported": true,
+      "startLine": 99,
+      "endLine": 139
+    },
+    {
+      "name": "SkyBands",
+      "kind": "const",
+      "exported": true,
+      "startLine": 142,
+      "endLine": 161
+    }
+  ],
+  "errors": 0
+}

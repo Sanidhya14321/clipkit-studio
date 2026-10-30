@@ -1,0 +1,168 @@
+{
+  "file": "src/components/parallax-pan/ParallaxPan.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "ParallaxPanProps",
+    "defaultParallaxPanProps",
+    "ParallaxPan",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "ParallaxPanProps",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "skyTop",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "skyBottom",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "mountainColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "hillColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "groundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "panDistance",
+          "type": "number",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "ParallaxPanProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 19,
+      "endLine": 38
+    },
+    {
+      "name": "defaultParallaxPanProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 40,
+      "endLine": 50
+    },
+    {
+      "name": "ParallaxPan",
+      "kind": "const",
+      "exported": true,
+      "startLine": 52,
+      "endLine": 206
+    },
+    {
+      "name": "ParallaxLayer",
+      "kind": "const",
+      "exported": false,
+      "startLine": 208,
+      "endLine": 223
+    },
+    {
+      "name": "seededHeight",
+      "kind": "const",
+      "exported": false,
+      "startLine": 226,
+      "endLine": 230
+    },
+    {
+      "name": "MountainRange",
+      "kind": "const",
+      "exported": false,
+      "startLine": 232,
+      "endLine": 258
+    },
+    {
+      "name": "Trees",
+      "kind": "const",
+      "exported": false,
+      "startLine": 260,
+      "endLine": 288
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 290,
+      "endLine": 290
+    }
+  ],
+  "errors": 0
+}

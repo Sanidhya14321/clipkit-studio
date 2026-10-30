@@ -1,0 +1,163 @@
+{
+  "file": "src/components/transition-circle-wipe/TransitionCircleWipe.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Easing",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "TransitionCircleWipeProps",
+    "defaultTransitionCircleWipeProps",
+    "TransitionCircleWipe",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "TransitionCircleWipeProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "fromLabel",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "toLabel",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 21,
+      "endLine": 21
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 22,
+      "endLine": 22
+    },
+    {
+      "name": "TransitionCircleWipeProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 24,
+      "endLine": 30
+    },
+    {
+      "name": "defaultTransitionCircleWipeProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 32,
+      "endLine": 38
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 40,
+      "endLine": 40
+    },
+    {
+      "name": "IRIS_START",
+      "kind": "const",
+      "exported": false,
+      "startLine": 43,
+      "endLine": 43
+    },
+    {
+      "name": "IRIS_END",
+      "kind": "const",
+      "exported": false,
+      "startLine": 44,
+      "endLine": 44
+    },
+    {
+      "name": "RULE_START",
+      "kind": "const",
+      "exported": false,
+      "startLine": 45,
+      "endLine": 45
+    },
+    {
+      "name": "RULE_END",
+      "kind": "const",
+      "exported": false,
+      "startLine": 46,
+      "endLine": 46
+    },
+    {
+      "name": "parseHex",
+      "kind": "const",
+      "exported": false,
+      "startLine": 49,
+      "endLine": 64
+    },
+    {
+      "name": "mixHex",
+      "kind": "const",
+      "exported": false,
+      "startLine": 67,
+      "endLine": 75,
+      "doc": "Mix two colours; t = 0 returns a, t = 1 returns b."
+    },
+    {
+      "name": "TransitionCircleWipe",
+      "kind": "const",
+      "exported": true,
+      "startLine": 77,
+      "endLine": 211
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 213,
+      "endLine": 213
+    }
+  ],
+  "errors": 0
+}

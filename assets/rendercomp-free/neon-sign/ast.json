@@ -1,0 +1,138 @@
+{
+  "file": "src/components/neon-sign/NeonSign.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "NeonSignProps",
+    "defaultNeonSignProps",
+    "NeonSign",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "NeonSignProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "neonColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "glowColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "flickerColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "frameColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "signText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subText",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 11,
+      "endLine": 11
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "NeonSignProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 24
+    },
+    {
+      "name": "defaultNeonSignProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 26,
+      "endLine": 36
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 38,
+      "endLine": 38
+    },
+    {
+      "name": "NeonSign",
+      "kind": "const",
+      "exported": true,
+      "startLine": 40,
+      "endLine": 153
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 155,
+      "endLine": 155
+    }
+  ],
+  "errors": 0
+}

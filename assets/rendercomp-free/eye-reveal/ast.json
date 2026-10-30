@@ -1,0 +1,142 @@
+{
+  "file": "src/components/eye-reveal/EyeReveal.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Easing",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "EyeRevealProps",
+    "defaultEyeRevealProps",
+    "EyeReveal",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "EyeRevealProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "scleraColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "irisColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "pupilColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "lidColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "messageText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subText",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 14,
+      "endLine": 14
+    },
+    {
+      "name": "EyeRevealProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 26
+    },
+    {
+      "name": "defaultEyeRevealProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 28,
+      "endLine": 38
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 40,
+      "endLine": 40
+    },
+    {
+      "name": "EyeReveal",
+      "kind": "const",
+      "exported": true,
+      "startLine": 42,
+      "endLine": 170
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 172,
+      "endLine": 172
+    }
+  ],
+  "errors": 0
+}

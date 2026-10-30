@@ -63,7 +63,7 @@ Steps:
 - [x] 5. Tantivy search with filters (kind, tags, aspect, license mode, grade, collection) and the retrieval ladder with budget gate: `ck assets search|card|skeleton|slice|source` + MCP twins.
 - [x] 6. License mode in the brief, respected by search, recipes and export; `ck license report` (asset, Remotion runtime, attribution and trademark notes).
 - [x] 7. Derive with codemods (type check and first render carried to Phase 9): project-local copy with tokens, easing and data-ck instrumentation, props schema; provenance recorded; `ck assets derive`.
-- [ ] 8. Wave 2 for real: vet and ingest the sources whose license reads permissive from the original repo; everything else stays unverified.
+- [x] 8. Wave 2 for real (rendercomp-free ingested; simple-icons vetted; tabler-icons too large; others lack a confirmed repo): vet and ingest the sources whose license reads permissive from the original repo; everything else stays unverified.
 - [ ] 9. Proof run, self review, evidence.
 
 Versions (2026-10-30): tantivy 0.26.2 (2026-09-08; 0.27.0 is under two weeks old), oxc_parser/oxc_ast/oxc_allocator/oxc_span 0.154.0 (2026-10-13).

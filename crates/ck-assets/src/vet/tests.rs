@@ -88,6 +88,12 @@ fn the_hostile_pack_is_rejected_and_its_text_is_not_followed() {
     assert!(rules.contains(&("prompt-injection", Severity::Warning)));
     assert!(rules.contains(&("nondeterministic", Severity::Warning)));
     // It asked to be marked permissive and enabled; it is not.
+    // The obfuscated postinstall is a blocker, not a plain warning.
+    assert!(
+        r.findings
+            .iter()
+            .any(|f| f.rule == "install-script" && f.severity == Severity::Blocker)
+    );
     let s = hub.source("pack-injection").unwrap();
     assert_eq!((s.license_class, s.enabled), (LicenseClass::Unknown, false));
 }
@@ -113,6 +119,25 @@ fn unknown_sources_and_missing_repos_are_refused() {
     )
     .unwrap_err();
     assert_eq!(no_repo.code, ErrorCode::Request);
+}
+
+#[test]
+fn plain_install_scripts_and_build_tooling_are_warnings() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(
+        dir.path().join("package.json"),
+        r#"{ "scripts": { "prepare": "husky" } }"#,
+    )
+    .unwrap();
+    std::fs::create_dir(dir.path().join("scripts")).unwrap();
+    std::fs::write(
+        dir.path().join("scripts/release.js"),
+        "const { execSync } = require('child_process');",
+    )
+    .unwrap();
+    let f = scan(dir.path()).unwrap();
+    assert!(f.iter().all(|f| f.severity == Severity::Warning), "{f:?}");
+    assert_eq!(f.len(), 2);
 }
 
 #[test]

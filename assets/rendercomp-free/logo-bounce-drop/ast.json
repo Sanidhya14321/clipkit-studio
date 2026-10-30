@@ -1,0 +1,142 @@
+{
+  "file": "src/components/logo-bounce-drop/LogoBounceDrop.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React",
+        "useMemo"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "LogoBounceDropProps",
+    "defaultLogoBounceDropProps",
+    "LogoBounceDrop",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "LogoBounceDropProps",
+      "fields": [
+        {
+          "name": "logoText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "svgPath",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "viewBox",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "dropHeight",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "bounceStrength",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "logoColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "fontSize",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "LogoBounceDropProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 17,
+      "endLine": 36
+    },
+    {
+      "name": "defaultLogoBounceDropProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 38,
+      "endLine": 48
+    },
+    {
+      "name": "LogoBounceDrop",
+      "kind": "const",
+      "exported": true,
+      "startLine": 58,
+      "endLine": 166,
+      "doc": "Logo drops in from above and bounces on landing. - Remotion spring() gives a physics-like bounce (damping controls rebound) - svgPath present => SVG mode, otherwise text mode - Pure useCurrentFrame() + spring + interpolate (no CSS transition / keyframes) - System fonts only (no external CDN reference)"
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 168,
+      "endLine": 168
+    }
+  ],
+  "errors": 0
+}

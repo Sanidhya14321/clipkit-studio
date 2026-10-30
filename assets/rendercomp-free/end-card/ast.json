@@ -1,0 +1,185 @@
+{
+  "file": "src/components/end-card/EndCard.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "spring",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "EndCardProps",
+    "defaultEndCardProps",
+    "EndCard",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "CtaButtonProps",
+      "fields": [
+        {
+          "name": "text",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "fillColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "fontSize",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "EndCardProps",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "ctaText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "background",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "titleColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "spring",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "FONT_EN",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "EASE_OUT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 21,
+      "endLine": 21
+    },
+    {
+      "name": "DUR_NORMAL",
+      "kind": "const",
+      "exported": false,
+      "startLine": 22,
+      "endLine": 22
+    },
+    {
+      "name": "CtaButtonProps",
+      "kind": "type",
+      "exported": false,
+      "startLine": 30,
+      "endLine": 36
+    },
+    {
+      "name": "CtaButton",
+      "kind": "const",
+      "exported": false,
+      "startLine": 38,
+      "endLine": 132
+    },
+    {
+      "name": "EndCardProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 134,
+      "endLine": 147
+    },
+    {
+      "name": "defaultEndCardProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 149,
+      "endLine": 156
+    },
+    {
+      "name": "EndCard",
+      "kind": "const",
+      "exported": true,
+      "startLine": 158,
+      "endLine": 312
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 314,
+      "endLine": 314
+    }
+  ],
+  "errors": 0
+}

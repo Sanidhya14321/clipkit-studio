@@ -1,0 +1,160 @@
+{
+  "file": "src/components/slide-wipe/SlideWipe.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "Easing",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "SlideWipeProps",
+    "defaultSlideWipeProps",
+    "SlideWipe",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "SlideWipeProps",
+      "fields": [
+        {
+          "name": "colorBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "colorAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelBefore",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "labelAfter",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "backdropColor",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 12,
+      "endLine": 12
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 13,
+      "endLine": 13
+    },
+    {
+      "name": "SlideWipeProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 23
+    },
+    {
+      "name": "DEFAULT_BACKDROP",
+      "kind": "const",
+      "exported": false,
+      "startLine": 25,
+      "endLine": 25
+    },
+    {
+      "name": "defaultSlideWipeProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 27,
+      "endLine": 34
+    },
+    {
+      "name": "FONT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 36,
+      "endLine": 36
+    },
+    {
+      "name": "DELAY",
+      "kind": "const",
+      "exported": false,
+      "startLine": 40,
+      "endLine": 40
+    },
+    {
+      "name": "TRANSITION",
+      "kind": "const",
+      "exported": false,
+      "startLine": 41,
+      "endLine": 41
+    },
+    {
+      "name": "EASE_IN_OUT",
+      "kind": "const",
+      "exported": false,
+      "startLine": 44,
+      "endLine": 44
+    },
+    {
+      "name": "PageLayer",
+      "kind": "const",
+      "exported": false,
+      "startLine": 48,
+      "endLine": 77
+    },
+    {
+      "name": "SlideWipe",
+      "kind": "const",
+      "exported": true,
+      "startLine": 82,
+      "endLine": 122
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 124,
+      "endLine": 124
+    }
+  ],
+  "errors": 0
+}

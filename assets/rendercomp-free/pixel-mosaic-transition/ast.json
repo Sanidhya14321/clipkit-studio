@@ -1,0 +1,174 @@
+{
+  "file": "src/components/pixel-mosaic-transition/PixelMosaicTransition.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "useCurrentFrame"
+      ]
+    },
+    {
+      "from": "../../pixel-kit",
+      "names": [
+        "PixelStage",
+        "PixelDither",
+        "CrtScanlines",
+        "CrtVignette",
+        "CrtNoise",
+        "quantizeToCell",
+        "lerpRGB",
+        "rgb",
+        "lerp",
+        "RGB"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "PixelMosaicTransitionProps",
+    "defaultPixelMosaicTransitionProps",
+    "PixelMosaicTransition",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "PixelMosaicTransitionProps",
+      "fields": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "screenAColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "screenAAccent",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "screenBColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "screenBAccent",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "maxCell",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "ditherOpacity",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 15,
+      "endLine": 15
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 16,
+      "endLine": 16
+    },
+    {
+      "name": "IW",
+      "kind": "const",
+      "exported": false,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "IH",
+      "kind": "const",
+      "exported": false,
+      "startLine": 19,
+      "endLine": 19
+    },
+    {
+      "name": "snap",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "PixelMosaicTransitionProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 22,
+      "endLine": 30
+    },
+    {
+      "name": "defaultPixelMosaicTransitionProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 32,
+      "endLine": 40
+    },
+    {
+      "name": "hexToRgb",
+      "kind": "const",
+      "exported": false,
+      "startLine": 42,
+      "endLine": 45
+    },
+    {
+      "name": "easeInOut",
+      "kind": "const",
+      "exported": false,
+      "startLine": 48,
+      "endLine": 48
+    },
+    {
+      "name": "sceneField",
+      "kind": "function",
+      "exported": false,
+      "startLine": 55,
+      "endLine": 103
+    },
+    {
+      "name": "PixelMosaicTransition",
+      "kind": "const",
+      "exported": true,
+      "startLine": 105,
+      "endLine": 183
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 185,
+      "endLine": 185
+    }
+  ],
+  "errors": 0
+}

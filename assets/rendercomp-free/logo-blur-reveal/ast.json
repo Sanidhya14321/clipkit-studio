@@ -1,0 +1,130 @@
+{
+  "file": "src/components/logo-blur-reveal/LogoBlurReveal.tsx",
+  "imports": [
+    {
+      "from": "react",
+      "names": [
+        "React"
+      ]
+    },
+    {
+      "from": "remotion",
+      "names": [
+        "AbsoluteFill",
+        "interpolate",
+        "useCurrentFrame",
+        "useVideoConfig",
+        "Easing"
+      ]
+    }
+  ],
+  "exports": [
+    "FPS",
+    "DURATION_FRAMES",
+    "LogoBlurRevealProps",
+    "defaultLogoBlurRevealProps",
+    "LogoBlurReveal",
+    "default"
+  ],
+  "props": [
+    {
+      "name": "LogoBlurRevealProps",
+      "fields": [
+        {
+          "name": "logoText",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "blurAmount",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "revealDuration",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "logoColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "fontSize",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "primitives": [
+    "useCurrentFrame",
+    "useVideoConfig",
+    "interpolate",
+    "Easing",
+    "AbsoluteFill"
+  ],
+  "outline": [
+    {
+      "name": "FPS",
+      "kind": "const",
+      "exported": true,
+      "startLine": 17,
+      "endLine": 17
+    },
+    {
+      "name": "DURATION_FRAMES",
+      "kind": "const",
+      "exported": true,
+      "startLine": 18,
+      "endLine": 18
+    },
+    {
+      "name": "FONT_FAMILY",
+      "kind": "const",
+      "exported": false,
+      "startLine": 20,
+      "endLine": 20
+    },
+    {
+      "name": "LogoBlurRevealProps",
+      "kind": "type",
+      "exported": true,
+      "startLine": 22,
+      "endLine": 37
+    },
+    {
+      "name": "defaultLogoBlurRevealProps",
+      "kind": "const",
+      "exported": true,
+      "startLine": 39,
+      "endLine": 47
+    },
+    {
+      "name": "LogoBlurReveal",
+      "kind": "const",
+      "exported": true,
+      "startLine": 49,
+      "endLine": 114
+    },
+    {
+      "name": "default",
+      "kind": "default",
+      "exported": true,
+      "startLine": 116,
+      "endLine": 116
+    }
+  ],
+  "errors": 0
+}
