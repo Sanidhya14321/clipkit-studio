@@ -316,6 +316,7 @@ impl Session {
                             src_in: *src_in,
                             src_out: *src_out,
                             at: *at,
+                            gain: 1.0,
                         });
                     }
                 }
@@ -334,7 +335,31 @@ impl Session {
                             src_in: 0.0,
                             src_out: t.duration_sec,
                             at: *at,
+                            gain: 1.0,
                         });
+                    }
+                }
+                // Music beds and other audio: each range plays back to back from `at`.
+                ItemBody::Audio {
+                    src,
+                    at,
+                    ranges,
+                    volume,
+                    ..
+                } => {
+                    let Some(s) = project.sources.iter().find(|s| &s.id == src) else {
+                        continue;
+                    };
+                    let mut t = *at;
+                    for r in ranges {
+                        clips.push(ck_media::AudioClip {
+                            path: self.resolve(&s.path),
+                            src_in: r.start,
+                            src_out: r.end,
+                            at: t,
+                            gain: *volume,
+                        });
+                        t += r.end - r.start;
                     }
                 }
                 _ => {}

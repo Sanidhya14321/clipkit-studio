@@ -42,15 +42,47 @@ pub async fn proxy(
 ) -> Result<Response, ApiError> {
     let hash = name.strip_suffix(".mp4").unwrap_or("");
     let paths = CachePaths::new(&s.cache_dir(), hash)?;
+    serve_file(paths.proxy, "video/mp4", &headers).await
+}
+
+/// `GET /media/source/<hash>`: the original media of an imported source, for the render
+/// worker (spec 2.3: render against original media). Only files the project imported.
+pub async fn original(
+    State(s): State<Arc<Session>>,
+    Path(hash): Path<String>,
+    headers: HeaderMap,
+) -> Result<Response, ApiError> {
+    let found = tokio::task::spawn_blocking(move || s.source_file(&hash))
+        .await
+        .map_err(media_err)??;
+    let kind = match found
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(str::to_lowercase)
+        .as_deref()
+    {
+        Some("webm") => "video/webm",
+        Some("mov") => "video/quicktime",
+        _ => "video/mp4",
+    };
+    serve_file(found, kind, &headers).await
+}
+
+/// Serves `path` with byte ranges (open ranges capped at 4 MB per reply).
+async fn serve_file(
+    path: std::path::PathBuf,
+    kind: &'static str,
+    headers: &HeaderMap,
+) -> Result<Response, ApiError> {
     let range = headers
         .get(header::RANGE)
         .and_then(|v| v.to_str().ok())
         .map(str::to_owned);
     let read = tokio::task::spawn_blocking(move || -> Result<_, ApiError> {
-        let mut file = std::fs::File::open(&paths.proxy).map_err(|_| {
+        let mut file = std::fs::File::open(&path).map_err(|_| {
             ApiError(CkError::new(
                 ErrorCode::NotFound,
-                format!("no proxy {}", paths.proxy.display()),
+                format!("no media {}", path.display()),
             ))
         })?;
         let len = file.metadata().map_err(media_err)?.len();
@@ -73,7 +105,7 @@ pub async fn proxy(
     let (body, span) = read;
     let mut resp = body.into_response();
     let h = resp.headers_mut();
-    h.insert(header::CONTENT_TYPE, HeaderValue::from_static("video/mp4"));
+    h.insert(header::CONTENT_TYPE, HeaderValue::from_static(kind));
     h.insert(header::ACCEPT_RANGES, HeaderValue::from_static("bytes"));
     if let Some((start, end, len)) = span {
         *resp.status_mut() = StatusCode::PARTIAL_CONTENT;

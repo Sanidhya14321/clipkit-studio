@@ -199,6 +199,24 @@ impl Session {
         &self.activity
     }
 
+    /// The original file of the imported source with this content hash.
+    pub fn source_file(&self, hash: &str) -> CkResult<std::path::PathBuf> {
+        let doc = self.doc()?;
+        let src = doc
+            .project()
+            .sources
+            .iter()
+            .find(|s| s.hash == hash)
+            .ok_or_else(|| CkError::new(ErrorCode::NotFound, format!("no source {hash:?}")))?;
+        let p = Path::new(&src.path);
+        Ok(if p.is_absolute() {
+            p.to_path_buf()
+        } else {
+            let root = self.store.root();
+            root.parent().unwrap_or(root).join(p)
+        })
+    }
+
     /// `.clipkit/cache/`: proxies, extracted audio and transcripts.
     pub fn cache_dir(&self) -> std::path::PathBuf {
         self.store.root().join("cache")

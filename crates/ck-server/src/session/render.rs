@@ -43,6 +43,15 @@ pub fn find_worker(start: &Path) -> CkResult<PathBuf> {
         .with_hint("Install it with `just worker`, or set CK_RENDER_WORKER to its folder."))
 }
 
+/// Containers Chrome's video element decodes (with the common codecs inside).
+pub fn browser_playable(path: &str) -> bool {
+    let ext = Path::new(path)
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(str::to_lowercase);
+    matches!(ext.as_deref(), Some("mp4" | "m4v" | "webm"))
+}
+
 /// Content that draws: the project without engine state, plus the look set and frame size.
 fn render_key(project: &Project, looks: &Value) -> CkResult<String> {
     let full = serde_json::to_value(project)
@@ -102,10 +111,18 @@ impl Session {
             .map(|s| {
                 (
                     s.id.clone(),
-                    Value::String(format!(
-                        "http://127.0.0.1:{}/media/{}.mp4?token={}",
-                        info.port, s.hash, info.token
-                    )),
+                    // Originals Chrome decodes; anything else plays from the 720p proxy.
+                    Value::String(if browser_playable(&s.path) {
+                        format!(
+                            "http://127.0.0.1:{}/media/source/{}?token={}",
+                            info.port, s.hash, info.token
+                        )
+                    } else {
+                        format!(
+                            "http://127.0.0.1:{}/media/{}.mp4?token={}",
+                            info.port, s.hash, info.token
+                        )
+                    }),
                 )
             })
             .collect();

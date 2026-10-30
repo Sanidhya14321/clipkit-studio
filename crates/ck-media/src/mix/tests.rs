@@ -14,6 +14,7 @@ fn clip(path: &str, src_in: f64, src_out: f64, at: f64) -> AudioClip {
         src_in,
         src_out,
         at,
+        gain: 1.0,
     }
 }
 
@@ -25,7 +26,7 @@ fn the_graph_places_clips_and_pads_to_the_duration() {
         TARGET,
     );
     assert!(g.contains("[0:a:0]atrim=start=1:end=2,"));
-    assert!(g.contains("adelay=500|500[a0]"));
+    assert!(g.contains("volume=1,adelay=500|500[a0]"));
     assert!(g.contains("adelay=3000|3000[a1]"));
     assert!(g.contains(
         "[a0][a1]amix=inputs=2:normalize=0:duration=longest,apad=whole_dur=5,atrim=duration=5"

@@ -25,6 +25,13 @@ pub struct AudioClip {
     pub src_out: f64,
     /// Timeline start, seconds.
     pub at: f64,
+    /// Linear gain (1.0 unchanged).
+    #[serde(default = "unity")]
+    pub gain: f64,
+}
+
+fn unity() -> f64 {
+    1.0
 }
 
 fn num(x: f64) -> String {
@@ -45,12 +52,13 @@ pub fn mix_graph(clips: &[AudioClip], duration: f64, loudness: LoudnessTarget) -
             g,
             "[{i}:a:0]atrim=start={}:end={},asetpts=PTS-STARTPTS,aresample=48000,\
              aformat=channel_layouts=stereo,afade=t=in:d={},afade=t=out:st={}:d={},\
-             adelay={delay}|{delay}[a{i}];",
+             volume={},adelay={delay}|{delay}[a{i}];",
             num(c.src_in),
             num(c.src_out),
             num(fade),
             num(len - fade),
-            num(fade)
+            num(fade),
+            num(c.gain.max(0.0))
         );
         let _ = write!(labels, "[a{i}]");
     }

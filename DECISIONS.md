@@ -624,3 +624,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 
 ## Phase 10 close (2026-10-30)
 - Not built: more agents (formats unverified) and the Demucs sidecar (needs Python). Taste-profile search reranking and learning from reverts are not built either.
+
+## Follow-ups: original media and audio items (2026-10-30)
+- The render worker plays originals through `/media/source/<hash>` when the container is mp4, m4v or webm (Chrome decodes those); other containers (mov, mkv, ...) keep the 720p proxy, so a ProRes `.mov` still renders, at proxy quality.
+- Audio items mix at their `volume` as linear gain; `duck` (lowering music under voice) is not applied in the mix yet (the sound plan already emits duck cues).

@@ -251,6 +251,14 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: studio transcript panel: click a word to seek, Delete/Backspace cuts it from the footage (human revision through `POST /api/cut/words` with the whole deleted set), same key restores at the clip edge; read-only while the agent holds the video track, and the server refuses (track lock now part of every footage rebuild) | PASS | `studio/e2e/phase5.spec.ts` (2 tests, `just e2e` 8 of 8 passed); `studio/src/transcript.test.ts` (deleted words from segment midpoints, toggle, source-to-timeline time); `ck-server` `tests::edit::studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock` (E_LOCK_HELD) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 254 of 254 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean; `just e2e` 8 of 8 |
 
+## Follow-ups after Phase 10 (2026-10-30)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Render against original media (spec 2.3): `/media/source/<hash>` serves an imported source's original file with byte ranges (token in the query, only project sources); the worker uses it for mp4, m4v and webm and falls back to the 720p proxy for other containers | PASS | `ck-server` `tests::import::originals_are_served_for_imported_sources_only` (206, unknown hash 404, no token 403) |
+| Audio items (music beds) in the full-path mix: each range plays back to back from the item's start at its volume | PASS | `ck-media` `mix::tests::the_graph_places_clips_and_pads_to_the_duration` (per-clip gain in the graph); end-to-end with a real music source not yet run (no CC0 music vetted) |
+| Run | PASS | 2026-10-30 `just check`: 357 of 357 nextest (1 skipped), hooks 41 of 41 |
+
 ## Phase 10: stretch (2026-10-30, done; more agents and Demucs not built)
 
 | Check | Result | Evidence |

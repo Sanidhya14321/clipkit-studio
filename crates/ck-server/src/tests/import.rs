@@ -211,3 +211,43 @@ async fn the_proxy_is_served_in_ranges_with_the_token_in_the_query() {
         .await;
     assert_eq!(status, StatusCode::BAD_REQUEST);
 }
+
+#[tokio::test]
+async fn originals_are_served_for_imported_sources_only() {
+    use axum::http::{Request, StatusCode};
+
+    use super::fixture::{HOST, TOKEN, body_of};
+
+    let Some(dir) = fixtures() else {
+        eprintln!("skipped: run `just fixtures` first");
+        return;
+    };
+    let f = Fixture::new();
+    let hash = f
+        .session
+        .import(&req(dir.join("av.mp4")))
+        .unwrap()
+        .source
+        .hash;
+    let get = |uri: String| {
+        Request::builder()
+            .uri(uri)
+            .header("host", HOST)
+            .header("range", "bytes=0-99")
+            .body(body_of(None))
+            .unwrap()
+    };
+    let (status, _) = f
+        .send(get(format!("/media/source/{hash}?token={TOKEN}")))
+        .await;
+    assert_eq!(status, StatusCode::PARTIAL_CONTENT);
+    let (status, _) = f
+        .send(get(format!(
+            "/media/source/{}?token={TOKEN}",
+            "a".repeat(64)
+        )))
+        .await;
+    assert_eq!(status, StatusCode::NOT_FOUND);
+    let (status, _) = f.send(get(format!("/media/source/{hash}"))).await;
+    assert_eq!(status, StatusCode::FORBIDDEN);
+}
