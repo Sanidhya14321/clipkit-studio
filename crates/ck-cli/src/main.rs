@@ -42,8 +42,8 @@ use serde::Serialize;
 use args::{
     AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
     CutCommand, DemoCommand, LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg,
-    ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand, SourcesCommand,
-    TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
+    ProfileArg, ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand,
+    SourcesCommand, TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -440,6 +440,18 @@ fn run(cli: Cli) -> CkResult<()> {
             let out =
                 ck_eval::bench::report(&cli.dir, &ck_eval::bench::BenchReportRequest { results })?;
             capped_print("bench report", ck_eval::bench::caps::REPORT, out)
+        }
+        Command::Profile { action } => {
+            use ck_server::profile::{self as taste, ProfileAction, ProfileCommandRequest};
+            let action = match action {
+                ProfileArg::Show => ProfileAction::Show,
+                ProfileArg::Clear => ProfileAction::Clear,
+                ProfileArg::Disable => ProfileAction::Disable,
+                ProfileArg::Enable => ProfileAction::Enable,
+            };
+            let path = taste::default_path();
+            let out = taste::run(path.as_deref(), &ProfileCommandRequest { action })?;
+            capped_print("profile", taste::caps::PROFILE, out)
         }
         Command::Demo(DemoCommand::Reset { force }) => {
             let out = ck_server::demo::reset(&cli.dir, &ck_server::demo::DemoRequest { force })?;

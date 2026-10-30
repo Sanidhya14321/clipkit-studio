@@ -17,6 +17,7 @@ pub mod info;
 pub mod launch;
 pub mod media;
 pub mod ops;
+pub mod profile;
 pub mod serve;
 pub mod session;
 pub mod studio;

@@ -106,6 +106,8 @@ pub struct Session {
     studio_context: Mutex<context::StudioContext>,
     /// The agent's open questions and their undelivered answers (`ck ask`).
     asks: Mutex<ask::Asks>,
+    /// Taste profile file; None when there is no home folder.
+    profile: Option<std::path::PathBuf>,
 }
 
 impl Session {
@@ -129,6 +131,12 @@ impl Session {
             speaker: Arc::new(FishTts::from_env()),
             studio_context: Mutex::default(),
             asks: Mutex::default(),
+            // Unit tests never touch a real profile; they opt in with `with_profile`.
+            profile: if cfg!(test) {
+                None
+            } else {
+                crate::profile::default_path()
+            },
         })
     }
 
@@ -136,6 +144,34 @@ impl Session {
     pub fn with_speaker(mut self, speaker: Arc<dyn Speaker>) -> Self {
         self.speaker = speaker;
         self
+    }
+
+    /// Use another taste profile file (tests).
+    pub fn with_profile(mut self, path: std::path::PathBuf) -> Self {
+        self.profile = Some(path);
+        self
+    }
+
+    /// No taste profile: neither learned from nor used (ck's own scripted edits).
+    pub fn without_profile(mut self) -> Self {
+        self.profile = None;
+        self
+    }
+
+    pub fn profile_path(&self) -> Option<&Path> {
+        self.profile.as_deref()
+    }
+
+    /// Learns from a human revision's brief changes (spec 8.8). Never fails the edit.
+    fn learn_profile(&self, before: &ck_core::model::Brief, after: &ck_core::model::Brief) {
+        let Some(path) = &self.profile else { return };
+        let mut p = crate::profile::load(path);
+        if p.enabled
+            && p.learn(before, after)
+            && let Err(e) = crate::profile::save(path, &p)
+        {
+            tracing::warn!(error = %e, "taste profile not saved");
+        }
     }
 
     /// Use another transcriber (tests, or a local model once one is installed).
@@ -192,7 +228,11 @@ impl Session {
     pub fn patch(&self, req: &PatchRequest) -> CkResult<PatchResult> {
         let now = self.now_ms();
         let mut doc = self.doc()?;
+        let before = doc.project().brief.clone();
         let rev = doc.patch(req, now)?.clone();
+        if req.author != Author::Agent {
+            self.learn_profile(&before, &doc.project().brief);
+        }
         self.persist(&mut doc)?;
         self.publish(Event::Revision {
             rev: rev.rev,

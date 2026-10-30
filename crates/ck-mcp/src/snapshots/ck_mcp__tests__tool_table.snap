@@ -1190,6 +1190,34 @@ expression: specs()
     }
   },
   {
+    "name": "profile",
+    "command": "ck profile",
+    "description": "The local taste profile learned from the user's picks: show its defaults, or clear, disable or enable it. It fills brief fields nobody set; never overrides.",
+    "cap": 2048,
+    "inputSchema": {
+      "$defs": {
+        "ProfileAction": {
+          "description": "What `ck profile` does.",
+          "type": "string",
+          "enum": [
+            "show",
+            "clear",
+            "disable",
+            "enable"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/ProfileAction",
+          "default": "show"
+        }
+      }
+    }
+  },
+  {
     "name": "sources_ingest",
     "command": "ck sources ingest",
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",

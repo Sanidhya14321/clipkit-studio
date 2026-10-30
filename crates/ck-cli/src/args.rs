@@ -170,6 +170,11 @@ pub enum Command {
     /// Benchmark report from bench run lines.
     #[command(subcommand)]
     Bench(BenchCommand),
+    /// The local taste profile: show, clear, disable, enable.
+    Profile {
+        #[arg(value_enum, default_value_t = ProfileArg::Show)]
+        action: ProfileArg,
+    },
     /// The seeded demo project.
     #[command(subcommand)]
     Demo(DemoCommand),
@@ -590,4 +595,12 @@ pub enum ReferenceCommand {
         #[arg(long)]
         apply: bool,
     },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum ProfileArg {
+    Show,
+    Clear,
+    Disable,
+    Enable,
 }

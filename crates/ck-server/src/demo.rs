@@ -100,7 +100,8 @@ pub fn reset(dir: &Path, req: &DemoRequest) -> CkResult<DemoResult> {
     let mut project = Project::new(DEMO_ID, "ClipKit demo", Mode::Generate);
     project.brief.license_mode = Some("commercial-safe".into());
     store.init(&project)?;
-    let s = Session::open(&root, Arc::new(SystemClock))?;
+    // The demo's confirm is ck's script, not the user's pick: no profile learning or defaults.
+    let s = Session::open(&root, Arc::new(SystemClock))?.without_profile();
 
     let fields = json!({
         "goal": "Launch teaser for ClipKit Studio",

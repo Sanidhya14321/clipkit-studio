@@ -606,3 +606,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 
 ## Phase 10 step 2: reference match (2026-10-30)
 - Statistics only (spec 8.1): nothing of the reference is copied or stored. Shots come from the scene detector (scdet in RGB); pacing is the level whose average shot is nearest in log scale; aspect snaps to 16:9, 9:16, 1:1 or 4:5 within 2%. Applied fields get confidence 0.6 and never replace a `user` field.
+
+## Phase 10 step 3: taste profile (2026-10-30)
+- Picks are brief fields with source `user` changed by a human or voice revision; agent and ck-scripted edits never teach it. Learned fields: platform, aspect, length, pacing, look, voice, licenseMode (per-project text such as goal or CTA is not learned). A value becomes a default after 2 picks; confidence 0.5 + 0.1 per pick, at most 0.9.
+- Defaults fill only fields absent after the agent's proposal: an inferred or user value is never replaced (spec 8.8). Search reranking from the profile and learning from reverts are not built.
+- Test isolation: unit-test sessions have no profile unless given; `.cargo/config.toml` points `CK_PROFILE` at `target/test-taste-profile.json` for everything cargo runs; Playwright studios use a per-test file.

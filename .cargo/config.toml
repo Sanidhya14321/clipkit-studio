@@ -1,0 +1,5 @@
+
+# Tests (and every ck they spawn) learn into a scratch taste profile, never the user's
+# ~/.clipkit/profile.json. Applies only to processes cargo runs.
+[env]
+CK_PROFILE = { value = "target/test-taste-profile.json", relative = true }

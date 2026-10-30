@@ -63,6 +63,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("trace_bundle", ck_server::debug::caps::TRACE),
         ("demo_reset", ck_server::demo::caps::DEMO),
         ("bench_report", ck_eval::bench::caps::REPORT),
+        ("profile", ck_server::profile::caps::PROFILE),
         ("sources_ingest", ck_assets::ingest::caps::INGEST),
         ("sources_gaps", ck_assets::sources::caps::SOURCES_GAPS),
         ("look_apply", caps::LOOK_APPLY),

@@ -24,6 +24,7 @@ use ck_server::demo::{self, DemoRequest};
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
+use ck_server::profile::{self as taste, ProfileCommandRequest};
 use ck_server::session::ask::AskRequest;
 use ck_server::session::branch::{
     BranchRequest, HistoryRequest as RevHistoryRequest, VariantsRequest,
@@ -298,6 +299,13 @@ pub fn specs() -> Vec<ToolSpec> {
             "Medians, ranges and pass rates per arm and scenario from bench run lines; tokens \
              only from the agents' own usage (otherwise not measured).",
             bench::caps::REPORT,
+        ),
+        spec::<ProfileCommandRequest>(
+            "profile",
+            "ck profile",
+            "The local taste profile learned from the user's picks: show its defaults, or \
+             clear, disable or enable it. It fills brief fields nobody set; never overrides.",
+            ck_server::profile::caps::PROFILE,
         ),
         spec::<IngestRequest>(
             "sources_ingest",
@@ -576,6 +584,7 @@ pub fn is_offline(name: &str) -> bool {
             | "trace_bundle"
             | "demo_reset"
             | "bench_report"
+            | "profile"
     )
 }
 
@@ -683,6 +692,14 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
                 "bench report",
                 bench::caps::REPORT,
                 &bench::report(project, &r)?,
+            )
+        }),
+        "profile" => parse::<ProfileCommandRequest>(args).and_then(|r| {
+            let path = taste::default_path();
+            capped_json(
+                "profile",
+                taste::caps::PROFILE,
+                &taste::run(path.as_deref(), &r)?,
             )
         }),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)

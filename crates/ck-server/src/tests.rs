@@ -14,6 +14,7 @@ mod import;
 mod live;
 mod look;
 mod ops;
+mod profile;
 mod recipe;
 mod reference;
 mod sound;

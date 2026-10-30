@@ -406,7 +406,20 @@ impl Session {
         req.check()?;
         let now = self.now_ms();
         let mut doc = self.doc()?;
-        let (next, kept) = req.merge(&doc.project().brief);
+        let (mut next, kept) = req.merge(&doc.project().brief);
+        // Spec 8.8: the taste profile fills fields nobody set, never inferred or user values.
+        if let Some(path) = self.profile_path() {
+            let profile = crate::profile::load(path);
+            if profile.enabled {
+                for (field, (value, n)) in profile.defaults() {
+                    next.fields.entry(field).or_insert(BriefField {
+                        value,
+                        source: BriefSource::Profile,
+                        confidence: (0.5 + 0.1 * f64::from(n)).min(0.9),
+                    });
+                }
+            }
+        }
         if next == doc.project().brief {
             return Ok(BriefProposeResult {
                 rev: doc.project().rev,

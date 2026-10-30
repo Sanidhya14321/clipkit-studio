@@ -26,6 +26,8 @@ export type Studio = {
 export const test = base.extend<{ studio: Studio }>({
   studio: async ({}, use) => {
     const dir = await mkdtemp(join(tmpdir(), "ck-e2e-"));
+    // Studios under test learn into a scratch taste profile, never the user's.
+    process.env.CK_PROFILE = join(dir, "taste-profile.json");
     const child = spawn(CK_BIN, ["studio", "--dir", dir], {
       stdio: ["ignore", "pipe", "inherit"],
     });
