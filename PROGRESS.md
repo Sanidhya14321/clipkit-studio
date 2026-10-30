@@ -517,3 +517,7 @@ Approval is required before application code changes by AGENTS.md and .agents/sk
 - [ ] Merge/integrate with the other agent's branch only after coordinating ownership. No push requested.
 
 Review note: reviewer/test subagents supplied earlier findings, which were addressed; their later turns hit the session quota. Remaining review and final checks were completed by the primary agent. No new independent reviewer pass is claimed. `ck doctor` is absent from this CLI; actual build/media/browser checks replaced that diagnostic step.
+
+## Demo quality follow-up audit
+
+Owner asks which assets are used and why the video is not fast-paced beat-wise. Current URL port 50696 is the original 15-second smoke-test demo: three original recipes, base holds of 4/5/6 seconds, no imported music, external derived asset, beat grid or beat sheet. The existing sound planner has cue timings without sound assets, and energy/beat gates remain absent. Functional test PASS must not be presented as creative-quality acceptance. Compared the supplied Update 5 section 3 and Update 6 core directive/section 4.2; recorded evidence in `docs/updates/ui-workflow-evidence/demo-pacing-audit.json` and `ASSET_USAGE_AUDIT.md`. No application code or main-checkout file changed; Update 5/6 backend implementation remains separately coordinated.

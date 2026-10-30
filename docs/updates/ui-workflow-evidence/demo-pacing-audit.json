@@ -1,0 +1,41 @@
+{
+  "port": 50696,
+  "project": "ClipKit demo",
+  "assetsUsed": [
+    "recipe:hook-title",
+    "recipe:stat-callout",
+    "recipe:outro-cta"
+  ],
+  "sources": 0,
+  "beatGridPresent": false,
+  "derivedRegistered": 0,
+  "nativeClipIds": [
+    "backdrop",
+    "kinetic-text",
+    "lower-third",
+    "stat-counter"
+  ],
+  "scenes": [
+    {
+      "at": 0.0,
+      "duration": 4.0,
+      "recipe": "recipe:hook-title"
+    },
+    {
+      "at": 4.0,
+      "duration": 5.0,
+      "recipe": "recipe:stat-callout"
+    },
+    {
+      "at": 9.0,
+      "duration": 6.0,
+      "recipe": "recipe:outro-cta"
+    }
+  ],
+  "audioItemTypes": [
+    "voice",
+    "voice",
+    "voice"
+  ],
+  "note": "Read persisted demo project and source; no subjective output rating, rendered energy measurement or beat-alignment test performed."
+}
