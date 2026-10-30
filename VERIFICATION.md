@@ -251,7 +251,7 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: studio transcript panel: click a word to seek, Delete/Backspace cuts it from the footage (human revision through `POST /api/cut/words` with the whole deleted set), same key restores at the clip edge; read-only while the agent holds the video track, and the server refuses (track lock now part of every footage rebuild) | PASS | `studio/e2e/phase5.spec.ts` (2 tests, `just e2e` 8 of 8 passed); `studio/src/transcript.test.ts` (deleted words from segment midpoints, toggle, source-to-timeline time); `ck-server` `tests::edit::studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock` (E_LOCK_HELD) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 254 of 254 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean; `just e2e` 8 of 8 |
 
-## Phase 8: assets at scale (2026-10-30, in progress)
+## Phase 8: assets at scale (2026-10-30, done; wave 3 adapters, previews and SVG/LUT/sfx ingest carried)
 
 | Check | Result | Evidence |
 | --- | --- | --- |
@@ -274,6 +274,10 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 8: real data found ingest and vet issues, fixed with tests | PASS | `ingest::tests::constants_and_roots_are_not_assets` (SCREAMING_CASE constants and `*Root` registries were cards), duplicate names across files get a file suffix, stale asset folders pruned, license copied beside cards; `vet::tests::plain_install_scripts_and_build_tooling_are_warnings`; `hub::tests::saving_keeps_the_owners_key_order` (serde_json `preserve_order`; snapshot content unchanged, key order only) |
 | Step 8: icon packs as cards (SVG ingest) | BLOCKED | Not built: ingest reads TS/JS components only; simple-icons yields no cards yet |
 | Step 8 run | PASS | 2026-10-30 `just check`: 328 of 328 nextest (1 skipped), hooks 41 of 41 |
+| Step 9: Phase 8 proof through the real binary: three sources registered and vetted (MIT vetted, restricted vetted, hostile rejected and refused at ingest); gaps count 2 usable, 1 rejected; with a commercial-safe brief, search finds the MIT cards and hides the restricted and hostile ones; personal mode finds the ticker; 2 cards then E_BUDGET; skeleton within the token target; derive writes tokens and instrumentation and refuses the restricted asset; the license report is ok with MIT and the Remotion runtime line | PASS | `crates/ck-cli/tests/assets_proof.rs` `sources_become_searchable_cards_within_budget_and_license` |
+| Step 9: wave 3 frame-clock adapter and determinism tests (GSAP, Motion, Origin UI, Launch UI); preview.webp; icon, LUT and sfx ingest; site-license snapshots (Kenney, Pixabay, IWLTBAP) | BLOCKED | Adapter, determinism tests and previews need the Phase 9 render worker; non-code ingest not built; site sources have no confirmed listing yet |
+| Step 9: rust-reviewer and spec-checker subagents | BLOCKED | Agent types unavailable in this session; self review in PROGRESS.md |
+| Phase 8 close run | PASS | 2026-10-30 `just check` and `just test`: 329 of 329 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16 |
 | Step 1 run | PASS | 2026-10-30 `just check`: 298 of 298 nextest (1 skipped), hooks 41 of 41 |
 
 ## Phase 7: voice slice (2026-10-29, done; Fish Audio TTS, STT and cloning are PLACEHOLDER stubs)

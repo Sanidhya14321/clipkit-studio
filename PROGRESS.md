@@ -1,16 +1,17 @@
 # Progress
 
 STATUS: RUNNING
-PHASE: 8
+PHASE: 9
 
 ## Handoff (latest)
-1. Done: Phase 7 (voice slice): voice script/mode/speak/clone/captions with MCP twins, take processing (trim, -16 LUFS, fit), record-along studio panel, consent-gated cloning, captions from take timing, push-to-talk commands, `ck ask`; proof `crates/ck-cli/tests/voice_proof.rs`.
-2. Proof: `just check` and `just test` 294 of 294 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16. Evidence in VERIFICATION.md, Phase 7.
-3. Open: all Fish Audio calls (TTS, STT, cloning) are PLACEHOLDER stubs until the owner adds FISH_AUDIO_API_KEY and the API is verified; caption words are not drawn in the preview yet; crossfades and music ducking at mix time wait for the Phase 9 render path; reviewer agents not run.
-4. Next: Phase 8 assets at scale (card ingestion, AST extraction, tantivy search, retrieval ladder with budget gate, derive with codemods, Source Hub with vetting, license mode, collections). Plan it first; it touches third-party code and licenses, so read spec 07 and 14 closely.
-5. Start: `just check`; phase-runner and asset-pipeline skills; spec 07, 09, 14.
+1. Done: Phase 8 (assets at scale): cards and catalog, Source Hub registry, vetting without running code (quarantine, license from text, lure and dependency checks, sources.lock), oxc AST extraction and ingest, tantivy search with the retrieval ladder and budget gate (E_BUDGET), license mode and `ck license report`, derive with codemods; wave 2: rendercomp-free ingested (62 cards), simple-icons vetted. Proof `crates/ck-cli/tests/assets_proof.rs`.
+2. Proof: `just check` and `just test` 329 of 329 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16. Evidence in VERIFICATION.md, Phase 8.
+3. Open: wave 3 frame-clock adapter and determinism tests, preview.webp and the derived copy's type check and first render (all need the Phase 9 render worker); icon, LUT and sfx ingest; tabler-icons too large for the quarantine limits; reviewer agents not run; Fish Audio provider calls (Phase 5 and 7).
+4. Next: Phase 9 polish and proof (Node render worker with Remotion, render cache, history and branches, variants, sound design, critic pass, eval and bench harness, trace bundle, replay and bisect, demo reset). Plan it first.
+5. Start: `just check`; phase-runner skill; spec 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7).
 
 ## Open questions
+- Phase 8 close: the Phase 9 render worker must also cover the wave 3 frame-clock adapter with determinism tests (same frame twice, out of order) before any wrappable card goes live, card previews (preview.webp) and the derived copy's type check and first render. Non-code ingest (SVG icons, LUTs, sfx) and a path filter for very large repos (tabler-icons) are not built.
 - Phase 7 close: Fish Audio TTS (`FishTts`), STT (`FishStt`) and cloning are stubs; with the key, verify the API (spec 8.3), implement them behind the existing `Speaker` and `Transcriber` traits, and add cassette tests. Spec 8.3's crossfades and music ducking belong to the mix in the Phase 9 render path; the sound plan already emits duck cues.
 - Phase 7 step 6: `ck-server` `tests::idle::only_authorized_calls_count` uses 40 ms wall-clock margins and failed once under a loaded full run; move it to paused tokio time like the other idle tests.
 - Phase 6 close: self review against spec found these gaps outside spec 12's Phase 6 list, carried: Stop button with cooperative cancel (spec 5.2), timeline drag/trim/split/snapping/zoom (spec 5.4), loop range in the studio. Run the reviewer agents on e33924a^..HEAD when available.
@@ -51,7 +52,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 8: assets at scale (2026-10-30, in progress)
+## Phase 8: assets at scale (2026-10-30, done; wave 3 adapters, previews and non-code ingest carried)
 
 Spec: 07, 09 (retrieval budget), 14 (wave 2 and 3, 14.7 checks). Owner approved network fetches and pipeline-first (2026-10-30). Proof: a vetted source is ingested into cards and ast.json without running its code, search returns it within the budget gate in the right license mode, a restricted fixture is blocked in commercial-safe mode, a derived copy carries tokens and instrumentation, and the export license report lists it.
 
@@ -64,7 +65,7 @@ Steps:
 - [x] 6. License mode in the brief, respected by search, recipes and export; `ck license report` (asset, Remotion runtime, attribution and trademark notes).
 - [x] 7. Derive with codemods (type check and first render carried to Phase 9): project-local copy with tokens, easing and data-ck instrumentation, props schema; provenance recorded; `ck assets derive`.
 - [x] 8. Wave 2 for real (rendercomp-free ingested; simple-icons vetted; tabler-icons too large; others lack a confirmed repo): vet and ingest the sources whose license reads permissive from the original repo; everything else stays unverified.
-- [ ] 9. Proof run, self review, evidence.
+- [x] 9. Proof run (`crates/ck-cli/tests/assets_proof.rs`), self review, evidence.
 
 Versions (2026-10-30): tantivy 0.26.2 (2026-09-08; 0.27.0 is under two weeks old), oxc_parser/oxc_ast/oxc_allocator/oxc_span 0.154.0 (2026-10-13).
 
