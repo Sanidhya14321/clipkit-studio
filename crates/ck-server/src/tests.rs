@@ -15,6 +15,7 @@ mod live;
 mod look;
 mod ops;
 mod recipe;
+mod reference;
 mod sound;
 mod studio;
 mod verify;

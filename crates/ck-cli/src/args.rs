@@ -149,6 +149,9 @@ pub enum Command {
         #[arg(long)]
         gate: Option<String>,
     },
+    /// Reference video statistics and suggested brief fields.
+    #[command(subcommand)]
+    Reference(ReferenceCommand),
     /// Recent revisions in short.
     History {
         #[arg(long)]
@@ -577,4 +580,14 @@ pub enum BranchCommand {
     List,
     /// Switch to a saved branch (one undoable revision).
     Switch { name: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum ReferenceCommand {
+    /// Statistics only; --apply writes suggested brief fields (source reference).
+    Analyze {
+        path: String,
+        #[arg(long)]
+        apply: bool,
+    },
 }

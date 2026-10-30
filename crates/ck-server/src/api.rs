@@ -30,6 +30,7 @@ use crate::session::history::{HistoryRequest, SplitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
+use crate::session::reference::ReferenceRequest;
 use crate::session::render::RenderCheckRequest;
 use crate::session::verify::VerifyRequest;
 use crate::session::voice::{
@@ -76,6 +77,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/assets/derive", post(derive))
         .route("/api/render/check", post(render_check))
         .route("/api/history", get(history))
+        .route("/api/reference/analyze", post(reference_analyze))
         .route("/api/branch/save", post(branch_save))
         .route("/api/branch/list", get(branch_list))
         .route("/api/branch/switch", post(branch_switch))
@@ -519,6 +521,14 @@ async fn variants(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.variants(&req)).await
+}
+
+async fn reference_analyze(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<ReferenceRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.reference_analyze(&req)).await
 }
 
 async fn look_apply(

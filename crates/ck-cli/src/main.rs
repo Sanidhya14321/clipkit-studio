@@ -29,6 +29,7 @@ use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
+use ck_server::session::reference::ReferenceRequest;
 use ck_server::session::render::RenderCheckRequest;
 use ck_server::session::verify::VerifyRequest;
 use ck_server::session::voice::{
@@ -41,8 +42,8 @@ use serde::Serialize;
 use args::{
     AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
     CutCommand, DemoCommand, LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg,
-    ProjectCommand, RecipeCommand, RenderCommand, SoundCommand, SourcesCommand, TasteCommand,
-    TraceCommand, TranscriptCommand, VoiceCommand,
+    ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand, SourcesCommand,
+    TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -416,6 +417,13 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             let report = ck_eval::evaluate(&cli.dir, &ck_eval::EvalRequest { video, expect })?;
             capped_print("eval", ck_eval::caps::EVAL, report)
+        }
+        Command::Reference(ReferenceCommand::Analyze { path, apply }) => {
+            let path = std::path::absolute(&path)
+                .map_err(|e| request_err(format!("reference path: {e}")))?
+                .to_string_lossy()
+                .into_owned();
+            print(&ops()?.reference_analyze(&ReferenceRequest { path, apply })?)
         }
         Command::History { limit } => print(&ops()?.history(&RevHistoryRequest { limit })?),
         Command::Branch(BranchCommand::Save { name }) => {

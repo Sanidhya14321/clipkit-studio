@@ -37,6 +37,7 @@ pub mod import;
 pub mod layout;
 pub mod look;
 pub mod recipe;
+pub mod reference;
 pub mod render;
 pub mod sound;
 pub mod verify;

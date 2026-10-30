@@ -603,3 +603,6 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Phase 10 step 1: critic pass (2026-10-30)
 - `verify --critic` (the skill already called it) adds the contact sheet; plain `verify` is unchanged. Frames: every layer's start + 0.1 s and midpoint, deduplicated within 0.25 s, then 6 spread evenly; the critic itself is the existing `clipkit-critic` subagent (read-only, at most ten lines), which covers Phase 10's "sub-agent roles" item for the critic role.
 - Session roots are now absolute: paths handed to the worker (which runs in `render-worker/`) were relative when the studio was started with a relative `--dir`.
+
+## Phase 10 step 2: reference match (2026-10-30)
+- Statistics only (spec 8.1): nothing of the reference is copied or stored. Shots come from the scene detector (scdet in RGB); pacing is the level whose average shot is nearest in log scale; aspect snaps to 16:9, 9:16, 1:1 or 4:5 within 2%. Applied fields get confidence 0.6 and never replace a `user` field.

@@ -40,6 +40,7 @@ use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
+use ck_server::session::reference::ReferenceRequest;
 use ck_server::session::render::RenderCheckRequest;
 use ck_server::session::verify::VerifyRequest;
 use ck_server::session::voice::{
@@ -410,6 +411,14 @@ pub fn specs() -> Vec<ToolSpec> {
              the unstable frames (time- or random-dependent layers).",
             caps::RENDER_CHECK,
         ),
+        spec::<ReferenceRequest>(
+            "reference_analyze",
+            "ck reference analyze",
+            "Statistics of a reference video only (duration, aspect, shot lengths, cuts per \
+             15 s, loudness) and suggested brief fields; apply=true writes them with source \
+             reference, keeping fields the user set.",
+            caps::REFERENCE,
+        ),
         spec::<RevHistoryRequest>(
             "history",
             "ck history",
@@ -739,6 +748,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
         "history" => json(&ops.history(&parse::<RevHistoryRequest>(args)?)?),
+        "reference_analyze" => json(&ops.reference_analyze(&parse::<ReferenceRequest>(args)?)?),
         "branch_save" => json(&ops.branch_save(&parse::<BranchRequest>(args)?)?),
         "branch_list" => {
             let StatusArgs {} = parse(args)?;

@@ -1501,6 +1501,30 @@ expression: specs()
     }
   },
   {
+    "name": "reference_analyze",
+    "command": "ck reference analyze",
+    "description": "Statistics of a reference video only (duration, aspect, shot lengths, cuts per 15 s, loudness) and suggested brief fields; apply=true writes them with source reference, keeping fields the user set.",
+    "cap": 1024,
+    "inputSchema": {
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "path": {
+          "description": "Path of the reference video (absolute, or relative to the project folder).",
+          "type": "string"
+        },
+        "apply": {
+          "description": "Write the suggestions into the brief (fields the user set are kept).",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  {
     "name": "history",
     "command": "ck history",
     "description": "Recent revisions in short, newest first: rev, author, label, layers touched.",

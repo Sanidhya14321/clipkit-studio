@@ -59,7 +59,7 @@ Spec: 12 (Phase 10), 04 (critic pass, storyboard checkpoint), 06 (clipkit-critic
 
 Steps:
 - [x] 1. Critic pass: `ck critic sheet` (6 low-resolution frames at cuts and motion peaks, stitched into one contact sheet) and the plugin's read-only `clipkit-critic` subagent (sub-agent roles).
-- [ ] 2. Reference match: `ck reference analyze <video>` (statistics only: duration, aspect, shot lengths, cuts per 15 s, loudness) with suggested brief fields sourced `reference`.
+- [x] 2. Reference match: `ck reference analyze <video>` (statistics only: duration, aspect, shot lengths, cuts per 15 s, loudness) with suggested brief fields sourced `reference`.
 - [ ] 3. Taste profile: local editable `profile.json` learned from what the user picks; fills brief defaults (source `profile`), never overrides explicit choices; `ck profile show|clear|disable`.
 - [ ] 4. Storyboard checkpoint: `ck storyboard get` (a still per scene) and the human confirm.
 - [ ] 5. OpenTimelineIO and SRT export.

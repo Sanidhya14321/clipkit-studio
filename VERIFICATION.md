@@ -255,6 +255,7 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 
 | Check | Result | Evidence |
 | --- | --- | --- |
+| Step 2: `ck reference analyze <video> [--apply]` + MCP twin: statistics only (duration, aspect, shots, average/min/max shot, cuts per 15 s, loudness), suggested length, aspect and pacing (nearest average shot on the pacing scale); apply writes them with source reference and keeps user-set fields | PASS | `ck-server` `session::reference::tests::*` (scenes fixture: 5 shots of 2 s, lively), `tests::reference::apply_fills_reference_fields_and_keeps_the_users`; CLI/MCP parity in `comment_tools_answer_like_their_cli_twins` |
 | Step 1: critic pass (spec 4.3): `ck verify --critic` (MCP `verify` with `critic`) renders 6 frames chosen from layer starts and midpoints (cuts, landings, motion peaks) through the worker and tiles them 3x2 at 320 px into `.clipkit/critic/sheet-<rev>.png` for the existing read-only `clipkit-critic` subagent; fixed: session roots are made absolute (a studio started with `--dir .` handed relative paths to the worker) | PASS | `ck-server` `session::render::tests::critic_times_spread_six_frames_over_cuts_and_peaks`; `ck-media` `mix::tests::a_contact_sheet_tiles_frames_in_a_grid`; `generate_proof` (960 px sheet); manual 2026-10-30 on the demo: sheet shows the hook, stat and outro scenes |
 
 ## Phase 9: polish and proof (2026-10-30, done; sound design, critic pass, bench results and some studio views carried)

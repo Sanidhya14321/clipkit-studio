@@ -35,6 +35,7 @@ use crate::session::import::{ImportRequest, ImportResult};
 use crate::session::layout::LayoutCheckResult;
 use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
+use crate::session::reference::{ReferenceRequest, ReferenceResult};
 use crate::session::render::{RenderCheckRequest, RenderCheckResult};
 use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::verify::{VerifyIssue, VerifyRequest, VerifyResult};
@@ -78,6 +79,7 @@ pub mod caps {
     pub const VOICE_SCRIPT: usize = 4 * 1024;
     pub const VOICE_WRITE: usize = 1024;
     pub const ASK: usize = 1024;
+    pub const REFERENCE: usize = 1024;
     pub const DERIVE: usize = 2 * 1024;
     pub const RENDER_CHECK: usize = 1024;
     /// About 300 tokens (spec 6.4).
@@ -375,6 +377,12 @@ impl Ops {
     pub fn variants(&self, req: &VariantsRequest) -> CkResult<VariantsResult> {
         let reply = self.client.post_slow("/api/variants", req)?;
         capped("variants", crate::session::branch::caps::VARIANTS, reply)
+    }
+
+    /// `reference analyze`: a reference video's statistics and suggested brief fields.
+    pub fn reference_analyze(&self, req: &ReferenceRequest) -> CkResult<ReferenceResult> {
+        let reply = self.client.post_slow("/api/reference/analyze", req)?;
+        capped("reference analyze", caps::REFERENCE, reply)
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.

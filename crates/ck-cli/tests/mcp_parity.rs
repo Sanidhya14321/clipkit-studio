@@ -421,6 +421,24 @@ fn comment_tools_answer_like_their_cli_twins() {
         err_line(d, &["ask", "--id", "q9", "--timeout", "0"])
     );
 
+    // Reference statistics answer alike (fixture media when generated).
+    let scenes = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/generated/scenes.mp4");
+    if scenes.is_file() {
+        let scenes = scenes.canonicalize().unwrap();
+        let cli = ok_line(
+            d,
+            &["reference", "analyze", scenes.to_str().unwrap()],
+            caps::REFERENCE,
+        );
+        let tool = mcp.ok(
+            "reference_analyze",
+            json!({ "path": scenes }),
+            caps::REFERENCE,
+        );
+        assert_eq!(cli, tool);
+        assert!(cli.contains("\"pacing\":\"lively\""), "{cli}");
+    }
+
     let refused = mcp.err("comments_resolve", json!({ "id": "c9" }));
     assert_eq!(code(&refused), "E_NOT_FOUND");
     assert_eq!(refused, err_line(d, &["comments", "resolve", "c9"]));
