@@ -521,3 +521,32 @@ Review note: reviewer/test subagents supplied earlier findings, which were addre
 ## Demo quality follow-up audit
 
 Owner asks which assets are used and why the video is not fast-paced beat-wise. Current URL port 50696 is the original 15-second smoke-test demo: three original recipes, base holds of 4/5/6 seconds, no imported music, external derived asset, beat grid or beat sheet. The existing sound planner has cue timings without sound assets, and energy/beat gates remain absent. Functional test PASS must not be presented as creative-quality acceptance. Compared the supplied Update 5 section 3 and Update 6 core directive/section 4.2; recorded evidence in `docs/updates/ui-workflow-evidence/demo-pacing-audit.json` and `ASSET_USAGE_AUDIT.md`. No application code or main-checkout file changed; Update 5/6 backend implementation remains separately coordinated.
+
+## Update 6 implementation plan — awaiting owner approval
+
+Owner explicitly requested implementation of the attached Update 6 prompt. It is retained verbatim in docs/updates/UPDATE_6.md as requirements; the document's kickoff text is not separate authority to change protected specs or bypass review gates. Continue in the isolated `codex/ui-pro` worktree. Main is clean at 2d0cc96; other Update 5 chats are not currently loaded. Do not modify their checkout or push.
+
+Preconditions: existing U6-0 source/license audit is committed; stabilization evidence exists for canvas, stage enforcement, export gate refusal, loudness and command agreement. The UI branch also passed 377 Rust tests, 41 hooks, 47 frontend unit tests and 130 real-server browser runs. These results do not prove Update 6 quality checks. Preserve the current Remotion engine through its adapter while the engine decision remains open, per Update 6 rule 0.4.
+
+### U6-1: executable asset supply and media analysis
+
+1. Verify direct-use component, SFX and music sources against original license texts; record origin/version/hash and rejection reasons. Start with verified permissive supply. Keep unknown/restricted/paid sources disabled. Do not execute quarantine. Resolve checks that can be verified independently; ask only about terms requiring an owner's decision.
+2. Extend ingestion to bounded local audio/media inputs, with trusted ffmpeg/ffprobe argument arrays. Record duration, peak/loudness, onset, tempo/beat confidence and music energy/drop candidates. Rust owns analysis; no paid API or new dependency without verified need.
+3. Close the derive-to-render gap for an explicitly supported, reviewed native/direct-use subset. Require adaptation, provenance, type-check/first-render and deterministic-frame evidence. Unknown components must be refused by the backend rather than rendered as labels. Do not import arbitrary derived/quarantine code into studio.
+4. Preserve CLI/MCP operation parity and response size caps. Introduce model/schema changes only through generated bindings and backward-compatible defaults. Current project edits remain revisioned and authenticated.
+5. Tests: synthetic known-onset/tempo audio; silence/low-confidence/invalid/oversize inputs; license/reference-only refusal; ingestion/provenance; deterministic supported rendering and unsupported export refusal; CLI/MCP schema/parity/size caps. Run just check, just test and real-server browser import/preview/export coverage. Record F2 and relevant foundations for F4/F5/F9/F10 without claiming all Update 6 checks pass.
+6. Commit this phase and update audit/decisions/evidence. No application code until this concrete plan is approved, as required by AGENTS.md and phase-runner.
+
+Ownership: ck-assets ingestion/card/vetting/report/derive; ck-media analysis; narrow core model/generated bindings as required; ck-server/CLI/MCP adapters and render-worker registration; studio capability display and integration tests. Check main for newly committed overlapping work before each shared-module edit; coordinate rather than overwrite.
+
+### Remaining approved-requirement sequence (separate phase plans)
+
+- U6-2: remaining media kinds, transitions/backgrounds/fonts/icons/LUTs and server-enforced adaptation/usage rules; collision foundations from section 3A.
+- U6-3: candidate starter collection, real previews/license/grade and collection review page. Stop for owner review before promoting the collection.
+- U6-4: fold in missing Update 5 dependencies: beat grid/sheet, onset-aligned sound kits, energy/beat gates, fast default and five format planners. Implement audio ducking and audible preview needed to judge rhythm. Preserve explicit slow requests. Licensed music or clearly labeled generated placeholder fallback only.
+- U6-5: transcript-driven punch-ins, face/caption-safe zones, licensed b-roll draft/swap and collision refusal/fix UI.
+- U6-6: numeric taste files and five golden projects/exports with measured energy, beat alignment, loudness, collisions and playback. Owner footage stays PLACEHOLDER until supplied. Stop for owner ratings.
+- U6-7: one web-library frame-clock adapter at a time with deterministic out-of-order frame tests and license proof.
+- U6-8: real A0/A1/B agent benchmark, three runs per golden brief, measured report and limitations; stop for report review. No invented ratings, benchmark numbers, licenses or assets.
+
+Approval requested for U6-1 only; later collection/example/report human gates remain required by the adopted prompt. Full Update 6 remains unimplemented until its F1–F15 checks have actual evidence.
