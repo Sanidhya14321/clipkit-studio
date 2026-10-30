@@ -3,3 +3,5 @@
 # ~/.clipkit/profile.json. Applies only to processes cargo runs.
 [env]
 CK_PROFILE = { value = "target/test-taste-profile.json", relative = true }
+# Tests act as the studio (crates/ck-server/src/auth.rs).
+CK_STUDIO_TOKEN = "test-studio-token"

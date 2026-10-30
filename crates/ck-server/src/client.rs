@@ -36,7 +36,18 @@ impl Client {
                 format!("no running studio: {}", e.message),
             )
         })?;
-        Ok(Self::new(&info))
+        Ok(Self::as_caller(&info))
+    }
+
+    /// The agent's client, or the studio's when its token is named (tests).
+    pub fn as_caller(info: &ServerInfo) -> Self {
+        let mut client = Self::new(info);
+        if let Ok(t) = std::env::var(crate::auth::STUDIO_TOKEN_ENV)
+            && !t.is_empty()
+        {
+            client.token = t;
+        }
+        client
     }
 
     pub fn new(info: &ServerInfo) -> Self {

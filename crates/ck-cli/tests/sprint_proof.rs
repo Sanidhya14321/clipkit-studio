@@ -234,3 +234,22 @@ fn json_inputs_share_one_convention_and_recipes_ripple_in_order() {
         "{summary}"
     );
 }
+
+#[test]
+fn an_agent_token_cannot_act_as_the_user() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _s = Studio::start(d);
+    let edit = json!({ "baseRev": 0, "author": "human", "ops": [
+        { "op": "replace", "path": "/brief/status", "value": "confirmed" }] });
+    let out = Command::new(env!("CARGO_BIN_EXE_ck"))
+        .args(["project", "patch", &edit.to_string()])
+        .current_dir(d)
+        .env_remove("CK_STUDIO_TOKEN")
+        .output()
+        .unwrap();
+    let v: Value = serde_json::from_slice(&[out.stdout, out.stderr].concat()).unwrap();
+    assert_eq!(v["code"], "E_AUTH", "{v}");
+    let info = std::fs::read_to_string(d.join(".clipkit/server.json")).unwrap();
+    assert!(!info.contains("test-studio-token"));
+}

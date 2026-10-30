@@ -19,13 +19,36 @@ pub const TOKEN_HEADER: &str = "x-ck-token";
 pub struct Guard {
     port: u16,
     token: Arc<str>,
+    studio: Arc<str>,
 }
+
+/// Who a request's token says it is. The studio token lives in server memory and the browser
+/// tab; this is a guardrail against a rule-following agent, not a boundary against code running
+/// as the same OS user (VERIFICATION.md, L14).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Role {
+    Agent,
+    Studio,
+}
+
+/// Environment variable that fixes the studio token, for tests.
+pub const STUDIO_TOKEN_ENV: &str = "CK_STUDIO_TOKEN";
 
 impl Guard {
     pub fn new(port: u16, token: &str) -> Self {
         Self {
             port,
             token: Arc::from(token),
+            studio: Arc::from(token),
+        }
+    }
+
+    /// A guard with a separate studio token.
+    pub fn with_studio(port: u16, token: &str, studio: &str) -> Self {
+        Self {
+            port,
+            token: Arc::from(token),
+            studio: Arc::from(studio),
         }
     }
 
@@ -55,7 +78,7 @@ impl Guard {
         Ok(())
     }
 
-    pub fn check_token(&self, req: &Request) -> Result<(), CkError> {
+    pub fn check_token(&self, req: &Request) -> Result<Role, CkError> {
         let from_header = req
             .headers()
             .get(TOKEN_HEADER)
@@ -68,7 +91,8 @@ impl Guard {
             .flatten()
             .and_then(|q| q.split('&').find_map(|pair| pair.strip_prefix("token=")));
         match from_header.or(from_query) {
-            Some(t) if constant_time_eq(t.as_bytes(), self.token.as_bytes()) => Ok(()),
+            Some(t) if constant_time_eq(t.as_bytes(), self.studio.as_bytes()) => Ok(Role::Studio),
+            Some(t) if constant_time_eq(t.as_bytes(), self.token.as_bytes()) => Ok(Role::Agent),
             Some(_) => Err(denied("session token is wrong")),
             None => Err(denied("session token is missing")),
         }
@@ -92,9 +116,12 @@ pub async fn site_guard(State(guard): State<Guard>, req: Request, next: Next) ->
 }
 
 /// API and WebSocket routes: the session token.
-pub async fn token_guard(State(guard): State<Guard>, req: Request, next: Next) -> Response {
+pub async fn token_guard(State(guard): State<Guard>, mut req: Request, next: Next) -> Response {
     match guard.check_token(&req) {
-        Ok(()) => next.run(req).await,
+        Ok(role) => {
+            req.extensions_mut().insert(role);
+            next.run(req).await
+        }
         Err(e) => ApiError(e).into_response(),
     }
 }

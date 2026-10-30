@@ -72,7 +72,7 @@ impl Launcher {
 /// error, counts as running; only E_SERVER (no server.json, nothing listening) means none.
 pub fn running(root: &Path) -> Option<ServerInfo> {
     let info = ServerInfo::read(root).ok()?;
-    let answers = Ops::new(Client::new(&info))
+    let answers = Ops::new(Client::as_caller(&info))
         .status()
         .map_or_else(|e| e.code != ErrorCode::Server, |_| true);
     answers.then_some(info)
@@ -86,7 +86,7 @@ pub fn connect(dir: &Path, launcher: &Launcher) -> CkResult<Ops> {
         Some(info) => info,
         None => ensure_with(dir, Open::BestEffort, launcher)?.0,
     };
-    Ok(Ops::new(Client::new(&info)))
+    Ok(Ops::new(Client::as_caller(&info)))
 }
 
 /// Make sure a studio serves the project in `dir`, and open its tab once if asked.
@@ -259,7 +259,10 @@ fn open_once(root: &Path, info: &ServerInfo) -> CkResult<bool> {
     }
     // Marker first: a tab that opened is never reported as a failure or opened twice.
     std::fs::write(&marker, id).map_err(|e| io_err(&marker, e))?;
-    if let Err(e) = open_browser(&format!("{}#token={}", info.url, info.token)) {
+    if let Err(e) = crate::client::Client::new(info)
+        .post::<_, serde_json::Value>("/api/open-studio", &())
+        .map(|_| ())
+    {
         let _ = std::fs::remove_file(&marker);
         return Err(e);
     }
@@ -268,7 +271,7 @@ fn open_once(root: &Path, info: &ServerInfo) -> CkResult<bool> {
 
 /// `$BROWSER` (its first `:`-separated entry) or the platform opener, given the URL as one
 /// argument. Never through a shell.
-fn open_browser(url: &str) -> CkResult<()> {
+pub fn open_browser(url: &str) -> CkResult<()> {
     let custom = std::env::var("BROWSER")
         .ok()
         .and_then(|b| b.split(':').next().map(str::to_owned))
@@ -285,7 +288,7 @@ fn open_browser(url: &str) -> CkResult<()> {
         .spawn()
         .map_err(|e| {
             server_err(format!("cannot open a browser: {e}"))
-                .with_hint("Open the url from ck studio --ensure with #token= from server.json.")
+                .with_hint("Set BROWSER and restart the studio.")
         })?;
     reap(child);
     Ok(())

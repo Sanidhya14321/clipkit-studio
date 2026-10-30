@@ -28,6 +28,8 @@ export const test = base.extend<{ studio: Studio }>({
     const dir = await mkdtemp(join(tmpdir(), "ck-e2e-"));
     // Studios under test learn into a scratch taste profile, never the user's.
     process.env.CK_PROFILE = join(dir, "taste-profile.json");
+    // The studio token never reaches server.json; the fixture fixes it.
+    process.env.CK_STUDIO_TOKEN = "e2e-studio-token";
     const child = spawn(CK_BIN, ["studio", "--dir", dir], {
       stdio: ["ignore", "pipe", "inherit"],
     });
@@ -40,7 +42,7 @@ export const test = base.extend<{ studio: Studio }>({
         const { stdout } = await run(CK_BIN, [...args, "--dir", dir]);
         return JSON.parse(stdout) as unknown;
       };
-      await use({ dir, url, token: info.token, ck });
+      await use({ dir, url, token: "e2e-studio-token", ck });
     } finally {
       child.kill("SIGTERM");
       await new Promise((r) => child.once("exit", r));

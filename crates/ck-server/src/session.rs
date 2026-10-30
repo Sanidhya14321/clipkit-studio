@@ -114,6 +114,8 @@ pub struct Session {
     /// Refuse agent calls out of pipeline order. Unit tests of one operation opt out.
     pipeline_gates: bool,
     autopilot: bool,
+    /// The browser link with the studio token; held only in memory.
+    studio_link: Mutex<Option<String>>,
     retry: Mutex<ck_pipeline::retry::RetryGate>,
 }
 
@@ -146,6 +148,7 @@ impl Session {
             },
             pipeline_gates: !cfg!(test),
             autopilot: false,
+            studio_link: Mutex::default(),
             retry: Mutex::default(),
         })
     }
@@ -154,6 +157,25 @@ impl Session {
     pub fn with_pipeline_gates(mut self, on: bool) -> Self {
         self.pipeline_gates = on;
         self
+    }
+
+    pub fn set_studio_link(&self, link: String) -> CkResult<()> {
+        *self
+            .studio_link
+            .lock()
+            .map_err(|_| CkError::new(ErrorCode::Server, "studio link poisoned"))? = Some(link);
+        Ok(())
+    }
+
+    /// Open the studio from the server process, so the link never passes through the agent.
+    pub fn open_studio(&self) -> CkResult<()> {
+        let link = self
+            .studio_link
+            .lock()
+            .map_err(|_| CkError::new(ErrorCode::Server, "studio link poisoned"))?
+            .clone()
+            .ok_or_else(|| CkError::new(ErrorCode::Server, "studio link not set"))?;
+        crate::launch::open_browser(&link)
     }
 
     /// Autopilot: the user asked for no questions, so this session treats the brief as settled.

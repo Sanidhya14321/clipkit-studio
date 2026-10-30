@@ -2,7 +2,8 @@
 
 ## Update 5 and 6 queue (owner order, 2026-10-30)
 - [x] U5-2: requirements stay in docs/updates/ (spec frozen)
-- [ ] U5-3 draft and apply; interrupt and redirect (needs separate studio and agent credentials first)
+- [x] U5-3a separate studio token (patch, consent, stop)
+- [ ] U5-3b draft and apply; interrupt and redirect
 - [ ] U5-4 energy gates, playback check, mood to look, caption presets, router skill
 - [ ] U5-5 beat grid, beat sheet, sound kit on cuts
 - [ ] U5-6 kinetic block library

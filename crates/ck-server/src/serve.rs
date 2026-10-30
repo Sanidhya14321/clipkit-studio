@@ -33,7 +33,12 @@ impl Server {
             .port();
         let info = ServerInfo::new(port, new_token()?);
         info.write(root)?;
-        let router = api::router(session, Guard::new(port, &info.token));
+        let studio = match std::env::var(crate::auth::STUDIO_TOKEN_ENV) {
+            Ok(t) if !t.is_empty() => t,
+            _ => new_token()?,
+        };
+        session.set_studio_link(format!("{}#token={studio}", info.url))?;
+        let router = api::router(session, Guard::with_studio(port, &info.token, &studio));
         tracing::info!(port, "server listening");
         Ok(Self {
             listener,

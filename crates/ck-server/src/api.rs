@@ -1,5 +1,6 @@
 //! HTTP routes. Handlers are thin: parse, run the session call off the async runtime, reply.
 
+use axum::Extension;
 use std::sync::Arc;
 
 use axum::extract::rejection::{JsonRejection, QueryRejection};
@@ -108,6 +109,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         // Studio only: keyboard and push-to-talk commands.
         .route("/api/undo", post(undo))
         .route("/api/stop", post(stop))
+        .route("/api/open-studio", post(open_studio))
         .route("/api/ask", post(ask))
         .route("/api/asks", get(asks_open))
         .route("/api/ask/answer", post(ask_answer))
@@ -169,11 +171,30 @@ async fn project(State(s): State<Arc<Session>>, Query(q): Query<ProjectQuery>) -
     }
 }
 
+/// Human acts need the studio token: an agent token may not claim to be the user.
+fn studio_only(role: crate::auth::Role) -> Result<(), ApiError> {
+    if role == crate::auth::Role::Studio {
+        return Ok(());
+    }
+    Err(ApiError(ck_core::CkError::new(
+        ck_core::ErrorCode::Auth,
+        "only the studio can act as the user",
+    )))
+}
+
+async fn open_studio(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.open_studio().map(|()| serde_json::json!({}))).await
+}
+
 async fn patch(
     State(s): State<Arc<Session>>,
+    Extension(role): Extension<crate::auth::Role>,
     body: Result<Json<PatchRequest>, JsonRejection>,
 ) -> ApiResult {
     let req = parse(body)?;
+    if req.author != ck_core::model::Author::Agent {
+        studio_only(role)?;
+    }
     blocking(s, move |s| s.patch(&req)).await
 }
 
@@ -398,8 +419,10 @@ async fn voice_active_take(
 
 async fn voice_consent(
     State(s): State<Arc<Session>>,
+    Extension(role): Extension<crate::auth::Role>,
     body: Result<Json<ConsentRequest>, JsonRejection>,
 ) -> ApiResult {
+    studio_only(role)?;
     let req = parse(body)?;
     blocking(s, move |s| s.voice_consent(&req)).await
 }
@@ -566,7 +589,11 @@ async fn export_timeline(
 }
 
 /// Studio only: the Stop button.
-async fn stop(State(s): State<Arc<Session>>) -> ApiResult {
+async fn stop(
+    State(s): State<Arc<Session>>,
+    Extension(role): Extension<crate::auth::Role>,
+) -> ApiResult {
+    studio_only(role)?;
     blocking(s, |s| s.request_stop()).await
 }
 
