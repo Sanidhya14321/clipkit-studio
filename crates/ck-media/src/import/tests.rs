@@ -113,3 +113,62 @@ fn audio_from_a_silent_video_is_a_media_error_and_leaves_no_file() {
     let left = std::fs::read_dir(wav.parent().unwrap()).unwrap().count();
     assert_eq!(left, 0);
 }
+
+fn stream(codec: &str, pix: &str, h: u32, rotation: u32, vfr: bool) -> crate::MediaInfo {
+    crate::MediaInfo {
+        format: "mov,mp4".into(),
+        duration: 1.0,
+        video: Some(crate::VideoStream {
+            index: 0,
+            codec: codec.into(),
+            width: h * 16 / 9 / 2 * 2,
+            height: h,
+            fps: 30.0,
+            variable_frame_rate: vfr,
+            rotation,
+            display_width: h * 16 / 9 / 2 * 2,
+            display_height: h,
+            pix_fmt: pix.into(),
+        }),
+        audio: Vec::new(),
+    }
+}
+
+#[test]
+fn only_browser_ready_video_is_copied_as_the_proxy() {
+    assert!(proxy_ready(&stream("h264", "yuv420p", 720, 0, false)));
+    assert!(!proxy_ready(&stream("h264", "yuv420p", 1080, 0, false)));
+    assert!(!proxy_ready(&stream("hevc", "yuv420p", 720, 0, false)));
+    assert!(!proxy_ready(&stream("h264", "yuv422p10le", 720, 0, false)));
+    assert!(!proxy_ready(&stream("h264", "yuv420p", 720, 90, false)));
+    assert!(!proxy_ready(&stream("h264", "yuv420p", 720, 0, true)));
+}
+
+#[test]
+fn a_large_source_is_still_encoded_down_to_720p() {
+    if fixtures().is_none() {
+        eprintln!("skipped: run `just fixtures` first");
+        return;
+    }
+    let tmp = tempfile::tempdir().unwrap();
+    let src = tmp.path().join("big.mp4");
+    let ok = std::process::Command::new("ffmpeg")
+        .args([
+            "-v",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "testsrc2=s=1920x1080:d=0.5:r=30",
+            "-pix_fmt",
+            "yuv420p",
+        ])
+        .arg(&src)
+        .status()
+        .unwrap()
+        .success();
+    assert!(ok);
+    let out = tmp.path().join("p.mp4");
+    make_proxy(&src, &out).unwrap();
+    assert_eq!(probe(&out).unwrap().video.unwrap().height, 720);
+}

@@ -45,6 +45,9 @@ pub struct VideoStream {
     /// Size as displayed, after rotation.
     pub display_width: u32,
     pub display_height: u32,
+    /// Pixel format as ffprobe names it (for example `yuv420p`); empty when unknown.
+    #[serde(default)]
+    pub pix_fmt: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -107,6 +110,8 @@ struct RawStream {
     sample_rate: Option<String>,
     channels: Option<u32>,
     duration: Option<String>,
+    #[serde(default)]
+    pix_fmt: String,
     #[serde(default)]
     disposition: RawDisposition,
     #[serde(default)]
@@ -228,6 +233,7 @@ fn video_stream(s: &RawStream) -> VideoStream {
         rotation,
         display_width,
         display_height,
+        pix_fmt: s.pix_fmt.clone(),
     }
 }
 

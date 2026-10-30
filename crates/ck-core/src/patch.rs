@@ -13,7 +13,7 @@ use serde_json::Value;
 use ts_rs::TS;
 
 use crate::error::{CkError, CkResult, ErrorCode};
-use crate::model::{Author, Project};
+use crate::model::{Author, Item, Project};
 
 /// Top-level fields only the engine may change.
 const PROTECTED: &[&str] = &["/rev", "/schemaVersion", "/locks", "/pipeline", "/agent"];
@@ -207,19 +207,17 @@ pub const STRUCTURE_LAYER: &str = "@structure";
 /// any other content changed.
 /// Sorted. Every content change produces at least one id, so the lock gate always applies.
 fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
-    let items = |p: &Project| -> CkResult<BTreeMap<String, Value>> {
-        let mut out = BTreeMap::new();
-        for t in &p.tracks {
-            for i in &t.items {
-                let mut v = json(i)?;
-                if let Some(o) = v.as_object_mut() {
-                    o.remove("rev");
-                    o.insert("@track".into(), Value::String(t.id.clone()));
-                }
-                out.insert(i.id.clone(), v);
-            }
-        }
-        Ok(out)
+    // Items by id with their track; compared field by field without their rev (the JSON
+    // round trip this replaced dominated patch time on large projects).
+    let items = |p: &'_ Project| -> BTreeMap<String, (String, Item)> {
+        p.tracks
+            .iter()
+            .flat_map(|t| {
+                t.items
+                    .iter()
+                    .map(move |i| (i.id.clone(), (t.id.clone(), unrevved(i))))
+            })
+            .collect()
     };
     let tracks = |p: &Project| -> BTreeMap<String, Value> {
         p.tracks
@@ -227,17 +225,8 @@ fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
             .map(|t| (t.id.clone(), serde_json::json!({ "kind": t.kind })))
             .collect()
     };
-    let rest = |p: &Project| -> CkResult<Value> {
-        let mut v = content(&json(p)?);
-        if let Some(o) = v.as_object_mut() {
-            o.remove("tracks");
-            o.remove("comments");
-        }
-        Ok(v)
-    };
-
     let mut touched: BTreeSet<String> = BTreeSet::new();
-    let (ia, ib) = (items(a)?, items(b)?);
+    let (ia, ib) = (items(a), items(b));
     touched.extend(
         ia.keys()
             .chain(ib.keys())
@@ -267,7 +256,7 @@ fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
             touched.insert(t.id.clone());
         }
     }
-    if rest(a)? != rest(b)? {
+    if !rest_equal(a, b) {
         touched.insert(PROJECT_LAYER.to_owned());
     }
     if json(&a.comments)? != json(&b.comments)? {
@@ -290,6 +279,53 @@ fn touched_items(a: &Project, b: &Project) -> CkResult<Vec<String>> {
         touched.insert(STRUCTURE_LAYER.to_owned());
     }
     Ok(touched.into_iter().collect())
+}
+
+/// `item` with its rev zeroed, so equality ignores the engine's stamp.
+fn unrevved(item: &Item) -> Item {
+    Item {
+        rev: 0,
+        ..item.clone()
+    }
+}
+
+/// Project-level content other than tracks and comments is equal. Exhaustive on purpose: a new
+/// project field must be placed here (compared, or engine state that is not).
+fn rest_equal(a: &Project, b: &Project) -> bool {
+    let Project {
+        schema_version,
+        id,
+        name,
+        rev: _,
+        settings,
+        mode,
+        brief,
+        plan,
+        tokens,
+        sources,
+        tracks: _,
+        voice_slots,
+        comments: _,
+        assets_used,
+        derived,
+        locks: _,
+        branches,
+        pipeline: _,
+        agent: _,
+    } = a;
+    *schema_version == b.schema_version
+        && *id == b.id
+        && *name == b.name
+        && *settings == b.settings
+        && *mode == b.mode
+        && *brief == b.brief
+        && *plan == b.plan
+        && *tokens == b.tokens
+        && *sources == b.sources
+        && *voice_slots == b.voice_slots
+        && *assets_used == b.assets_used
+        && *derived == b.derived
+        && *branches == b.branches
 }
 
 fn json<T: Serialize>(v: &T) -> CkResult<Value> {

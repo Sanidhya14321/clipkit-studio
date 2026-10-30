@@ -65,9 +65,47 @@ impl CachePaths {
     }
 }
 
+/// True when `info`'s video can serve as the proxy as is: H.264, yuv420p, at most
+/// [`PROXY_MAX_HEIGHT`] tall, even size, no rotation, constant frame rate.
+pub fn proxy_ready(info: &crate::MediaInfo) -> bool {
+    info.video.as_ref().is_some_and(|v| {
+        v.codec == "h264"
+            && v.pix_fmt == "yuv420p"
+            && v.height <= PROXY_MAX_HEIGHT
+            && v.width % 2 == 0
+            && v.height % 2 == 0
+            && v.rotation == 0
+            && !v.variable_frame_rate
+    })
+}
+
 /// Writes an H.264 proxy at most [`PROXY_MAX_HEIGHT`] tall (even size, aspect kept, rotation
 /// applied) with AAC audio when the source has any. Skips the work when `out` already exists.
 pub fn make_proxy(src: &Path, out: &Path) -> Result<(), CkError> {
+    // Already a browser-ready proxy: copy the video stream instead of encoding it again
+    // (an import of 720p H.264 then takes a second, not the length of the clip).
+    if out.is_file() {
+        return Ok(());
+    }
+    if crate::probe(src).is_ok_and(|i| proxy_ready(&i)) {
+        let args: [&OsStr; 14] = [
+            "-map".as_ref(),
+            "0:v:0".as_ref(),
+            "-map".as_ref(),
+            "0:a:0?".as_ref(),
+            "-c:v".as_ref(),
+            "copy".as_ref(),
+            "-c:a".as_ref(),
+            "aac".as_ref(),
+            "-movflags".as_ref(),
+            "+faststart".as_ref(),
+            "-tag:v".as_ref(),
+            "avc1".as_ref(),
+            "-f".as_ref(),
+            "mp4".as_ref(),
+        ];
+        return transcode(src, out, &args);
+    }
     let scale = format!("scale=-2:'min({PROXY_MAX_HEIGHT},trunc(ih/2)*2)'");
     let args: [&OsStr; 20] = [
         "-map".as_ref(),

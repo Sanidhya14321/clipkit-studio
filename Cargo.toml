@@ -67,3 +67,14 @@ todo = "warn"
 
 [profile.dev.package."*"]
 debug = false
+# Dependencies (serde_json, json-patch, tantivy, oxc) optimized in dev and test builds: the
+# debug-built JSON engine dominated test time. Our own crates keep debug settings.
+opt-level = 2
+
+
+# The shipped `ck` binary: link-time optimized and stripped (size and start-up). Builds take
+# longer; development uses the dev profile.
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"

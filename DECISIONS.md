@@ -628,3 +628,11 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Follow-ups: original media and audio items (2026-10-30)
 - The render worker plays originals through `/media/source/<hash>` when the container is mp4, m4v or webm (Chrome decodes those); other containers (mov, mkv, ...) keep the 720p proxy, so a ProRes `.mov` still renders, at proxy quality.
 - Audio items mix at their `volume` as linear gain; `duck` (lowering music under voice) is not applied in the mix yet (the sound plan already emits duck cues).
+
+## Optimization pass (2026-10-30)
+- Measured first: slowest tests, patch latency on large projects (release), search latency, binary size. Changes only where the measurement showed a cost.
+- Dev and test builds compile dependencies at opt-level 2 (first build slower, cached after); our crates stay at debug settings for fast incremental builds.
+- Proxy: sources that already meet the proxy spec are stream-copied (audio still re-encoded to AAC, faststart); everything else is encoded as before.
+- Patch engine: `touched_items` compares items (rev zeroed) and project-level fields by value; the project-fields comparison destructures `Project` exhaustively so a new field cannot be missed silently. The remaining per-patch cost is the JSON patch apply plus forward and inverse diffs, linear in project size and well under the 300 ms target at 2000 layers.
+- Release profile: thin LTO, codegen-units 1, stripped symbols (release builds take about 5 minutes).
+- Not changed after measuring: asset search builds its tantivy index per call (about 10 ms for 62 cards).
