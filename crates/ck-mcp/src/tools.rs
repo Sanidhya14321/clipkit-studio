@@ -33,6 +33,7 @@ use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
+use ck_server::session::render::RenderCheckRequest;
 use ck_server::session::voice::{
     CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
 };
@@ -349,6 +350,14 @@ pub fn specs() -> Vec<ToolSpec> {
              the asset added to assetsUsed. Refused when the license mode does not allow it.",
             caps::DERIVE,
         ),
+        spec::<RenderCheckRequest>(
+            "render_check",
+            "ck render check",
+            "Determinism test: renders frames (default first, middle, last) in order and again \
+             in reverse through the render worker and compares them. deterministic=false lists \
+             the unstable frames (time- or random-dependent layers).",
+            caps::RENDER_CHECK,
+        ),
         spec::<ExportRequest>(
             "export",
             "ck export",
@@ -613,6 +622,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
+        "render_check" => json(&ops.render_check(&parse::<RenderCheckRequest>(args)?)?),
         "assets_derive" => json(&ops.derive(&parse::<DeriveRequest>(args)?)?),
         "comments_list" => json(&ops.comments_list(&parse(args)?)?),
         "ask" => json(&ops.ask(&parse::<AskRequest>(args)?)?),

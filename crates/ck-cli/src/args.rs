@@ -127,7 +127,10 @@ pub enum Command {
     /// Source Hub: list, add and report gaps.
     #[command(subcommand)]
     Sources(SourcesCommand),
-    /// Export a footage-only project to MP4.
+    /// Render checks (determinism).
+    #[command(subcommand)]
+    Render(RenderCommand),
+    /// Export the project to MP4 (fast path or render worker).
     Export {
         /// source, youtube, tiktok, reels or shorts.
         #[arg(long, value_enum, default_value_t = PresetArg::Source)]
@@ -482,5 +485,15 @@ pub enum LicenseCommand {
         /// commercial-safe, personal or any (default: the brief's).
         #[arg(long)]
         mode: Option<String>,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum RenderCommand {
+    /// Render frames twice and out of order; report frames that differ.
+    Check {
+        /// Frame to check; repeat for more (default first, middle, last).
+        #[arg(long = "frame")]
+        frames: Vec<u64>,
     },
 }

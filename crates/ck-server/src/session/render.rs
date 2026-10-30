@@ -8,6 +8,8 @@ use std::process::{Command, Stdio};
 
 use ck_core::model::SourceKind;
 use ck_core::{CkError, CkResult, ErrorCode, Project};
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
@@ -62,6 +64,27 @@ impl Session {
         if out.is_file() {
             return Ok(out);
         }
+        let dir = out.parent().unwrap_or(Path::new("."));
+        std::fs::create_dir_all(dir)
+            .map_err(|e| CkError::new(ErrorCode::Storage, e.to_string()))?;
+        let tmp = dir.join(format!(".tmp-{key}.mp4"));
+        let mut job = self.job(project, &looks)?;
+        job["out"] = json!(tmp);
+        let result = self.run_worker(&job);
+        match result {
+            Ok(()) => {
+                std::fs::rename(&tmp, &out).map_err(|e| render_err(e.to_string()))?;
+                Ok(out)
+            }
+            Err(e) => {
+                let _ = std::fs::remove_file(&tmp);
+                Err(e)
+            }
+        }
+    }
+
+    /// The job fields every render shares: bundle, project, looks and footage URLs.
+    fn job(&self, project: &Project, looks: &Value) -> CkResult<Value> {
         let worker = find_worker(&self.workdir())?;
         let bundle = worker.join("bundle");
         if !bundle.join("index.html").is_file() {
@@ -86,17 +109,18 @@ impl Session {
                 )
             })
             .collect();
-        let dir = out.parent().unwrap_or(Path::new("."));
-        std::fs::create_dir_all(dir)
-            .map_err(|e| CkError::new(ErrorCode::Storage, e.to_string()))?;
-        let tmp = dir.join(format!(".tmp-{key}.mp4"));
-        let job = json!({
+        Ok(json!({
+            "worker": worker,
             "bundle": bundle,
-            "out": tmp,
             "project": project,
             "looks": looks,
             "media": media,
-        });
+        }))
+    }
+
+    /// Runs the worker on `job` and waits for its `done` or `error` line.
+    fn run_worker(&self, job: &Value) -> CkResult<()> {
+        let worker = PathBuf::from(job["worker"].as_str().unwrap_or("render-worker"));
         let mut child = Command::new("node")
             .arg(worker.join("src/render.mjs"))
             .current_dir(&worker)
@@ -127,17 +151,113 @@ impl Session {
         }
         let status = child.wait().map_err(|e| render_err(e.to_string()))?;
         match result {
-            Some(Ok(())) if status.success() => {
-                std::fs::rename(&tmp, &out).map_err(|e| render_err(e.to_string()))?;
-                Ok(out)
-            }
-            other => {
-                let _ = std::fs::remove_file(&tmp);
-                Err(render_err(match other {
-                    Some(Err(e)) => format!("render failed: {e}"),
-                    _ => format!("render worker exited with {status}"),
-                }))
-            }
+            Some(Ok(())) if status.success() => Ok(()),
+            Some(Err(e)) => Err(render_err(format!("render failed: {e}"))),
+            _ => Err(render_err(format!("render worker exited with {status}"))),
         }
     }
+
+    /// `render check` (spec 7.6): renders `frames` in order, then again in reverse (each frame
+    /// twice, out of order) and compares the PNGs. Any difference means the composition depends
+    /// on more than the frame number.
+    pub fn render_check(&self, req: &RenderCheckRequest) -> CkResult<RenderCheckResult> {
+        let project = self.project()?;
+        let fps = f64::from(project.settings.fps);
+        let last = (ck_core::timeline::duration(&project) * fps)
+            .ceil()
+            .max(1.0) as u64
+            - 1;
+        let frames: Vec<u64> = if req.frames.is_empty() {
+            vec![0, last / 2, last]
+        } else {
+            req.frames.iter().map(|f| (*f).min(last)).collect()
+        };
+        let looks = serde_json::to_value(ck_assets::library::looks()?)
+            .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
+        let dir = self.cache_dir().join("renders").join("check");
+        std::fs::create_dir_all(&dir)
+            .map_err(|e| CkError::new(ErrorCode::Storage, e.to_string()))?;
+        let order: Vec<(u64, PathBuf)> = frames
+            .iter()
+            .chain(frames.iter().rev())
+            .enumerate()
+            .map(|(i, f)| (*f, dir.join(format!("{i}-{f}.png"))))
+            .collect();
+        let mut job = self.job(&project, &looks)?;
+        job["out"] = json!(dir);
+        job["stills"] = json!(
+            order
+                .iter()
+                .map(|(f, p)| json!({ "frame": f, "out": p }))
+                .collect::<Vec<_>>()
+        );
+        self.run_worker(&job)?;
+        let mut hashes: std::collections::BTreeMap<u64, Vec<String>> = Default::default();
+        for (f, p) in &order {
+            let bytes =
+                std::fs::read(p).map_err(|e| render_err(format!("{}: {e}", p.display())))?;
+            let h: String = Sha256::digest(&bytes)[..8]
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect();
+            hashes.entry(*f).or_default().push(h);
+            let _ = std::fs::remove_file(p);
+        }
+        let unstable = unstable_frames(&hashes);
+        Ok(RenderCheckResult {
+            frames,
+            deterministic: unstable.is_empty(),
+            unstable,
+        })
+    }
+}
+
+/// Frames whose renders do not all hash the same.
+pub fn unstable_frames(hashes: &std::collections::BTreeMap<u64, Vec<String>>) -> Vec<u64> {
+    hashes
+        .iter()
+        .filter(|(_, hs)| hs.windows(2).any(|w| w[0] != w[1]))
+        .map(|(f, _)| *f)
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_frame_whose_renders_differ_is_unstable() {
+        let h = |s: &[&str]| s.iter().map(|x| (*x).to_owned()).collect::<Vec<_>>();
+        let map = [
+            (0, h(&["a", "a"])),
+            (15, h(&["b", "c"])),
+            (30, h(&["d", "d"])),
+        ]
+        .into_iter()
+        .collect();
+        assert_eq!(unstable_frames(&map), [15]);
+    }
+
+    #[test]
+    fn the_worker_is_found_from_the_repo_or_the_environment() {
+        let here = Path::new(env!("CARGO_MANIFEST_DIR"));
+        assert!(find_worker(here).unwrap().join("src/render.mjs").is_file());
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RenderCheckRequest {
+    /// Frames to check; default first, middle and last.
+    #[serde(default)]
+    pub frames: Vec<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct RenderCheckResult {
+    pub frames: Vec<u64>,
+    pub deterministic: bool,
+    /// Frames whose two renders differ.
+    pub unstable: Vec<u64>,
 }

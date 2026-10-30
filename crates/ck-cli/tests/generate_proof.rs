@@ -106,6 +106,10 @@ fn prompt_to_brief_to_a_verified_15_second_generated_video() {
     let info = ck_media::probe(&file).unwrap();
     assert!((info.duration - 15.0).abs() < 0.2, "{}", info.duration);
     assert_eq!(info.audio.len(), 1);
+    // Determinism: each frame rendered twice, out of order, is identical.
+    let check = ok(d, &["render", "check"], caps::RENDER_CHECK);
+    assert_eq!(check["deterministic"], true, "{check}");
+
     // The same project again comes from the render cache.
     let t = std::time::Instant::now();
     ok(d, &["export", "--out", "exports/again.mp4"], caps::EXPORT);

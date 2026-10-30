@@ -29,6 +29,7 @@ use crate::session::history::{HistoryRequest, SplitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
+use crate::session::render::RenderCheckRequest;
 use crate::session::voice::{
     ActiveTakeRequest, CaptionsRequest, ConsentRequest, MAX_RECORDING, SlotRequest, TakeQuery,
     VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
@@ -71,6 +72,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/cut/apply", post(cut_apply))
         .route("/api/export", post(export))
         .route("/api/assets/derive", post(derive))
+        .route("/api/render/check", post(render_check))
         .route("/api/comments", get(comments_list))
         .route("/api/voice/script", post(voice_script))
         .route("/api/voice/mode", post(voice_mode))
@@ -457,6 +459,14 @@ async fn derive(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.derive(&req)).await
+}
+
+async fn render_check(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<RenderCheckRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.render_check(&req)).await
 }
 
 async fn look_apply(

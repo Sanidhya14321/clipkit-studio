@@ -59,7 +59,7 @@ Spec: 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7). Owner approved Remotion rendering
 Steps:
 - [x] 1. Render worker (`render-worker/`, Node, @remotion/renderer and @remotion/bundler 4.0.535): bundles the studio composition once, renders a job from stdin with progress lines; `E_RENDER`.
 - [x] 2. Full export path: `ck export` uses the worker when component layers exist (muted video), ck mixes the audio (footage, voice takes) and muxes; render cache keyed by content hash; Phase 4 step 10b and Phase 5 carried export items close here.
-- [ ] 3. Frame-clock adapter and determinism test (same frame twice, frames out of order) for wrappable cards; card previews.
+- [x] 3. (determinism check done; adapter and previews carried) Frame-clock adapter and determinism test (same frame twice, frames out of order) for wrappable cards; card previews.
 - [ ] 4. `ck eval`: output-only evaluator (duration, aspect, loudness, clipping, black or frozen frames, cut accuracy, brief conformance) with fixture tests.
 - [ ] 5. Debuggability: `ck trace bundle` (redacted), `ck replay`, `ck bisect`.
 - [ ] 6. Demo reset (seeded project in under 10 s) and README (install, requirements, demo, voice privacy, Remotion licensing, asset licenses).

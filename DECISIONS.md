@@ -573,3 +573,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Audio: footage sound (sources with extracted audio) and voice takes are mixed by ck at their timeline positions with 30 ms fades, padded to the project duration and normalized to -14 LUFS; audio items (music beds) are not mixed yet.
 - Render cache: one muted video per hash of the project content (engine state removed), the looks and the size, under `.clipkit/cache/renders/`. The spec's per-layer cache is a later refinement; the whole-video cache already makes repeat exports and preset changes cheap.
 - Silent output: integrated at or below -69 LUFS is `silent` and the loudness gate does not apply; true peak is floored at -144 dB so it never serializes as null.
+
+## Phase 9 step 3: determinism check (2026-10-30)
+- `ck render check` renders the chosen frames in order and again in reverse within one worker job and compares PNG hashes; it runs on the project composition (what export draws).
+- The frame-clock adapter for wrappable cards and card previews wait for a vetted wave 3 source and per-asset bundling; card determinism stays graded statically (vetting's Math.random/Date.now findings mark cards wrappable, grade C).

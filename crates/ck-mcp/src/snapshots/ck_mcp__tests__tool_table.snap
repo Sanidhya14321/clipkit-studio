@@ -1261,6 +1261,28 @@ expression: specs()
     }
   },
   {
+    "name": "render_check",
+    "command": "ck render check",
+    "description": "Determinism test: renders frames (default first, middle, last) in order and again in reverse through the render worker and compares them. deterministic=false lists the unstable frames (time- or random-dependent layers).",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "frames": {
+          "description": "Frames to check; default first, middle and last.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint64",
+            "minimum": 0
+          },
+          "default": []
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "export",
     "command": "ck export",
     "description": "Export a footage-only project to MP4 (fast ffmpeg path): preset source, youtube, tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",

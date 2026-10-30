@@ -26,6 +26,7 @@ use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
+use ck_server::session::render::RenderCheckRequest;
 use ck_server::session::voice::{
     CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest,
 };
@@ -35,8 +36,8 @@ use serde::Serialize;
 
 use args::{
     AssetsCommand, BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand,
-    LicenseCommand, LookCommand, ModeArg, PresetArg, ProjectCommand, RecipeCommand, SoundCommand,
-    SourcesCommand, TasteCommand, TranscriptCommand, VoiceCommand,
+    LicenseCommand, LookCommand, ModeArg, PresetArg, ProjectCommand, RecipeCommand, RenderCommand,
+    SoundCommand, SourcesCommand, TasteCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -401,6 +402,9 @@ fn run(cli: Cli) -> CkResult<()> {
                     print(&sources::sources_gaps(&hub, &SourcesGapsRequest {})?)
                 }
             }
+        }
+        Command::Render(RenderCommand::Check { frames }) => {
+            print(&ops()?.render_check(&RenderCheckRequest { frames })?)
         }
         Command::Export { preset, out } => {
             let preset = match preset {

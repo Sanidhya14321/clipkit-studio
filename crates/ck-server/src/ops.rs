@@ -31,6 +31,7 @@ use crate::session::import::{ImportRequest, ImportResult};
 use crate::session::layout::LayoutCheckResult;
 use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
+use crate::session::render::{RenderCheckRequest, RenderCheckResult};
 use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::verify::{VerifyIssue, VerifyResult};
 use crate::session::voice::{
@@ -74,6 +75,7 @@ pub mod caps {
     pub const VOICE_WRITE: usize = 1024;
     pub const ASK: usize = 1024;
     pub const DERIVE: usize = 2 * 1024;
+    pub const RENDER_CHECK: usize = 1024;
     /// About 300 tokens (spec 6.4).
     pub const CONTEXT: usize = 1536;
 }
@@ -326,6 +328,13 @@ impl Ops {
     pub fn derive(&self, req: &DeriveRequest) -> CkResult<DeriveResult> {
         let reply = self.client.post("/api/assets/derive", req)?;
         trimmed("assets derive", caps::DERIVE, reply)
+    }
+
+    /// `render check`: each frame rendered twice and out of order; differences mean the
+    /// composition depends on more than the frame number.
+    pub fn render_check(&self, req: &RenderCheckRequest) -> CkResult<RenderCheckResult> {
+        let reply = self.client.post_slow("/api/render/check", req)?;
+        capped("render check", caps::RENDER_CHECK, reply)
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.
