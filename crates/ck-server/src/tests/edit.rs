@@ -262,12 +262,13 @@ fn cut_footage_exports_with_presets_and_a_loudness_gate() {
 }
 
 #[test]
-fn component_layers_are_refused_by_the_fast_path() {
+fn component_layers_go_to_the_render_path() {
+    // Without a running studio (and, in CI, without the bundled worker) the render path
+    // refuses with E_RENDER instead of the fast path's refusal.
     let f = super::fixture::Fixture::new();
     let err = f
         .session
         .export(&crate::session::export::ExportRequest::default())
         .unwrap_err();
-    assert_eq!(err.code, ErrorCode::Request);
-    assert_eq!(err.layer_ids, ["title"]);
+    assert_eq!(err.code, ErrorCode::Render);
 }

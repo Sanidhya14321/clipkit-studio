@@ -58,7 +58,7 @@ Spec: 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7). Owner approved Remotion rendering
 
 Steps:
 - [x] 1. Render worker (`render-worker/`, Node, @remotion/renderer and @remotion/bundler 4.0.535): bundles the studio composition once, renders a job from stdin with progress lines; `E_RENDER`.
-- [ ] 2. Full export path: `ck export` uses the worker when component layers exist (muted video), ck mixes the audio (footage, voice takes) and muxes; render cache keyed by content hash; Phase 4 step 10b and Phase 5 carried export items close here.
+- [x] 2. Full export path: `ck export` uses the worker when component layers exist (muted video), ck mixes the audio (footage, voice takes) and muxes; render cache keyed by content hash; Phase 4 step 10b and Phase 5 carried export items close here.
 - [ ] 3. Frame-clock adapter and determinism test (same frame twice, frames out of order) for wrappable cards; card previews.
 - [ ] 4. `ck eval`: output-only evaluator (duration, aspect, loudness, clipping, black or frozen frames, cut accuracy, brief conformance) with fixture tests.
 - [ ] 5. Debuggability: `ck trace bundle` (redacted), `ck replay`, `ck bisect`.
@@ -164,7 +164,7 @@ Steps:
   - [x] 9c. Handoff and `ck wait`.
 - [x] 10. Proof run: prompt to brief to a 15 second generated video to export; reviewer, spec-checker, evidence.
   - [x] 10a. Generate proof through the real binary (`crates/ck-cli/tests/generate_proof.rs`).
-  - [ ] 10b. Export: BLOCKED, carried to Phase 9; component layers need the Phase 9 render worker (DECISIONS.md, step 10).
+  - [x] 10b. Export: done in Phase 9 step 2 (render worker); the generate proof exports through it.
   - [x] 10c. rust-reviewer and spec-checker on Phase 4; fix gaps; mark the phase done with 10b carried to Phase 9.
 
 Run plan (autonomous run 15): step 10c.

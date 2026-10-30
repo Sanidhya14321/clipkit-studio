@@ -255,6 +255,7 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 
 | Check | Result | Evidence |
 | --- | --- | --- |
+| Step 2: full export path: `ck export` renders projects with component, voice, audio or caption layers through the worker (muted video), mixes the timeline audio (footage sound and voice takes, fades, -14 LUFS) and muxes at the preset size; footage-only projects keep the fast path (`via` says which); render cache keyed by a hash of project content, looks and size; silent output marked `silent` (true peak floored at -144 dB) | PASS | `ck-media` `mix::tests::*` (2: graph, fixture mix and mux at 640x360 near -14 LUFS); `ck-server` `tests::edit::component_layers_go_to_the_render_path`; `crates/ck-cli/tests/generate_proof.rs` now exports the 15 s generated video through the worker (`via: render`, 15 s, one audio track) and a second export from the cache (closes Phase 4 step 10b); skipped where the worker is not bundled |
 | Step 1: render worker (`render-worker/`, @remotion/renderer and @remotion/bundler 4.0.535): `pnpm bundle` bundles the studio's ProjectComposition with React and Remotion aliased to one copy; `src/render.mjs` renders a job from stdin (video muted, or a still) with JSON progress lines | PASS | Manual run 2026-10-30: a hook-title project rendered 30 frames to H.264 in 14 s; frame at 0.9 s shows "Ship faster" in the clean-product look. Automated through `ck export` in step 2 |
 
 ## Phase 8: assets at scale (2026-10-30, done; wave 3 adapters, previews and SVG/LUT/sfx ingest carried)

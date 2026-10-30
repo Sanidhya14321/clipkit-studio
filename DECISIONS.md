@@ -566,3 +566,10 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - The bundle is built once (`just worker`) into `render-worker/bundle/` (gitignored); webpack aliases react, react-dom and remotion to the worker's copies so the studio's node_modules never adds a second React.
 - Protocol: a JSON job on stdin, JSON lines on stdout (`progress`, then `done` or `error`). Video renders muted; ck mixes and muxes the audio.
 - Remotion downloads Chrome Headless Shell on first render (network) and is under the Remotion License (companies above a size need a company license): stated in the worker README; README and install output in step 6.
+
+## Phase 9 step 2: full export path (2026-10-30)
+- Route: footage-only projects use the fast ffmpeg path; any clip, voice, audio or caption layer sends the export to the render worker. A project with no layers is refused (E_REQUEST).
+- The worker draws footage from the studio's `/media` route (the 720p proxy) because Chrome fetches media over HTTP; rendering against original media needs an original-resolution route (later).
+- Audio: footage sound (sources with extracted audio) and voice takes are mixed by ck at their timeline positions with 30 ms fades, padded to the project duration and normalized to -14 LUFS; audio items (music beds) are not mixed yet.
+- Render cache: one muted video per hash of the project content (engine state removed), the looks and the size, under `.clipkit/cache/renders/`. The spec's per-layer cache is a later refinement; the whole-video cache already makes repeat exports and preset changes cheap.
+- Silent output: integrated at or below -69 LUFS is `silent` and the loudness gate does not apply; true peak is floored at -144 dB so it never serializes as null.

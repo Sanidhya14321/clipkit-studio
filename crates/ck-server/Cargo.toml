@@ -12,6 +12,7 @@ ck-core.workspace = true
 ck-assets.workspace = true
 ck-media.workspace = true
 ck-voice.workspace = true
+sha2.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 schemars.workspace = true

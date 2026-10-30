@@ -58,6 +58,16 @@ impl Preset {
     }
 }
 
+/// The export path (spec 2.3).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub enum ExportPath {
+    /// Footage only: one ffmpeg filter graph.
+    Fast,
+    /// Component layers: the Remotion render worker, then ck's audio mix.
+    Render,
+}
+
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExportRequest {
@@ -80,6 +90,11 @@ pub struct ExportResult {
     pub loudness: Loudness,
     /// True when integrated loudness is within tolerance and true peak at most the target.
     pub loudness_pass: bool,
+    /// The video has no audible sound (nothing to normalize; the gate does not apply).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub silent: bool,
+    /// Which export path made the file.
+    pub via: ExportPath,
     /// License and attribution report written next to the video, when a Source Hub is found.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub license_report: Option<String>,
@@ -169,8 +184,43 @@ fn inside(rel: &str) -> CkResult<PathBuf> {
 impl Session {
     pub fn export(&self, req: &ExportRequest) -> CkResult<ExportResult> {
         let project = self.project()?;
-        let (sources, segs) = plan(&project)?;
         let workdir = self.workdir();
+        let (width, height) = req.preset.size(&project);
+        let rel = match &req.out {
+            Some(o) => inside(o)?,
+            None => {
+                PathBuf::from("exports").join(format!("{}-{}.mp4", project.id, req.preset.name()))
+            }
+        };
+        let out = workdir.join(&rel);
+        // Spec 2.3: footage-only projects take the fast ffmpeg path; anything with component,
+        // voice, audio or caption layers renders through the worker.
+        if project.items().next().is_none() {
+            return Err(
+                CkError::new(ErrorCode::Request, "nothing to export: no layers")
+                    .with_hint("Import a video or apply a recipe first."),
+            );
+        }
+        let fast = project
+            .items()
+            .all(|i| matches!(i.body, ItemBody::Footage { .. }));
+        let path = if fast {
+            self.export_fast(&project, &out, (width, height))?;
+            ExportPath::Fast
+        } else {
+            self.export_full(&project, &out, req.preset, (width, height))?;
+            ExportPath::Render
+        };
+        self.finish_export(req, &rel, &out, (width, height), path)
+    }
+
+    fn export_fast(
+        &self,
+        project: &Project,
+        out: &Path,
+        (width, height): (u32, u32),
+    ) -> CkResult<()> {
+        let (sources, segs) = plan(project)?;
         let mut inputs = Vec::new();
         let mut has_audio = Vec::new();
         for id in &sources {
@@ -200,7 +250,6 @@ impl Session {
             });
             cursor = at + (src_out - src_in);
         }
-        let (width, height) = req.preset.size(&project);
         let spec = ExportSpec {
             inputs,
             pieces,
@@ -209,18 +258,90 @@ impl Session {
             fps: f64::from(project.settings.fps),
             loudness: TARGET,
         };
-        let rel = match &req.out {
-            Some(o) => inside(o)?,
-            None => {
-                PathBuf::from("exports").join(format!("{}-{}.mp4", project.id, req.preset.name()))
+        ck_media::export(&spec, out)
+    }
+
+    /// Render path: muted video from the worker (cached), the timeline's audio mixed by ck
+    /// (footage sound and voice takes), then muxed at the preset size.
+    fn export_full(
+        &self,
+        project: &Project,
+        out: &Path,
+        preset: Preset,
+        size: (u32, u32),
+    ) -> CkResult<()> {
+        let video = self.render_video(project)?;
+        let mut clips = Vec::new();
+        for item in project.items() {
+            match &item.body {
+                ItemBody::Footage {
+                    src,
+                    src_in,
+                    src_out,
+                    at,
+                    ..
+                } => {
+                    let Some(s) = project.sources.iter().find(|s| &s.id == src) else {
+                        continue;
+                    };
+                    if CachePaths::new(&self.cache_dir(), &s.hash)?.audio.is_file() {
+                        clips.push(ck_media::AudioClip {
+                            path: self.resolve(&s.path),
+                            src_in: *src_in,
+                            src_out: *src_out,
+                            at: *at,
+                        });
+                    }
+                }
+                ItemBody::Voice { slot_id, at } => {
+                    let take = project
+                        .voice_slots
+                        .iter()
+                        .find(|s| &s.id == slot_id)
+                        .and_then(|s| {
+                            let id = s.active_take.as_ref()?;
+                            s.takes.iter().find(|t| &t.id == id)
+                        });
+                    if let Some(t) = take {
+                        clips.push(ck_media::AudioClip {
+                            path: self.resolve(&t.path),
+                            src_in: 0.0,
+                            src_out: t.duration_sec,
+                            at: *at,
+                        });
+                    }
+                }
+                _ => {}
             }
-        };
-        let out = workdir.join(&rel);
-        ck_media::export(&spec, &out)?;
-        let info = ck_media::probe(&out)?;
-        let loudness = ck_media::measure_loudness(&out)?;
-        let loudness_pass = (loudness.integrated - TARGET.integrated).abs() <= LOUDNESS_TOLERANCE
-            && loudness.true_peak <= TARGET.true_peak;
+        }
+        let duration = ck_core::timeline::duration(project);
+        let dir = out.parent().unwrap_or(Path::new("."));
+        std::fs::create_dir_all(dir)
+            .map_err(|e| CkError::new(ErrorCode::Storage, e.to_string()))?;
+        let wav = dir.join(".tmp-mix.wav");
+        let mixed = ck_media::mix_audio(&clips, duration, TARGET, &wav).and_then(|()| {
+            let scale = (preset != Preset::Source).then_some(size);
+            ck_media::mux(&video, &wav, out, scale)
+        });
+        let _ = std::fs::remove_file(&wav);
+        mixed
+    }
+
+    fn finish_export(
+        &self,
+        req: &ExportRequest,
+        rel: &Path,
+        out: &Path,
+        (width, height): (u32, u32),
+        path: ExportPath,
+    ) -> CkResult<ExportResult> {
+        let workdir = self.workdir();
+        let info = ck_media::probe(out)?;
+        let loudness = ck_media::measure_loudness(out)?;
+        let silent = loudness.integrated <= ck_media::export::SILENT_LUFS;
+        let loudness_pass = silent
+            || ((loudness.integrated - TARGET.integrated).abs() <= LOUDNESS_TOLERANCE
+                && loudness.true_peak <= TARGET.true_peak);
         // Spec 7.6: export prints a license and attribution report.
         let (license_report, license_ok) = match ck_assets::hub::Hub::locate(&workdir) {
             Ok(hub) => {
@@ -242,6 +363,7 @@ impl Session {
             Err(_) => (None, None),
         };
         Ok(ExportResult {
+            via: path,
             license_report,
             license_ok,
             path: rel.to_string_lossy().replace('\\', "/"),
@@ -251,6 +373,7 @@ impl Session {
             duration_sec: (info.duration * 1000.0).round() / 1000.0,
             loudness,
             loudness_pass,
+            silent,
         })
     }
 }

@@ -67,6 +67,9 @@ pub enum ErrorCode {
     /// The retrieval ladder's budget for this decision is spent (spec 7.3).
     #[serde(rename = "E_BUDGET")]
     Budget,
+    /// The render worker is missing, failed or timed out.
+    #[serde(rename = "E_RENDER")]
+    Render,
 }
 
 impl ErrorCode {
@@ -92,6 +95,7 @@ impl ErrorCode {
         ErrorCode::Voice,
         ErrorCode::Scope,
         ErrorCode::Budget,
+        ErrorCode::Render,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -116,6 +120,7 @@ impl ErrorCode {
             ErrorCode::Voice => "E_VOICE",
             ErrorCode::Scope => "E_SCOPE",
             ErrorCode::Budget => "E_BUDGET",
+            ErrorCode::Render => "E_RENDER",
         }
     }
 
@@ -146,6 +151,7 @@ impl ErrorCode {
                 "Check the media file and that ffmpeg and ffprobe are on PATH (ck doctor)."
             }
             ErrorCode::Voice => "Set FISH_AUDIO_API_KEY or install a local model (ck doctor).",
+            ErrorCode::Render => "Run `just worker` (Node and the render worker), then retry.",
             ErrorCode::Budget => {
                 "Decide with what you have read, apply it, then read more for the next decision."
             }

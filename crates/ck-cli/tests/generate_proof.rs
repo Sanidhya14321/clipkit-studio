@@ -1,5 +1,6 @@
 //! Phase 4 proof (spec 12): prompt to brief to a 15 second generated video, through the real
-//! `ck` binary against a real `ck studio`. Export is step 10b (needs the Phase 9 render worker).
+//! `ck` binary against a real `ck studio`, then exported through the render worker (step 10b,
+//! built in Phase 9).
 #![allow(clippy::unwrap_used)] // test helpers outside #[test] functions
 
 mod common;
@@ -90,4 +91,23 @@ fn prompt_to_brief_to_a_verified_15_second_generated_video() {
         caps::WAIT,
     );
     assert_eq!(waited["events"], json!([]));
+
+    // Step 10b (Phase 9): export through the render worker. Skipped where the worker is not
+    // bundled (`just worker`), like the fixture-backed tests.
+    let worker =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../../render-worker/bundle/index.html");
+    if !worker.is_file() {
+        eprintln!("skipped export: run `just worker` first");
+        return;
+    }
+    let exported = ok(d, &["export"], caps::EXPORT);
+    assert_eq!(exported["via"], "render", "{exported}");
+    let file = d.join(exported["path"].as_str().unwrap());
+    let info = ck_media::probe(&file).unwrap();
+    assert!((info.duration - 15.0).abs() < 0.2, "{}", info.duration);
+    assert_eq!(info.audio.len(), 1);
+    // The same project again comes from the render cache.
+    let t = std::time::Instant::now();
+    ok(d, &["export", "--out", "exports/again.mp4"], caps::EXPORT);
+    assert!(t.elapsed() < std::time::Duration::from_secs(20));
 }

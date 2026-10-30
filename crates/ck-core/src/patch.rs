@@ -172,7 +172,7 @@ fn to_value(project: &Project) -> CkResult<Value> {
 
 /// The project without engine-owned fields. Removing keys never shifts array indices,
 /// so content diffs apply cleanly to full project values.
-pub(crate) fn content(full: &Value) -> Value {
+pub fn content(full: &Value) -> Value {
     let mut v = full.clone();
     if let Some(obj) = v.as_object_mut() {
         for key in ["rev", "locks", "pipeline", "agent"] {

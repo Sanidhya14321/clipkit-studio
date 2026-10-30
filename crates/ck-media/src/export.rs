@@ -16,6 +16,11 @@ use crate::run::{check_path, run};
 const EXPORT_TIMEOUT: Duration = Duration::from_secs(60 * 60);
 const MEASURE_TIMEOUT: Duration = Duration::from_secs(30 * 60);
 
+/// True-peak floor reported for silence, dBTP.
+pub const SILENCE_FLOOR_DB: f64 = -144.0;
+/// Integrated loudness at or below this is silence (the ebur128 gate is -70 LUFS).
+pub const SILENT_LUFS: f64 = -69.0;
+
 /// Audio fade at each join, in seconds.
 pub const JOIN_FADE: f64 = 0.03;
 /// Loudness range passed to `loudnorm`.
@@ -252,10 +257,11 @@ pub fn parse_loudness(out: &str) -> Result<Loudness, CkError> {
     let integrated = integrated
         .filter(|i: &f64| i.is_finite())
         .ok_or_else(|| CkError::new(ErrorCode::Media, "no loudness measured (silent audio?)"))?;
+    // Digital silence has no peak; report the 24-bit floor instead of minus infinity.
     let true_peak = if peak > 0.0 {
-        20.0 * peak.log10()
+        (20.0 * peak.log10()).max(SILENCE_FLOOR_DB)
     } else {
-        f64::NEG_INFINITY
+        SILENCE_FLOOR_DB
     };
     Ok(Loudness {
         integrated,
