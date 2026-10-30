@@ -406,6 +406,7 @@ impl Session {
         req.check()?;
         let now = self.now_ms();
         let mut doc = self.doc()?;
+        self.gate(doc.project(), ck_pipeline::stage::Op::ProposeBrief)?;
         let (mut next, kept) = req.merge(&doc.project().brief);
         // Spec 8.8: the taste profile fills fields nobody set, never inferred or user values.
         if let Some(path) = self.profile_path() {
@@ -463,8 +464,9 @@ impl Session {
             touched: rev.touched,
         });
         self.publish_snapshot(&doc);
+        self.sync_canvas(&mut doc, Author::Agent)?;
         Ok(BriefProposeResult {
-            rev: rev.rev,
+            rev: doc.project().rev,
             status: next.status,
             kept,
             omitted: 0,

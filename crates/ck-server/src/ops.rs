@@ -66,6 +66,7 @@ pub mod caps {
     pub const LAYOUT_CHECK: usize = 4 * 1024;
     pub const VERIFY: usize = 4 * 1024;
     pub const SOUND_PLAN: usize = 4 * 1024;
+    pub const PIPELINE: usize = 512;
     pub const HANDOFF: usize = 1024;
     pub const WAIT: usize = 4 * 1024;
     pub const IMPORT: usize = 1024;
@@ -399,6 +400,24 @@ impl Ops {
     pub fn export_timeline(&self, req: &TimelineExportRequest) -> CkResult<TimelineExportResult> {
         let reply = self.client.post("/api/export/timeline", req)?;
         capped("export timeline", caps::EXPORT_TIMELINE, reply)
+    }
+
+    /// `pipeline detect`: read the mode and open the brief stage.
+    pub fn pipeline_detect(&self) -> CkResult<crate::session::pipeline::PipelineResult> {
+        capped(
+            "pipeline detect",
+            caps::PIPELINE,
+            self.client.post("/api/pipeline/detect", &())?,
+        )
+    }
+
+    /// `pipeline next`: finish the current step.
+    pub fn pipeline_next(&self) -> CkResult<crate::session::pipeline::PipelineResult> {
+        capped(
+            "pipeline next",
+            caps::PIPELINE,
+            self.client.post("/api/pipeline/next", &())?,
+        )
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.

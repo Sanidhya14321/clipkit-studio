@@ -10,6 +10,9 @@ pub enum ErrorCode {
     /// The operation is not allowed in the current pipeline stage.
     #[serde(rename = "E_STAGE")]
     Stage,
+    /// Blocking quality gates fail.
+    #[serde(rename = "E_GATES")]
+    Gates,
     /// The same failing call was attempted too many times.
     #[serde(rename = "E_RETRY")]
     Retry,
@@ -76,6 +79,7 @@ impl ErrorCode {
     /// All codes, in declaration order. Used by tests to pin the public list.
     pub const ALL: &'static [ErrorCode] = &[
         ErrorCode::Stage,
+        ErrorCode::Gates,
         ErrorCode::Retry,
         ErrorCode::LockHeld,
         ErrorCode::LockNotHeld,
@@ -101,6 +105,7 @@ impl ErrorCode {
     pub fn as_str(self) -> &'static str {
         match self {
             ErrorCode::Stage => "E_STAGE",
+            ErrorCode::Gates => "E_GATES",
             ErrorCode::Retry => "E_RETRY",
             ErrorCode::LockHeld => "E_LOCK_HELD",
             ErrorCode::LockNotHeld => "E_LOCK_NOT_HELD",
@@ -128,6 +133,7 @@ impl ErrorCode {
     pub fn hint(self) -> &'static str {
         match self {
             ErrorCode::Stage => "Run the next allowed step named in the message, then retry.",
+            ErrorCode::Gates => "Fix the listed gates, or pass --force with --reason.",
             ErrorCode::Retry => "Stop retrying: read the previous error and change the call.",
             ErrorCode::LockHeld => "Wait until the holder releases the layer or the lock expires.",
             ErrorCode::LockNotHeld => "Acquire the lock for the listed layers before patching.",

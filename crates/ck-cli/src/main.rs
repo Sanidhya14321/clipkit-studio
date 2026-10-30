@@ -43,9 +43,9 @@ use serde::Serialize;
 use args::{
     AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
     CutCommand, DemoCommand, FormatArg, LayoutCommand, LicenseCommand, LookCommand, ModeArg,
-    PresetArg, ProfileArg, ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand,
-    SoundCommand, SourcesCommand, StoryboardCommand, TasteCommand, TraceCommand, TranscriptCommand,
-    VoiceCommand,
+    PipelineCommand, PresetArg, ProfileArg, ProjectCommand, RecipeCommand, ReferenceCommand,
+    RenderCommand, SoundCommand, SourcesCommand, StoryboardCommand, TasteCommand, TraceCommand,
+    TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -496,7 +496,18 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             print(&ops()?.export_timeline(&TimelineExportRequest { format, out })?)
         }
-        Command::Export { preset, out, .. } => {
+        Command::Pipeline(PipelineCommand::Detect) => print(&ops()?.pipeline_detect()?),
+        Command::Pipeline(PipelineCommand::Next) => print(&ops()?.pipeline_next()?),
+        Command::Export {
+            preset,
+            out,
+            force,
+            reason,
+            ..
+        } => {
+            if force && reason.as_deref().is_none_or(|r| r.trim().is_empty()) {
+                return Err(request_err("--force needs --reason".into()));
+            }
             let preset = match preset {
                 PresetArg::Source => Preset::Source,
                 PresetArg::Youtube => Preset::Youtube,
@@ -505,6 +516,7 @@ fn run(cli: Cli) -> CkResult<()> {
                 PresetArg::Shorts => Preset::Shorts,
             };
             print(&ops()?.export(&ExportRequest {
+                force_reason: reason.filter(|_| force),
                 preset,
                 out,
                 ..Default::default()

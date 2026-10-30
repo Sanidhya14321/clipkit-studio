@@ -362,6 +362,20 @@ pub fn specs() -> Vec<ToolSpec> {
              voice. Read-only; returns timed cues.",
             caps::SOUND_PLAN,
         ),
+        spec::<StatusArgs>(
+            "pipeline_detect",
+            "ck pipeline detect",
+            "Read the mode from the project's sources and open the brief stage. First step of \
+             every job.",
+            caps::PIPELINE,
+        ),
+        spec::<StatusArgs>(
+            "pipeline_next",
+            "ck pipeline next",
+            "Finish the current pass or step and move to the next. Passes run in order: \
+             structure, audio, text, graphics, transitions, look, polish, then verify.",
+            caps::PIPELINE,
+        ),
         spec::<HandoffRequest>(
             "handoff",
             "ck handoff",
@@ -832,6 +846,14 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "sound_plan" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.sound_plan()?)
+        }
+        "pipeline_detect" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.pipeline_detect()?)
+        }
+        "pipeline_next" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.pipeline_next()?)
         }
         "handoff" => json(&ops.handoff(&parse(args)?)?),
         "wait" => json(&ops.wait(&parse(args)?)?),

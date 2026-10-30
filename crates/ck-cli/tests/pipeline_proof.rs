@@ -45,7 +45,13 @@ fn the_pipeline_is_enforced_end_to_end() {
         &json!({ "recipe": "hook-title", "at": 0.0, "duration": 4.0, "slots": { "headline": "Hello" } }),
     );
 
-    // No brief, no build.
+    // Refusal 1: the brief before detect.
+    let early = file(d, "p.json", &json!({ "fields": {}, "questions": [] }));
+    assert_eq!(raw(d, &["brief", "propose", &early])["code"], "E_STAGE");
+    assert_eq!(stage(d), "boot");
+    assert_eq!(raw(d, &["pipeline", "detect"])["stage"], "detect");
+
+    // Refusal 2: no brief, no build.
     let refused = raw(d, &["recipe", "apply", &hook]);
     assert_eq!(refused["code"], "E_STAGE", "{refused}");
 
@@ -73,7 +79,34 @@ fn the_pipeline_is_enforced_end_to_end() {
         &json!({ "recipe": "outro-cta", "at": 10.0, "duration": 3.0, "slots": { "action": "Go" } }),
     );
     ok(d, &["recipe", "apply", &outro], caps::RECIPE_APPLY);
+    // Refusal 3: handoff mid-pass.
     assert_eq!(raw(d, &["handoff"])["code"], "E_STAGE");
+    assert_eq!(stage(d), "passes");
+    let mut passes = vec![raw(d, &["status"])["pipeline"]["pass"].clone()];
+    loop {
+        let step = raw(d, &["pipeline", "next"]);
+        if step["stage"] == "verify" {
+            break;
+        }
+        passes.push(step["pass"].clone());
+    }
+    assert_eq!(
+        passes,
+        [
+            "structure",
+            "audio",
+            "text",
+            "graphicsMotion",
+            "transitions",
+            "look",
+            "polish"
+        ]
+        .map(|p| json!(p))
+    );
+    // Refusal 4: failing gates in verify.
+    assert_eq!(raw(d, &["handoff"])["code"], "E_STAGE");
+    // Refusal 5: verify is left by handoff, not by next.
+    assert_eq!(raw(d, &["pipeline", "next"])["code"], "E_STAGE");
     let done = raw(d, &["handoff", "--override-reason", "gap is deliberate"]);
     assert!(done["rev"].is_u64(), "{done}");
     assert_eq!(stage(d), "handoff");

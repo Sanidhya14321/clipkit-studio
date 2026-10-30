@@ -190,8 +190,17 @@ pub enum Command {
     /// Render checks (determinism).
     #[command(subcommand)]
     Render(RenderCommand),
+    /// Pipeline steps: detect the mode, finish the current step.
+    #[command(subcommand)]
+    Pipeline(PipelineCommand),
     /// Export the project to MP4 (fast path or render worker).
     Export {
+        /// Export despite failing gates; needs --reason.
+        #[arg(long)]
+        force: bool,
+        /// Why; recorded in the export report.
+        #[arg(long)]
+        reason: Option<String>,
         /// source, youtube, tiktok, reels or shorts.
         #[arg(long, value_enum, default_value_t = PresetArg::Source)]
         preset: PresetArg,
@@ -628,4 +637,12 @@ pub enum FormatArg {
     Mp4,
     Otio,
     Srt,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum PipelineCommand {
+    /// Read the mode from the project's sources; opens the brief stage.
+    Detect,
+    /// Finish the current pass or step and move to the next.
+    Next,
 }

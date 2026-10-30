@@ -78,6 +78,7 @@ fn prompt_to_brief_to_a_verified_15_second_generated_video() {
     let sound = ok(d, &["sound", "plan"], caps::SOUND_PLAN);
     assert!(!sound["cues"].as_array().unwrap().is_empty(), "{sound}");
 
+    common::to_verify(d);
     let handed = ok(d, &["handoff"], caps::HANDOFF);
     let waited = ok(
         d,

@@ -39,10 +39,30 @@ pub fn platform(project: &Project) -> Platform {
         .fields
         .get("platform")
         .and_then(|f| f.value.as_str());
-    if named.is_none() && project.settings.width > project.settings.height {
-        return Platform::Landscape;
+    let (w, h) = (project.settings.width, project.settings.height);
+    match named {
+        None if w > h => Platform::Landscape,
+        None if w == h => Platform::SquareFeed,
+        _ => Platform::from_brief(named),
     }
-    Platform::from_brief(named)
+}
+
+/// The canvas the brief asks for: `aspect` wins over `platform`; neither named means none.
+pub fn brief_canvas(project: &Project) -> Option<(u32, u32)> {
+    let field = |name: &str| {
+        project
+            .brief
+            .fields
+            .get(name)
+            .and_then(|f| f.value.as_str())
+    };
+    match (field("aspect"), field("platform")) {
+        (Some(a), _) if ck_assets::layout::aspect_canvas(a).is_some() => {
+            ck_assets::layout::aspect_canvas(a)
+        }
+        (_, Some(p)) => Some(Platform::from_brief(Some(p)).canvas()),
+        _ => None,
+    }
 }
 
 /// Checks the project's text layers.

@@ -73,12 +73,26 @@ impl Op {
         Some(match self {
             Op::Read => return None,
             Op::Health => &[Stage::Boot],
-            Op::SetMode => &[Stage::Detect],
-            Op::ProposeBrief => &[Stage::Brief, Stage::Iterate],
+            Op::SetMode => &[Stage::Boot, Stage::Detect, Stage::Brief],
+            Op::ProposeBrief => &[Stage::Detect, Stage::Brief, Stage::Plan, Stage::Iterate],
             Op::WritePlan => &[Stage::Plan],
-            Op::Patch => &[Stage::Base, Stage::Passes, Stage::Iterate],
-            Op::RunGates => &[Stage::Verify],
-            Op::Handoff => &[Stage::Handoff],
+            Op::Patch => &[
+                Stage::Plan,
+                Stage::Base,
+                Stage::Passes,
+                Stage::Verify,
+                Stage::Handoff,
+                Stage::Iterate,
+            ],
+            Op::RunGates => &[
+                Stage::Plan,
+                Stage::Base,
+                Stage::Passes,
+                Stage::Verify,
+                Stage::Handoff,
+                Stage::Iterate,
+            ],
+            Op::Handoff => &[Stage::Verify, Stage::Handoff, Stage::Iterate],
         })
     }
 }
@@ -136,15 +150,25 @@ pub fn advance(state: &mut PipelineState, to: Step, brief: BriefStatus) -> CkRes
     Ok(())
 }
 
-/// The stage a project is in after a write, derived from evidence so the agent never drives it:
-/// an unsettled brief is BRIEF, a settled one with no layers is PLAN, layers mean PASSES, and
-/// anything after the first handoff is ITERATE.
-pub fn stage_after_write(current: Stage, brief: BriefStatus, has_layers: bool) -> Stage {
-    match (current, brief, has_layers) {
-        (Stage::Handoff | Stage::Iterate, _, _) => Stage::Iterate,
-        (_, BriefStatus::Proposed, _) => Stage::Brief,
-        (_, _, false) => Stage::Plan,
-        (_, _, true) => Stage::Passes,
+/// The step after a write, derived from evidence: an untouched brief leaves BOOT and DETECT
+/// alone, an unsettled one is BRIEF, a settled one with no layers is PLAN, the first layers open
+/// the structure pass, a write in VERIFY reopens the last pass, and after handoff work is ITERATE.
+pub fn step_after_write(
+    state: &PipelineState,
+    brief: BriefStatus,
+    touched: bool,
+    layers: bool,
+) -> Step {
+    let keep = Step::of(state);
+    match (state.stage, brief, layers) {
+        (Stage::Handoff | Stage::Iterate, _, _) => Step::stage(Stage::Iterate),
+        (Stage::Boot | Stage::Detect, BriefStatus::Proposed, _) if !touched => keep,
+        (_, BriefStatus::Proposed, _) => Step::stage(Stage::Brief),
+        (Stage::Passes | Stage::Base, _, false) => keep,
+        (_, _, false) => Step::stage(Stage::Plan),
+        (Stage::Passes, _, true) => keep,
+        (Stage::Verify, _, true) => Step::pass(Pass::Polish),
+        (_, _, true) => Step::pass(Pass::Structure),
     }
 }
 
@@ -188,26 +212,26 @@ mod tests {
     }
 
     #[test]
-    fn writes_derive_the_stage_from_evidence() {
+    fn writes_derive_the_step_from_evidence() {
         use BriefStatus::{Auto, Confirmed, Proposed};
+        let at = |stage| PipelineState {
+            stage,
+            pass: None,
+            last_completed_pass: None,
+        };
+        let s = |st, b, t, l| step_after_write(&at(st), b, t, l).stage;
+        assert_eq!(s(Stage::Boot, Proposed, false, true), Stage::Boot);
+        assert_eq!(s(Stage::Detect, Proposed, true, false), Stage::Brief);
+        assert_eq!(s(Stage::Brief, Confirmed, true, false), Stage::Plan);
         assert_eq!(
-            stage_after_write(Stage::Boot, Proposed, false),
-            Stage::Brief
+            step_after_write(&at(Stage::Plan), Auto, true, true),
+            Step::pass(Pass::Structure)
         );
         assert_eq!(
-            stage_after_write(Stage::Brief, Confirmed, false),
-            Stage::Plan
+            step_after_write(&at(Stage::Verify), Auto, true, true),
+            Step::pass(Pass::Polish)
         );
-        assert_eq!(stage_after_write(Stage::Plan, Auto, true), Stage::Passes);
-        assert_eq!(stage_after_write(Stage::Verify, Auto, true), Stage::Passes);
-        assert_eq!(
-            stage_after_write(Stage::Handoff, Auto, true),
-            Stage::Iterate
-        );
-        assert_eq!(
-            stage_after_write(Stage::Iterate, Proposed, true),
-            Stage::Iterate
-        );
+        assert_eq!(s(Stage::Handoff, Auto, true, true), Stage::Iterate);
     }
 
     #[test]

@@ -10,6 +10,17 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+/// The frame of a brief `aspect` value.
+pub fn aspect_canvas(aspect: &str) -> Option<(u32, u32)> {
+    match aspect {
+        "9:16" => Some((1080, 1920)),
+        "1:1" => Some((1080, 1080)),
+        "4:5" => Some((1080, 1350)),
+        "16:9" => Some((1920, 1080)),
+        _ => None,
+    }
+}
+
 /// Platforms of the platform-specs taste file.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "kebab-case")]
@@ -44,6 +55,15 @@ impl Platform {
             Some("landscape" | "youtube" | "web") => Self::Landscape,
             Some("presentation") => Self::Presentation,
             _ => Self::VerticalShort,
+        }
+    }
+
+    /// The frame a platform is made for.
+    pub fn canvas(self) -> (u32, u32) {
+        match self.aspect() {
+            Aspect::Portrait => (1080, 1920),
+            Aspect::Square => (1080, 1080),
+            Aspect::Wide => (1920, 1080),
         }
     }
 

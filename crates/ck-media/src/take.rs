@@ -99,7 +99,7 @@ pub fn prepare_take(src: &Path, out: &Path, window: Option<f64>) -> Result<TakeI
     let trim = format!(
         "silenceremove=start_periods=1:start_threshold={TRIM_DB}dB,areverse,\
          silenceremove=start_periods=1:start_threshold={TRIM_DB}dB,areverse,\
-         loudnorm=I={VOICE_LUFS}:TP=-1.5:LRA=11,aresample=48000"
+         aformat=channel_layouts=mono,loudnorm=I={VOICE_LUFS}:TP=-1.5:LRA=11,aresample=48000"
     );
     let result = (|| {
         ffmpeg(src, &trim, &trimmed)?;

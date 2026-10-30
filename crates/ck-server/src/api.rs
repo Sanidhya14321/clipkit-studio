@@ -125,6 +125,8 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/sound/plan", get(sound_plan))
         .route("/api/verify", get(verify).post(verify_critic))
         .route("/api/handoff", post(handoff))
+        .route("/api/pipeline/detect", post(pipeline_detect))
+        .route("/api/pipeline/next", post(pipeline_next))
         .route("/api/wait", get(wait))
         .route("/ws", get(ws::upgrade))
         .route("/media/{name}", get(crate::media::proxy))
@@ -616,6 +618,14 @@ async fn brief_wait(
             Ok(Err(RecvError::Closed)) => return Ok(check),
         }
     }
+}
+
+async fn pipeline_detect(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, move |s| s.pipeline_detect()).await
+}
+
+async fn pipeline_next(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, move |s| s.pipeline_next()).await
 }
 
 async fn handoff(

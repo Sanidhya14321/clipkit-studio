@@ -27,6 +27,7 @@ use super::{Session, is_zero};
 /// Gates in the order they run.
 pub const GATES: &[&str] = &[
     "schema",
+    "canvas",
     "gaps",
     "overlaps",
     "duration",
@@ -515,10 +516,25 @@ fn placeholders(project: &Project, out: &mut Issues) {
     }
 }
 
+/// The project's frame must match what the brief asks for (same ratio).
+fn canvas(project: &Project, out: &mut Issues) {
+    let (w, h) = (project.settings.width, project.settings.height);
+    if let Some((bw, bh)) = super::layout::brief_canvas(project)
+        && u64::from(w) * u64::from(bh) != u64::from(h) * u64::from(bw)
+    {
+        out.add(
+            "canvas",
+            vec![ck_core::patch::PROJECT_LAYER.into()],
+            format!("project is {w}x{h}, the brief asks for {bw}x{bh}"),
+        );
+    }
+}
+
 /// Runs every gate over the project with the given look.
 pub fn verify(project: &Project, look: &Look) -> VerifyResult {
     let mut out = Issues(Vec::new());
     schema(project, &mut out);
+    canvas(project, &mut out);
     gaps(project, &mut out);
     overlaps(project, &mut out);
     duration(project, &mut out);
@@ -549,18 +565,22 @@ impl Session {
     /// `verify`: read-only; with `critic`, also the contact sheet.
     pub fn verify(&self, req: &VerifyRequest) -> CkResult<VerifyResult> {
         let project = self.project()?;
+        self.gate(&project, ck_pipeline::stage::Op::RunGates)?;
+        self.verify_now(req, project)
+    }
+
+    /// The gates with no stage check (handoff and export run them as part of their own step).
+    pub(super) fn verify_now(
+        &self,
+        req: &VerifyRequest,
+        project: Project,
+    ) -> CkResult<VerifyResult> {
         let look = library::look_get(&library::IdRequest {
             id: super::look::project_look_id(&project),
         })?;
         let mut result = verify(&project, &look);
         if req.critic {
             result.contact_sheet = Some(self.contact_sheet(&project)?);
-        }
-        if result.ok && project.pipeline.stage == ck_core::model::Stage::Passes {
-            let mut doc = self.doc()?;
-            doc.set_stage(ck_core::model::Stage::Verify);
-            self.persist(&mut doc)?;
-            self.publish_snapshot(&doc);
         }
         Ok(result)
     }

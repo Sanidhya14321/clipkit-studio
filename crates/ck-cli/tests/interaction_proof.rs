@@ -29,6 +29,7 @@ fn a_user_comment_becomes_a_scoped_agent_job() {
         applied["layers"].to_string().contains(headline),
         "{applied}"
     );
+    common::to_verify(d);
     let handed = ok(d, &["handoff"], caps::HANDOFF);
     let since = handed["rev"].as_u64().unwrap();
 

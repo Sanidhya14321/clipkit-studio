@@ -37,6 +37,7 @@ pub mod history;
 pub mod import;
 pub mod layout;
 pub mod look;
+pub mod pipeline;
 pub mod recipe;
 pub mod reference;
 pub mod render;
@@ -171,8 +172,22 @@ impl Session {
         }
     }
 
-    /// Stage gate for agent writes (spec 4.2): nothing is built before the brief settles.
+    /// Stage gate (spec 4.2) for agent operations. Autopilot only skips the questions.
+    fn gate(&self, project: &ck_core::model::Project, op: ck_pipeline::stage::Op) -> CkResult<()> {
+        use ck_core::model::Stage;
+        if !self.pipeline_gates {
+            return Ok(());
+        }
+        let mut state = project.pipeline.clone();
+        if self.autopilot && matches!(state.stage, Stage::Boot | Stage::Detect | Stage::Brief) {
+            state.stage = Stage::Plan;
+        }
+        ck_pipeline::stage::check_op(&state, op)
+    }
+
+    /// The patch gate plus the brief: nothing is built before the brief settles.
     fn gate_agent_write(&self, project: &ck_core::model::Project) -> CkResult<()> {
+        self.gate(project, ck_pipeline::stage::Op::Patch)?;
         if self.pipeline_gates
             && self.brief_status(project) == ck_core::model::BriefStatus::Proposed
         {
@@ -185,15 +200,42 @@ impl Session {
         Ok(())
     }
 
-    /// Move the stage after a write, from what the project now holds.
+    /// Move the pipeline after a write, from what the project now holds.
     fn note_write(&self, doc: &mut MutexGuard<'_, Document>) {
         let p = doc.project();
-        let stage = ck_pipeline::stage::stage_after_write(
-            p.pipeline.stage,
+        let step = ck_pipeline::stage::step_after_write(
+            &p.pipeline,
             self.brief_status(p),
+            !p.brief.fields.is_empty(),
             p.items().next().is_some(),
         );
-        doc.set_stage(stage);
+        let mut state = p.pipeline.clone();
+        state.stage = step.stage;
+        state.pass = step.pass;
+        doc.set_pipeline(state);
+    }
+
+    /// The brief sets the canvas (spec 8.1): a revision whenever they disagree.
+    fn sync_canvas(&self, doc: &mut MutexGuard<'_, Document>, author: Author) -> CkResult<()> {
+        let p = doc.project();
+        let Some((width, height)) = layout::brief_canvas(p) else {
+            return Ok(());
+        };
+        if (p.settings.width, p.settings.height) == (width, height) {
+            return Ok(());
+        }
+        let ops = serde_json::json!([
+            { "op": "replace", "path": "/settings/width", "value": width },
+            { "op": "replace", "path": "/settings/height", "value": height },
+        ]);
+        self.commit_by(
+            doc,
+            author,
+            ops,
+            format!("canvas: {width}x{height} from the brief"),
+            &[],
+        )
+        .map(|_| ())
     }
 
     /// Retry gate (spec 4.2): refuse the third identical failing call. Refusals the agent can
@@ -361,6 +403,10 @@ impl Session {
             touched: rev.touched.clone(),
         });
         self.publish_snapshot(&doc);
+        // Studio-made brief edits resize too; an explicit size patch is left for verify to judge.
+        if serde_json::to_string(&req.ops).is_ok_and(|o| o.contains("/brief")) {
+            self.sync_canvas(&mut doc, req.author)?;
+        }
         Ok(PatchResult {
             rev: rev.rev,
             touched: rev.touched,

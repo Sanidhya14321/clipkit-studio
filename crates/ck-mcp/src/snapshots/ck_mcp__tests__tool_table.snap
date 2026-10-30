@@ -1362,6 +1362,28 @@ expression: specs()
     }
   },
   {
+    "name": "pipeline_detect",
+    "command": "ck pipeline detect",
+    "description": "Read the mode from the project's sources and open the brief stage. First step of every job.",
+    "cap": 512,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "`status` takes no input."
+    }
+  },
+  {
+    "name": "pipeline_next",
+    "command": "ck pipeline next",
+    "description": "Finish the current pass or step and move to the next. Passes run in order: structure, audio, text, graphics, transitions, look, polish, then verify.",
+    "cap": 512,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "`status` takes no input."
+    }
+  },
+  {
     "name": "handoff",
     "command": "ck handoff",
     "description": "Hand the project to the user: release every agent lock and set the agent idle. Then reply in five lines or fewer and loop on wait with since = the returned rev.",
@@ -1780,6 +1802,13 @@ expression: specs()
         },
         "out": {
           "description": "Output path relative to the project folder; default `exports/<project>-<preset>.mp4`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "forceReason": {
+          "description": "Export despite failing gates; the reason goes in the export report.",
           "type": [
             "string",
             "null"

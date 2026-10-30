@@ -131,8 +131,10 @@ pub fn user_events(doc: &Document, since: u64) -> Vec<WaitEvent> {
 impl Session {
     /// `handoff`: release every agent lock and set the agent idle (no revision is made).
     pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
+        let project = self.project()?;
+        self.gate(&project, ck_pipeline::stage::Op::Handoff)?;
         let failed = if self.pipeline_gates {
-            self.verify(&Default::default())?.failed
+            self.verify_now(&Default::default(), project)?.failed
         } else {
             Vec::new()
         };

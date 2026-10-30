@@ -242,18 +242,21 @@ fn cut_footage_exports_with_presets_and_a_loudness_gate() {
     );
     assert!(out.loudness_pass, "{:?}", out.loudness);
 
-    let vertical = s
+    let reframed = s
         .export(&ExportRequest {
+            force_reason: None,
             preset: Preset::Tiktok,
             out: Some("exports/v.mp4".into()),
             ..Default::default()
         })
-        .unwrap();
-    assert_eq!((vertical.width, vertical.height), (1080, 1920));
+        .unwrap_err();
+    assert_eq!(reframed.code, ErrorCode::Request);
+    assert!(reframed.message.contains("reframe"), "{reframed:?}");
 
     for bad in ["../x.mp4", "/tmp/x.mp4", "x.mov"] {
         let err = s
             .export(&ExportRequest {
+                force_reason: None,
                 preset: Preset::Source,
                 out: Some(bad.into()),
                 ..Default::default()

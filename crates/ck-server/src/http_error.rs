@@ -26,7 +26,9 @@ pub fn status_of(code: ErrorCode) -> StatusCode {
         ErrorCode::PatchInvalid | ErrorCode::Schema | ErrorCode::Media | ErrorCode::Voice => {
             StatusCode::UNPROCESSABLE_ENTITY
         }
-        ErrorCode::Stage | ErrorCode::Retry | ErrorCode::HistoryEmpty => StatusCode::CONFLICT,
+        ErrorCode::Stage | ErrorCode::Gates | ErrorCode::Retry | ErrorCode::HistoryEmpty => {
+            StatusCode::CONFLICT
+        }
         ErrorCode::Storage
         | ErrorCode::Migration
         | ErrorCode::Server

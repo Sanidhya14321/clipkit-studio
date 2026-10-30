@@ -8,6 +8,10 @@ expression: table
     "Run the next allowed step named in the message, then retry."
   ],
   [
+    "E_GATES",
+    "Fix the listed gates, or pass --force with --reason."
+  ],
+  [
     "E_RETRY",
     "Stop retrying: read the previous error and change the call."
   ],

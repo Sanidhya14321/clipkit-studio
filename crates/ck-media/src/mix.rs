@@ -70,7 +70,7 @@ pub fn mix_graph(clips: &[AudioClip], duration: f64, loudness: LoudnessTarget) -
     let _ = write!(
         g,
         "{labels}amix=inputs={}:normalize=0:duration=longest,apad=whole_dur={d},\
-         atrim=duration={d},loudnorm=I={}:TP={}:LRA=11,aresample=48000[aout]",
+         atrim=duration={d},loudnorm=I={}:TP={}:LRA=11,aresample=48000:ochl=stereo[aout]",
         clips.len(),
         num(loudness.integrated),
         num(loudness.true_peak)

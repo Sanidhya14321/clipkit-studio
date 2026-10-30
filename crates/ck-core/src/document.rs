@@ -88,6 +88,10 @@ impl Document {
         self.project.pipeline.pass = None;
     }
 
+    pub fn set_pipeline(&mut self, state: crate::model::PipelineState) {
+        self.project.pipeline = state;
+    }
+
     pub fn release(&mut self, holder: Holder, layer_ids: Option<&[String]>) {
         locks::release(&mut self.project.locks, holder, layer_ids);
         // The agent released all its locks (`ck unlock` with no ids): it is done with this step,

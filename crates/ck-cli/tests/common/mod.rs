@@ -101,6 +101,21 @@ pub fn ck(dir: &Path, args: &[&str]) -> Output {
         .unwrap()
 }
 
+/// Finish every pass, so `handoff` is allowed.
+#[allow(dead_code)]
+pub fn to_verify(dir: &Path) {
+    for _ in 0..12 {
+        let out = ck(dir, &["pipeline", "next"]);
+        if !out.status.success() {
+            return;
+        }
+        let step: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+        if step["stage"] == "verify" {
+            return;
+        }
+    }
+}
+
 /// Run a command that must succeed and return its one stdout line (without the newline),
 /// checked against `cap`.
 pub fn ok_line(dir: &Path, args: &[&str], cap: usize) -> String {

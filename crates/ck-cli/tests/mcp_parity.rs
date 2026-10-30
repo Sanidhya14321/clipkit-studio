@@ -233,6 +233,7 @@ fn recipe_apply_answers_like_its_cli_twin() {
     let planned: Value = serde_json::from_str(&planned).unwrap();
     assert!(planned["cues"].is_array());
 
+    common::to_verify(d);
     let handed = ok_line(
         d,
         &["handoff", "--override-reason", "parity fixture"],

@@ -96,11 +96,20 @@ pub struct ExportRequest {
     /// Output path relative to the project folder; default `exports/<project>-<preset>.mp4`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub out: Option<String>,
+    /// Export despite failing gates; the reason goes in the export report.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub force_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct ExportResult {
+    /// Why this export went out with failing gates.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub forced_reason: Option<String>,
+    /// The gates it failed.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub forced_gates: Vec<String>,
     /// Written file, relative to the project folder.
     pub path: String,
     pub preset: Preset,
@@ -110,7 +119,7 @@ pub struct ExportResult {
     pub loudness: Loudness,
     /// True when integrated loudness is within tolerance and true peak at most the target.
     pub loudness_pass: bool,
-    /// The video has no audible sound (nothing to normalize; the gate does not apply).
+    /// The video has no audible sound; the loudness gate fails.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub silent: bool,
     /// Which export path made the file.
@@ -212,6 +221,29 @@ impl Session {
         let project = self.project()?;
         let workdir = self.workdir();
         let (width, height) = req.preset.size(&project);
+        let (pw, ph) = (project.settings.width, project.settings.height);
+        if u64::from(width) * u64::from(ph) != u64::from(height) * u64::from(pw) {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                format!(
+                    "preset {} would reframe the {pw}x{ph} project to {width}x{height}",
+                    req.preset.name()
+                ),
+            )
+            .with_hint("Use the source preset or a preset of the same shape."));
+        }
+        let forced_gates = self.export_blocks(&project)?;
+        let reason = req
+            .force_reason
+            .as_deref()
+            .map(str::trim)
+            .filter(|r| !r.is_empty());
+        if !forced_gates.is_empty() && reason.is_none() {
+            return Err(CkError::new(
+                ErrorCode::Gates,
+                format!("export blocked by: {}", forced_gates.join(", ")),
+            ));
+        }
         let rel = match &req.out {
             Some(o) => inside(o)?,
             None => {
@@ -237,7 +269,38 @@ impl Session {
             self.export_full(&project, &out, req.preset, (width, height))?;
             ExportPath::Render
         };
-        self.finish_export(req, &rel, &out, (width, height), path)
+        let mut result = self.finish_export(req, &rel, &out, (width, height), path)?;
+        if !forced_gates.is_empty() {
+            result.forced_reason = reason.map(str::to_owned);
+            result.forced_gates = forced_gates;
+        }
+        Ok(result)
+    }
+
+    /// What blocks an export: failing gates, offline media and blocked licenses.
+    fn export_blocks(&self, project: &Project) -> CkResult<Vec<String>> {
+        if !self.pipeline_gates {
+            return Ok(Vec::new());
+        }
+        let mut blocks = self
+            .verify_now(&Default::default(), project.clone())?
+            .failed;
+        for s in &project.sources {
+            if !self.workdir().join(&s.path).exists() {
+                blocks.push(format!("offline:{}", s.id));
+            }
+        }
+        if let Ok(hub) = ck_assets::hub::Hub::locate(&self.workdir()) {
+            let report = ck_assets::report::license_report(
+                &hub,
+                self.store.root(),
+                &ck_assets::report::LicenseReportRequest::default(),
+            )?;
+            if !report.ok {
+                blocks.push("license".into());
+            }
+        }
+        Ok(blocks)
     }
 
     fn export_fast(
@@ -390,9 +453,9 @@ impl Session {
         let info = ck_media::probe(out)?;
         let loudness = ck_media::measure_loudness(out)?;
         let silent = loudness.integrated <= ck_media::export::SILENT_LUFS;
-        let loudness_pass = silent
-            || ((loudness.integrated - TARGET.integrated).abs() <= LOUDNESS_TOLERANCE
-                && loudness.true_peak <= TARGET.true_peak);
+        let loudness_pass = !silent
+            && (loudness.integrated - TARGET.integrated).abs() <= LOUDNESS_TOLERANCE
+            && loudness.true_peak <= TARGET.true_peak;
         // Spec 7.6: export prints a license and attribution report.
         let (license_report, license_ok) = match ck_assets::hub::Hub::locate(&workdir) {
             Ok(hub) => {
@@ -414,6 +477,8 @@ impl Session {
             Err(_) => (None, None),
         };
         Ok(ExportResult {
+            forced_reason: None,
+            forced_gates: Vec::new(),
             via: path,
             license_report,
             license_ok,

@@ -71,6 +71,8 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("layout_check", caps::LAYOUT_CHECK),
         ("verify", caps::VERIFY),
         ("sound_plan", caps::SOUND_PLAN),
+        ("pipeline_detect", caps::PIPELINE),
+        ("pipeline_next", caps::PIPELINE),
         ("handoff", caps::HANDOFF),
         ("import", caps::IMPORT),
         ("transcribe", caps::TRANSCRIBE),
