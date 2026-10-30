@@ -432,11 +432,11 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::History { limit } => print(&ops()?.history(&RevHistoryRequest { limit })?),
         Command::Branch(BranchCommand::Save { name }) => {
-            print(&ops()?.branch_save(&BranchRequest { name })?)
+            print(&ops()?.branch_save(&BranchRequest { name, author: None })?)
         }
         Command::Branch(BranchCommand::List) => print(&ops()?.branch_list()?),
         Command::Branch(BranchCommand::Switch { name }) => {
-            print(&ops()?.branch_switch(&BranchRequest { name })?)
+            print(&ops()?.branch_switch(&BranchRequest { name, author: None })?)
         }
         Command::Variants { looks, frame } => {
             print(&ops()?.variants(&VariantsRequest { looks, frame })?)

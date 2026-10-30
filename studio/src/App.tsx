@@ -13,6 +13,7 @@ import { VoicePanel } from "./panels/VoicePanel";
 import { PushToTalk } from "./panels/PushToTalk";
 import { AskCards } from "./panels/AskCards";
 import { StoryboardPanel } from "./panels/StoryboardPanel";
+import { HistoryPanel } from "./panels/HistoryPanel";
 import { HoverSelect, type Target } from "./preview/HoverSelect";
 import type { Pointer } from "./comments";
 import type { StudioContext } from "./generated/types";
@@ -193,6 +194,11 @@ export function App({ token }: { token: string }) {
               readOnly={!canEdit(locks, PROJECT_LAYER, now)}
             />
             <CommentsPanel token={token} project={project} pointer={pointer} />
+            <HistoryPanel
+              token={token}
+              project={project}
+              readOnly={!canEdit(locks, PROJECT_LAYER, now)}
+            />
             <ActivityFeed feed={feed} />
           </aside>
           <Timeline

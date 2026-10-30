@@ -79,6 +79,7 @@ fn decls(cfg: &Config) -> Vec<String> {
         crate::session::voice::ActiveTakeRequest::decl(cfg),
         crate::session::voice::ConsentRequest::decl(cfg),
         crate::session::history::HistoryRequest::decl(cfg),
+        crate::session::branch::BranchRequest::decl(cfg),
         crate::session::ask::Ask::decl(cfg),
         crate::session::ask::AnswerRequest::decl(cfg),
         crate::session::history::SplitRequest::decl(cfg),

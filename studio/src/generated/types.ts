@@ -278,6 +278,12 @@ export type HistoryRequest = {
  */
 author?: Author | null, };
 
+export type BranchRequest = { name: string, 
+/**
+ * Who switches: the agent (default) or the human (the studio).
+ */
+author?: Author | null, };
+
 export type Ask = { id: string, question: string, options: Array<string>, };
 
 export type AnswerRequest = { id: string, answer: string, };

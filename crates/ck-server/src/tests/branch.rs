@@ -50,7 +50,10 @@ fn history_lists_newest_first() {
 fn a_branch_switch_is_one_undoable_revision() {
     let f = Fixture::new();
     rename(&f, "Calm");
-    let br = |n: &str| BranchRequest { name: n.into() };
+    let br = |n: &str| BranchRequest {
+        name: n.into(),
+        author: None,
+    };
     f.session.branch_save(&br("calm")).unwrap();
     rename(&f, "Punchy");
     let switched = f.session.branch_switch(&br("calm")).unwrap();

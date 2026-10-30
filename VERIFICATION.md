@@ -257,7 +257,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | --- | --- | --- |
 | Render against original media (spec 2.3): `/media/source/<hash>` serves an imported source's original file with byte ranges (token in the query, only project sources); the worker uses it for mp4, m4v and webm and falls back to the 720p proxy for other containers | PASS | `ck-server` `tests::import::originals_are_served_for_imported_sources_only` (206, unknown hash 404, no token 403) |
 | Audio items (music beds) in the full-path mix: each range plays back to back from the item's start at its volume | PASS | `ck-media` `mix::tests::the_graph_places_clips_and_pads_to_the_duration` (per-clip gain in the graph); end-to-end with a real music source not yet run (no CC0 music vetted) |
-| Run | PASS | 2026-10-30 `just check`: 357 of 357 nextest (1 skipped), hooks 41 of 41 |
+| Studio history panel: recent revisions, undo and redo as the human, branch save and switch (a studio switch is a human revision; `BranchRequest.author`) | PASS | `studio/e2e/phase10.spec.ts` "history: undo, redo, save a branch and switch back"; `just e2e` 18 of 18 |
+| Run | PASS | 2026-10-30 `just check`: 357 of 357 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 18 of 18 |
 
 ## Phase 10: stretch (2026-10-30, done; more agents and Demucs not built)
 

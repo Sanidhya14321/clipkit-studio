@@ -15,12 +15,11 @@ const BUNDLE = resolve(
   "index.html",
 );
 
-test.skip(!existsSync(BUNDLE), "run `just worker` first");
-
 test("the user confirms the storyboard; the agent's wait sees it", async ({
   page,
   studio,
 }) => {
+  test.skip(!existsSync(BUNDLE), "run `just worker` first");
   test.setTimeout(90_000);
   await page.goto(`${studio.url}#token=${studio.token}`);
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
@@ -81,4 +80,40 @@ test("the user confirms the storyboard; the agent's wait sees it", async ({
     events: { kind: string }[];
   };
   expect(waited.events.map((e) => e.kind)).toContain("checkpoint");
+});
+
+test("history: undo, redo, save a branch and switch back", async ({
+  page,
+  studio,
+}) => {
+  await page.goto(`${studio.url}#token=${studio.token}`);
+  await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
+  const file = join(studio.dir, "r.json");
+  await writeFile(
+    file,
+    JSON.stringify({ recipe: "hook-title", slots: { headline: "One" } }),
+  );
+  await studio.ck("recipe", "apply", file);
+
+  const panel = page.locator("[data-ck-history]");
+  await expect(
+    panel.locator("[data-ck-history-lines] li").first(),
+  ).toContainText("recipe: hook-title");
+  await panel.locator("[data-ck-branch-name]").fill("first");
+  await panel.locator("[data-ck-branch-save]").click();
+  await expect(panel.locator('[data-ck-branch="first"]')).toBeVisible();
+
+  // Undo removes the scene; the branch brings it back as one revision.
+  await panel.locator("[data-ck-undo]").click();
+  const timeline = page.locator("[data-ck-timeline]");
+  await expect(
+    timeline.locator('[data-ck-layer="hook-title-backdrop"]'),
+  ).toHaveCount(0);
+  await panel.locator('[data-ck-branch-switch="first"]').click();
+  await expect(
+    timeline.locator('[data-ck-layer="hook-title-backdrop"]'),
+  ).toHaveCount(1);
+  await expect(
+    panel.locator("[data-ck-history-lines] li").first(),
+  ).toContainText("human switch to branch first");
 });

@@ -6,7 +6,7 @@ PHASE: 10
 ## Handoff (latest)
 1. Done: Phase 10 (stretch): critic contact sheet (`verify --critic`), `ck reference analyze`, local taste profile (`ck profile`), storyboard checkpoint with studio confirm, OpenTimelineIO and SRT export. All phases 0 to 10 have run; open items below.
 2. Proof: `just check` 356 of 356 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 17 of 17. Evidence in VERIFICATION.md, Phase 10.
-3. Open: Fish Audio provider calls (key and API check), bench results (real agent runs and owner media), sound design placement (vetted CC0 sound set), studio views for history/branches/variants, frame-clock adapter and card previews, packaged installers, more agents, Demucs, reviewer agents never run; see Open questions.
+3. Open: Fish Audio provider calls (key and API check), bench results (real agent runs and owner media), sound design placement (vetted CC0 sound set), studio side-by-side variants view, frame-clock adapter and card previews, packaged installers, more agents, Demucs, reviewer agents never run; see Open questions.
 4. Next: owner priorities among the open items; first candidates: add FISH_AUDIO_API_KEY and verify the API, run the reviewer and spec-checker agents over phases 5 to 10, run the benchmark.
 5. Start: `just check`; `just worker`; README.md.
 

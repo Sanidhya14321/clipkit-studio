@@ -38,10 +38,13 @@ pub struct HistoryView {
     pub omitted: usize,
 }
 
-#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema, ts_rs::TS)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct BranchRequest {
     pub name: String,
+    /// Who switches: the agent (default) or the human (the studio).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub author: Option<ck_core::model::Author>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -201,7 +204,9 @@ impl Session {
                 omitted: 0,
             });
         }
-        let rev = self.commit_agent(&mut doc, ops, format!("switch to branch {}", req.name))?;
+        let author = req.author.unwrap_or(ck_core::model::Author::Agent);
+        let label = format!("switch to branch {}", req.name);
+        let rev = self.commit_by(&mut doc, author, ops, label, &[])?;
         Ok(BranchResult {
             rev: rev.rev,
             name: req.name.clone(),

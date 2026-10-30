@@ -1589,16 +1589,37 @@ expression: specs()
     "description": "Save the current project content as a named branch (replaces a save of that name).",
     "cap": 2048,
     "inputSchema": {
+      "$defs": {
+        "Author": {
+          "type": "string",
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ]
+        }
+      },
       "required": [
         "name"
       ],
-      "additionalProperties": false,
       "type": "object",
       "properties": {
         "name": {
           "type": "string"
+        },
+        "author": {
+          "description": "Who switches: the agent (default) or the human (the studio).",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Author"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
-      }
+      },
+      "additionalProperties": false
     }
   },
   {
@@ -1618,16 +1639,37 @@ expression: specs()
     "description": "Make the project equal a saved branch, as one undoable revision.",
     "cap": 2048,
     "inputSchema": {
+      "$defs": {
+        "Author": {
+          "type": "string",
+          "enum": [
+            "human",
+            "agent",
+            "voice"
+          ]
+        }
+      },
       "required": [
         "name"
       ],
-      "additionalProperties": false,
       "type": "object",
       "properties": {
         "name": {
           "type": "string"
+        },
+        "author": {
+          "description": "Who switches: the agent (default) or the human (the studio).",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Author"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
-      }
+      },
+      "additionalProperties": false
     }
   },
   {
