@@ -586,3 +586,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - All three read the `.clipkit` folder directly (no studio). Bisect checks the quality gates (`verify`) at revisions rebuilt by `content_at`, assuming once broken it stays broken, like git bisect; history older than the stored base is out of reach.
 - The trace bundle is one JSON file (shareable without archive tools): environment (ck, OS, ffmpeg and node versions), project, revision history with patches, failing gates and replay status. Redaction replaces values under keys containing token, secret, password, api key or authorization, `?token=` in URLs and the home folder path. Logs and screenshots are not in the bundle yet (spec 10.4 flight recorder).
 - `ck repro` (smallest failing project) is not built.
+
+## Phase 9 step 6: demo reset and README (2026-10-30)
+- `ck demo reset` builds the demo in-process through the same session operations an agent uses (brief propose and confirm, three recipes, voice script, a comment): no network, render or agent, about 40 ms. A project whose id is not `demo` is replaced only with `--force`; a folder a studio is serving is refused (the studio holds the project in memory).
+- README rewritten for spec 12.1: install from source (packaged installers are not built), requirements, demo, voice privacy (local recordings, Fish Audio stubs, consent-only cloning, Chrome's speech recognition sends audio to Google), Remotion licensing and asset licenses.
+- The render worker denies esbuild's install script (`allowBuilds: esbuild: false`, pnpm 12): it only verifies a prebuilt binary and the bundle builds without it, keeping "no dependency install scripts".

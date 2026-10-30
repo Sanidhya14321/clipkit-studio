@@ -1154,6 +1154,23 @@ expression: specs()
     }
   },
   {
+    "name": "demo_reset",
+    "command": "ck demo reset",
+    "description": "Restore the seeded demo project (brief, three scenes, voice script, a comment) in this folder; refuses a non-demo project without force and while a studio runs.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "force": {
+          "description": "Replace a project that is not the demo.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "sources_ingest",
     "command": "ck sources ingest",
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",

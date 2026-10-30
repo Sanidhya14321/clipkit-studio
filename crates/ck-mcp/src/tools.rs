@@ -19,6 +19,7 @@ use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_eval::EvalRequest;
 use ck_server::debug::{self, BisectRequest, ReplayRequest, TraceRequest};
+use ck_server::demo::{self, DemoRequest};
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
@@ -278,6 +279,13 @@ pub fn specs() -> Vec<ToolSpec> {
              gates, replay status) under .clipkit/traces/.",
             debug::caps::TRACE,
         ),
+        spec::<DemoRequest>(
+            "demo_reset",
+            "ck demo reset",
+            "Restore the seeded demo project (brief, three scenes, voice script, a comment) in \
+             this folder; refuses a non-demo project without force and while a studio runs.",
+            demo::caps::DEMO,
+        ),
         spec::<IngestRequest>(
             "sources_ingest",
             "ck sources ingest",
@@ -513,6 +521,7 @@ pub fn is_offline(name: &str) -> bool {
             | "replay"
             | "bisect"
             | "trace_bundle"
+            | "demo_reset"
     )
 }
 
@@ -613,6 +622,8 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
                 &debug::trace_bundle(root, &r)?,
             )
         }),
+        "demo_reset" => parse::<DemoRequest>(args)
+            .and_then(|r| capped_json("demo reset", demo::caps::DEMO, &demo::reset(project, &r)?)),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)
             .and_then(|r| json(&sources::sources_gaps(&hub()?, &r)?)),
         _ => return None,

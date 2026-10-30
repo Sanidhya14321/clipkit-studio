@@ -145,6 +145,9 @@ pub enum Command {
         #[arg(long)]
         gate: Option<String>,
     },
+    /// The seeded demo project.
+    #[command(subcommand)]
+    Demo(DemoCommand),
     /// Redacted trace bundle.
     #[command(subcommand)]
     Trace(TraceCommand),
@@ -523,4 +526,14 @@ pub enum RenderCommand {
 pub enum TraceCommand {
     /// Write one redacted, shareable JSON trace under .clipkit/traces/.
     Bundle,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum DemoCommand {
+    /// Restore the seeded demo project in this folder.
+    Reset {
+        /// Replace a project that is not the demo.
+        #[arg(long)]
+        force: bool,
+    },
 }

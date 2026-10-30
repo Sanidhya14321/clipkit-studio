@@ -68,3 +68,4 @@ split-spec:
 worker:
     pnpm --dir render-worker install --frozen-lockfile --silent
     pnpm --dir render-worker --silent bundle
+    @echo "Rendering uses Remotion, which has its own license: companies above a certain size need a company license (https://remotion.dev/license)."

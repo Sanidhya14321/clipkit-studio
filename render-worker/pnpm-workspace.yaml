@@ -1,0 +1,4 @@
+# esbuild's install script only checks its prebuilt binary; the bundle builds without it, so no
+# dependency install script runs.
+allowBuilds:
+  esbuild: false

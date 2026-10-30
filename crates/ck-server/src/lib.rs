@@ -9,6 +9,7 @@ pub mod auth;
 pub mod client;
 pub mod clock;
 pub mod debug;
+pub mod demo;
 pub mod event;
 pub mod http_error;
 pub mod idle;
