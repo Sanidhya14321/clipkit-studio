@@ -231,6 +231,8 @@ fn recipe_apply_answers_like_its_cli_twin() {
     let planned = ok_line(d, &["sound", "plan"], caps::SOUND_PLAN);
     assert_eq!(mcp.ok("sound_plan", Value::Null, caps::SOUND_PLAN), planned);
 
+    let jobs = ok_line(d, &["jobs"], caps::EXPORT_JOBS);
+    assert_eq!(mcp.ok("jobs", Value::Null, caps::EXPORT_JOBS), jobs);
     ok_line(d, &["grid", "build", "--dur", "4"], caps::GRID);
     let view = ok_line(d, &["plan", "get"], caps::PLAN);
     assert_eq!(mcp.ok("plan_get", Value::Null, caps::PLAN), view);

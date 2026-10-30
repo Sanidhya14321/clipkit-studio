@@ -44,6 +44,7 @@ use crate::session::edl::{
     GridBuildRequest, GridResult, PlanCandidates, PlanExpandRequest, PlanSetRequest, PlanView,
     PlanWriteResult,
 };
+use crate::session::jobs::{ExportJob, ExportJobs};
 use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::storyboard::{StoryboardRequest, StoryboardResult};
 use crate::session::verify::{VerifyIssue, VerifyRequest, VerifyResult};
@@ -88,6 +89,7 @@ pub mod caps {
     pub const CUT_SUGGEST: usize = 8 * 1024;
     pub const CUT_APPLY: usize = 2 * 1024;
     pub const EXPORT: usize = 1024;
+    pub const EXPORT_JOBS: usize = 4 * 1024;
     /// The send bundle: open comments and the layers they point at.
     pub const COMMENTS: usize = 8 * 1024;
     pub const COMMENT_WRITE: usize = 2 * 1024;
@@ -316,6 +318,24 @@ impl Ops {
     pub fn cut_apply(&self, req: &CutApplyRequest) -> CkResult<CutApplyResult> {
         let reply = self.client.post("/api/cut/apply", req)?;
         trimmed("cut apply", caps::CUT_APPLY, reply)
+    }
+
+    /// `export --queue`: queue the export and return at once.
+    pub fn export_enqueue(&self, req: &ExportRequest) -> CkResult<ExportJob> {
+        capped(
+            "export queue",
+            caps::EXPORT_JOBS,
+            self.client.post("/api/export/jobs", req)?,
+        )
+    }
+
+    /// `export-jobs`: queued, running and finished exports, newest first.
+    pub fn export_jobs(&self) -> CkResult<ExportJobs> {
+        trimmed(
+            "export jobs",
+            caps::EXPORT_JOBS,
+            self.client.get("/api/export/jobs", &[])?,
+        )
     }
 
     /// `export`: the fast ffmpeg path to an MP4 with a platform preset and a loudness gate.
@@ -627,6 +647,13 @@ impl Trim for BranchResult {
     type Entry = String;
     fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
         (&mut self.touched, &mut self.omitted)
+    }
+}
+
+impl Trim for ExportJobs {
+    type Entry = ExportJob;
+    fn parts(&mut self) -> (&mut Vec<ExportJob>, &mut usize) {
+        (&mut self.jobs, &mut self.omitted)
     }
 }
 

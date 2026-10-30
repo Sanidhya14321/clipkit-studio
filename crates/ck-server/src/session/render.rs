@@ -159,6 +159,7 @@ impl Session {
                 };
                 if let Some(p) = v.get("progress").and_then(Value::as_f64) {
                     tracing::info!(progress = p, "render progress");
+                    self.jobs.progress(p);
                 } else if v.get("done").is_some() {
                     result = Some(Ok(()));
                 } else if let Some(e) = v.get("error").and_then(Value::as_str) {

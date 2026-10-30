@@ -522,6 +522,7 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             print(&ops()?.export_timeline(&TimelineExportRequest { format, out })?)
         }
+        Command::Jobs => print(&ops()?.export_jobs()?),
         Command::Pipeline(PipelineCommand::Detect) => print(&ops()?.pipeline_detect()?),
         Command::Pipeline(PipelineCommand::Next) => print(&ops()?.pipeline_next()?),
         Command::Export {
@@ -529,6 +530,7 @@ fn run(cli: Cli) -> CkResult<()> {
             out,
             force,
             reason,
+            queue,
             ..
         } => {
             if force && reason.as_deref().is_none_or(|r| r.trim().is_empty()) {
@@ -541,12 +543,18 @@ fn run(cli: Cli) -> CkResult<()> {
                 PresetArg::Reels => Preset::Reels,
                 PresetArg::Shorts => Preset::Shorts,
             };
-            print(&ops()?.export(&ExportRequest {
+            let req = ExportRequest {
+                queue,
                 force_reason: reason.filter(|_| force),
                 preset,
                 out,
                 ..Default::default()
-            })?)
+            };
+            if queue {
+                print(&ops()?.export_enqueue(&req)?)
+            } else {
+                print(&ops()?.export(&req)?)
+            }
         }
         Command::Handoff {
             label,

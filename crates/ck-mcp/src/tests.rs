@@ -95,6 +95,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("branch_switch", ck_server::session::branch::caps::BRANCH),
         ("variants", ck_server::session::branch::caps::VARIANTS),
         ("export", caps::EXPORT),
+        ("jobs", caps::EXPORT_JOBS),
         ("voice_script", caps::VOICE_SCRIPT),
         ("voice_mode", caps::VOICE_WRITE),
         ("voice_speak", caps::VOICE_WRITE),

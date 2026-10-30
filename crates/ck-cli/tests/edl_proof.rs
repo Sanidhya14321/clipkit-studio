@@ -156,3 +156,28 @@ fn speech_clip_keeps_phrases_with_captions_on_exact_words() {
     let check = raw(d, &["layout", "check"]);
     assert_eq!(check["ok"], true, "no collisions: {check}");
 }
+
+#[test]
+fn queued_export_returns_at_once_and_reports_its_end() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _s = Studio::start(d);
+    // Nothing to export: the job must end failed, with the reason, not hang.
+    let job = raw(d, &["export", "--queue"]);
+    assert_eq!(job["id"], "export-1", "{job}");
+    for _ in 0..100 {
+        let jobs = raw(d, &["jobs"]);
+        if jobs["jobs"][0]["state"] == "failed" {
+            assert!(
+                jobs["jobs"][0]["error"]
+                    .as_str()
+                    .unwrap()
+                    .contains("no layers"),
+                "{jobs}"
+            );
+            return;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(50));
+    }
+    panic!("job never finished");
+}

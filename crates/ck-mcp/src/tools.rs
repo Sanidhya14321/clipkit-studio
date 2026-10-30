@@ -525,9 +525,15 @@ pub fn specs() -> Vec<ToolSpec> {
         spec::<ExportRequest>(
             "export",
             "ck export",
-            "Export a footage-only project to MP4 (fast ffmpeg path): preset source, youtube, \
-             tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",
+            "Export the project to MP4 (fast ffmpeg path or render worker): preset source, \
+             youtube, tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured. queue: true returns a job at once; follow it with jobs.",
             caps::EXPORT,
+        ),
+        spec::<StatusArgs>(
+            "jobs",
+            "ck jobs",
+            "Queued, running and finished exports with progress, newest first.",
+            caps::EXPORT_JOBS,
         ),
         spec::<VoiceScriptRequest>(
             "voice_script",
@@ -827,9 +833,14 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
+        "jobs" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.export_jobs()?)
+        }
         "export" => {
             let req: ExportRequest = parse(args)?;
             match req.format {
+                ExportFormat::Mp4 if req.queue => json(&ops.export_enqueue(&req)?),
                 ExportFormat::Mp4 => json(&ops.export(&req)?),
                 ExportFormat::Otio | ExportFormat::Srt => {
                     json(&ops.export_timeline(&TimelineExportRequest {

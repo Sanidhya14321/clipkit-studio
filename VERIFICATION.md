@@ -403,3 +403,4 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Beat measurement | PASS | `beats::tests` (synthetic clicks only; no real music measured) |
 | Ducking in the graph | PASS | `ducked_clip_drops_only_inside_its_ranges` (graph text; not listened to) |
 | Benchmark against a vanilla agent | BLOCKED | Needs real agent runs and owner media |
+| Export queue returns at once and reports the end | PASS | `edl_proof::queued_export_returns_at_once_and_reports_its_end`; progress during a real render not asserted |

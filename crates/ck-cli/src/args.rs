@@ -202,8 +202,13 @@ pub enum Command {
     /// Pipeline steps: detect the mode, finish the current step.
     #[command(subcommand)]
     Pipeline(PipelineCommand),
-    /// Export the project to MP4 (fast path or render worker).
+    /// Export jobs.
+    Jobs,
+    /// Export to MP4.
     Export {
+        /// Return at once; follow it with ck jobs.
+        #[arg(long)]
+        queue: bool,
         /// Export despite failing gates; needs --reason.
         #[arg(long)]
         force: bool,

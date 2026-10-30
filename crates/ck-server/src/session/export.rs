@@ -88,6 +88,9 @@ fn is_mp4(f: &ExportFormat) -> bool {
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExportRequest {
+    /// Queue the export and return at once with the job.
+    #[serde(default)]
+    pub queue: bool,
     /// mp4 (default), otio or srt; otio and srt answer with the timeline export result.
     #[serde(default, skip_serializing_if = "is_mp4")]
     pub format: ExportFormat,

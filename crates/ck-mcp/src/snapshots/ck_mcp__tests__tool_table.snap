@@ -1958,7 +1958,7 @@ expression: specs()
   {
     "name": "export",
     "command": "ck export",
-    "description": "Export a footage-only project to MP4 (fast ffmpeg path): preset source, youtube, tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",
+    "description": "Export the project to MP4 (fast ffmpeg path or render worker): preset source, youtube, tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured. queue: true returns a job at once; follow it with jobs.",
     "cap": 1024,
     "inputSchema": {
       "$defs": {
@@ -2015,6 +2015,11 @@ expression: specs()
       "additionalProperties": false,
       "type": "object",
       "properties": {
+        "queue": {
+          "description": "Queue the export and return at once with the job.",
+          "type": "boolean",
+          "default": false
+        },
         "format": {
           "description": "mp4 (default), otio or srt; otio and srt answer with the timeline export result.",
           "$ref": "#/$defs/ExportFormat"
@@ -2038,6 +2043,17 @@ expression: specs()
           ]
         }
       }
+    }
+  },
+  {
+    "name": "jobs",
+    "command": "ck jobs",
+    "description": "Queued, running and finished exports with progress, newest first.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "`status` takes no input."
     }
   },
   {

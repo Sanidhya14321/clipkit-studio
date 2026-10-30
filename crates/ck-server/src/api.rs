@@ -77,6 +77,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/cut/suggest", get(cut_suggest))
         .route("/api/cut/apply", post(cut_apply))
         .route("/api/export", post(export))
+        .route("/api/export/jobs", get(export_jobs).post(export_enqueue))
         .route("/api/assets/derive", post(derive))
         .route("/api/render/check", post(render_check))
         .route("/api/history", get(history))
@@ -350,6 +351,18 @@ async fn cut_words(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.cut_words(&req)).await
+}
+
+async fn export_jobs(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.export_jobs()).await
+}
+
+async fn export_enqueue(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<ExportRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s.clone(), move |_| s.export_enqueue(&req)).await
 }
 
 async fn export(

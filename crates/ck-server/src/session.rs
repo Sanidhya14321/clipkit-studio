@@ -36,6 +36,7 @@ pub mod formats;
 pub mod handoff;
 pub mod history;
 pub mod import;
+pub mod jobs;
 pub mod layout;
 pub mod look;
 pub mod pipeline;
@@ -105,6 +106,7 @@ pub struct Session {
     degraded: AtomicBool,
     activity: Arc<Activity>,
     transcriber: Arc<dyn Transcriber>,
+    jobs: jobs::Jobs,
     speaker: Arc<dyn Speaker>,
     /// What the studio last reported pointing at (UI state, never stored).
     studio_context: Mutex<context::StudioContext>,
@@ -138,6 +140,7 @@ impl Session {
             degraded: AtomicBool::new(false),
             activity: Arc::default(),
             transcriber: Arc::new(FishStt::from_env()),
+            jobs: jobs::Jobs::default(),
             speaker: Arc::new(FishTts::from_env()),
             studio_context: Mutex::default(),
             asks: Mutex::default(),
