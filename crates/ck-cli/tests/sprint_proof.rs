@@ -144,6 +144,9 @@ fn forced_export_records_the_reason_and_silence_fails_loudness() {
     );
     assert_eq!(out["silent"], true, "{out}");
     assert_eq!(out["loudnessPass"], false, "silence must fail: {out}");
+    let path = d.join(out["path"].as_str().unwrap());
+    let eval = raw(d, &["eval", path.to_str().unwrap()]);
+    assert!(eval["score"].as_f64().unwrap() < 100.0, "{eval}");
 }
 
 #[test]

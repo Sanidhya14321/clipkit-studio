@@ -149,7 +149,7 @@ pub fn evaluate(base: &Path, req: &EvalRequest) -> CkResult<EvalReport> {
     }
 
     if info.audio.is_empty() {
-        not_measured.push("loudness (no audio)".into());
+        checks.push(check("loudness", false, "no audio".to_owned()));
     } else {
         let l = measure_loudness(&video)?;
         let target = e.loudness.unwrap_or(LoudnessTarget {
@@ -157,7 +157,7 @@ pub fn evaluate(base: &Path, req: &EvalRequest) -> CkResult<EvalReport> {
             true_peak: -1.0,
         });
         if l.integrated <= ck_media::export::SILENT_LUFS {
-            not_measured.push("loudness (silent)".into());
+            checks.push(check("loudness", false, "silent".to_owned()));
         } else {
             let ok = (l.integrated - target.integrated).abs() <= LOUDNESS_TOLERANCE
                 && l.true_peak <= target.true_peak + 0.5;

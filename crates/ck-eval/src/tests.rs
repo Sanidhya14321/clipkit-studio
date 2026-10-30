@@ -60,7 +60,7 @@ fn the_scene_fixture_meets_its_ground_truth() {
     assert!(names.contains(&("source unchanged", true)));
     // Each solid-colour scene holds 2 s: below the frozen limit.
     assert!(names.contains(&("frozen frames", true)), "{:?}", r.checks);
-    assert!(r.not_measured.iter().any(|n| n.starts_with("loudness")));
+    assert!(r.checks.iter().any(|c| c.name == "loudness" && !c.pass));
 }
 
 #[test]
