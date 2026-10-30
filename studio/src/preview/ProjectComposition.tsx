@@ -12,7 +12,8 @@ import {
 import type { Item, Look, Project, TrackKind } from "../generated/types";
 import { span } from "../timeline";
 import { CLIPS, AssetMediaContext } from "../clips/clips";
-import { type Props, isCoreClip, lookId, resolveTokens } from "../clips/motion";
+import { type Props, lookId, resolveTokens } from "../clips/motion";
+import { registeredClip } from "../editor/assets";
 
 export interface CompositionProps extends Record<string, unknown> {
   project: Project;
@@ -96,13 +97,13 @@ export function ProjectComposition({
               isVisibleAt(project, item, t),
           )
           .map((item) =>
-            item.type === "clip" && isCoreClip(item.clipId) ? (
+            item.type === "clip" && registeredClip(project, item) ? (
               <div
                 key={
                   flash.includes(item.id) ? `${item.id}@${flashRev}` : item.id
                 }
                 data-ck-layer={item.id}
-                data-ck-clip={item.clipId}
+                data-ck-clip={registeredClip(project, item)}
                 data-ck-agent={agentLayers.includes(item.id)}
                 className={flash.includes(item.id) ? "flash" : undefined}
                 style={{
@@ -117,7 +118,7 @@ export function ProjectComposition({
                 <AssetMediaContext.Provider
                   value={{ sources: sourceMedia, at: item.at }}
                 >
-                  {CLIPS[item.clipId]({
+                  {CLIPS[registeredClip(project, item)!]({
                     props: resolveTokens(propsOf(item.props), look),
                     t: t - item.at,
                     dur: item.dur,

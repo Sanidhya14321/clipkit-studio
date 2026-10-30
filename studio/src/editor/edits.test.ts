@@ -131,3 +131,33 @@ test("unregistered or derived components are never treated as native rendered as
   });
   assert.deepEqual(unsupportedAssetLayers(p), ["derived"]);
 });
+
+test("only explicit source and adapter version resolve derived content", async () => {
+  const { registeredClip } = await import("./assets.ts");
+  const p = fixture();
+  const item = {
+    id: "native-adapted",
+    name: "Adapted",
+    purpose: "",
+    briefDeps: [],
+    rev: 0,
+    type: "clip" as const,
+    derivedId: "d1",
+    at: 0,
+    dur: 1,
+    props: { text: "Adapted" },
+  };
+  p.derived.push({
+    id: "d1",
+    sourceAsset: "rendercomp-free/glitch-text",
+    nativeAdapter: "glitch-text-v1",
+  });
+  assert.equal(registeredClip(p, item), "glitch-text");
+  p.derived[0] = {
+    id: "d1",
+    sourceAsset: "unverified/file",
+    nativeAdapter: "glitch-text-v1",
+    path: "/tmp/run.js",
+  };
+  assert.equal(registeredClip(p, item), null);
+});

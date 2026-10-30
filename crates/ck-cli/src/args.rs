@@ -106,7 +106,7 @@ pub enum Command {
     /// Voice slots: script, mode.
     #[command(subcommand)]
     Voice(VoiceCommand),
-    /// Ask the user a question in the studio; prints the answer.
+    /// Ask in the studio; print the answer.
     Ask {
         /// The question (omit with --id to keep waiting).
         question: Option<String>,
@@ -120,15 +120,15 @@ pub enum Command {
         #[arg(long)]
         timeout: Option<u64>,
     },
-    /// What the user points at in the studio, plus open comments.
+    /// Studio selection and open comments.
     Context,
     /// List, add, reply to and resolve comments.
     #[command(subcommand)]
     Comments(CommentsCommand),
-    /// Retrieval ladder over vetted assets: search, card, skeleton, slice, source.
+    /// Search and inspect vetted assets.
     #[command(subcommand)]
     Assets(AssetsCommand),
-    /// License and attribution report for the assets the project uses.
+    /// Project license and attribution report.
     #[command(subcommand)]
     License(LicenseCommand),
     /// Source Hub: list, add and report gaps.
@@ -155,6 +155,9 @@ pub enum Command {
     /// Reference video statistics and suggested brief fields.
     #[command(subcommand)]
     Reference(ReferenceCommand),
+    /// Analyze audio rhythm candidates.
+    #[command(subcommand)]
+    Music(MusicCommand),
     /// Storyboard checkpoint: one still per scene.
     #[command(subcommand)]
     Storyboard(StoryboardCommand),
@@ -606,6 +609,11 @@ pub enum BranchCommand {
     List,
     /// Switch to a saved branch (one undoable revision).
     Switch { name: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum MusicCommand {
+    Analyze { path: String },
 }
 
 #[derive(Debug, Subcommand)]

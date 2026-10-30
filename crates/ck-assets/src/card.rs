@@ -64,6 +64,7 @@ kebab_enum!(
         Lut = "lut",
         OverlayVideo = "overlay-video",
         Sfx = "sfx",
+        Music = "music",
         Font = "font",
         Icon = "icon",
         AeReference = "ae-reference",

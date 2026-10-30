@@ -1,4 +1,12 @@
 {
+  "duru-original-music": {
+    "commit": "local-14c9aa0b122a61b6",
+    "licenseHash": "989a406d23b9d21d9aaacf4c709f157e8cb7448f44dfdd6310e5dcab21fd246a",
+    "licenseClass": "permissive",
+    "spdx": "CC0-1.0",
+    "vettedAt": "2026-10-30",
+    "findings": []
+  },
   "rendercomp-free": {
     "commit": "f648980e528defb7594e24c6447055f0540f340b",
     "licenseHash": "3e0f0f2895a6bf2b5aa9d03aa4a6b68679a7d037d54f24177f99748084a58444",
@@ -13,6 +21,14 @@
         "detail": "3139981 bytes, not copied"
       }
     ]
+  },
+  "sfx-elements-audio": {
+    "commit": "local-789e4cf3ab2e3817",
+    "licenseHash": "9c0014f38c0bae0ffd01fceb0088b9ecb7e7b06968ba9f3fe3ab6af1b8a4a5c9",
+    "licenseClass": "permissive",
+    "spdx": "CC0-1.0",
+    "vettedAt": "2026-10-30",
+    "findings": []
   },
   "simple-icons": {
     "commit": "90646e4bf7f3b89df6c37e65baf3e7bc759a517c",

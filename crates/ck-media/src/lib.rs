@@ -7,6 +7,7 @@ pub mod engine;
 pub mod export;
 pub mod import;
 pub mod mix;
+pub mod music;
 pub mod probe;
 mod run;
 pub mod take;

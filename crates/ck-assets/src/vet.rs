@@ -19,6 +19,20 @@ use crate::license::classify;
 
 /// Largest single file copied into quarantine.
 pub const MAX_FILE: u64 = 2 * 1024 * 1024;
+/// Audio has a separate cap; the source-wide 64 MiB cap still applies.
+pub const MAX_AUDIO_FILE: u64 = 32 * 1024 * 1024;
+
+pub(crate) fn file_limit(path: &Path) -> u64 {
+    match path
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(str::to_ascii_lowercase)
+        .as_deref()
+    {
+        Some("wav" | "mp3" | "ogg" | "opus" | "flac" | "m4a") => MAX_AUDIO_FILE,
+        _ => MAX_FILE,
+    }
+}
 /// Largest total size of one source.
 pub const MAX_TOTAL: u64 = 64 * 1024 * 1024;
 /// Most files in one source.
@@ -125,7 +139,7 @@ fn copy_local(from: &Path, to: &Path, findings: &mut Vec<Finding>) -> CkResult<(
         }
         count += 1;
         total += meta.len();
-        if meta.len() > MAX_FILE {
+        if meta.len() > file_limit(&path) {
             findings.push(finding(
                 Severity::Warning,
                 "large-file",

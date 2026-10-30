@@ -1,6 +1,9 @@
 import { memo, useRef, useState } from "react";
 import type { Project, PatchRequest } from "../generated/types";
 import { addItemRequest, uniqueId } from "../editor/edits";
+import { request } from "../api";
+import { object, text } from "../editor/json";
+import type { JsonValue } from "../generated/types";
 export const SourcePanel = memo(function SourcePanel({
   token,
   project,
@@ -21,6 +24,9 @@ export const SourcePanel = memo(function SourcePanel({
   const [start, setStart] = useState("0"),
     [end, setEnd] = useState(""),
     [error, setError] = useState("");
+  const [analysis, setAnalysis] = useState<JsonValue>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisSource, setAnalysisSource] = useState<string | null>(null);
   if (!source)
     return (
       <section className="panel empty-state" aria-label="Source monitor">
@@ -108,7 +114,15 @@ export const SourcePanel = memo(function SourcePanel({
           {source.kind} · {source.durationSec?.toFixed(2) ?? "—"} seconds
         </p>
       </div>
-      {url ? (
+      {source.kind === "audio" ? (
+        <audio
+          key={source.id}
+          controls
+          preload="metadata"
+          aria-label="Audio source preview"
+          src={`/media/source/${source.hash}?token=${encodeURIComponent(token)}`}
+        />
+      ) : url ? (
         <video
           ref={video}
           src={url}
@@ -118,14 +132,49 @@ export const SourcePanel = memo(function SourcePanel({
         />
       ) : (
         <div className="empty-state">
-          <strong>
-            {source.kind === "audio" ? "Audio source" : "Preview unavailable"}
-          </strong>
+          <strong>Preview unavailable</strong>
           <p>
             {source.kind === "video"
               ? "No browser proxy is ready. Importing video through ck creates a proxy."
               : "This server does not expose a browser preview for this source format."}
           </p>
+        </div>
+      )}
+      {(source.kind === "audio" || source.kind === "video") && (
+        <div>
+          <button
+            disabled={analyzing}
+            onClick={() => {
+              setAnalysisSource(source.id);
+              setAnalyzing(true);
+              setAnalysis(null);
+              setError("");
+              void request<JsonValue>(token, "/api/music/analyze", {
+                method: "POST",
+                body: JSON.stringify({ path: source.path }),
+              })
+                .then(setAnalysis)
+                .catch((e: unknown) =>
+                  setError(
+                    e instanceof Error ? e.message : "Audio analysis failed",
+                  ),
+                )
+                .finally(() => setAnalyzing(false));
+            }}
+          >
+            {analyzing ? "Analyzing audio…" : "Analyze rhythm"}
+          </button>
+          {analysis !== null && analysisSource === source.id && (
+            <p role="status">
+              Estimated tempo:{" "}
+              {text(
+                object(object(analysis).analysis).bpm,
+                String(object(object(analysis).analysis).bpm ?? "undetermined"),
+              )}{" "}
+              BPM. Timing candidates require confirmation; this does not retime
+              your sequence or approve the source license.
+            </p>
+          )}
         </div>
       )}
       <form

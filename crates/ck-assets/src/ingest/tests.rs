@@ -2,6 +2,53 @@ use super::*;
 use crate::hub::tests::hub_with;
 use crate::vet::{VetRequest, vet};
 
+#[test]
+fn audio_ingestion_requires_vetting_and_analysis_and_preserves_provenance() {
+    let (_d, hub) = hub_with(
+        serde_json::json!([{ "id":"sound-pack", "kind":"sfx-pack", "licenseClass":"unknown", "status":"unverified" }]),
+    );
+    let req = IngestRequest {
+        id: "sound-pack".into(),
+    };
+    assert!(ingest(&hub, &req).is_err());
+    let input = tempfile::tempdir().unwrap();
+    std::fs::copy(
+        Path::new(&fixture("pack-mit")).join("LICENSE"),
+        input.path().join("LICENSE"),
+    )
+    .unwrap();
+    std::fs::write(input.path().join("hit.wav"), vec![0_u8; 3 * 1024 * 1024]).unwrap();
+    vet(
+        &hub,
+        &VetRequest {
+            id: req.id.clone(),
+            from: Some(input.path().to_string_lossy().into_owned()),
+        },
+    )
+    .unwrap();
+    assert!(ingest(&hub, &req).is_err());
+    let result = ingest_with_media(
+        &hub,
+        &req,
+        Some(&|_| Ok(serde_json::json!({"durationSec":0.5,"onsetSec":0.1,"peak":0.5}))),
+    )
+    .unwrap();
+    assert_eq!(result.assets.len(), 1);
+    let dir = hub.assets().join(&result.assets[0]);
+    let card = Card::parse(
+        &dir.join("asset.md"),
+        &std::fs::read_to_string(dir.join("asset.md")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(card.kind, AssetKind::Sfx);
+    assert_eq!(card.license_class, LicenseClass::Permissive);
+    assert!(!card.reviewed);
+    assert_eq!(card.duration, Some(0.5));
+    assert!(dir.join("analysis.json").is_file());
+    assert!(dir.join("media/hit.wav").is_file());
+    assert!(!card.source_commit.is_empty());
+}
+
 fn fixture(name: &str) -> String {
     format!(
         "{}/../../fixtures/sources/{name}",

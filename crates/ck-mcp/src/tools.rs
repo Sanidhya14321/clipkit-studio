@@ -41,6 +41,7 @@ use ck_server::session::formats::{TimelineExportRequest, TimelineFormat};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
+use ck_server::session::music::MusicAnalyzeRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::reference::ReferenceRequest;
 use ck_server::session::render::RenderCheckRequest;
@@ -435,6 +436,12 @@ pub fn specs() -> Vec<ToolSpec> {
              the unstable frames (time- or random-dependent layers).",
             caps::RENDER_CHECK,
         ),
+        spec::<MusicAnalyzeRequest>(
+            "music_analyze",
+            "ck music analyze",
+            "Bounded audio onset/tempo candidates; full data cached; no timing or license approval.",
+            caps::MUSIC,
+        ),
         spec::<ReferenceRequest>(
             "reference_analyze",
             "ck reference analyze",
@@ -650,7 +657,11 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
             )?)
         }),
         "sources_ingest" => parse::<IngestRequest>(args).and_then(|r| {
-            let out = ingest::ingest(&hub()?, &r)?;
+            let out = ingest::ingest_with_media(
+                &hub()?,
+                &r,
+                Some(&ck_server::session::music::asset_analysis),
+            )?;
             json(&ck_server::ops::trimmed(
                 "sources ingest",
                 ingest::caps::INGEST,
@@ -805,6 +816,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         }
         "history" => json(&ops.history(&parse::<RevHistoryRequest>(args)?)?),
         "storyboard_get" => json(&ops.storyboard_get(&parse::<StoryboardRequest>(args)?)?),
+        "music_analyze" => json(&ops.music_analyze(&parse::<MusicAnalyzeRequest>(args)?)?),
         "reference_analyze" => json(&ops.reference_analyze(&parse::<ReferenceRequest>(args)?)?),
         "branch_save" => json(&ops.branch_save(&parse::<BranchRequest>(args)?)?),
         "branch_list" => {

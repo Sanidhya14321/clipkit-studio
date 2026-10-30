@@ -13,6 +13,7 @@ mod idle;
 mod import;
 mod live;
 mod look;
+mod music;
 mod ops;
 mod profile;
 mod recipe;

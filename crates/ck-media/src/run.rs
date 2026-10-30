@@ -34,6 +34,22 @@ pub(crate) fn run(
     args: &[&std::ffi::OsStr],
     timeout: Duration,
 ) -> Result<Output, CkError> {
+    run_bounded(program, args, timeout, MAX_OUTPUT)
+}
+
+/// Internal decoded-media path; callers choose a finite cap up to 64 MiB.
+pub(crate) fn run_bounded(
+    program: &str,
+    args: &[&std::ffi::OsStr],
+    timeout: Duration,
+    output_limit: u64,
+) -> Result<Output, CkError> {
+    if output_limit > 64 * 1024 * 1024 {
+        return Err(CkError::new(
+            ErrorCode::Media,
+            "media output cap exceeds 64 MiB",
+        ));
+    }
     let mut child = Command::new(program)
         .args(args)
         .stdin(Stdio::null())
@@ -42,11 +58,11 @@ pub(crate) fn run(
         .spawn()
         .map_err(|e| CkError::new(ErrorCode::Media, format!("{program} could not start: {e}")))?;
     let (out, err) = (child.stdout.take(), child.stderr.take());
-    let read_all = |r: Option<Box<dyn Read + Send>>| {
+    let read_all = move |r: Option<Box<dyn Read + Send>>| {
         std::thread::spawn(move || {
             let mut buf = Vec::new();
             if let Some(r) = r {
-                let _ = r.take(MAX_OUTPUT).read_to_end(&mut buf);
+                let _ = r.take(output_limit).read_to_end(&mut buf);
             }
             buf
         })

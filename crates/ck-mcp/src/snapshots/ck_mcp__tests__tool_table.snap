@@ -767,6 +767,7 @@ expression: specs()
             "lut",
             "overlay-video",
             "sfx",
+            "music",
             "font",
             "icon",
             "ae-reference",
@@ -1581,6 +1582,24 @@ expression: specs()
         }
       },
       "type": "object"
+    }
+  },
+  {
+    "name": "music_analyze",
+    "command": "ck music analyze",
+    "description": "Bounded audio onset/tempo candidates; full data cached; no timing or license approval.",
+    "cap": 4096,
+    "inputSchema": {
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      }
     }
   },
   {

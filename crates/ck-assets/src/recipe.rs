@@ -22,6 +22,7 @@ pub const CORE_CLIPS: &[&str] = &[
     "backdrop",
     "bullet-list",
     "device-frame",
+    "glitch-text",
     "kinetic-text",
     "lower-third",
     "quote-card",

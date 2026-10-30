@@ -165,6 +165,18 @@ fn schema(project: &Project, out: &mut Issues) {
     }
     for item in project.items() {
         if let ItemBody::Clip {
+            derived_id: Some(id),
+            ..
+        } = &item.body
+            && ck_assets::native_adapter::resolve(project, item).is_none()
+        {
+            out.add(
+                "schema",
+                vec![item.id.clone()],
+                format!("derived component `{id}` has no registered renderer"),
+            );
+        }
+        if let ItemBody::Clip {
             clip_id: Some(c),
             derived_id: None,
             ..

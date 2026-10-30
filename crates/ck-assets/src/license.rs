@@ -44,7 +44,11 @@ pub fn classify(text: &str) -> Reading {
     if has("attribution 4.0 international") && has("creative commons") {
         return read(L::Attribution, "CC-BY-4.0");
     }
-    if has("cc0 1.0 universal") {
+    if has("cc0 1.0 universal")
+        || (has("cc0 (public domain)")
+            && has("no attribution required")
+            && has("free for commercial use"))
+    {
         return read(L::Permissive, "CC0-1.0");
     }
     if has("gnu affero general public license") {
@@ -128,6 +132,13 @@ mod tests {
 
     #[test]
     fn restrictions_win_over_permissive_bodies() {
+        let notice =
+            "All sounds are CC0 (public domain). No attribution required. Free for commercial use.";
+        assert_eq!(classify(notice).spdx, "CC0-1.0");
+        assert_eq!(
+            classify(&format!("{notice} Commons Clause")).class,
+            LicenseClass::CommercialRestricted
+        );
         let mit = "Permission is hereby granted, free of charge, to any person obtaining a copy \
                    ... THE SOFTWARE IS PROVIDED \"AS IS\"";
         assert_eq!(classify(mit).spdx, "MIT-0");

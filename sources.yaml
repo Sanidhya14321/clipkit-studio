@@ -1021,5 +1021,23 @@
     "phase": "8",
     "homepage": "https://pixabay.com",
     "licenseNote": "custom-license and site-license: snapshot terms at every ingest; no SPDX guess; API key only in the gitignored .env."
+  },
+  {
+    "id": "sfx-elements-audio",
+    "name": "Elements CC0 audio subset",
+    "kind": "sfx-pack",
+    "license": "CC0-1.0",
+    "licenseClass": "permissive",
+    "status": "vetted",
+    "enabled": true
+  },
+  {
+    "id": "duru-original-music",
+    "name": "Duru original CC0 music subset",
+    "kind": "music-pack",
+    "license": "CC0-1.0",
+    "licenseClass": "permissive",
+    "status": "vetted",
+    "enabled": true
   }
 ]

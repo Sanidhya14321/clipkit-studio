@@ -87,8 +87,8 @@ export const LibraryPanel = memo(function LibraryPanel({
         <summary>Project asset use · {project.assetsUsed.length}</summary>
         <p className="muted">
           10 original recipes use 8 registered native clips. The external source
-          catalog is agent-searchable; external components require a render
-          adapter and are not directly executable here.
+          catalog is agent-searchable. GlitchText has a registered native
+          adaptation; other external components require a render adapter.
         </p>
         <small>
           License mode: {project.brief.licenseMode ?? "commercial-safe"}

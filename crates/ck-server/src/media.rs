@@ -61,6 +61,11 @@ pub async fn original(
         .map(str::to_lowercase)
         .as_deref()
     {
+        Some("wav") => "audio/wav",
+        Some("mp3") => "audio/mpeg",
+        Some("ogg" | "opus") => "audio/ogg",
+        Some("flac") => "audio/flac",
+        Some("m4a") => "audio/mp4",
         Some("webm") => "video/webm",
         Some("mov") => "video/quicktime",
         Some("png") => "image/png",

@@ -1,0 +1,39 @@
+{
+  "source": "duru-original-music",
+  "commit": "1f63fef279098a082f2f77b3f74940b2784d37b7",
+  "files": [
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/uncle-sheepsky/duru-ai-cc0-bgm/1f63fef279098a082f2f77b3f74940b2784d37b7/LICENSE",
+      "sha256": "989a406d23b9d21d9aaacf4c709f157e8cb7448f44dfdd6310e5dcab21fd246a",
+      "bytes": 7135
+    },
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/uncle-sheepsky/duru-ai-cc0-bgm/1f63fef279098a082f2f77b3f74940b2784d37b7/README.md",
+      "sha256": "f92fa7d299a3bbe19e916f36e38d605d3ff5a195a80413310914da7cc602412c",
+      "bytes": 5565
+    },
+    {
+      "path": "mp3/hyak-ep1-rhythm.mp3",
+      "url": "https://raw.githubusercontent.com/uncle-sheepsky/duru-ai-cc0-bgm/1f63fef279098a082f2f77b3f74940b2784d37b7/mp3/hyak-ep1-rhythm.mp3",
+      "sha256": "843ddc7ba6f90c0121334f4749b565b8f3f2dac0bec4ec8df10dabd62006b6d1",
+      "bytes": 6402132
+    },
+    {
+      "path": "mp3/hyak-ep3-suika.mp3",
+      "url": "https://raw.githubusercontent.com/uncle-sheepsky/duru-ai-cc0-bgm/1f63fef279098a082f2f77b3f74940b2784d37b7/mp3/hyak-ep3-suika.mp3",
+      "sha256": "fb684210e4dbe26b80928d07c02a6948699eb669397c760b68a7618c5165aadd",
+      "bytes": 6402132
+    },
+    {
+      "path": "mp3/hyak-ep4-blackhole.mp3",
+      "url": "https://raw.githubusercontent.com/uncle-sheepsky/duru-ai-cc0-bgm/1f63fef279098a082f2f77b3f74940b2784d37b7/mp3/hyak-ep4-blackhole.mp3",
+      "sha256": "ac50a39d42691f6c4f8433ac5496ea2ce5ea406570faa067ef578b39dda68743",
+      "bytes": 6338394
+    }
+  ],
+  "provenance": "Publisher states original compositions synthesized in code; no builder was fetched or executed. Musical tempo/quality are unconfirmed.",
+  "excluded": "arrangements and +sfx variants",
+  "approvedCollection": false
+}
