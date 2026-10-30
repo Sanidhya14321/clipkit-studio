@@ -6,9 +6,10 @@ where you watch the agent edit and take over when it stops.
 The agent works through `ck` (a CLI and an MCP server with the same tools). Every change is a
 patch on a non-destructive project you can undo, comment on and edit yourself in the studio.
 
-**Status:** Phases 0 to 8 are built; Phase 9 (polish and proof) is in progress. See
-`PROGRESS.md` for where the build stands, `VERIFICATION.md` for evidence and `docs/spec/INDEX.md`
-for the specification.
+**Status:** early and in active development. The studio editor (timeline move, trim and split),
+the Edit Decision Plan and the export queue work; the benchmark against a vanilla agent has not
+been run. See `PROGRESS.md` for where the build stands, `VERIFICATION.md` for evidence and
+`docs/spec/INDEX.md` for the specification.
 
 ## Install
 ```
@@ -25,7 +26,7 @@ missing. Remotion downloads Chrome Headless Shell on the first render.
 ## How a video gets made
 EDIT: `ck import`, `ck transcribe`, `ck content map`, `ck grid build --source <id>`. GENERATE:
 `ck grid build --dur <seconds>`, fast by default. Then both paths use `ck plan set`,
-`ck plan candidates` and `ck plan expand`, followed by `ck verify` and `ck export`. The agent
+`ck plan candidates` and `ck plan expand`, followed by `ck verify` and `ck export` (`ck export --queue` returns at once; `ck jobs` shows progress). The agent
 decides per segment; code does the frame math. Changing one part with
 `ck plan expand --segment <id>` touches only that segment.
 
