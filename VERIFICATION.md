@@ -18,7 +18,7 @@ Every item has a status (PASS, FAIL, BLOCKED) and evidence. No PASS without evid
 | settings.json is valid JSON | PASS | `jq -e . .claude/settings.json` |
 | Every skill and agent has frontmatter with a description | PASS | frontmatter check loop over .claude/skills/*/SKILL.md and .claude/agents/*.md |
 | CI workflow parses | PASS | `python3 -c "yaml.safe_load(...)"` on .github/workflows/ci.yml |
-| CI runs green on GitHub | BLOCKED | Not pushed yet; runs on the first push or PR |
+| CI runs green on GitHub | PASS | Audit 2026-10-30: green from run 41030811771 after adding ffmpeg and fixtures to CI (it had been red since Phase 7; docs/AUDIT.md) |
 | Fixtures generator produces media and ground truth | PASS | 2026-10-28, ffmpeg 8.0.1: `just fixtures` -> "wrote 11 files ... (counter overlay: true)", ffprobe duration checks inside the script pass; frame at 1.5 s reads "frame 45" and "00:00:01:15". Fixed a pipefail bug that had silently disabled the overlay. |
 | Hooks fire inside a live Claude Code session | PASS | During Phase 0 the live guard-bash hook blocked a heredoc writing `.gitignore` (a false positive, fixed and covered by a regression case in tests/hooks/run.sh) |
 
@@ -90,7 +90,7 @@ Command: `just check` (64 of 64 tests, hooks 41 of 41). ck-server suite run 3 mo
 | Step 8: idle shutdown (spec 5.1): the count restarts on each authorized call; an open WebSocket holds it off; 0 never stops; refused and static requests do not count; a real `ck studio --idle 1` exits 0 by itself at least 1 s after the last call and removes server.json | PASS | `ck-server tests::idle::*` (5 tests, paused tokio time), `cli_commands::studio_stops_by_itself_after_the_idle_time` |
 | Step 8: CSP and `X-Frame-Options: DENY` on studio files; no CSP violation while the Player preview, panels and edits run | PASS | `studio::index_is_served_without_a_token` header assertions (CSP constant, no `unsafe-eval`); `phase2.spec.ts` records `securitypolicyviolation` events and requires none in both tests. The first run caught `media-src data:` from the Player, now allowed. 2026-10-29 `just e2e` 2 of 2; `--repeat-each=10 --workers=4` 20 of 20 |
 | Step 8: studio opens in under 3 s (spec 1.2) | PASS | `phase2.spec.ts`: `page.goto` to the connected timeline took 253 ms (2026-10-29, debug ck, warm machine); budget 3000 ms |
-| Step 8: e2e in CI | BLOCKED | `e2e` job added to `.github/workflows/ci.yml` (Playwright Chromium with deps, `just e2e`); not pushed, so it has never run on GitHub |
+| Step 8: e2e in CI | PASS | Audit 2026-10-30: the e2e job runs green (run 41030811771) |
 | Phase 2 final run | PASS | 2026-10-29 `just check`: 103 of 103 nextest, hooks 41 of 41, studio prettier, `tsc --noEmit` and 10 of 10 unit tests; `just e2e` 2 of 2 |
 
 ## Phase 3: plugin and auto-launch (2026-10-29, in progress)
@@ -227,7 +227,7 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 9c: `ck handoff`, `ck wait` and MCP `handoff`, `wait` (schema, 1 KB and 4 KB caps, parity) | PASS | `ck_mcp` `tool_table_snapshot` (2 tools added), `every_tool_has_an_object_schema_and_its_cli_cap`; `mcp_parity.rs` `recipe_apply_answers_like_its_cli_twin` |
 | Step 9c run | PASS | 2026-10-29 `just check`: 217 of 217 nextest (1 skipped), hooks 41 of 41 |
 | Step 10a: prompt to brief (propose, human confirm, ready) to a 15 s generated project (3 recipes); layout check ok, `verify` ok on every gate, sound cues, handoff, wait | PASS | `generate_proof.rs` `prompt_to_brief_to_a_verified_15_second_generated_video` (real `ck studio` and `ck` commands) |
-| Step 10b: export of the generated video | BLOCKED | Component layers need the Node render worker (spec 2 full export path, Phase 9); DECISIONS.md, step 10 |
+| Step 10b: export of the generated video | PASS | Done in Phase 9 step 2: `generate_proof` exports through the render worker |
 | Step 10c: rust-reviewer and spec-checker run; trimmed `wait` resumes after the last kept event; handoff label capped at 80 chars | PASS | `ops::tests::trimmed_wait_resumes_after_the_last_kept_event`, `handoff::tests::handoff_label_is_capped_and_defaulted`; 2026-10-29 `just check` exit 0 (220 of 220 nextest, 1 skipped; hooks 41 of 41; studio clean). Carried gaps in DECISIONS.md step 10c |
 | Step 10a run | PASS | 2026-10-29 `just check`: 218 of 218 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean |
 
@@ -292,9 +292,9 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: bench harness: `bench/scenarios.json` (arms A0, A1, B, five ablations; the 15 spec scenarios; 3 runs per arm), `bench/run.sh` (fresh workspace per run, agent from AGENT_CMD, tokens only from the agent's usage, `ck eval` score, one JSON line per run), `ck bench report` + MCP twin and `just bench` (medians, ranges, pass rates; tokens not estimated; cells under 3 runs flagged) | PASS | `ck-eval` `bench::tests::*` (3); `bash -n bench/run.sh` |
 | Step 7: benchmark results (A0, A1, B on the headline scenarios) | BLOCKED | PLACEHOLDER: needs real agent runs (tokens) and the owner-supplied talking-head clip and voice sample; `bench/run.sh` has not been run |
 | Step 8: `ck history` (newest first), `ck branch save|list|switch` (saved content; a switch is one undoable revision; no-op when equal), `ck variants` (2 or 3 looks, one still each at a frame through the worker; pick with `look apply`) + MCP twins | PASS | `ck-server` `tests::branch::*` (3, including undo of a switch); `generate_proof` renders cinematic and bold-social stills through the real worker |
-| Step 8: studio views for history, branches and side-by-side variants | BLOCKED | Not built (CLI and MCP only) |
+| Step 8: studio views for history, branches and side-by-side variants | PASS (history, branches); BLOCKED (side-by-side variants) | History panel built after Phase 10 (`phase10.spec.ts`); variants view not built |
 | Step 9: Phase 9 proof through the real binary: the generated project exports via the render worker (15 s, audio track), is deterministic frame to frame, renders look variants and re-exports from the cache (`generate_proof`); the edit export scores 100 in `ck eval` (`edit_proof`); replay and a redacted trace bundle (`interaction_proof`); the demo resets in 39 ms | PASS | `crates/ck-cli/tests/generate_proof.rs`, `edit_proof.rs`, `interaction_proof.rs`; `ck-server` `demo::tests` |
-| Step 9: sound design placement and the critic pass (spec 12 Phase 9) | BLOCKED | Sound design needs a vetted CC0 sound set (none has a confirmed source yet; `ck sound plan` already places cues); the critic pass is not built |
+| Step 9: sound design placement (critic pass built in Phase 10 step 1) | BLOCKED | Sound design needs a vetted CC0 sound set (none has a confirmed source yet; `ck sound plan` already places cues); the critic pass is not built |
 | Step 9: spec 14.7 Phase 9 tools (remotion-qa, audio-bed-check, tesseract.js) | BLOCKED | Each needs its license checked from the original source first; not vetted |
 | Step 9: rust-reviewer and spec-checker subagents | BLOCKED | Agent types unavailable in this session |
 | Phase 9 close run | PASS | 2026-10-30 `just check` and `just test`: 347 of 347 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16 |
@@ -368,8 +368,8 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | --- | --- | --- |
 | Local transcription works with no network | BLOCKED | Not implemented; Phase 5 |
 | VAD candidates match fixture ground truth within tolerance | BLOCKED | Not implemented; Phase 5 (fixtures/generated/ground-truth.json tones.silences) |
-| Scene detection finds the fixture scene changes | BLOCKED | Not implemented; Phase 5 (ground-truth.json scenes.changesAtSec) |
-| Loudness gates use the ffmpeg meter | BLOCKED | Not implemented; Phase 5 and 9 |
-| A restricted fixture (LYGIA or BBC style) is blocked in commercial-safe mode | BLOCKED | Not implemented; Phase 8 |
-| An unresolved or unverified source never appears in search | BLOCKED | Not implemented; Phase 8. Today all 63 sources.yaml entries are unverified and disabled: `jq '[.[]|select(.enabled or .status!="unverified")]|length' sources.yaml` -> 0 |
+| Scene detection finds the fixture scene changes | PASS | Phase 5 step 3: `detect::tests::finds_fixture_silences_and_scene_changes` |
+| Loudness gates use the ffmpeg meter | PASS | Phase 5 step 9 and Phase 9 step 4: `export::tests::exports_fixture_footage_to_the_target_loudness`, `ck eval` |
+| A restricted fixture (LYGIA or BBC style) is blocked in commercial-safe mode | PASS | Phase 8: `retrieve::tests::search_ranks_and_respects_the_license_mode`, `assets_proof` |
+| An unresolved or unverified source never appears in search | PASS | Phase 8: `ingest::tests::rejected_and_unvetted_sources_are_not_ingested`, `retrieve` usable-source filter |
 | No Python dependency added to the install | BLOCKED | Install does not exist yet (Phase 3). Today: no Python package manifest in the repo; Python appears only as the dev-time `scripts/split-spec.py` |

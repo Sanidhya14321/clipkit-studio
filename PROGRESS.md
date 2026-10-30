@@ -11,6 +11,7 @@ PHASE: 10
 5. Start: `just check`; `just worker`; README.md.
 
 ## Open questions
+- Audit 2026-10-30: full list of what was missed and why in docs/AUDIT.md; CI is green again.
 - Phase 9 close: not built: sound design placement (needs a vetted CC0 sound set), the critic pass, studio views for history, branches and variants, `ck repro`, per-layer render cache (whole-video cache built), original-resolution media for the render path (proxies used), audio items (music beds) in the mix, C-arm ablation switches for the bench. Bench results are PLACEHOLDER until real agent runs.
 - Phase 8 close: the Phase 9 render worker must also cover the wave 3 frame-clock adapter with determinism tests (same frame twice, out of order) before any wrappable card goes live, card previews (preview.webp) and the derived copy's type check and first render. Non-code ingest (SVG icons, LUTs, sfx) and a path filter for very large repos (tabler-icons) are not built.
 - Phase 7 close: Fish Audio TTS (`FishTts`), STT (`FishStt`) and cloning are stubs; with the key, verify the API (spec 8.3), implement them behind the existing `Speaker` and `Transcriber` traits, and add cassette tests. Spec 8.3's crossfades and music ducking belong to the mix in the Phase 9 render path; the sound plan already emits duck cues.
@@ -18,7 +19,6 @@ PHASE: 10
 - Phase 6 close: self review against spec found these gaps outside spec 12's Phase 6 list, carried: Stop button with cooperative cancel (spec 5.2), timeline drag/trim/split/snapping/zoom (spec 5.4), loop range in the studio. Run the reviewer agents on e33924a^..HEAD when available.
 - Phase 5 close: run the rust-reviewer and spec-checker subagents on the Phase 5 diff (05509be..HEAD) in a session that has them. Self review found no blocker; known gaps: export and import block one request thread (no queue or progress), `/media/` non-range requests read the whole proxy, packed transcript cap trims lines for sources much longer than 10 min.
 - Phase 5 step 4b: owner will add FISH_AUDIO_API_KEY; then verify the Fish Audio STT API, build `FishStt`, record a cassette test. Decide whether whisper-rs (C++ build) goes in by default or behind a cargo feature.
-- Phase 5 step 1: run `just fixtures` in the CI test job so fixture-backed media tests do not skip (DECISIONS.md, Phase 5 step 1).
 - Phase 4 step 10c: spec-checker gaps carried forward (verify --critic, audio and captions gates, motion direction and holds, license-mode check, retrieval budgets, token meter, variants, brief more-options, verify before idle); assign each to a later phase (DECISIONS.md, step 10c).
 - Phase 4 step 10b: the Phase 4 proof ends at a verified project; exporting the generated video waits for the Phase 9 render worker (DECISIONS.md, step 10). Confirm this is acceptable or pull a minimal render path forward.
 - Phase 4 step 9c: verify how Claude Code and Codex handle long-running MCP tool calls and tune the `wait` timeout (default 20 s, at most 25 s) (DECISIONS.md, step 9c).
