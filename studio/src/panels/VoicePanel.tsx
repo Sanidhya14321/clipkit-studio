@@ -35,6 +35,16 @@ export function VoicePanel({
   const [fit, setFit] = useState<Record<string, string>>({});
   const [rec, setRec] = useState<Recording | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
+  useEffect(
+    () => () => {
+      const active = recorder.current;
+      if (!active) return;
+      active.onstop = null;
+      if (active.state !== "inactive") active.stop();
+      active.stream.getTracks().forEach((track) => track.stop());
+    },
+    [],
+  );
 
   useEffect(() => {
     if (rec?.phase !== "countdown") return;

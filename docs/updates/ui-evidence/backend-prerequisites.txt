@@ -1,0 +1,8 @@
+Real backend verification prerequisites (local host):
+cargo: NOT FOUND on PATH
+just: NOT FOUND on PATH
+ffmpeg: NOT FOUND on PATH
+$ just check
+[Errno 2] No such file or directory: 'just'
+$ just test
+[Errno 2] No such file or directory: 'just'

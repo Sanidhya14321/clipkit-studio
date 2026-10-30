@@ -4,7 +4,7 @@
 import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { expect, test } from "./fixture";
+import { expect, test, openPanel } from "./fixture";
 
 const BUNDLE = resolve(
   import.meta.dirname,
@@ -58,6 +58,7 @@ test("the user confirms the storyboard; the agent's wait sees it", async ({
   });
   const since = ((await studio.ck("status")) as { rev: number }).rev;
 
+  await openPanel(page, "storyboard");
   const panel = page.locator("[data-ck-storyboard]");
   await expect(panel.locator("[data-ck-storyboard-sheet]")).toBeVisible();
   await expect
@@ -95,6 +96,7 @@ test("history: undo, redo, save a branch and switch back", async ({
   );
   await studio.ck("recipe", "apply", file);
 
+  await openPanel(page, "history");
   const panel = page.locator("[data-ck-history]");
   await expect(
     panel.locator("[data-ck-history-lines] li").first(),

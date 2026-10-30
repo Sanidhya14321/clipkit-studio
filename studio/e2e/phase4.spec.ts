@@ -7,7 +7,7 @@ import { join } from "node:path";
 import type { Page } from "@playwright/test";
 import type { Project } from "../src/generated/types";
 import { confirmPatch } from "../src/brief";
-import { expect, test, type Studio } from "./fixture";
+import { expect, test, openPanel, type Studio } from "./fixture";
 
 async function propose(studio: Studio) {
   const file = join(studio.dir, "propose.json");
@@ -30,6 +30,7 @@ async function propose(studio: Studio) {
 async function open(page: Page, studio: Studio) {
   await page.goto(`${studio.url}#token=${studio.token}`);
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
+  await openPanel(page, "brief");
 }
 
 type Wait = {

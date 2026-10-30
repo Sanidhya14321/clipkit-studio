@@ -392,3 +392,25 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Friction | PASS | `sprint_proof.rs::json_inputs_share_one_convention_and_recipes_ripple_in_order`: inline, @file and - on every JSON input; at and dur in summaries; insert and ripple; sorted items. @project in the lock error and guardrails.md |
 | New-user walkthrough, 9:16 from an empty folder | PASS with known weakness | Exported 1080x1920, 12.0 s. Stages boot, detect, brief, plan, passes (7 in order), verify, handoff. Refused with E_STAGE: brief before detect, recipe before brief, handoff mid-pass. Verify 12 of 12 gates. Render deterministic. Eval 83 of 100: loudness fails because the video is silent; safe areas and text size not measured. The human brief confirm was simulated by patch, no real agent or browser used |
 | L14 foundation: separate studio token | PASS as a guardrail | `sprint_proof.rs::an_agent_token_cannot_act_as_the_user`: E_AUTH on human patch; token absent from server.json; consent and stop also studio-only. NOT a security boundary: code running as the same OS user can read the browser process arguments, or start a studio with CK_STUDIO_TOKEN set. Other human-labelled calls (comments, branch, voice holder) are not yet checked. `just e2e` not run |
+
+## UI-0 audit and UI-1 workspace shell (2026-10-30)
+
+All browser projects below are explicitly synthetic contract fixtures; no real project/export/agent success is inferred.
+
+| Status | Check | Evidence |
+| --- | --- | --- |
+| PASS | Audit: real Chrome observed baseline document overflow, 1440×900 viewport → 1236px document | `docs/updates/UI_AUDIT.md`; `docs/updates/ui-evidence/baseline-browser.json`; `before-1440.png` |
+| PASS | Production TypeScript/Vite build | `pnpm --dir studio build`; bundle build completed, 53 modules; no dependency/type/engine changes |
+| PASS | Formatting and strict TypeScript | `docs/updates/ui-evidence/checks.txt` |
+| PASS | 41 frontend unit tests: existing 37 plus layout validation/movement/defaults and command capability/error contracts | `checks.txt`; `studio/src/workspace/layout.test.ts` |
+| PASS | 7 frontend Playwright flows repeated three times, 21/21 | `checks.txt`; `studio/e2e/ui-workspace.spec.ts`, `playwright.ui.config.ts` |
+| PASS | Revisioned inspector request contract and snapshot reconciliation; simulated layer locks leave other layers editable; API refusal displayed | browser flow `selection edits retain revisioned API requests, lock refusal and command errors` |
+| PASS | Dock/close/reopen, desktop resize, saved layouts, draft preservation across reparent-free docking/responsive changes and closed-panel maximize | browser workspace and draft-fields flows |
+| PASS | Storage denied: session token remains usable and layouts survive workspace switches in memory | browser storage-fallback flow |
+| PASS | Native Enter/Space activation and search keyboard behavior; isolated panel crash/reload | browser palette and boundary flows |
+| PASS | 7 workspaces × widths 1440/1920 × dark/high-contrast, no document overflow; no page errors in visual flow | 28 `docs/updates/ui-evidence/{workspace}-{width}-{theme}.png` files; visual matrix browser test |
+| PASS | Visible local-browser smoke: typed seek moved playhead to 1.000s; timeline selection opened matching Inspector | disposable read-only simulated preview at `http://127.0.0.1:43172`; browser tool observations in chat; preview is not ck |
+| BLOCKED | `just check`, `just test`, real ck Playwright suites, server lock enforcement/agent-in-loop, import/transcription/recording/export | `docs/updates/ui-evidence/backend-prerequisites.txt`: cargo, just, ffmpeg absent; no local ck binary. Existing real-server tests updated for tabs but not executed |
+| BLOCKED | End-to-end acceptance of UI-2..UI-8, all section-8 fallbacks, performance budgets, real media/provider and memory runs | Not implemented/measured by this phase; no benchmark PASS claimed |
+
+Node executable used: `/Users/sanidhyavats/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node`. Other dependencies reuse the pre-existing studio installation without modifying it. No push, main-checkout edit or engine migration performed.

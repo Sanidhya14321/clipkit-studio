@@ -1,5 +1,12 @@
 import { Player, type PlayerRef } from "@remotion/player";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { request } from "./api";
 import type { Look } from "./generated/types";
 import { ActivityFeed } from "./panels/ActivityFeed";
@@ -21,6 +28,9 @@ import { ProjectComposition } from "./preview/ProjectComposition";
 import { PROJECT_LAYER, agentLocked, agentStopped, canEdit } from "./state";
 import { durationInFrames, mediaUrls } from "./timeline";
 import { useNow, useStudio } from "./useStudio";
+import { Workbench } from "./workspace/Workbench";
+import { ProjectPanel } from "./workspace/ProjectPanel";
+import type { Command } from "./workspace/commands";
 
 export function App({ token }: { token: string }) {
   const { connected, project, locks, lastRevision, feed, asks } =
@@ -30,6 +40,11 @@ export function App({ token }: { token: string }) {
   const [looks, setLooks] = useState<Look[]>([]);
   const [looksFailed, setLooksFailed] = useState(false);
   const player = useRef<PlayerRef>(null);
+  const [playerInstance, setPlayerInstance] = useState<PlayerRef | null>(null);
+  const attachPlayer = useCallback((instance: PlayerRef | null) => {
+    player.current = instance;
+    setPlayerInstance(instance);
+  }, []);
   const contextQueue = useRef<Promise<unknown>>(Promise.resolve());
   const [playhead, setPlayhead] = useState(0);
   const [hovered, setHovered] = useState<Target | null>(null);
@@ -37,7 +52,7 @@ export function App({ token }: { token: string }) {
   const fps = project?.settings.fps ?? 30;
 
   useEffect(() => {
-    const p = player.current;
+    const p = playerInstance;
     if (!p) return;
     const onFrame = (e: { detail: { frame: number } }) =>
       setPlayhead(e.detail.frame / fps);
@@ -47,7 +62,7 @@ export function App({ token }: { token: string }) {
       p.removeEventListener("frameupdate", onFrame);
       p.removeEventListener("seeked", onFrame);
     };
-  }, [fps, project !== null]);
+  }, [fps, playerInstance]);
 
   // Report what the user points at, for `ck context` (debounced; UI state only).
   useEffect(() => {
@@ -98,21 +113,113 @@ export function App({ token }: { token: string }) {
     return ids;
   }, [locks, now, project, stopped]);
 
-  return (
-    <div className="studio" data-ck-connected={connected}>
-      <header className="studio-header">
+  if (!project)
+    return (
+      <div
+        className="studio connecting-screen"
+        data-ck-connected={connected}
+        role="status"
+      >
         <strong>ClipKit Studio</strong>
-        {project && (
-          <span data-ck-project={project.id}>
-            {project.name} · rev <span data-ck-rev>{project.rev}</span>
+        <p>Connecting to your local ck project…</p>
+        <small>
+          If this continues, start ck studio and open its session link.
+        </small>
+      </div>
+    );
+
+  const globalReadOnly = !connected || !canEdit(locks, PROJECT_LAYER, now);
+  const post = (path: string) =>
+    request(token, path, {
+      method: "POST",
+      body: JSON.stringify({ author: "human" }),
+    }).then(() => undefined);
+  const commands: Command[] = [
+    {
+      id: "undo",
+      label: "Undo",
+      group: "Edit",
+      shortcut: "⌘ Z",
+      reason: globalReadOnly
+        ? "Reconnect or wait for the project lock to release"
+        : undefined,
+      run: () => post("/api/undo"),
+    },
+    {
+      id: "redo",
+      label: "Redo",
+      group: "Edit",
+      shortcut: "⇧ ⌘ Z",
+      reason: globalReadOnly
+        ? "Reconnect or wait for the project lock to release"
+        : undefined,
+      run: () => post("/api/redo"),
+    },
+    {
+      id: "play",
+      label: "Play / pause",
+      group: "Sequence",
+      shortcut: "Space",
+      run: () => {
+        if (player.current?.isPlaying()) player.current.pause();
+        else player.current?.play();
+      },
+    },
+    {
+      id: "stop",
+      label: "Stop after current step",
+      group: "Agent",
+      reason: !connected
+        ? "Agent is disconnected"
+        : project.agent.status === "idle" || project.agent.stopRequested
+          ? "No running agent step"
+          : undefined,
+      run: () =>
+        request(token, "/api/stop", { method: "POST" }).then(() => undefined),
+    },
+    {
+      id: "import",
+      label: "Import media",
+      group: "File",
+      reason: "Media import panel arrives in UI-5; use ck import",
+      run: () => undefined,
+    },
+    {
+      id: "export",
+      label: "Export video",
+      group: "File",
+      reason: "Export panel arrives in UI-6; use ck export",
+      run: () => undefined,
+    },
+  ];
+  const seek = (seconds: number) =>
+    player.current?.seekTo(Math.round(seconds * fps));
+  const panels = {
+    project: (
+      <ProjectPanel
+        project={project}
+        selected={selected}
+        onSelect={setSelected}
+      />
+    ),
+    program: (
+      <main className="studio-preview">
+        <div className="monitor-meta">
+          <span>SEQUENCE / {project.name}</span>
+          <span>
+            {project.settings.width} × {project.settings.height}
           </span>
-        )}
-        {!connected && <span role="status">Connecting to ck…</span>}
-      </header>
-      {project && <Banner token={token} project={project} stopped={stopped} />}
-      {project && (
-        <div className="studio-body">
-          <main className="studio-preview">
+        </div>
+        <div className="monitor-stage">
+          <div
+            className="monitor-frame"
+            style={
+              {
+                "--monitor-ratio":
+                  project.settings.width / project.settings.height,
+              } as CSSProperties
+            }
+          >
             <HoverSelect
               token={token}
               project={project}
@@ -123,7 +230,7 @@ export function App({ token }: { token: string }) {
               }}
             >
               <Player
-                ref={player}
+                ref={attachPlayer}
                 component={ProjectComposition}
                 inputProps={{
                   project,
@@ -134,83 +241,150 @@ export function App({ token }: { token: string }) {
                   media,
                 }}
                 durationInFrames={durationInFrames(project)}
-                fps={project.settings.fps}
+                fps={fps}
                 compositionWidth={project.settings.width}
                 compositionHeight={project.settings.height}
                 style={{ width: "100%", maxHeight: "100%" }}
                 controls
               />
             </HoverSelect>
-          </main>
-          <aside className="studio-side">
-            <BriefPanel
-              token={token}
-              project={project}
-              readOnly={!canEdit(locks, PROJECT_LAYER, now)}
-              looks={looks}
-              looksFailed={looksFailed}
-            />
-            <Inspector
-              key={selected ?? ""}
-              token={token}
-              project={project}
-              layerId={selected}
-              readOnly={selected !== null && !canEdit(locks, selected, now)}
-            />
-            <TranscriptPanel
-              token={token}
-              project={project}
-              readOnly={
-                !canEdit(
-                  locks,
-                  project.tracks.find((t) => t.kind === "video")?.id ??
-                    PROJECT_LAYER,
-                  now,
-                )
-              }
-              onSeek={(seconds) =>
-                player.current?.seekTo(
-                  Math.round(seconds * project.settings.fps),
-                )
-              }
-            />
-            <StoryboardPanel token={token} project={project} />
-            <AskCards token={token} asks={asks} />
-            <PushToTalk
-              token={token}
-              selection={selected}
-              playhead={playhead}
-              onPlay={() => player.current?.play()}
-              onPause={() => player.current?.pause()}
-              onSeek={(seconds) =>
-                player.current?.seekTo(
-                  Math.round(seconds * project.settings.fps),
-                )
-              }
-            />
-            <VoicePanel
-              token={token}
-              project={project}
-              readOnly={!canEdit(locks, PROJECT_LAYER, now)}
-            />
-            <CommentsPanel token={token} project={project} pointer={pointer} />
-            <HistoryPanel
-              token={token}
-              project={project}
-              readOnly={!canEdit(locks, PROJECT_LAYER, now)}
-            />
-            <ActivityFeed feed={feed} />
-          </aside>
-          <Timeline
-            project={project}
-            agentLayers={agentLayers}
-            lastRevision={lastRevision}
-            selected={selected}
-            onSelect={setSelected}
-          />
+          </div>
         </div>
-      )}
-    </div>
+        <div className="monitor-footer">
+          <span>PROGRAM</span>
+          <span>Preview · {fps} fps</span>
+        </div>
+      </main>
+    ),
+    timeline: (
+      <Timeline
+        project={project}
+        agentLayers={agentLayers}
+        lastRevision={lastRevision}
+        selected={selected}
+        onSelect={setSelected}
+      />
+    ),
+    inspector: (
+      <Inspector
+        key={selected ?? ""}
+        token={token}
+        project={project}
+        layerId={selected}
+        readOnly={
+          globalReadOnly ||
+          (selected !== null && !canEdit(locks, selected, now))
+        }
+      />
+    ),
+    brief: (
+      <BriefPanel
+        token={token}
+        project={project}
+        readOnly={globalReadOnly}
+        looks={looks}
+        looksFailed={looksFailed}
+      />
+    ),
+    transcript: (
+      <>
+        <TranscriptPanel
+          token={token}
+          project={project}
+          readOnly={
+            globalReadOnly ||
+            !canEdit(
+              locks,
+              project.tracks.find((t) => t.kind === "video")?.id ??
+                PROJECT_LAYER,
+              now,
+            )
+          }
+          onSeek={seek}
+        />
+        {!project.sources.some((s) => s.transcriptPath) && (
+          <div className="empty-state">
+            <strong>No transcript yet</strong>
+            <p>
+              Import and transcribe footage through your agent. Words will
+              appear here for seeking and editing.
+            </p>
+          </div>
+        )}
+      </>
+    ),
+    storyboard: (
+      <>
+        <StoryboardPanel token={token} project={project} />
+        {!project.brief.checkpoints?.includes("storyboard") && (
+          <div className="empty-state">
+            <strong>No storyboard checkpoint</strong>
+            <p>
+              Ask your agent for a storyboard checkpoint to review the scene
+              plan here.
+            </p>
+          </div>
+        )}
+      </>
+    ),
+    voice: (
+      <>
+        <VoicePanel token={token} project={project} readOnly={globalReadOnly} />
+        {!project.voiceSlots.length && (
+          <div className="empty-state">
+            <strong>Give your video a voice</strong>
+            <p>
+              Ask your agent to create a voice script. Record and manage takes
+              here once slots are ready.
+            </p>
+          </div>
+        )}
+      </>
+    ),
+    comments: (
+      <CommentsPanel token={token} project={project} pointer={pointer} />
+    ),
+    history: (
+      <HistoryPanel token={token} project={project} readOnly={globalReadOnly} />
+    ),
+    agent: (
+      <>
+        <section className="panel agent-summary">
+          <h2>Agent connection</h2>
+          <p>{connected ? "ck event bridge connected" : "Waiting for ck"}</p>
+          <p className="muted">
+            {project.agent.label ||
+              "Ask a question or give your agent a direction."}
+          </p>
+          <small>
+            Stage: {project.pipeline.stage} ·{" "}
+            {project.pipeline.pass ?? "no active pass"}
+          </small>
+        </section>
+        <AskCards token={token} asks={asks} />
+        <PushToTalk
+          token={token}
+          selection={selected}
+          playhead={playhead}
+          onPlay={() => player.current?.play()}
+          onPause={() => player.current?.pause()}
+          onSeek={seek}
+        />
+        <ActivityFeed feed={feed} />
+      </>
+    ),
+  };
+  return (
+    <Workbench
+      project={project}
+      connected={connected}
+      agentStatus={stopped ? "stopped" : project.agent.status}
+      panels={panels}
+      banner={<Banner token={token} project={project} stopped={stopped} />}
+      commands={commands}
+      selection={selected}
+      playhead={playhead}
+    />
   );
 }
 

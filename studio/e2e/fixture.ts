@@ -7,6 +7,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { promisify } from "node:util";
+import type { Page } from "@playwright/test";
+import { PANELS, type PanelId } from "../src/workspace/layout";
 
 const run = promisify(execFile);
 
@@ -52,6 +54,20 @@ export const test = base.extend<{ studio: Studio }>({
 });
 
 export { expect } from "@playwright/test";
+
+/** Navigate the real workspace instead of assuming every panel is visible at once. */
+export async function openPanel(page: Page, id: PanelId) {
+  await page
+    .getByRole("button", { name: "Open command palette", exact: true })
+    .click();
+  await page
+    .getByRole("textbox", { name: "Search commands" })
+    .fill(`Open ${PANELS[id]}`);
+  await page.getByRole("textbox", { name: "Search commands" }).press("Enter");
+  await base
+    .expect(page.getByRole("tab", { name: PANELS[id], exact: true }))
+    .toHaveAttribute("aria-selected", "true");
+}
 
 /** `ck studio` prints one JSON line ({url, port}) once it listens. */
 function firstLine(child: ChildProcess): Promise<unknown> {

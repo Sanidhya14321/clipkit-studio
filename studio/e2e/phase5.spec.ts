@@ -5,7 +5,7 @@ import { copyFile, mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Page } from "@playwright/test";
-import { expect, test, type Studio } from "./fixture";
+import { expect, test, openPanel, type Studio } from "./fixture";
 
 const FIXTURES = resolve(
   import.meta.dirname,
@@ -76,6 +76,7 @@ test("deleting a word cuts the footage; deleting it again restores it", async ({
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
   const id = await importWithTranscript(page, studio);
 
+  await openPanel(page, "transcript");
   const panel = page.locator(`[data-ck-transcript="${id}"]`);
   const um = panel.locator('[data-ck-word="1"]');
   await expect(um).toHaveText("um");
@@ -108,6 +109,7 @@ test("while the agent holds the video track the panel is read-only", async ({
   await studio.ck("cut", "apply", id, "--ids", "cut-1");
   await studio.ck("lock", "footage-1");
 
+  await openPanel(page, "transcript");
   const panel = page.locator(`[data-ck-transcript="${id}"]`);
   await expect(panel).toHaveAttribute("data-ck-readonly", "true");
   const word = panel.locator('[data-ck-word="2"]');

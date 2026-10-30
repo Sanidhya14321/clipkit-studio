@@ -3,7 +3,7 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Page } from "@playwright/test";
-import { expect, test, type Studio } from "./fixture";
+import { expect, test, openPanel, type Studio } from "./fixture";
 
 /** The studio posts context 250 ms after it settles; allow for a loaded machine. */
 const CONTEXT_POLL = { timeout: 15_000 };
@@ -29,6 +29,7 @@ test("the user pins a comment while the agent works; the agent sees it", async (
   await open(page, studio);
   await studio.ck("lock", "@project");
 
+  await openPanel(page, "comments");
   const panel = page.locator("[data-ck-comments]");
   await panel.locator("[data-ck-comment-text]").fill("Make the intro faster");
   await panel.locator("[data-ck-send]").click();
@@ -159,6 +160,7 @@ test("tuning chips show their impact and re-plan only dependent layers", async (
   await studio.ck("handoff");
   const before = ((await studio.ck("status")) as { rev: number }).rev;
 
+  await openPanel(page, "brief");
   const chips = page.locator("[data-ck-chips]");
   const punchier = chips.locator('[data-ck-chip="punchier"]');
   await expect(punchier).toBeEnabled();

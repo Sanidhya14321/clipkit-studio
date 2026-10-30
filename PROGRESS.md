@@ -1,5 +1,13 @@
 # Progress
 
+## UI handoff (2026-10-30)
+1. Done: UI-0 audit and approved UI-1 workspace shell on `codex/ui-pro` in `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`; source-of-truth Rust APIs/preview engine preserved.
+2. Proof: production build, formatting, TypeScript, 41 unit tests, 21/21 frontend browser contracts (7 flows repeated three times), 28 workspace screenshots; `docs/updates/ui-evidence/checks.txt`.
+3. Open: real ck integration/export and `just check`/`just test` BLOCKED locally (cargo/just/ffmpeg absent); UI-2 through UI-8, floating, server layout persistence and full command/store migration remain open.
+4. Next: run real-server suites with the updated tab helpers once prerequisites exist; coordinate merge with the other agent, then plan UI-2. Do not claim full editor acceptance from simulated backend tests.
+5. Start: add bundled Node to PATH; `pnpm --dir studio build`; `pnpm --dir studio exec playwright test --config playwright.ui.config.ts --repeat-each=3`. For real e2e, build ck/use CK_BIN and run the original Playwright config.
+
+
 ## Update 5 and 6 queue (owner order, 2026-10-30)
 - [x] U5-2: requirements stay in docs/updates/ (spec frozen)
 - [x] U5-3a separate studio token (patch, consent, stop)
@@ -449,3 +457,31 @@ Plan (approved by the owner before building):
 - [x] CI: .github/workflows/ci.yml (fast suite + fixtures job).
 - [x] Fixtures generator: fixtures/generate.sh -> fixtures/generated/ with ground-truth.json.
 - [x] Run the fixtures generator locally (ffmpeg 8.0.1, 2026-10-28).
+
+## UI-0 / UI-1 plan (2026-10-30, owner approved UI-1 in chat)
+
+Isolation: branch `codex/ui-pro`, worktree `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`, base `af6c2d5`. Do not touch the main checkout's uncommitted Update 5 engine work.
+
+UI-0 (authorized audit): inspect existing studio and API, run current browser flows against a fresh demo, save screenshots and findings in `docs/updates/UI_AUDIT.md`. No application code changes. Generated bindings remain untouched under AGENTS.md.
+
+Proposed UI-1 (approval required by AGENTS.md):
+1. Introduce shared theme tokens, compact full-window shell, accessible panel registry, resizable split/tab layout and workspace presets. Retain all existing functional panels and the current preview engine.
+2. Add menus, searchable command palette, live project/connection/agent/revision status and per-panel/top-level error boundaries. Wire supported commands to existing HTTP APIs, patches and WebSocket state; disable unsupported actions with reasons.
+3. Persist layout safely in browser storage; server persistence requires separately reviewed server capability work if absent. No engine migration, Rust behavior changes or new dependency without verification.
+4. Verify existing edits, context selection, locks, comments, brief, history and reconnect against the real server. Run studio checks, full `just check`/`just test` and relevant browser tests; save 1440/1920 screenshots and evidence.
+5. Commit only isolated UI phase files. Hand off later UI-2 to UI-8 work explicitly; do not claim unsupported editor features.
+
+Scope: `studio/src` shell/layout/theme, `studio/e2e` coverage and UI-specific audit/progress/evidence docs. Do not edit `docs/spec`, engine code, generated types, render-worker or shared dependencies during UI-1.
+
+### UI-1 delivery checklist
+- [x] Original theme tokens, dark/high contrast, compact/comfortable density; no new dependencies.
+- [x] Split/tab shell and seven workspace presets; independent scrolling, close/reopen, maximize, desktop splitters, merged narrow tabs.
+- [x] Stable mounted panels retain draft forms when docked, across workspaces and responsive changes; recording streams cleaned up on actual unmount.
+- [x] Safe per-project/workspace browser storage plus per-key memory fallback; malformed preferences reset.
+- [x] Shared shell commands, menus/palette, typing-safe keyboard handling, server undo/redo/stop, live connection/agent/revision status and panel/top-level boundaries.
+- [x] Preserve generated types, revisioned existing edit requests, preview/context/lock behavior; adapt real-server tests to explicitly open panels.
+- [x] Browser audit, visual matrix, frontend checks and read-only localhost preview opened in the visible browser.
+- [ ] Real Rust server, media export, real agent-in-the-loop and performance/fallback acceptance: BLOCKED/unverified; see VERIFICATION.md.
+- [ ] Floating, server layout persistence, normalized store/optimistic patch-command migration and richer registry capabilities: explicitly deferred in DECISIONS.md, not represented as working UI.
+
+UI integration: rebased onto committed main `5ec6550` (engine adapter seam and pipeline gates). Only shared handoff/decision/evidence documentation required conflict resolution; both agents' records were retained. Main checkout and its active work were not changed.
