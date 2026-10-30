@@ -978,6 +978,132 @@ expression: specs()
     }
   },
   {
+    "name": "eval",
+    "command": "ck eval",
+    "description": "Score an exported video from the file alone: duration, aspect, loudness, clipping, black and frozen frames, cut accuracy against expected cuts, sources unchanged. OCR checks are listed as not measured.",
+    "cap": 4096,
+    "inputSchema": {
+      "$defs": {
+        "Expectations": {
+          "type": "object",
+          "properties": {
+            "durationSec": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            },
+            "durationTolerance": {
+              "description": "Allowed difference, seconds (default 0.5).",
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            },
+            "aspect": {
+              "description": "For example `16:9` or `9:16`.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "loudness": {
+              "description": "Default -14 LUFS and -1 dBTP.",
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/LoudnessTarget"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "cutsAtSec": {
+              "description": "Expected hard cuts in the output, seconds (ground truth).",
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "default": []
+            },
+            "cutTolerance": {
+              "description": "Default 0.1 s.",
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            },
+            "sources": {
+              "description": "Source files that must be unchanged: path and SHA-256.",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SourceHash"
+              },
+              "default": []
+            }
+          },
+          "additionalProperties": false
+        },
+        "LoudnessTarget": {
+          "type": "object",
+          "properties": {
+            "integrated": {
+              "description": "Integrated loudness, LUFS.",
+              "type": "number",
+              "format": "double"
+            },
+            "truePeak": {
+              "description": "Maximum true peak, dBTP.",
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "required": [
+            "integrated",
+            "truePeak"
+          ]
+        },
+        "SourceHash": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "hash": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "hash"
+          ]
+        }
+      },
+      "required": [
+        "video"
+      ],
+      "type": "object",
+      "properties": {
+        "video": {
+          "description": "The exported video.",
+          "type": "string"
+        },
+        "expect": {
+          "$ref": "#/$defs/Expectations",
+          "default": {
+            "cutsAtSec": [],
+            "sources": []
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
     "name": "sources_ingest",
     "command": "ck sources ingest",
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",

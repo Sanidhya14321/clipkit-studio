@@ -577,3 +577,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Phase 9 step 3: determinism check (2026-10-30)
 - `ck render check` renders the chosen frames in order and again in reverse within one worker job and compares PNG hashes; it runs on the project composition (what export draws).
 - The frame-clock adapter for wrappable cards and card previews wait for a vetted wave 3 source and per-asset bundling; card determinism stays graded statically (vetting's Math.random/Date.now findings mark cards wrappable, grade C).
+
+## Phase 9 step 4: evaluator (2026-10-30)
+- `ck eval` judges only the file plus stated expectations, so every benchmark arm is scored the same way. Thresholds (choices): duration ±0.5 s, aspect within 1%, loudness ±1 LU of -14 LUFS with peak at most -0.5 dBTP, clipping at 0 dBTP, black stretches under 1 s, frozen stretches under 4 s (title holds are shorter), cuts within 0.1 s.
+- Safe areas and text size need OCR (tesseract.js, license unverified per spec 14): reported as not measured, never estimated. Brief conformance beyond duration and aspect comes from expectations the bench writes from the brief.

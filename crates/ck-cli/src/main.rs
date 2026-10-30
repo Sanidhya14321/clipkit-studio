@@ -403,6 +403,15 @@ fn run(cli: Cli) -> CkResult<()> {
                 }
             }
         }
+        Command::Eval { video, expect } => {
+            let expect = match expect {
+                Some(f) => serde_json::from_str(&read_input(&f, "eval")?)
+                    .map_err(|e| request_err(format!("eval expectations JSON: {e}")))?,
+                None => Default::default(),
+            };
+            let report = ck_eval::evaluate(&cli.dir, &ck_eval::EvalRequest { video, expect })?;
+            capped_print("eval", ck_eval::caps::EVAL, report)
+        }
         Command::Render(RenderCommand::Check { frames }) => {
             print(&ops()?.render_check(&RenderCheckRequest { frames })?)
         }

@@ -127,6 +127,13 @@ pub enum Command {
     /// Source Hub: list, add and report gaps.
     #[command(subcommand)]
     Sources(SourcesCommand),
+    /// Score an exported video from the file alone.
+    Eval {
+        video: String,
+        /// Expectations JSON {durationSec?, aspect?, loudness?, cutsAtSec?, sources?}, or -.
+        #[arg(long)]
+        expect: Option<String>,
+    },
     /// Render checks (determinism).
     #[command(subcommand)]
     Render(RenderCommand),

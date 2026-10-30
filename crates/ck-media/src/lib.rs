@@ -10,7 +10,7 @@ pub mod probe;
 mod run;
 pub mod take;
 
-pub use detect::{SceneChange, Silence, detect_scenes, detect_silences};
+pub use detect::{SceneChange, Silence, Span, detect_black_freeze, detect_scenes, detect_silences};
 pub use export::{
     ExportSpec, Loudness, LoudnessTarget, Piece, export, filter_graph, measure_loudness,
 };

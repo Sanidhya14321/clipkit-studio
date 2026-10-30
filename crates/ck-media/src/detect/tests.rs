@@ -88,3 +88,31 @@ fn finds_fixture_silences_and_scene_changes() {
         assert!((g - w).abs() < 0.05, "{at:?}");
     }
 }
+
+#[test]
+fn black_and_frozen_stretches_pair_up() {
+    let out = "lavfi.black_start=0\nlavfi.freezedetect.freeze_start=0\nlavfi.black_end=1\n\
+               lavfi.freezedetect.freeze_duration=1\nlavfi.freezedetect.freeze_end=1\n\
+               lavfi.black_start=4\n";
+    let (black, frozen) = parse_black_freeze(out, 5.0);
+    assert_eq!(
+        black,
+        [
+            Span {
+                start: 0.0,
+                end: 1.0
+            },
+            Span {
+                start: 4.0,
+                end: 5.0
+            }
+        ]
+    );
+    assert_eq!(
+        frozen,
+        [Span {
+            start: 0.0,
+            end: 1.0
+        }]
+    );
+}

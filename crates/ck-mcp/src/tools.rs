@@ -17,6 +17,7 @@ use ck_assets::sources::{self, SourcesAddRequest, SourcesGapsRequest, SourcesLis
 use ck_assets::vet::{self, VetRequest};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
+use ck_eval::EvalRequest;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
@@ -246,6 +247,14 @@ pub fn specs() -> Vec<ToolSpec> {
              checked against the license mode; ClipKit originals and the Remotion runtime \
              license listed apart. ok=false means a blocked or unresolved asset.",
             report::caps::REPORT,
+        ),
+        spec::<EvalRequest>(
+            "eval",
+            "ck eval",
+            "Score an exported video from the file alone: duration, aspect, loudness, clipping, \
+             black and frozen frames, cut accuracy against expected cuts, sources unchanged. \
+             OCR checks are listed as not measured.",
+            ck_eval::caps::EVAL,
         ),
         spec::<IngestRequest>(
             "sources_ingest",
@@ -478,6 +487,7 @@ pub fn is_offline(name: &str) -> bool {
             | "assets_slice"
             | "assets_source"
             | "license_report"
+            | "eval"
     )
 }
 
@@ -559,6 +569,13 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
                 report::caps::REPORT,
                 out,
             )?)
+        }),
+        "eval" => parse::<EvalRequest>(args).and_then(|r| {
+            capped_json(
+                "eval",
+                ck_eval::caps::EVAL,
+                &ck_eval::evaluate(project, &r)?,
+            )
         }),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)
             .and_then(|r| json(&sources::sources_gaps(&hub()?, &r)?)),

@@ -74,4 +74,23 @@ fn raw_footage_to_a_cut_to_an_exported_mp4() {
     assert_eq!((v.width, v.height), (1920, 1080));
     assert_eq!(exported["loudnessPass"], true, "{exported}");
     assert_eq!(info.audio.len(), 1);
+
+    // The evaluator scores the export from the file alone; the source is unchanged.
+    let expect = json!({
+        "durationSec": kept, "aspect": "16:9",
+        "sources": [{ "path": av, "hash": hash }]
+    });
+    let file = d.join("expect.json");
+    std::fs::write(&file, expect.to_string()).unwrap();
+    let scored = ok(
+        d,
+        &[
+            "eval",
+            exported["path"].as_str().unwrap(),
+            "--expect",
+            file.to_str().unwrap(),
+        ],
+        ck_eval::caps::EVAL,
+    );
+    assert_eq!(scored["score"], 100, "{scored}");
 }

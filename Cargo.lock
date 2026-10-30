@@ -380,6 +380,7 @@ version = "0.0.0"
 dependencies = [
  "ck-assets",
  "ck-core",
+ "ck-eval",
  "ck-mcp",
  "ck-media",
  "ck-server",
@@ -412,6 +413,15 @@ dependencies = [
 [[package]]
 name = "ck-eval"
 version = "0.0.0"
+dependencies = [
+ "ck-core",
+ "ck-media",
+ "schemars",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+]
 
 [[package]]
 name = "ck-mcp"
@@ -419,6 +429,7 @@ version = "0.0.0"
 dependencies = [
  "ck-assets",
  "ck-core",
+ "ck-eval",
  "ck-server",
  "insta",
  "rmcp",

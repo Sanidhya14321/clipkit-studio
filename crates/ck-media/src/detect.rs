@@ -115,5 +115,57 @@ pub fn parse_scenes(out: &str) -> Vec<SceneChange> {
     scenes
 }
 
+/// A time range in seconds (black or frozen stretch).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct Span {
+    pub start: f64,
+    pub end: f64,
+}
+
+/// Black stretches (at least `min` seconds) and frozen stretches (no change for `min` seconds)
+/// in the first video stream; open stretches close at `duration`.
+pub fn detect_black_freeze(
+    src: &Path,
+    min: f64,
+    duration: f64,
+) -> Result<(Vec<Span>, Vec<Span>), CkError> {
+    let filter = format!(
+        "blackdetect=d={min}:pix_th=0.1,freezedetect=n=0.001:d={min},metadata=mode=print:file=-"
+    );
+    let out = ffmpeg_null(src, &["-map", "0:v:0", "-an", "-vf", &filter])?;
+    Ok(parse_black_freeze(&String::from_utf8_lossy(&out), duration))
+}
+
+pub fn parse_black_freeze(out: &str, duration: f64) -> (Vec<Span>, Vec<Span>) {
+    let pair = |start_key: &str, end_key: &str| {
+        let mut spans = Vec::new();
+        let mut open = None;
+        for line in out.lines() {
+            if let Some(s) = value(line, start_key) {
+                open = Some(s);
+            } else if let Some(e) = value(line, end_key)
+                && let Some(s) = open.take()
+            {
+                spans.push(Span { start: s, end: e });
+            }
+        }
+        if let Some(s) = open.filter(|s| *s < duration) {
+            spans.push(Span {
+                start: s,
+                end: duration,
+            });
+        }
+        spans
+    };
+    (
+        pair("lavfi.black_start", "lavfi.black_end"),
+        pair(
+            "lavfi.freezedetect.freeze_start",
+            "lavfi.freezedetect.freeze_end",
+        ),
+    )
+}
+
 #[cfg(test)]
 mod tests;
