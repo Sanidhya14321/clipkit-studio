@@ -1,9 +1,11 @@
 # Progress
 
-STATUS: PHASES DONE
-PHASE: 10
+STATUS: PAUSED (Update 5: owner must approve the render engine, DECISIONS.md U5-1)
+PHASE: U5-1
 
 ## Handoff (latest)
+Update 5: U5-0 audit done (docs/updates/UPDATE5_AUDIT.md). U5-1 spike done: recommendation in DECISIONS.md, nothing migrated. Next: owner approves the engine and decides how U5-2 may edit docs/spec/ (audit finding 3); U5-2 and later not started.
+
 1. Done: Phase 10 (stretch): critic contact sheet (`verify --critic`), `ck reference analyze`, local taste profile (`ck profile`), storyboard checkpoint with studio confirm, OpenTimelineIO and SRT export. All phases 0 to 10 have run; open items below.
 2. Proof: `just check` 356 of 356 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 17 of 17. Evidence in VERIFICATION.md, Phase 10.
 3. Open: Fish Audio provider calls (key and API check), bench results (real agent runs and owner media), sound design placement (vetted CC0 sound set), studio side-by-side variants view, frame-clock adapter and card previews, packaged installers, more agents, Demucs, reviewer agents never run; see Open questions.

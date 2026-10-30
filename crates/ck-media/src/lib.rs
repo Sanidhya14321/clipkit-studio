@@ -3,6 +3,7 @@
 //! Phase 5: safe tool invocation (`run`), probing (`probe`) and import media (`import`), cut-candidate signals (`detect`) and the fast export path (`export`).
 
 pub mod detect;
+pub mod engine;
 pub mod export;
 pub mod import;
 pub mod mix;

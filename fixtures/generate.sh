@@ -66,10 +66,9 @@ ff "${scene_inputs[@]}" -filter_complex "${labels}concat=n=${#SCENE_COLORS[@]}:v
   -map "[v]" "${X264[@]}" "${BITEXACT[@]}" "$OUT/scenes.mp4"
 
 # 5. Image set in three aspects.
-declare -A IMAGES=([landscape]=1920x1080 [portrait]=1080x1920 [square]=1080x1080)
-for name in "${!IMAGES[@]}"; do
-  ff -f lavfi -i "testsrc2=size=${IMAGES[$name]}:rate=1:duration=1" -frames:v 1 \
-    "${BITEXACT[@]}" "$OUT/images/$name.png"
+for image in landscape=1920x1080 portrait=1080x1920 square=1080x1080; do
+  ff -f lavfi -i "testsrc2=size=${image#*=}:rate=1:duration=1" -frames:v 1 \
+    "${BITEXACT[@]}" "$OUT/images/${image%%=*}.png"
 done
 
 # 6. Brand kit: logo plus tokens. Fonts are PLACEHOLDER until the owner supplies a real kit.

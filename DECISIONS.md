@@ -640,3 +640,25 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Audit fixes: agent state and Stop (2026-10-30)
 - `agent.status` is engine-owned: an agent revision or an agent lock makes it `working` (label = patch label, active layers = touched layers); `ck unlock` with no ids (all locks) or `handoff` makes it `idle`. ck's own auto-locks around one write (released by id) keep it working until the agent hands back.
 - Stop is `agent.stopRequested` (engine state, no revision): every agent patch is refused with E_STAGE until `handoff`. Locks are not force-released, so the user is never handed a half-applied change; the agent releases them through handoff.
+
+## Update 5, U5-1: render engine spike (2026-10-30). Awaiting owner approval; nothing migrated
+
+Code: `spike/u5-1/` (three engine-neutral fixtures, two adapters, measurement runner), `crates/ck-media/src/engine.rs` (Rust seam, not yet wired into the render path). Versions: Remotion 4.0.535 (the repo's pin), HyperFrames 0.8.221, GSAP 3.15.0, Motion 14.8.0; Apple Silicon Mac, Node 24, ffmpeg 6.0, Chrome headless. Times are from this machine with a small sample.
+
+| Criterion | Remotion | HyperFrames | Pass bar |
+| --- | --- | --- | --- |
+| Frame accuracy, all 3 fixtures, out of order and repeated | Identical | Identical; two full PNG-sequence renders also identical (sampled every 7th frame, footage and web fixtures) | Both pass |
+| GSAP and Motion (fixture 3) | Pass, from the frame clock | GSAP native; Motion passes only through a proxy GSAP tween, no native adapter | Both pass |
+| Seek after a word patch, median of 20 | 49 ms (new props) | 233 ms (document reload); 33 ms for seek alone | Both under 300 ms |
+| Render, fixture 1, 1080p 15 s | 4.0 s (3 warm runs, 3.9 to 4.1; first run 5.1) | 9.1 s (3 warm runs, 8.9 to 9.4; first run 23.5) | Remotion 2.3x faster |
+| Render, fixture 2 (footage), 9 s, one run | 11.0 s | 6.2 s | HyperFrames 1.8x faster |
+| Render, fixture 3, 6 s, one run | 1.6 s | 3.3 s | Remotion faster |
+| Hover-select | 23 of 23 layers | 23 of 23 layers | Both pass |
+| Agent authoring cost | NOT MEASURED | NOT MEASURED | No agent run done. Both would fill the same recipe slots |
+| Asset reuse | Native; all clips and Remotion-native cards run | Needs conversion of 8 core clips and the expander; upstream has a remotion-to-hyperframes skill (not tried) | Stated |
+| License | Free for individuals, for-profits up to 3 employees and non-profits; company license above that | Apache 2.0 (repo LICENSE) | Stated |
+| Footprint | 73 MB packages plus 570 MB downloaded headless Chrome | 52 MB packages; used system Chrome; Node 22+ | Recorded |
+
+Caveats: `hyperframes snapshot` differed from the rendered frame on the footage fixture (matched on web), so snapshot is not a stand-in for render there. Motion blur was not compared: both fixtures use a CSS blur. The fixtures are hand-matched rather than pixel-identical across engines (side-by-side frames checked by eye). GSAP's standard license is "no charge" custom terms, not open source; Motion is MIT. HyperFrames' FrameAdapter is marked experimental v0. HyperFrames has telemetry; `DO_NOT_TRACK=1` set for all runs.
+
+Recommendation: keep Remotion as the default engine; keep the adapter seam; do not adopt HyperFrames now. Rule 2.3 recommends HyperFrames only if "not clearly slower", and on fixture 1, the kinetic scene this update is built around, it is 2.3x slower; its Motion support is also a workaround. It wins clearly on license and footage rendering. If the Remotion company license applies to this business, that outweighs the speed gap and the answer flips: HyperFrames passes every correctness bar. Mixed-engine projects were not tested, so one engine per project stands.

@@ -375,3 +375,13 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | A restricted fixture (LYGIA or BBC style) is blocked in commercial-safe mode | PASS | Phase 8: `retrieve::tests::search_ranks_and_respects_the_license_mode`, `assets_proof` |
 | An unresolved or unverified source never appears in search | PASS | Phase 8: `ingest::tests::rejected_and_unvetted_sources_are_not_ingested`, `retrieve` usable-source filter |
 | No Python dependency added to the install | BLOCKED | Install does not exist yet (Phase 3). Today: no Python package manifest in the repo; Python appears only as the dev-time `scripts/split-spec.py` |
+
+## Update 5
+
+| Check | Status | Evidence |
+| --- | --- | --- |
+| L1 Adapter compiles the three fixtures for both engines; fixtures stay engine-neutral | PASS (spike scope) | `spike/u5-1/src/{fixtures,adapters}.mjs`, `node src/run.mjs`. The product render path is not on the adapter yet |
+| L2 Spike results and recommendation recorded before migration | PARTIAL | DECISIONS.md, U5-1. Agent authoring tokens not measured |
+| L3 to L25 | NOT STARTED | After engine approval |
+| Toolchain note | INFO | This Mac had no Rust, ffmpeg, pnpm or Homebrew; runs used a session-only install. Spike ffmpeg is 6.0, not the 8.0.1 recorded in Phase 0, so loudness numbers are not comparable |
+| Baseline at U5-1 | PARTIAL | fmt, clippy, hooks 41 of 41, studio format, typecheck and unit tests pass. nextest 353 of 361: all 8 failures are audio (`Cannot select channel layout`) under ffmpeg 6.0; rerun on 8.0.1. `just e2e` not run |
