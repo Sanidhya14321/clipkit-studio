@@ -560,3 +560,9 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Ingest: component names need a lowercase letter (no `FPS`-style constants) and `*Root` registries are skipped; a name exported from two files gets a `-<file>` suffix; asset folders a re-ingest no longer produces are removed; the source LICENSE is copied beside its cards because the cards keep copies of the original files.
 - `assets/quarantine/*` is gitignored (re-fetchable from the pinned commit); cards, ast.json and file copies are committed with the license.
 - serde_json `preserve_order` is on workspace-wide so `sources.yaml` saves keep the owner's key order; snapshot contents are unchanged (key order only).
+
+## Phase 9 step 1: render worker (2026-10-30)
+- `render-worker/` is its own pnpm package (remotion, @remotion/renderer, @remotion/bundler 4.0.535, same as the studio; 4.0.535 dates from 2026-10-12). Its entry registers one composition, `project`, drawn by `studio/src/preview/ProjectComposition`, so preview and export share one renderer; size, fps and length come from the project through calculateMetadata.
+- The bundle is built once (`just worker`) into `render-worker/bundle/` (gitignored); webpack aliases react, react-dom and remotion to the worker's copies so the studio's node_modules never adds a second React.
+- Protocol: a JSON job on stdin, JSON lines on stdout (`progress`, then `done` or `error`). Video renders muted; ck mixes and muxes the audio.
+- Remotion downloads Chrome Headless Shell on first render (network) and is under the Remotion License (companies above a size need a company license): stated in the worker README; README and install output in step 6.

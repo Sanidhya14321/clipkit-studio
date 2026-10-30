@@ -52,6 +52,21 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
+## Phase 9: polish and proof (2026-10-30, in progress)
+
+Spec: 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7). Owner approved Remotion rendering (2026-10-30). Proof: a generated project exports to MP4 through the render worker; the evaluator scores outputs; trace, replay and bisect work; the demo resets in under 10 s. Order follows the cut line (branches and variants last).
+
+Steps:
+- [x] 1. Render worker (`render-worker/`, Node, @remotion/renderer and @remotion/bundler 4.0.535): bundles the studio composition once, renders a job from stdin with progress lines; `E_RENDER`.
+- [ ] 2. Full export path: `ck export` uses the worker when component layers exist (muted video), ck mixes the audio (footage, voice takes) and muxes; render cache keyed by content hash; Phase 4 step 10b and Phase 5 carried export items close here.
+- [ ] 3. Frame-clock adapter and determinism test (same frame twice, frames out of order) for wrappable cards; card previews.
+- [ ] 4. `ck eval`: output-only evaluator (duration, aspect, loudness, clipping, black or frozen frames, cut accuracy, brief conformance) with fixture tests.
+- [ ] 5. Debuggability: `ck trace bundle` (redacted), `ck replay`, `ck bisect`.
+- [ ] 6. Demo reset (seeded project in under 10 s) and README (install, requirements, demo, voice privacy, Remotion licensing, asset licenses).
+- [ ] 7. Bench harness for A0/A1/B (scenarios, arms, report format); real runs need agents and tokens: results PLACEHOLDER until run.
+- [ ] 8. History and branches, variants (cut-line items).
+- [ ] 9. Proof run, self review, evidence.
+
 ## Phase 8: assets at scale (2026-10-30, done; wave 3 adapters, previews and non-code ingest carried)
 
 Spec: 07, 09 (retrieval budget), 14 (wave 2 and 3, 14.7 checks). Owner approved network fetches and pipeline-first (2026-10-30). Proof: a vetted source is ingested into cards and ast.json without running its code, search returns it within the budget gate in the right license mode, a restricted fixture is blocked in commercial-safe mode, a derived copy carries tokens and instrumentation, and the export license report lists it.

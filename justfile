@@ -63,3 +63,8 @@ bench:
 # Re-split docs/MASTER_PROMPT.md into docs/spec/ (only when the master prompt changes).
 split-spec:
     python3 -I scripts/split-spec.py
+
+# Install the render worker and bundle the studio composition for it (Phase 9).
+worker:
+    pnpm --dir render-worker install --frozen-lockfile --silent
+    pnpm --dir render-worker --silent bundle
