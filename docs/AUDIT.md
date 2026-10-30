@@ -119,3 +119,22 @@ rust-reviewer (R) and spec-checker (S), first run. Found by reading code; each f
 | S10 to S12 | missing feature | Derived components not type-checked or rendered once; root-only instrumentation; profile learns brief picks only |
 | S13 to S16 | missing feature | Fast path footage only; no aspect variants (presets of another shape are now refused); first audio track only; wavesurfer, opentype, culori absent |
 | S17, S18 | minor | Retake detection adjacent only; send bundle includes Working comments |
+
+## 6. E2E pipeline audit (2026-10-30, docs/E2E_PIPELINE.md section 6)
+
+Baseline at 2d0cc96: `cargo nextest` 376 passed, 1 skipped (with Node on PATH; without it 2 render tests fail on `node could not start`).
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| 9:16 brief made a 1920x1080 project | Fixed | `sprint_proof::brief_sets_the_canvas_and_edits_follow`, `verify_fails_when_size_and_brief_disagree` |
+| Stage stayed at boot; out-of-order calls accepted | Fixed | `sprint_proof::voice_before_the_brief_is_refused`, `pipeline_proof` |
+| Export ran with failing gates | Fixed | `sprint_proof::export_refuses_failing_gates_and_a_reframing_preset` |
+| Silent audio passed loudness | Fixed | `sprint_proof::forced_export_records_the_reason_and_silence_fails_loudness` |
+| Skill named missing commands; unknown brief fields accepted | Fixed | `docs_agree`, `brief_rejects_unknown_fields_and_get_shows_the_schema` |
+| Plugin MCP registration pending | Fixed | `plugin/.mcp.json` present |
+| JSON forms, at and dur, @project, recipe ripple and insert, sorted items | Fixed | `json_inputs_share_one_convention_and_recipes_ripple_in_order` |
+| Code review and spec check never run on phases 5 to 10 | Fixed | Section 5 above; open findings stay listed there |
+| Single test from a 9:16 brief to an exported file | Confirmed missing | Added in step 2 |
+| Ducking in the mix; caption words drawn; export queue; `ck repro`; timeline drag, trim, split, loop | Confirmed not built | No code in `ck-media`, `studio/src`, `api.rs` |
+| Content map, plan.edl, speech and generated grids, per-segment selection | Confirmed not built | `Project.plan` is an untyped, unused value |
+| Professional editor UI | In progress elsewhere | `codex/ui-pro` worktree with uncommitted work; `docs/updates/UI_UPDATE.md` exists only there |
