@@ -1,0 +1,45 @@
+{
+  "fixture": "Simulated snapshot/API responses; NOT backend end-to-end proof",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "document": {
+    "width": 1440,
+    "height": 1236
+  },
+  "panels": [
+    {
+      "name": "Brief",
+      "top": 67,
+      "bottom": 751
+    },
+    {
+      "name": "Inspector",
+      "top": 751,
+      "bottom": 825
+    },
+    {
+      "name": "Push to talk",
+      "top": 825,
+      "bottom": 891
+    },
+    {
+      "name": "Comments",
+      "top": 891,
+      "bottom": 1061
+    },
+    {
+      "name": "History",
+      "top": 1061,
+      "bottom": 1211
+    },
+    {
+      "name": "Activity",
+      "top": 1211,
+      "bottom": 1236
+    }
+  ],
+  "inspectorVisible": true,
+  "valueAfterSimulatedServerRefusal": "UI audit edit"
+}
