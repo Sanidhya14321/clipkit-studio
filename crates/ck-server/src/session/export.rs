@@ -68,9 +68,29 @@ pub enum ExportPath {
     Render,
 }
 
+/// What `export` writes (spec 8.6).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub enum ExportFormat {
+    /// The video (fast path or render worker).
+    #[default]
+    Mp4,
+    /// OpenTimelineIO timeline.
+    Otio,
+    /// SRT subtitles from real word timing.
+    Srt,
+}
+
+fn is_mp4(f: &ExportFormat) -> bool {
+    *f == ExportFormat::Mp4
+}
+
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExportRequest {
+    /// mp4 (default), otio or srt; otio and srt answer with the timeline export result.
+    #[serde(default, skip_serializing_if = "is_mp4")]
+    pub format: ExportFormat,
     #[serde(default)]
     pub preset: Preset,
     /// Output path relative to the project folder; default `exports/<project>-<preset>.mp4`.
@@ -183,6 +203,12 @@ fn inside(rel: &str) -> CkResult<PathBuf> {
 
 impl Session {
     pub fn export(&self, req: &ExportRequest) -> CkResult<ExportResult> {
+        if req.format != ExportFormat::Mp4 {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                "otio and srt are written by /api/export/timeline",
+            ));
+        }
         let project = self.project()?;
         let workdir = self.workdir();
         let (width, height) = req.preset.size(&project);

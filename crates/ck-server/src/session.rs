@@ -31,6 +31,7 @@ pub mod context;
 pub mod derive;
 pub mod edit;
 pub mod export;
+pub mod formats;
 pub mod handoff;
 pub mod history;
 pub mod import;

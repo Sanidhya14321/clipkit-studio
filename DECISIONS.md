@@ -616,3 +616,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Scenes are the base (video) track's item starts, where every recipe puts its backdrop and footage sits; staggered overlay layers inside a scene are not scenes. Without a base track, every clip start counts.
 - Requested by `storyboard` in `brief.checkpoints`; confirmed is the entry `storyboard:confirmed`, written only by the studio's human route (spec 6.2 lists `storyboard confirm` among CLI commands; the agent never confirms for the user, so there is no agent twin).
 - The studio loads the newest sheet from `/media/storyboard/latest.png` (token in the query) and retries every 2 s while it is missing, because rendering the sheet makes no revision.
+
+## Phase 10 step 5: OTIO and SRT (2026-10-30)
+- OTIO is written by hand as JSON (Timeline.1, Stack.1, Track.1, Clip.2, Gap.1, ExternalReference.1, GeneratorReference.1, TimeRange.1, RationalTime.1 at the project fps); no OTIO library is added. Checked once by loading with the official Python library in a scratch venv. Overlay and caption tracks: overlays become extra video tracks (lanes); caption items and audio items are not written yet.
+- SRT uses only real word timing; with none it refuses (E_REQUEST) rather than spacing words evenly.
+- MCP has one `export` tool with a `format` field (tool names follow CLI commands, and the CLI is `ck export --format`); otio and srt answer with the timeline export result.

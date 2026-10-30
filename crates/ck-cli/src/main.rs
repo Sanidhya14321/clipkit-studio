@@ -42,9 +42,10 @@ use serde::Serialize;
 
 use args::{
     AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
-    CutCommand, DemoCommand, LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg,
-    ProfileArg, ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand,
-    SourcesCommand, StoryboardCommand, TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
+    CutCommand, DemoCommand, FormatArg, LayoutCommand, LicenseCommand, LookCommand, ModeArg,
+    PresetArg, ProfileArg, ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand,
+    SoundCommand, SourcesCommand, StoryboardCommand, TasteCommand, TraceCommand, TranscriptCommand,
+    VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -476,7 +477,20 @@ fn run(cli: Cli) -> CkResult<()> {
         Command::Render(RenderCommand::Check { frames }) => {
             print(&ops()?.render_check(&RenderCheckRequest { frames })?)
         }
-        Command::Export { preset, out } => {
+        Command::Export {
+            format: format @ (FormatArg::Otio | FormatArg::Srt),
+            out,
+            ..
+        } => {
+            use ck_server::session::formats::{TimelineExportRequest, TimelineFormat};
+            let format = if format == FormatArg::Otio {
+                TimelineFormat::Otio
+            } else {
+                TimelineFormat::Srt
+            };
+            print(&ops()?.export_timeline(&TimelineExportRequest { format, out })?)
+        }
+        Command::Export { preset, out, .. } => {
             let preset = match preset {
                 PresetArg::Source => Preset::Source,
                 PresetArg::Youtube => Preset::Youtube,
@@ -484,7 +498,11 @@ fn run(cli: Cli) -> CkResult<()> {
                 PresetArg::Reels => Preset::Reels,
                 PresetArg::Shorts => Preset::Shorts,
             };
-            print(&ops()?.export(&ExportRequest { preset, out })?)
+            print(&ops()?.export(&ExportRequest {
+                preset,
+                out,
+                ..Default::default()
+            })?)
         }
         Command::Handoff { label } => print(&ops()?.handoff(&HandoffRequest { label })?),
         Command::Wait { since, timeout } => print(&ops()?.wait(&WaitRequest {

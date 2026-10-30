@@ -1668,6 +1668,26 @@ expression: specs()
     "cap": 1024,
     "inputSchema": {
       "$defs": {
+        "ExportFormat": {
+          "description": "What `export` writes (spec 8.6).",
+          "oneOf": [
+            {
+              "description": "The video (fast path or render worker).",
+              "type": "string",
+              "const": "mp4"
+            },
+            {
+              "description": "OpenTimelineIO timeline.",
+              "type": "string",
+              "const": "otio"
+            },
+            {
+              "description": "SRT subtitles from real word timing.",
+              "type": "string",
+              "const": "srt"
+            }
+          ]
+        },
         "Preset": {
           "oneOf": [
             {
@@ -1701,6 +1721,10 @@ expression: specs()
       "additionalProperties": false,
       "type": "object",
       "properties": {
+        "format": {
+          "description": "mp4 (default), otio or srt; otio and srt answer with the timeline export result.",
+          "$ref": "#/$defs/ExportFormat"
+        },
         "preset": {
           "$ref": "#/$defs/Preset",
           "default": "source"

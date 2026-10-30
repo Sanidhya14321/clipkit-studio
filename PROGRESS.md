@@ -62,7 +62,7 @@ Steps:
 - [x] 2. Reference match: `ck reference analyze <video>` (statistics only: duration, aspect, shot lengths, cuts per 15 s, loudness) with suggested brief fields sourced `reference`.
 - [x] 3. Taste profile: local editable `profile.json` learned from what the user picks; fills brief defaults (source `profile`), never overrides explicit choices; `ck profile show|clear|disable`.
 - [x] 4. Storyboard checkpoint: `ck storyboard get` (a still per scene) and the human confirm.
-- [ ] 5. OpenTimelineIO and SRT export.
+- [x] 5. OpenTimelineIO and SRT export.
 - [ ] 6. More agents and the Demucs sidecar: verify formats and runtime; build only what can be verified.
 - [ ] 7. Proof, evidence.
 

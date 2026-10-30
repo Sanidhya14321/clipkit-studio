@@ -246,6 +246,7 @@ fn cut_footage_exports_with_presets_and_a_loudness_gate() {
         .export(&ExportRequest {
             preset: Preset::Tiktok,
             out: Some("exports/v.mp4".into()),
+            ..Default::default()
         })
         .unwrap();
     assert_eq!((vertical.width, vertical.height), (1080, 1920));
@@ -255,6 +256,7 @@ fn cut_footage_exports_with_presets_and_a_loudness_gate() {
             .export(&ExportRequest {
                 preset: Preset::Source,
                 out: Some(bad.into()),
+                ..Default::default()
             })
             .unwrap_err();
         assert_eq!(err.code, ErrorCode::Request, "{bad}");

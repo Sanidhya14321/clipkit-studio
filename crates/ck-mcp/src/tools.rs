@@ -36,7 +36,8 @@ use ck_server::session::comments::{
 use ck_server::session::context::ContextRequest;
 use ck_server::session::derive::DeriveRequest;
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
-use ck_server::session::export::ExportRequest;
+use ck_server::session::export::{ExportFormat, ExportRequest};
+use ck_server::session::formats::{TimelineExportRequest, TimelineFormat};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
@@ -772,7 +773,22 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "brief_diff" => json(&ops.brief_diff(&parse(args)?)?),
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
-        "export" => json(&ops.export(&parse(args)?)?),
+        "export" => {
+            let req: ExportRequest = parse(args)?;
+            match req.format {
+                ExportFormat::Mp4 => json(&ops.export(&req)?),
+                ExportFormat::Otio | ExportFormat::Srt => {
+                    json(&ops.export_timeline(&TimelineExportRequest {
+                        format: if req.format == ExportFormat::Otio {
+                            TimelineFormat::Otio
+                        } else {
+                            TimelineFormat::Srt
+                        },
+                        out: req.out,
+                    })?)
+                }
+            }
+        }
         "history" => json(&ops.history(&parse::<RevHistoryRequest>(args)?)?),
         "storyboard_get" => json(&ops.storyboard_get(&parse::<StoryboardRequest>(args)?)?),
         "reference_analyze" => json(&ops.reference_analyze(&parse::<ReferenceRequest>(args)?)?),

@@ -93,4 +93,21 @@ fn raw_footage_to_a_cut_to_an_exported_mp4() {
         ck_eval::caps::EVAL,
     );
     assert_eq!(scored["score"], 100, "{scored}");
+
+    // Subtitles of the cut: the transcript mapped through the kept segments. The filler and
+    // the abandoned take are gone.
+    let srt = ok(d, &["export", "--format", "srt"], caps::EXPORT_TIMELINE);
+    let text = std::fs::read_to_string(d.join(srt["path"].as_str().unwrap())).unwrap();
+    assert!(text.starts_with("1\n00:00:00,"), "{text}");
+    assert!(text.contains("Welcome"), "{text}");
+    assert!(!text.contains("um") && !text.contains("we will"), "{text}");
+    // And the same cut as an OpenTimelineIO timeline.
+    let otio = ok(d, &["export", "--format", "otio"], caps::EXPORT_TIMELINE);
+    let timeline: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string(d.join(otio["path"].as_str().unwrap())).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(timeline["OTIO_SCHEMA"], "Timeline.1");
+    let clips = &timeline["tracks"]["children"][0]["children"];
+    assert!(clips.as_array().unwrap().len() >= 3, "{clips}");
 }

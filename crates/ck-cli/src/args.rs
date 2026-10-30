@@ -195,6 +195,9 @@ pub enum Command {
         /// Output path relative to the project folder.
         #[arg(long)]
         out: Option<String>,
+        /// mp4 (default), otio (OpenTimelineIO) or srt (subtitles).
+        #[arg(long, value_enum, default_value_t = FormatArg::Mp4)]
+        format: FormatArg,
     },
     /// Hand the project to the user: release agent locks, go idle.
     Handoff {
@@ -612,4 +615,11 @@ pub enum ProfileArg {
 pub enum StoryboardCommand {
     /// Render the sheet the user confirms in the studio.
     Get,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum FormatArg {
+    Mp4,
+    Otio,
+    Srt,
 }

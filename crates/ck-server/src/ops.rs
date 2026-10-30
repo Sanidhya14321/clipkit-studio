@@ -30,6 +30,7 @@ use crate::session::edit::{
     TranscriptView,
 };
 use crate::session::export::{ExportRequest, ExportResult};
+use crate::session::formats::{TimelineExportRequest, TimelineExportResult};
 use crate::session::handoff::{HandoffRequest, HandoffResult, WaitEvent, WaitRequest, WaitResult};
 use crate::session::import::{ImportRequest, ImportResult};
 use crate::session::layout::LayoutCheckResult;
@@ -82,6 +83,7 @@ pub mod caps {
     pub const ASK: usize = 1024;
     pub const REFERENCE: usize = 1024;
     pub const STORYBOARD: usize = 1024;
+    pub const EXPORT_TIMELINE: usize = 1024;
     pub const DERIVE: usize = 2 * 1024;
     pub const RENDER_CHECK: usize = 1024;
     /// About 300 tokens (spec 6.4).
@@ -391,6 +393,12 @@ impl Ops {
     pub fn storyboard_get(&self, req: &StoryboardRequest) -> CkResult<StoryboardResult> {
         let reply = self.client.post_slow("/api/storyboard/get", req)?;
         capped("storyboard get", caps::STORYBOARD, reply)
+    }
+
+    /// `export --format otio|srt`: an interchange timeline or subtitles.
+    pub fn export_timeline(&self, req: &TimelineExportRequest) -> CkResult<TimelineExportResult> {
+        let reply = self.client.post("/api/export/timeline", req)?;
+        capped("export timeline", caps::EXPORT_TIMELINE, reply)
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.

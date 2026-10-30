@@ -25,6 +25,7 @@ use crate::session::context::StudioContext;
 use crate::session::derive::DeriveRequest;
 use crate::session::edit::{CutApplyRequest, CutWordsRequest, SourceRequest};
 use crate::session::export::ExportRequest;
+use crate::session::formats::TimelineExportRequest;
 use crate::session::handoff::{HandoffRequest, WaitRequest};
 use crate::session::history::{HistoryRequest, SplitRequest};
 use crate::session::import::ImportRequest;
@@ -78,6 +79,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/assets/derive", post(derive))
         .route("/api/render/check", post(render_check))
         .route("/api/history", get(history))
+        .route("/api/export/timeline", post(export_timeline))
         .route("/api/storyboard/get", post(storyboard_get))
         // Studio only: the user's confirmation.
         .route("/api/storyboard/confirm", post(storyboard_confirm))
@@ -549,6 +551,14 @@ async fn storyboard_get(
 
 async fn storyboard_confirm(State(s): State<Arc<Session>>) -> ApiResult {
     blocking(s, |s| s.storyboard_confirm()).await
+}
+
+async fn export_timeline(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<TimelineExportRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.export_timeline(&req)).await
 }
 
 async fn look_apply(

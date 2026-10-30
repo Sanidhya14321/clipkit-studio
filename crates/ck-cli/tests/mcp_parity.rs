@@ -439,6 +439,15 @@ fn comment_tools_answer_like_their_cli_twins() {
         assert!(cli.contains("\"pacing\":\"lively\""), "{cli}");
     }
 
+    // Interchange export answers alike (an OTIO timeline of this project).
+    let otio = ok_line(d, &["export", "--format", "otio"], caps::EXPORT_TIMELINE);
+    assert_eq!(
+        mcp.ok("export", json!({ "format": "otio" }), caps::EXPORT_TIMELINE),
+        otio
+    );
+    let refused = mcp.err("export", json!({ "format": "srt" }));
+    assert_eq!(refused, err_line(d, &["export", "--format", "srt"]));
+
     let refused = mcp.err("comments_resolve", json!({ "id": "c9" }));
     assert_eq!(code(&refused), "E_NOT_FOUND");
     assert_eq!(refused, err_line(d, &["comments", "resolve", "c9"]));
