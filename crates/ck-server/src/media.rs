@@ -85,6 +85,33 @@ pub async fn proxy(
     Ok(resp)
 }
 
+/// `GET /media/storyboard/latest.png`: the newest storyboard sheet, for the studio's `<img>`
+/// (token in the query, like the proxies).
+pub async fn storyboard_sheet(State(s): State<Arc<Session>>) -> Result<Response, ApiError> {
+    let dir = s.cache_dir().with_file_name("storyboard");
+    let newest = std::fs::read_dir(&dir)
+        .ok()
+        .into_iter()
+        .flatten()
+        .filter_map(Result::ok)
+        .map(|e| e.path())
+        .filter(|p| {
+            p.extension().is_some_and(|e| e == "png")
+                && p.file_name()
+                    .is_some_and(|n| n.to_string_lossy().starts_with("sheet-"))
+        })
+        .max_by_key(|p| std::fs::metadata(p).and_then(|m| m.modified()).ok());
+    let path =
+        newest.ok_or_else(|| ApiError(CkError::new(ErrorCode::NotFound, "no storyboard yet")))?;
+    let bytes = std::fs::read(&path).map_err(media_err)?;
+    let mut resp = bytes.into_response();
+    resp.headers_mut()
+        .insert(header::CONTENT_TYPE, HeaderValue::from_static("image/png"));
+    resp.headers_mut()
+        .insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
+    Ok(resp)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

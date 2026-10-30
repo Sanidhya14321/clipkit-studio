@@ -31,6 +31,7 @@ use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::reference::ReferenceRequest;
 use ck_server::session::render::RenderCheckRequest;
+use ck_server::session::storyboard::StoryboardRequest;
 use ck_server::session::verify::VerifyRequest;
 use ck_server::session::voice::{
     CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest,
@@ -43,7 +44,7 @@ use args::{
     AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
     CutCommand, DemoCommand, LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg,
     ProfileArg, ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand,
-    SourcesCommand, TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
+    SourcesCommand, StoryboardCommand, TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -424,6 +425,9 @@ fn run(cli: Cli) -> CkResult<()> {
                 .to_string_lossy()
                 .into_owned();
             print(&ops()?.reference_analyze(&ReferenceRequest { path, apply })?)
+        }
+        Command::Storyboard(StoryboardCommand::Get) => {
+            print(&ops()?.storyboard_get(&StoryboardRequest {})?)
         }
         Command::History { limit } => print(&ops()?.history(&RevHistoryRequest { limit })?),
         Command::Branch(BranchCommand::Save { name }) => {

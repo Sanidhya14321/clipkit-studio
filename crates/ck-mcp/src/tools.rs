@@ -43,6 +43,7 @@ use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::reference::ReferenceRequest;
 use ck_server::session::render::RenderCheckRequest;
+use ck_server::session::storyboard::StoryboardRequest;
 use ck_server::session::verify::VerifyRequest;
 use ck_server::session::voice::{
     CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
@@ -427,6 +428,14 @@ pub fn specs() -> Vec<ToolSpec> {
              reference, keeping fields the user set.",
             caps::REFERENCE,
         ),
+        spec::<StoryboardRequest>(
+            "storyboard_get",
+            "ck storyboard get",
+            "Storyboard checkpoint: one still per scene as a sheet shown in the studio. When \
+             the brief's checkpoints include storyboard, wait (ck wait) for the user's confirm \
+             before building the passes.",
+            caps::STORYBOARD,
+        ),
         spec::<RevHistoryRequest>(
             "history",
             "ck history",
@@ -765,6 +774,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
         "history" => json(&ops.history(&parse::<RevHistoryRequest>(args)?)?),
+        "storyboard_get" => json(&ops.storyboard_get(&parse::<StoryboardRequest>(args)?)?),
         "reference_analyze" => json(&ops.reference_analyze(&parse::<ReferenceRequest>(args)?)?),
         "branch_save" => json(&ops.branch_save(&parse::<BranchRequest>(args)?)?),
         "branch_list" => {

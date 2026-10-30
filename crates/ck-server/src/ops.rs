@@ -38,6 +38,7 @@ use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::reference::{ReferenceRequest, ReferenceResult};
 use crate::session::render::{RenderCheckRequest, RenderCheckResult};
 use crate::session::sound::{SoundCue, SoundPlan};
+use crate::session::storyboard::{StoryboardRequest, StoryboardResult};
 use crate::session::verify::{VerifyIssue, VerifyRequest, VerifyResult};
 use crate::session::voice::{
     CaptionsRequest, CaptionsResult, SlotCaption, SlotRequest, SlotSummary, TakeResult,
@@ -80,6 +81,7 @@ pub mod caps {
     pub const VOICE_WRITE: usize = 1024;
     pub const ASK: usize = 1024;
     pub const REFERENCE: usize = 1024;
+    pub const STORYBOARD: usize = 1024;
     pub const DERIVE: usize = 2 * 1024;
     pub const RENDER_CHECK: usize = 1024;
     /// About 300 tokens (spec 6.4).
@@ -383,6 +385,12 @@ impl Ops {
     pub fn reference_analyze(&self, req: &ReferenceRequest) -> CkResult<ReferenceResult> {
         let reply = self.client.post_slow("/api/reference/analyze", req)?;
         capped("reference analyze", caps::REFERENCE, reply)
+    }
+
+    /// `storyboard get`: one still per scene as a sheet the user confirms in the studio.
+    pub fn storyboard_get(&self, req: &StoryboardRequest) -> CkResult<StoryboardResult> {
+        let reply = self.client.post_slow("/api/storyboard/get", req)?;
+        capped("storyboard get", caps::STORYBOARD, reply)
     }
 
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.

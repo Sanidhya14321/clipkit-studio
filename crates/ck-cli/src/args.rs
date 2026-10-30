@@ -152,6 +152,9 @@ pub enum Command {
     /// Reference video statistics and suggested brief fields.
     #[command(subcommand)]
     Reference(ReferenceCommand),
+    /// Storyboard checkpoint: one still per scene.
+    #[command(subcommand)]
+    Storyboard(StoryboardCommand),
     /// Recent revisions in short.
     History {
         #[arg(long)]
@@ -603,4 +606,10 @@ pub enum ProfileArg {
     Clear,
     Disable,
     Enable,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum StoryboardCommand {
+    /// Render the sheet the user confirms in the studio.
+    Get,
 }

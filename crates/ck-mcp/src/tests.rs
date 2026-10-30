@@ -80,6 +80,7 @@ fn every_tool_has_an_object_schema_and_its_cli_cap() {
         ("assets_derive", caps::DERIVE),
         ("render_check", caps::RENDER_CHECK),
         ("reference_analyze", caps::REFERENCE),
+        ("storyboard_get", caps::STORYBOARD),
         ("history", ck_server::session::branch::caps::HISTORY),
         ("branch_save", ck_server::session::branch::caps::BRANCH),
         ("branch_list", ck_server::session::branch::caps::BRANCH),

@@ -611,3 +611,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Picks are brief fields with source `user` changed by a human or voice revision; agent and ck-scripted edits never teach it. Learned fields: platform, aspect, length, pacing, look, voice, licenseMode (per-project text such as goal or CTA is not learned). A value becomes a default after 2 picks; confidence 0.5 + 0.1 per pick, at most 0.9.
 - Defaults fill only fields absent after the agent's proposal: an inferred or user value is never replaced (spec 8.8). Search reranking from the profile and learning from reverts are not built.
 - Test isolation: unit-test sessions have no profile unless given; `.cargo/config.toml` points `CK_PROFILE` at `target/test-taste-profile.json` for everything cargo runs; Playwright studios use a per-test file.
+
+## Phase 10 step 4: storyboard (2026-10-30)
+- Scenes are the base (video) track's item starts, where every recipe puts its backdrop and footage sits; staggered overlay layers inside a scene are not scenes. Without a base track, every clip start counts.
+- Requested by `storyboard` in `brief.checkpoints`; confirmed is the entry `storyboard:confirmed`, written only by the studio's human route (spec 6.2 lists `storyboard confirm` among CLI commands; the agent never confirms for the user, so there is no agent twin).
+- The studio loads the newest sheet from `/media/storyboard/latest.png` (token in the query) and retries every 2 s while it is missing, because rendering the sheet makes no revision.

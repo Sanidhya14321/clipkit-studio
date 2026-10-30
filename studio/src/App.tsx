@@ -12,6 +12,7 @@ import { CommentsPanel } from "./panels/CommentsPanel";
 import { VoicePanel } from "./panels/VoicePanel";
 import { PushToTalk } from "./panels/PushToTalk";
 import { AskCards } from "./panels/AskCards";
+import { StoryboardPanel } from "./panels/StoryboardPanel";
 import { HoverSelect, type Target } from "./preview/HoverSelect";
 import type { Pointer } from "./comments";
 import type { StudioContext } from "./generated/types";
@@ -172,6 +173,7 @@ export function App({ token }: { token: string }) {
                 )
               }
             />
+            <StoryboardPanel token={token} project={project} />
             <AskCards token={token} asks={asks} />
             <PushToTalk
               token={token}

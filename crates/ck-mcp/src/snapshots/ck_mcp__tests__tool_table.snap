@@ -1553,6 +1553,16 @@ expression: specs()
     }
   },
   {
+    "name": "storyboard_get",
+    "command": "ck storyboard get",
+    "description": "Storyboard checkpoint: one still per scene as a sheet shown in the studio. When the brief's checkpoints include storyboard, wait (ck wait) for the user's confirm before building the passes.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  {
     "name": "history",
     "command": "ck history",
     "description": "Recent revisions in short, newest first: rev, author, label, layers touched.",

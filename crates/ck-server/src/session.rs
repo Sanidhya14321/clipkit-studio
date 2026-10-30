@@ -40,6 +40,7 @@ pub mod recipe;
 pub mod reference;
 pub mod render;
 pub mod sound;
+pub mod storyboard;
 pub mod verify;
 pub mod voice;
 

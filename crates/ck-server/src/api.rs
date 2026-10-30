@@ -32,6 +32,7 @@ use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::reference::ReferenceRequest;
 use crate::session::render::RenderCheckRequest;
+use crate::session::storyboard::StoryboardRequest;
 use crate::session::verify::VerifyRequest;
 use crate::session::voice::{
     ActiveTakeRequest, CaptionsRequest, ConsentRequest, MAX_RECORDING, SlotRequest, TakeQuery,
@@ -77,6 +78,13 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/assets/derive", post(derive))
         .route("/api/render/check", post(render_check))
         .route("/api/history", get(history))
+        .route("/api/storyboard/get", post(storyboard_get))
+        // Studio only: the user's confirmation.
+        .route("/api/storyboard/confirm", post(storyboard_confirm))
+        .route(
+            "/media/storyboard/latest.png",
+            get(crate::media::storyboard_sheet),
+        )
         .route("/api/reference/analyze", post(reference_analyze))
         .route("/api/branch/save", post(branch_save))
         .route("/api/branch/list", get(branch_list))
@@ -529,6 +537,18 @@ async fn reference_analyze(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.reference_analyze(&req)).await
+}
+
+async fn storyboard_get(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<StoryboardRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.storyboard_get(&req)).await
+}
+
+async fn storyboard_confirm(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.storyboard_confirm()).await
 }
 
 async fn look_apply(

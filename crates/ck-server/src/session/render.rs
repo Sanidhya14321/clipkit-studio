@@ -157,14 +157,21 @@ impl Session {
         }
     }
 
-    /// The critic's contact sheet: 6 stills at cuts and motion peaks, 320 px wide, tiled 3x2
-    /// into `.clipkit/critic/sheet-<rev>.png`.
+    /// The critic's contact sheet: 6 stills at cuts and motion peaks (spec 4.3).
     pub(super) fn contact_sheet(&self, project: &Project) -> CkResult<String> {
+        self.stills_sheet(project, &critic_times(project), "critic")
+    }
+
+    /// Stills at `times` (seconds), 320 px wide, tiled 3 per row into
+    /// `.clipkit/<folder>/sheet-<rev>.png`; returns that path relative to the project folder.
+    pub(super) fn stills_sheet(
+        &self,
+        project: &Project,
+        times: &[f64],
+        folder: &str,
+    ) -> CkResult<String> {
         let fps = f64::from(project.settings.fps);
-        let frames: Vec<u64> = critic_times(project)
-            .iter()
-            .map(|t| (t * fps).round() as u64)
-            .collect();
+        let frames: Vec<u64> = times.iter().map(|t| (t * fps).round() as u64).collect();
         if frames.is_empty() {
             return Err(CkError::new(
                 ErrorCode::Request,
@@ -173,7 +180,7 @@ impl Session {
         }
         let looks = serde_json::to_value(ck_assets::library::looks()?)
             .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
-        let dir = self.store.root().join("critic");
+        let dir = self.store.root().join(folder);
         std::fs::create_dir_all(&dir)
             .map_err(|e| CkError::new(ErrorCode::Storage, e.to_string()))?;
         let stills: Vec<PathBuf> = frames
@@ -192,12 +199,11 @@ impl Session {
         );
         self.run_worker(&job)?;
         let name = format!("sheet-{}.png", project.rev);
-        let sheet = dir.join(&name);
-        ck_media::contact_sheet(&stills, 320, 3, &sheet)?;
+        ck_media::contact_sheet(&stills, 320, 3, &dir.join(&name))?;
         for p in &stills {
             let _ = std::fs::remove_file(p);
         }
-        Ok(format!(".clipkit/critic/{name}"))
+        Ok(format!(".clipkit/{folder}/{name}"))
     }
 
     /// `render check` (spec 7.6): renders `frames` in order, then again in reverse (each frame
