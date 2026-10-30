@@ -25,6 +25,9 @@ use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
 use ck_server::session::ask::AskRequest;
+use ck_server::session::branch::{
+    BranchRequest, HistoryRequest as RevHistoryRequest, VariantsRequest,
+};
 use ck_server::session::brief::{BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use ck_server::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
@@ -405,6 +408,37 @@ pub fn specs() -> Vec<ToolSpec> {
              the unstable frames (time- or random-dependent layers).",
             caps::RENDER_CHECK,
         ),
+        spec::<RevHistoryRequest>(
+            "history",
+            "ck history",
+            "Recent revisions in short, newest first: rev, author, label, layers touched.",
+            ck_server::session::branch::caps::HISTORY,
+        ),
+        spec::<BranchRequest>(
+            "branch_save",
+            "ck branch save",
+            "Save the current project content as a named branch (replaces a save of that name).",
+            ck_server::session::branch::caps::BRANCH,
+        ),
+        spec::<StatusArgs>(
+            "branch_list",
+            "ck branch list",
+            "Saved branches with the revision each was saved at.",
+            ck_server::session::branch::caps::BRANCH,
+        ),
+        spec::<BranchRequest>(
+            "branch_switch",
+            "ck branch switch",
+            "Make the project equal a saved branch, as one undoable revision.",
+            ck_server::session::branch::caps::BRANCH,
+        ),
+        spec::<VariantsRequest>(
+            "variants",
+            "ck variants",
+            "Token-only variants: one still per look (2 or 3) at a frame, rendered by the \
+             worker; pick one with look_apply.",
+            ck_server::session::branch::caps::VARIANTS,
+        ),
         spec::<ExportRequest>(
             "export",
             "ck export",
@@ -702,6 +736,14 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "look_apply" => json(&ops.look_apply(&parse(args)?)?),
         "import" => json(&ops.import(&parse(args)?)?),
         "export" => json(&ops.export(&parse(args)?)?),
+        "history" => json(&ops.history(&parse::<RevHistoryRequest>(args)?)?),
+        "branch_save" => json(&ops.branch_save(&parse::<BranchRequest>(args)?)?),
+        "branch_list" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.branch_list()?)
+        }
+        "branch_switch" => json(&ops.branch_switch(&parse::<BranchRequest>(args)?)?),
+        "variants" => json(&ops.variants(&parse::<VariantsRequest>(args)?)?),
         "render_check" => json(&ops.render_check(&parse::<RenderCheckRequest>(args)?)?),
         "assets_derive" => json(&ops.derive(&parse::<DeriveRequest>(args)?)?),
         "comments_list" => json(&ops.comments_list(&parse(args)?)?),

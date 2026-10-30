@@ -595,3 +595,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Phase 9 step 7: bench harness (2026-10-30)
 - The harness is three parts: `bench/scenarios.json` (data), `bench/run.sh` (one run; bash and jq, no Python), `ck bench report` (aggregation in Rust, tested). A pass is an eval score of 80 or more (choice). Arms B and C run `ck init --yes` in the fresh workspace; A0 and A1 do not. The ablation switches themselves (turning one feature off) are not built yet: C arms need them before they mean anything.
 - Results are PLACEHOLDER: no agent run has been made (tokens and owner media needed). Nothing in the report is estimated.
+
+## Phase 9 step 8: history, branches, variants (2026-10-30)
+- A branch is a saved copy of the project content (engine state removed) in `.clipkit/branches/<name>.json`. Switching diffs the current content against it (json-patch diff) and commits that as one agent revision, so undo, history, replay and bisect treat it like any edit. Branches are not part of the project model (the unused `branches` field stays empty).
+- Variants (spec 8.8 "token-only treatments") render one still per look at a frame by swapping `tokens.look` in a copy of the project; nothing is written to the project until the agent or user runs `look apply`. Studio side-by-side display is not built.

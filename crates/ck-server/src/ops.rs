@@ -11,6 +11,10 @@ use serde::Serialize;
 
 use crate::client::Client;
 use crate::session::ask::{AskRequest, AskResult};
+use crate::session::branch::{
+    BranchList, BranchRequest, BranchResult, HistoryRequest as RevHistoryRequest, HistoryView,
+    VariantsRequest, VariantsResult,
+};
 use crate::session::brief::{
     BriefChange, BriefDiff, BriefDiffRequest, BriefProposeRequest, BriefProposeResult, BriefView,
     BriefWaitRequest, BriefWaitResult,
@@ -337,6 +341,38 @@ impl Ops {
         capped("render check", caps::RENDER_CHECK, reply)
     }
 
+    /// `history`: recent revisions in short, newest first.
+    pub fn history(&self, req: &RevHistoryRequest) -> CkResult<HistoryView> {
+        let limit = req.limit.map(|l| l.to_string());
+        let q: Vec<(&str, &str)> = limit.iter().map(|l| ("limit", l.as_str())).collect();
+        let reply = self.client.get("/api/history", &q)?;
+        trimmed("history", crate::session::branch::caps::HISTORY, reply)
+    }
+
+    /// `branch save`: keep the current content under a name.
+    pub fn branch_save(&self, req: &BranchRequest) -> CkResult<BranchResult> {
+        let reply = self.client.post("/api/branch/save", req)?;
+        trimmed("branch save", crate::session::branch::caps::BRANCH, reply)
+    }
+
+    /// `branch list`.
+    pub fn branch_list(&self) -> CkResult<BranchList> {
+        let reply = self.client.get("/api/branch/list", &[])?;
+        capped("branch list", crate::session::branch::caps::BRANCH, reply)
+    }
+
+    /// `branch switch`: one undoable revision to the branch's content.
+    pub fn branch_switch(&self, req: &BranchRequest) -> CkResult<BranchResult> {
+        let reply = self.client.post("/api/branch/switch", req)?;
+        trimmed("branch switch", crate::session::branch::caps::BRANCH, reply)
+    }
+
+    /// `variants`: one still per look at a frame (token-only treatments).
+    pub fn variants(&self, req: &VariantsRequest) -> CkResult<VariantsResult> {
+        let reply = self.client.post_slow("/api/variants", req)?;
+        capped("variants", crate::session::branch::caps::VARIANTS, reply)
+    }
+
     /// `handoff`: release every agent lock and set the agent idle; the user takes over.
     pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
         capped(
@@ -469,6 +505,20 @@ impl Trim for DeriveResult {
     type Entry = String;
     fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
         (&mut self.files, &mut self.omitted)
+    }
+}
+
+impl Trim for HistoryView {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.lines, &mut self.omitted)
+    }
+}
+
+impl Trim for BranchResult {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.touched, &mut self.omitted)
     }
 }
 

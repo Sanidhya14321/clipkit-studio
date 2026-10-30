@@ -16,6 +16,9 @@ use ck_server::api::BODY_LIMIT;
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::session::ask::AskRequest;
+use ck_server::session::branch::{
+    BranchRequest, HistoryRequest as RevHistoryRequest, VariantsRequest,
+};
 use ck_server::session::brief::{BriefDiffRequest, BriefWaitRequest};
 use ck_server::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
@@ -35,10 +38,10 @@ use clap::Parser;
 use serde::Serialize;
 
 use args::{
-    AssetsCommand, BenchCommand, BriefCommand, Cli, Command, CommentsCommand, CutCommand,
-    DemoCommand, LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg, ProjectCommand,
-    RecipeCommand, RenderCommand, SoundCommand, SourcesCommand, TasteCommand, TraceCommand,
-    TranscriptCommand, VoiceCommand,
+    AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
+    CutCommand, DemoCommand, LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg,
+    ProjectCommand, RecipeCommand, RenderCommand, SoundCommand, SourcesCommand, TasteCommand,
+    TraceCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -412,6 +415,17 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             let report = ck_eval::evaluate(&cli.dir, &ck_eval::EvalRequest { video, expect })?;
             capped_print("eval", ck_eval::caps::EVAL, report)
+        }
+        Command::History { limit } => print(&ops()?.history(&RevHistoryRequest { limit })?),
+        Command::Branch(BranchCommand::Save { name }) => {
+            print(&ops()?.branch_save(&BranchRequest { name })?)
+        }
+        Command::Branch(BranchCommand::List) => print(&ops()?.branch_list()?),
+        Command::Branch(BranchCommand::Switch { name }) => {
+            print(&ops()?.branch_switch(&BranchRequest { name })?)
+        }
+        Command::Variants { looks, frame } => {
+            print(&ops()?.variants(&VariantsRequest { looks, frame })?)
         }
         Command::Bench(BenchCommand::Report { results }) => {
             let out =

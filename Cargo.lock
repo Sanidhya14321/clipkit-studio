@@ -474,6 +474,7 @@ dependencies = [
  "futures-util",
  "getrandom 0.4.3",
  "insta",
+ "json-patch",
  "rust-embed",
  "schemars",
  "serde",

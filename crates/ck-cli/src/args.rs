@@ -145,6 +145,21 @@ pub enum Command {
         #[arg(long)]
         gate: Option<String>,
     },
+    /// Recent revisions in short.
+    History {
+        #[arg(long)]
+        limit: Option<usize>,
+    },
+    /// Save, list and switch branches.
+    #[command(subcommand)]
+    Branch(BranchCommand),
+    /// One still per look at a frame (2 or 3 looks).
+    Variants {
+        #[arg(long = "look")]
+        looks: Vec<String>,
+        #[arg(long)]
+        frame: Option<u64>,
+    },
     /// Benchmark report from bench run lines.
     #[command(subcommand)]
     Bench(BenchCommand),
@@ -548,4 +563,14 @@ pub enum BenchCommand {
         #[arg(default_value = "bench/results.jsonl")]
         results: String,
     },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum BranchCommand {
+    /// Save the current content under a name.
+    Save { name: String },
+    /// Saved branches.
+    List,
+    /// Switch to a saved branch (one undoable revision).
+    Switch { name: String },
 }

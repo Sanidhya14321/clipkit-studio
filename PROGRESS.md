@@ -64,7 +64,7 @@ Steps:
 - [x] 5. Debuggability: `ck trace bundle` (redacted), `ck replay`, `ck bisect`.
 - [x] 6. Demo reset (seeded project in under 10 s) and README (install, requirements, demo, voice privacy, Remotion licensing, asset licenses).
 - [x] 7. Bench harness (results PLACEHOLDER until real runs) for A0/A1/B (scenarios, arms, report format); real runs need agents and tokens: results PLACEHOLDER until run.
-- [ ] 8. History and branches, variants (cut-line items).
+- [x] 8. History and branches, variants (CLI and MCP; studio views not built) (cut-line items).
 - [ ] 9. Proof run, self review, evidence.
 
 ## Phase 8: assets at scale (2026-10-30, done; wave 3 adapters, previews and non-code ingest carried)

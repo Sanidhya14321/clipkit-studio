@@ -1495,6 +1495,105 @@ expression: specs()
     }
   },
   {
+    "name": "history",
+    "command": "ck history",
+    "description": "Recent revisions in short, newest first: rev, author, label, layers touched.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "description": "Newest revisions to list (default 10, at most 50).",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint",
+          "minimum": 0
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "branch_save",
+    "command": "ck branch save",
+    "description": "Save the current project content as a named branch (replaces a save of that name).",
+    "cap": 2048,
+    "inputSchema": {
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  {
+    "name": "branch_list",
+    "command": "ck branch list",
+    "description": "Saved branches with the revision each was saved at.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "`status` takes no input."
+    }
+  },
+  {
+    "name": "branch_switch",
+    "command": "ck branch switch",
+    "description": "Make the project equal a saved branch, as one undoable revision.",
+    "cap": 2048,
+    "inputSchema": {
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  {
+    "name": "variants",
+    "command": "ck variants",
+    "description": "Token-only variants: one still per look (2 or 3) at a frame, rendered by the worker; pick one with look_apply.",
+    "cap": 2048,
+    "inputSchema": {
+      "required": [
+        "looks"
+      ],
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "looks": {
+          "description": "Two or three look ids.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "frame": {
+          "description": "Timeline frame to compare at (default the middle).",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  {
     "name": "export",
     "command": "ck export",
     "description": "Export a footage-only project to MP4 (fast ffmpeg path): preset source, youtube, tiktok, reels or shorts; normalized to -14 LUFS, -1 dBTP and measured.",

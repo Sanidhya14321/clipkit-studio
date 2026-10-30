@@ -110,6 +110,18 @@ fn prompt_to_brief_to_a_verified_15_second_generated_video() {
     let check = ok(d, &["render", "check"], caps::RENDER_CHECK);
     assert_eq!(check["deterministic"], true, "{check}");
 
+    // Variants: one still per look at the middle frame.
+    let v = ok(
+        d,
+        &["variants", "--look", "cinematic", "--look", "bold-social"],
+        ck_server::session::branch::caps::VARIANTS,
+    );
+    assert_eq!(v["stills"].as_array().unwrap().len(), 2, "{v}");
+    assert!(
+        d.join(format!(".clipkit/variants/cinematic-{}.png", v["frame"]))
+            .is_file()
+    );
+
     // The same project again comes from the render cache.
     let t = std::time::Instant::now();
     ok(d, &["export", "--out", "exports/again.mp4"], caps::EXPORT);

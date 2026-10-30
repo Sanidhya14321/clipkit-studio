@@ -24,6 +24,7 @@ use crate::idle::Activity;
 use crate::view::{Status, Summary};
 
 pub mod ask;
+pub mod branch;
 pub mod brief;
 pub mod comments;
 pub mod context;

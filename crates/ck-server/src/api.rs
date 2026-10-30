@@ -16,6 +16,7 @@ use crate::auth::{self, Guard};
 use crate::http_error::ApiError;
 use crate::idle;
 use crate::session::ask::{AnswerRequest, AskRequest};
+use crate::session::branch::{BranchRequest, HistoryRequest as RevHistoryRequest, VariantsRequest};
 use crate::session::brief::{self, BriefDiffRequest, BriefProposeRequest, BriefWaitRequest};
 use crate::session::comments::{
     CommentAddRequest, CommentListRequest, CommentReplyRequest, CommentResolveRequest,
@@ -73,6 +74,11 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/export", post(export))
         .route("/api/assets/derive", post(derive))
         .route("/api/render/check", post(render_check))
+        .route("/api/history", get(history))
+        .route("/api/branch/save", post(branch_save))
+        .route("/api/branch/list", get(branch_list))
+        .route("/api/branch/switch", post(branch_switch))
+        .route("/api/variants", post(variants))
         .route("/api/comments", get(comments_list))
         .route("/api/voice/script", post(voice_script))
         .route("/api/voice/mode", post(voice_mode))
@@ -467,6 +473,42 @@ async fn render_check(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.render_check(&req)).await
+}
+
+async fn history(
+    State(s): State<Arc<Session>>,
+    q: Result<Query<RevHistoryRequest>, QueryRejection>,
+) -> ApiResult {
+    let req = query(q)?;
+    blocking(s, move |s| s.history(&req)).await
+}
+
+async fn branch_save(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<BranchRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.branch_save(&req)).await
+}
+
+async fn branch_list(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.branch_list()).await
+}
+
+async fn branch_switch(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<BranchRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.branch_switch(&req)).await
+}
+
+async fn variants(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<VariantsRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.variants(&req)).await
 }
 
 async fn look_apply(

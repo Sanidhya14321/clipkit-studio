@@ -84,7 +84,7 @@ impl Session {
     }
 
     /// The job fields every render shares: bundle, project, looks and footage URLs.
-    fn job(&self, project: &Project, looks: &Value) -> CkResult<Value> {
+    pub(super) fn job(&self, project: &Project, looks: &Value) -> CkResult<Value> {
         let worker = find_worker(&self.workdir())?;
         let bundle = worker.join("bundle");
         if !bundle.join("index.html").is_file() {
@@ -119,7 +119,7 @@ impl Session {
     }
 
     /// Runs the worker on `job` and waits for its `done` or `error` line.
-    fn run_worker(&self, job: &Value) -> CkResult<()> {
+    pub(super) fn run_worker(&self, job: &Value) -> CkResult<()> {
         let worker = PathBuf::from(job["worker"].as_str().unwrap_or("render-worker"));
         let mut child = Command::new("node")
             .arg(worker.join("src/render.mjs"))
