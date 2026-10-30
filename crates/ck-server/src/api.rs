@@ -125,6 +125,11 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
         .route("/api/sound/plan", get(sound_plan))
+        .route("/api/content/map", get(content_map))
+        .route("/api/grid/build", post(grid_build))
+        .route("/api/plan", get(plan_get).post(plan_set))
+        .route("/api/plan/candidates", get(plan_candidates))
+        .route("/api/plan/expand", post(plan_expand))
         .route("/api/verify", get(verify).post(verify_critic))
         .route("/api/handoff", post(handoff))
         .route("/api/pipeline/detect", post(pipeline_detect))
@@ -236,6 +241,42 @@ async fn brief_propose(
 
 async fn layout_check(State(s): State<Arc<Session>>) -> ApiResult {
     blocking(s, |s| s.layout_check()).await
+}
+
+async fn content_map(
+    State(s): State<Arc<Session>>,
+    Query(q): Query<crate::session::edit::SourceRequest>,
+) -> ApiResult {
+    blocking(s, move |s| s.content_map(&q)).await
+}
+
+async fn grid_build(
+    State(s): State<Arc<Session>>,
+    Json(r): Json<crate::session::edl::GridBuildRequest>,
+) -> ApiResult {
+    blocking(s, move |s| s.grid_build(&r)).await
+}
+
+async fn plan_get(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.plan_get()).await
+}
+
+async fn plan_set(
+    State(s): State<Arc<Session>>,
+    Json(r): Json<crate::session::edl::PlanSetRequest>,
+) -> ApiResult {
+    blocking(s, move |s| s.plan_set(&r)).await
+}
+
+async fn plan_candidates(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.plan_candidates()).await
+}
+
+async fn plan_expand(
+    State(s): State<Arc<Session>>,
+    Json(r): Json<crate::session::edl::PlanExpandRequest>,
+) -> ApiResult {
+    blocking(s, move |s| s.plan_expand(&r)).await
 }
 
 async fn sound_plan(State(s): State<Arc<Session>>) -> ApiResult {

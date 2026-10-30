@@ -677,3 +677,9 @@ Deviation: spec 9.4's skill text names `ck pipeline detect`, `ck footage`, `ck s
 - Sources: Pixabay media, Kenney audio, the LUT packs and GSAP may be vetted, plus other freely available animation sources. Approval covers vetting only: each is ingested after its original license is read and allows commercial use.
 - Live proof: the owner runs the PROGRESS.md checklist; work continues without it.
 - Engine: NOT decided. The owner says ClipKit is built on top of Remotion as a feature. Remotion's free license disallows selling a derivative of Remotion, and a company license depends on company size, so this needs reading against Remotion's current terms by the owner or counsel. Until then Remotion stays the default behind the adapter (Update 6 rule 0.4) and HyperFrames stays the Apache 2.0 alternative.
+
+## E2E pipeline (2026-10-30)
+- docs/E2E_PIPELINE.md wins over older specs; the frozen `docs/spec/` is still not edited (owner answer and hook), so its "update the spec file" rule is recorded here instead.
+- `plan.edl` lives at `project.plan.edl`; segments point at grid anchor indices, and each owns layers `edl-<id>-*`.
+- Plans are all kept speech or all generated; mixing is refused until HYBRID is built.
+- Beat tracking is plain Rust over ffmpeg PCM (no new dependency). Captions are `kinetic-text` clips on the caption track so preview and export draw them with no new render code.

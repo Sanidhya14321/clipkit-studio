@@ -15,6 +15,7 @@ fn clip(path: &str, src_in: f64, src_out: f64, at: f64) -> AudioClip {
         src_out,
         at,
         gain: 1.0,
+        duck: Vec::new(),
     }
 }
 
@@ -88,4 +89,18 @@ fn a_contact_sheet_tiles_frames_in_a_grid() {
     let v = probe(&out).unwrap().video.unwrap();
     assert_eq!((v.width, v.height), (300, 200));
     assert!(contact_sheet(&[], 100, 3, &out).is_err());
+}
+
+#[test]
+fn ducked_clip_drops_only_inside_its_ranges() {
+    let clip = AudioClip {
+        path: "music.wav".into(),
+        src_in: 0.0,
+        src_out: 10.0,
+        at: 0.0,
+        gain: 1.0,
+        duck: vec![(2.0, 4.5)],
+    };
+    let g = mix_graph(&[clip], 10.0, TARGET);
+    assert!(g.contains("volume=0.25:enable='between(t,2,4.5)'"), "{g}");
 }

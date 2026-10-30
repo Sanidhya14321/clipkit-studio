@@ -3,6 +3,7 @@
 //! Phase 1 covers the stage gate and the retry gate. Scope, budget, destructive, quality and
 //! honesty gates arrive with the features they guard (Phases 4, 6 and 8).
 
+pub mod edl;
 pub mod retry;
 pub mod stage;
 

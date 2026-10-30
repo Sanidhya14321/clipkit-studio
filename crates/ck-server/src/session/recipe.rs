@@ -289,7 +289,10 @@ impl Session {
         self.with_retry("recipe apply", req, || self.recipe_apply_inner(req))
     }
 
-    fn recipe_apply_inner(&self, req: &RecipeApplyRequest) -> CkResult<RecipeApplyResult> {
+    pub(super) fn recipe_apply_inner(
+        &self,
+        req: &RecipeApplyRequest,
+    ) -> CkResult<RecipeApplyResult> {
         let (recipe, text) = library::recipe_with_text(&req.recipe)?;
         let now = self.now_ms();
         let mut doc = self.doc()?;

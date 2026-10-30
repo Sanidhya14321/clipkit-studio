@@ -392,3 +392,14 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Friction | PASS | `sprint_proof.rs::json_inputs_share_one_convention_and_recipes_ripple_in_order`: inline, @file and - on every JSON input; at and dur in summaries; insert and ripple; sorted items. @project in the lock error and guardrails.md |
 | New-user walkthrough, 9:16 from an empty folder | PASS with known weakness | Exported 1080x1920, 12.0 s. Stages boot, detect, brief, plan, passes (7 in order), verify, handoff. Refused with E_STAGE: brief before detect, recipe before brief, handoff mid-pass. Verify 12 of 12 gates. Render deterministic. Eval 83 of 100: loudness fails because the video is silent; safe areas and text size not measured. The human brief confirm was simulated by patch, no real agent or browser used |
 | L14 foundation: separate studio token | PASS as a guardrail | `sprint_proof.rs::an_agent_token_cannot_act_as_the_user`: E_AUTH on human patch; token absent from server.json; consent and stop also studio-only. NOT a security boundary: code running as the same OS user can read the browser process arguments, or start a studio with CK_STUDIO_TOKEN set. Other human-labelled calls (comments, branch, voice holder) are not yet checked. `just e2e` not run |
+
+## E2E pipeline (docs/E2E_PIPELINE.md, 2026-10-30)
+| Claim | Status | Proof |
+| --- | --- | --- |
+| Section 6 wrong results fixed before this work | PASS | docs/AUDIT.md section 6; baseline nextest 376 passed |
+| 9:16 brief to exported 1080x1920 file | PASS | `edl_proof::generate_on_a_fast_grid_in_nine_by_sixteen_to_export` (ffprobe) |
+| Fast generated grid, top 3 candidates, scoped re-expansion | PASS | same test |
+| Speech grid, content map, captions from kept words, no collisions | PASS | `edl_proof::speech_clip_keeps_phrases_with_captions_on_exact_words` (fixture transcript) |
+| Beat measurement | PASS | `beats::tests` (synthetic clicks only; no real music measured) |
+| Ducking in the graph | PASS | `ducked_clip_drops_only_inside_its_ranges` (graph text; not listened to) |
+| Benchmark against a vanilla agent | BLOCKED | Needs real agent runs and owner media |

@@ -36,6 +36,7 @@ use ck_server::session::comments::{
 use ck_server::session::context::ContextRequest;
 use ck_server::session::derive::DeriveRequest;
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
+use ck_server::session::edl::{GridBuildRequest, PlanExpandRequest, PlanSetRequest};
 use ck_server::session::export::{ExportFormat, ExportRequest};
 use ck_server::session::formats::{TimelineExportRequest, TimelineFormat};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
@@ -361,6 +362,45 @@ pub fn specs() -> Vec<ToolSpec> {
              landings, risers before hooks, room tone under cuts, duck cues for music under \
              voice. Read-only; returns timed cues.",
             caps::SOUND_PLAN,
+        ),
+        spec::<SourceRequest>(
+            "content_map",
+            "ck content map",
+            "Compact content map of a transcribed source: numbered phrases, hook, fillers, \
+             retakes and pauses. Read this, not the transcript; phrase i spans anchors i to i+1.",
+            caps::CONTENT_MAP,
+        ),
+        spec::<GridBuildRequest>(
+            "grid_build",
+            "ck grid build",
+            "Build the rhythm grid in plan.edl: speech from source, beats from music, else a \
+             generated grid from the brief's pace (fast by default).",
+            caps::GRID,
+        ),
+        spec::<StatusArgs>(
+            "plan_get",
+            "ck plan get",
+            "Read plan.edl: stored segments and a grid summary.",
+            caps::PLAN,
+        ),
+        spec::<PlanSetRequest>(
+            "plan_set",
+            "ck plan set",
+            "Replace plan.edl segments. Segments use grid anchor indices, never raw times.",
+            caps::PLAN_WRITE,
+        ),
+        spec::<StatusArgs>(
+            "plan_candidates",
+            "ck plan candidates",
+            "Top 3 recipes per segment, one line each; pick one and set it in the segment.",
+            caps::PLAN_CANDIDATES,
+        ),
+        spec::<PlanExpandRequest>(
+            "plan_expand",
+            "ck plan expand",
+            "Expand segments into layers on exact frames, with captions from kept words. Name \
+             a segment to change only that segment.",
+            caps::PLAN_WRITE,
         ),
         spec::<StatusArgs>(
             "pipeline_detect",
@@ -847,6 +887,18 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
             let StatusArgs {} = parse(args)?;
             json(&ops.sound_plan()?)
         }
+        "content_map" => json(&ops.content_map(&parse(args)?)?),
+        "grid_build" => json(&ops.grid_build(&parse(args)?)?),
+        "plan_get" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.plan_get()?)
+        }
+        "plan_set" => json(&ops.plan_set(&parse(args)?)?),
+        "plan_candidates" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ops.plan_candidates()?)
+        }
+        "plan_expand" => json(&ops.plan_expand(&parse(args)?)?),
         "pipeline_detect" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.pipeline_detect()?)

@@ -84,7 +84,7 @@ pub enum Command {
     /// Check text layout (safe areas, collisions, sizes).
     #[command(subcommand)]
     Layout(LayoutCommand),
-    /// Run the quality gates (schema, timing, layout, contrast, motion, provenance).
+    /// Run the quality gates.
     Verify {
         /// Also render the critic's contact sheet (6 frames at cuts and motion peaks).
         #[arg(long)]
@@ -93,6 +93,15 @@ pub enum Command {
     /// Plan sound cues: whooshes, hits, risers, room tone, ducking.
     #[command(subcommand)]
     Sound(SoundCommand),
+    /// Content map.
+    #[command(subcommand)]
+    Content(ContentCommand),
+    /// Rhythm grid.
+    #[command(subcommand)]
+    Grid(GridCommand),
+    /// Edit plan.
+    #[command(subcommand)]
+    Plan(PlanCommand),
     /// Import a media file as a project source.
     Import { path: std::path::PathBuf },
     /// Transcribe a source with word timestamps.
@@ -125,7 +134,7 @@ pub enum Command {
     /// List, add, reply to and resolve comments.
     #[command(subcommand)]
     Comments(CommentsCommand),
-    /// Retrieval ladder over vetted assets: search, card, skeleton, slice, source.
+    /// Retrieval ladder over vetted assets.
     #[command(subcommand)]
     Assets(AssetsCommand),
     /// License and attribution report for the assets the project uses.
@@ -645,4 +654,40 @@ pub enum PipelineCommand {
     Detect,
     /// Finish the current pass or step and move to the next.
     Next,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum ContentCommand {
+    /// Phrases, hook, fillers, retakes and pauses.
+    Map { source: String },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum GridCommand {
+    /// Speech grid with --source, beat grid with --music, else a generated grid from the pace.
+    Build {
+        #[arg(long)]
+        source: Option<String>,
+        #[arg(long)]
+        music: Option<String>,
+        #[arg(long)]
+        bpm: Option<f64>,
+        #[arg(long)]
+        dur: Option<f64>,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum PlanCommand {
+    /// Stored segments and a grid summary.
+    Get,
+    /// Replace the segments (JSON: inline, @file or -).
+    Set { input: String },
+    /// Top 3 recipes per segment.
+    Candidates,
+    /// Expand into layers; one segment with --segment.
+    Expand {
+        #[arg(long)]
+        segment: Option<String>,
+    },
 }

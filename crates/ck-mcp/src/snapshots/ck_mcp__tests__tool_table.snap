@@ -1388,6 +1388,203 @@ expression: specs()
     }
   },
   {
+    "name": "content_map",
+    "command": "ck content map",
+    "description": "Compact content map of a transcribed source: numbered phrases, hook, fillers, retakes and pauses. Read this, not the transcript; phrase i spans anchors i to i+1.",
+    "cap": 6144,
+    "inputSchema": {
+      "required": [
+        "source"
+      ],
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "Source id (from `import`).",
+          "type": "string"
+        }
+      }
+    }
+  },
+  {
+    "name": "grid_build",
+    "command": "ck grid build",
+    "description": "Build the rhythm grid in plan.edl: speech from source, beats from music, else a generated grid from the brief's pace (fast by default).",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "description": "Source whose speech sets the rhythm.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "music": {
+          "description": "Audio source whose beats are measured.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bpm": {
+          "description": "Tempo of a generated grid; from the brief's pacing when omitted.",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "dur": {
+          "description": "Length of a generated grid in seconds; default 30.",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "plan_get",
+    "command": "ck plan get",
+    "description": "Read plan.edl: stored segments and a grid summary.",
+    "cap": 8192,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "`status` takes no input."
+    }
+  },
+  {
+    "name": "plan_set",
+    "command": "ck plan set",
+    "description": "Replace plan.edl segments. Segments use grid anchor indices, never raw times.",
+    "cap": 1024,
+    "inputSchema": {
+      "$defs": {
+        "Segment": {
+          "description": "One decision of the agent.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "from": {
+              "description": "First anchor index.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0
+            },
+            "to": {
+              "description": "Anchor index where the segment ends; after `from`.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0
+            },
+            "role": {
+              "$ref": "#/$defs/Role"
+            },
+            "recipe": {
+              "description": "Recipe drawn over the segment.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "slots": {
+              "description": "Recipe slot values.",
+              "type": "object",
+              "additionalProperties": true
+            },
+            "source": {
+              "description": "Source id whose speech this keeps; anchors are then that source's times.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "transition": {
+              "description": "Transition into the next segment (recorded; at most two types per plan).",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "captions": {
+              "description": "Draw captions from the kept words.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "from",
+            "to",
+            "role"
+          ]
+        },
+        "Role": {
+          "type": "string",
+          "enum": [
+            "hook",
+            "point",
+            "proof",
+            "turn",
+            "cta"
+          ]
+        }
+      },
+      "required": [
+        "segments"
+      ],
+      "type": "object",
+      "properties": {
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Segment"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "plan_candidates",
+    "command": "ck plan candidates",
+    "description": "Top 3 recipes per segment, one line each; pick one and set it in the segment.",
+    "cap": 4096,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "`status` takes no input."
+    }
+  },
+  {
+    "name": "plan_expand",
+    "command": "ck plan expand",
+    "description": "Expand segments into layers on exact frames, with captions from kept words. Name a segment to change only that segment.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "segment": {
+          "description": "Only this segment; default all.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "pipeline_detect",
     "command": "ck pipeline detect",
     "description": "Read the mode from the project's sources and open the brief stage. First step of every job.",

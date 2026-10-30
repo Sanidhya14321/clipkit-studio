@@ -28,6 +28,9 @@ pub struct AudioClip {
     /// Linear gain (1.0 unchanged).
     #[serde(default = "unity")]
     pub gain: f64,
+    /// Timeline ranges to duck under voice.
+    #[serde(default)]
+    pub duck: Vec<(f64, f64)>,
 }
 
 fn unity() -> f64 {
@@ -37,6 +40,24 @@ fn unity() -> f64 {
 fn num(x: f64) -> String {
     let s = format!("{x:.6}");
     s.trim_end_matches('0').trim_end_matches('.').to_owned()
+}
+
+/// Gain over music while voice plays (about -12 dB).
+const DUCK_GAIN: f64 = 0.25;
+
+/// One timed volume filter per range; runs after `adelay`, so `t` is timeline time.
+fn duck_filters(ranges: &[(f64, f64)]) -> String {
+    ranges
+        .iter()
+        .map(|(s, e)| {
+            format!(
+                ",volume={}:enable='between(t,{},{})'",
+                num(DUCK_GAIN),
+                num(*s),
+                num(*e)
+            )
+        })
+        .collect()
 }
 
 /// The `-filter_complex` graph mixing `clips` (input `i` is `clips[i]`) into `[aout]` of
@@ -52,13 +73,14 @@ pub fn mix_graph(clips: &[AudioClip], duration: f64, loudness: LoudnessTarget) -
             g,
             "[{i}:a:0]atrim=start={}:end={},asetpts=PTS-STARTPTS,aresample=48000,\
              aformat=channel_layouts=stereo,afade=t=in:d={},afade=t=out:st={}:d={},\
-             volume={},adelay={delay}|{delay}[a{i}];",
+             volume={},adelay={delay}|{delay}{}[a{i}];",
             num(c.src_in),
             num(c.src_out),
             num(fade),
             num(len - fade),
             num(fade),
-            num(c.gain.max(0.0))
+            num(c.gain.max(0.0)),
+            duck_filters(&c.duck)
         );
         let _ = write!(labels, "[a{i}]");
     }

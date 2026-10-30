@@ -30,6 +30,7 @@ pub mod comments;
 pub mod context;
 pub mod derive;
 pub mod edit;
+pub mod edl;
 pub mod export;
 pub mod formats;
 pub mod handoff;

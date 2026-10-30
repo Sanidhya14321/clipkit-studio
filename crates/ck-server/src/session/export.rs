@@ -362,6 +362,12 @@ impl Session {
     ) -> CkResult<()> {
         let video = self.render_video(project)?;
         let mut clips = Vec::new();
+        // Music ducks under narration and kept speech.
+        let voices: Vec<(f64, f64)> = project
+            .items()
+            .filter(|i| matches!(i.body, ItemBody::Voice { .. } | ItemBody::Footage { .. }))
+            .filter_map(|i| ck_core::timeline::span(project, i).map(|s| (s.start, s.end)))
+            .collect();
         for item in project.items() {
             match &item.body {
                 ItemBody::Footage {
@@ -391,6 +397,7 @@ impl Session {
                             src_out: *src_out,
                             at: *at,
                             gain: *volume,
+                            duck: Vec::new(),
                         });
                     }
                 }
@@ -410,6 +417,7 @@ impl Session {
                             src_out: t.duration_sec,
                             at: *at,
                             gain: 1.0,
+                            duck: Vec::new(),
                         });
                     }
                 }
@@ -419,7 +427,7 @@ impl Session {
                     at,
                     ranges,
                     volume,
-                    ..
+                    duck,
                 } => {
                     let Some(s) = project.sources.iter().find(|s| &s.id == src) else {
                         continue;
@@ -432,6 +440,7 @@ impl Session {
                             src_out: r.end,
                             at: t,
                             gain: *volume,
+                            duck: if *duck { voices.clone() } else { Vec::new() },
                         });
                         t += r.end - r.start;
                     }

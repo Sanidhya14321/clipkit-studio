@@ -38,6 +38,12 @@ use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::reference::{ReferenceRequest, ReferenceResult};
 use crate::session::render::{RenderCheckRequest, RenderCheckResult};
+use ck_voice::ContentMap;
+
+use crate::session::edl::{
+    GridBuildRequest, GridResult, PlanCandidates, PlanExpandRequest, PlanSetRequest, PlanView,
+    PlanWriteResult,
+};
 use crate::session::sound::{SoundCue, SoundPlan};
 use crate::session::storyboard::{StoryboardRequest, StoryboardResult};
 use crate::session::verify::{VerifyIssue, VerifyRequest, VerifyResult};
@@ -66,6 +72,12 @@ pub mod caps {
     pub const LAYOUT_CHECK: usize = 4 * 1024;
     pub const VERIFY: usize = 4 * 1024;
     pub const SOUND_PLAN: usize = 4 * 1024;
+    /// A few hundred tokens for a short clip; longer sources are trimmed.
+    pub const CONTENT_MAP: usize = 6 * 1024;
+    pub const GRID: usize = 4 * 1024;
+    pub const PLAN: usize = 8 * 1024;
+    pub const PLAN_WRITE: usize = 1024;
+    pub const PLAN_CANDIDATES: usize = 4 * 1024;
     pub const PIPELINE: usize = 512;
     pub const HANDOFF: usize = 1024;
     pub const WAIT: usize = 4 * 1024;
@@ -210,6 +222,55 @@ impl Ops {
             self.client.get("/api/verify", &[])?
         };
         trimmed("verify", caps::VERIFY, reply)
+    }
+
+    /// `content map`: phrases, hook, fillers, retakes and pauses; lines past the cap are counted.
+    pub fn content_map(&self, req: &SourceRequest) -> CkResult<ContentMap> {
+        let reply = self
+            .client
+            .get("/api/content/map", &[("source", &req.source)])?;
+        trimmed("content map", caps::CONTENT_MAP, reply)
+    }
+
+    /// `grid build`: measure or generate the rhythm grid and store it in `plan.edl`.
+    pub fn grid_build(&self, req: &GridBuildRequest) -> CkResult<GridResult> {
+        trimmed(
+            "grid build",
+            caps::GRID,
+            self.client.post_slow("/api/grid/build", req)?,
+        )
+    }
+
+    /// `plan get`: the stored segments and a grid summary.
+    pub fn plan_get(&self) -> CkResult<PlanView> {
+        capped("plan get", caps::PLAN, self.client.get("/api/plan", &[])?)
+    }
+
+    /// `plan set`: replace the segments.
+    pub fn plan_set(&self, req: &PlanSetRequest) -> CkResult<PlanWriteResult> {
+        capped(
+            "plan set",
+            caps::PLAN_WRITE,
+            self.client.post("/api/plan", req)?,
+        )
+    }
+
+    /// `plan candidates`: the top 3 recipes per segment, one line each.
+    pub fn plan_candidates(&self) -> CkResult<PlanCandidates> {
+        trimmed(
+            "plan candidates",
+            caps::PLAN_CANDIDATES,
+            self.client.get("/api/plan/candidates", &[])?,
+        )
+    }
+
+    /// `plan expand`: segments into layers with exact frames; one segment when named.
+    pub fn plan_expand(&self, req: &PlanExpandRequest) -> CkResult<PlanWriteResult> {
+        capped(
+            "plan expand",
+            caps::PLAN_WRITE,
+            self.client.post_slow("/api/plan/expand", req)?,
+        )
     }
 
     /// `sound plan`: whooshes before cuts, hits on text landings, risers before hooks, room
@@ -566,6 +627,27 @@ impl Trim for BranchResult {
     type Entry = String;
     fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
         (&mut self.touched, &mut self.omitted)
+    }
+}
+
+impl Trim for ContentMap {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.lines, &mut self.omitted)
+    }
+}
+
+impl Trim for GridResult {
+    type Entry = f64;
+    fn parts(&mut self) -> (&mut Vec<f64>, &mut usize) {
+        (&mut self.anchors, &mut self.omitted)
+    }
+}
+
+impl Trim for PlanCandidates {
+    type Entry = String;
+    fn parts(&mut self) -> (&mut Vec<String>, &mut usize) {
+        (&mut self.lines, &mut self.omitted)
     }
 }
 

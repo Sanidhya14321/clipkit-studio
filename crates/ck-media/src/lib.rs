@@ -2,6 +2,7 @@
 //!
 //! Phase 5: safe tool invocation (`run`), probing (`probe`) and import media (`import`), cut-candidate signals (`detect`) and the fast export path (`export`).
 
+pub mod beats;
 pub mod detect;
 pub mod engine;
 pub mod export;
@@ -11,6 +12,7 @@ pub mod probe;
 mod run;
 pub mod take;
 
+pub use beats::{Beats, measure_beats};
 pub use detect::{SceneChange, Silence, Span, detect_black_freeze, detect_scenes, detect_silences};
 pub use export::{
     ExportSpec, Loudness, LoudnessTarget, Piece, export, filter_graph, measure_loudness,

@@ -230,6 +230,15 @@ fn recipe_apply_answers_like_its_cli_twin() {
 
     let planned = ok_line(d, &["sound", "plan"], caps::SOUND_PLAN);
     assert_eq!(mcp.ok("sound_plan", Value::Null, caps::SOUND_PLAN), planned);
+
+    ok_line(d, &["grid", "build", "--dur", "4"], caps::GRID);
+    let view = ok_line(d, &["plan", "get"], caps::PLAN);
+    assert_eq!(mcp.ok("plan_get", Value::Null, caps::PLAN), view);
+    let picks = ok_line(d, &["plan", "candidates"], caps::PLAN_CANDIDATES);
+    assert_eq!(
+        mcp.ok("plan_candidates", Value::Null, caps::PLAN_CANDIDATES),
+        picks
+    );
     let planned: Value = serde_json::from_str(&planned).unwrap();
     assert!(planned["cues"].is_array());
 
@@ -242,7 +251,7 @@ fn recipe_apply_answers_like_its_cli_twin() {
     let args = json!({ "overrideReason": "parity fixture" });
     assert_eq!(mcp.ok("handoff", args, caps::HANDOFF), handed);
     let handed: Value = serde_json::from_str(&handed).unwrap();
-    assert_eq!(handed["rev"], 2);
+    assert_eq!(handed["rev"], 3); // recipe, grid, handoff
     let waited = ok_line(d, &["wait", "--since", "0", "--timeout", "0"], caps::WAIT);
     assert_eq!(
         mcp.ok("wait", json!({ "since": 0, "timeoutSecs": 0 }), caps::WAIT),
@@ -276,7 +285,7 @@ fn recipe_apply_answers_like_its_cli_twin() {
         caps::LOOK_APPLY,
     ))
     .unwrap();
-    assert_eq!((&cli["applied"], &cli["rev"]), (&json!(true), &json!(3)));
+    assert_eq!((&cli["applied"], &cli["rev"]), (&json!(true), &json!(4)));
     let tool: Value = serde_json::from_str(&mcp.ok(
         "look_apply",
         json!({ "look": "cinematic" }),

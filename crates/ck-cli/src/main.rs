@@ -25,6 +25,7 @@ use ck_server::session::comments::{
 };
 use ck_server::session::derive::DeriveRequest;
 use ck_server::session::edit::{CutApplyRequest, SourceRequest};
+use ck_server::session::edl::{GridBuildRequest, PlanExpandRequest, PlanSetRequest};
 use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
@@ -42,10 +43,10 @@ use serde::Serialize;
 
 use args::{
     AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
-    CutCommand, DemoCommand, FormatArg, LayoutCommand, LicenseCommand, LookCommand, ModeArg,
-    PipelineCommand, PresetArg, ProfileArg, ProjectCommand, RecipeCommand, ReferenceCommand,
-    RenderCommand, SoundCommand, SourcesCommand, StoryboardCommand, TasteCommand, TraceCommand,
-    TranscriptCommand, VoiceCommand,
+    ContentCommand, CutCommand, DemoCommand, FormatArg, GridCommand, LayoutCommand, LicenseCommand,
+    LookCommand, ModeArg, PipelineCommand, PlanCommand, PresetArg, ProfileArg, ProjectCommand,
+    RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand, SourcesCommand,
+    StoryboardCommand, TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -186,6 +187,31 @@ fn run(cli: Cli) -> CkResult<()> {
         }
         Command::Layout(LayoutCommand::Check) => print(&ops()?.layout_check()?),
         Command::Verify { critic } => print(&ops()?.verify(&VerifyRequest { critic })?),
+        Command::Content(ContentCommand::Map { source }) => {
+            print(&ops()?.content_map(&SourceRequest { source })?)
+        }
+        Command::Grid(GridCommand::Build {
+            source,
+            music,
+            bpm,
+            dur,
+        }) => print(&ops()?.grid_build(&GridBuildRequest {
+            source,
+            music,
+            bpm,
+            dur,
+        })?),
+        Command::Plan(PlanCommand::Get) => print(&ops()?.plan_get()?),
+        Command::Plan(PlanCommand::Set { input }) => {
+            let text = read_input(&input, "plan")?;
+            let req: PlanSetRequest = serde_json::from_str(&text)
+                .map_err(|e| CkError::new(ErrorCode::Request, format!("bad plan: {e}")))?;
+            print(&ops()?.plan_set(&req)?)
+        }
+        Command::Plan(PlanCommand::Candidates) => print(&ops()?.plan_candidates()?),
+        Command::Plan(PlanCommand::Expand { segment }) => {
+            print(&ops()?.plan_expand(&PlanExpandRequest { segment })?)
+        }
         Command::Sound(SoundCommand::Plan) => print(&ops()?.sound_plan()?),
         Command::Import { path } => {
             let path = std::path::absolute(&path)

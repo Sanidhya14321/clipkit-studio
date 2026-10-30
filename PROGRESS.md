@@ -25,6 +25,8 @@ STATUS: IN PROGRESS (Update 5 and 6 queue; engine decision still open)
 PHASE: U5-3
 
 ## Handoff (latest)
+E2E pipeline (docs/E2E_PIPELINE.md): steps 1 to 3 verified; step 4 core built (`ck content map`, `ck grid build`, `ck plan` get, set, candidates and expand; ducking). Not built: punch-ins and transitions are recorded only, per-change draft accept, timeline drag, trim, split and loop, export queue, generated plus kept speech in one plan. Step 7 needs the owner. Step 9 lives on `codex/ui-pro` with uncommitted work.
+Toolchain: `~/.cache/clipkit-ui-tools` (Rust, just, ffmpeg 6) and the Codex runtime Node; pnpm absent, so `just check` cannot finish its studio part here.
 Pipeline audit: server now enforces brief, gates and retry; see DECISIONS.md, end-to-end pipeline audit. Changes uncommitted.
 Update 5: U5-0 audit done (docs/updates/UPDATE5_AUDIT.md). U5-1 spike done: recommendation in DECISIONS.md, nothing migrated. Next: owner approves the engine and decides how U5-2 may edit docs/spec/ (audit finding 3); U5-2 and later not started.
 
