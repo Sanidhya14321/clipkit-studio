@@ -3,7 +3,7 @@
 use crate::error::{CkError, CkResult, ErrorCode};
 use crate::history::{Revision, RevisionKind, Stacks};
 use crate::locks;
-use crate::model::{AgentState, Author, Holder, Project};
+use crate::model::{AgentState, AgentStatus, Author, Holder, Project};
 use crate::patch::{self, PatchRequest};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -66,7 +66,12 @@ impl Document {
             layer_ids,
             now_ms,
             locks::DEFAULT_TTL_MS,
-        )
+        )?;
+        // Taking a lock is the agent starting work (spec 5.2 banner).
+        if holder == Holder::Agent && self.project.agent.status == AgentStatus::Idle {
+            self.project.agent.status = AgentStatus::Working;
+        }
+        Ok(())
     }
 
     pub fn heartbeat(&mut self, holder: Holder, now_ms: u64) -> usize {
@@ -80,6 +85,18 @@ impl Document {
 
     pub fn release(&mut self, holder: Holder, layer_ids: Option<&[String]>) {
         locks::release(&mut self.project.locks, holder, layer_ids);
+        // The agent released all its locks (`ck unlock` with no ids): it is done with this step,
+        // as the Stop hook asks. Releasing named locks (ck's own auto-locks around one write)
+        // keeps it working.
+        let holds = self.project.locks.iter().any(|l| l.holder == Holder::Agent);
+        if holder == Holder::Agent
+            && layer_ids.is_none()
+            && !holds
+            && self.project.agent.status == AgentStatus::Working
+        {
+            self.project.agent.status = AgentStatus::Idle;
+            self.project.agent.active_layers.clear();
+        }
     }
 
     /// The project content (engine-owned fields removed) as it was at revision `rev`, rebuilt
@@ -137,10 +154,29 @@ impl Document {
         let applied = patch::apply(&self.project, req)?;
         locks::check_patch(&self.project.locks, req.author, &applied.touched, now_ms)?;
         if req.author == Author::Agent {
+            if self.project.agent.stop_requested {
+                return Err(CkError::new(
+                    ErrorCode::Stage,
+                    "the user pressed Stop: finish by handing the project back",
+                )
+                .with_hint("Run ck handoff; the user has full control."));
+            }
             crate::scope::check(&self.project, &applied.touched)?;
             consent_unchanged(&self.project, &applied.project)?;
         }
         let mut project = applied.project;
+        // Spec 5.2: an agent write shows the agent working, with the patch label and the layers
+        // it touched, until it hands back (or the user stops it).
+        if req.author == Author::Agent {
+            project.agent.status = AgentStatus::Working;
+            project.agent.label = req.label.clone();
+            project.agent.active_layers = applied
+                .touched
+                .iter()
+                .filter(|id| !id.starts_with('@'))
+                .cloned()
+                .collect();
+        }
         // Locks are engine state, not content: carry them over and drop expired ones.
         project.locks = std::mem::take(&mut self.project.locks);
         locks::prune(&mut project.locks, now_ms);

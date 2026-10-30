@@ -1,4 +1,5 @@
 // What the agent is doing (spec 5.2): status, stage and pass, and its plain-words label.
+import { request } from "../api";
 import type { Pass, Project } from "../generated/types";
 
 const PASS_LABEL: Record<Pass, string> = {
@@ -12,9 +13,11 @@ const PASS_LABEL: Record<Pass, string> = {
 };
 
 export function Banner({
+  token,
   project,
   stopped,
 }: {
+  token: string;
   project: Project;
   stopped: boolean;
 }) {
@@ -28,6 +31,7 @@ export function Banner({
   let text: string;
   if (stopped) text = "The agent stopped. You have full control.";
   else if (agent.status === "idle") text = "Agent idle. You have full control.";
+  else if (agent.stopRequested) text = "Stopping after the current step…";
   else text = agent.label ? `${where}: ${agent.label}` : where;
 
   return (
@@ -35,6 +39,19 @@ export function Banner({
       <span className="banner-who">Agent</span>
       <span className="banner-status">{status}</span>
       <span className="banner-text">{text}</span>
+      {!stopped && agent.status !== "idle" && !agent.stopRequested && (
+        <button
+          type="button"
+          data-ck-stop-agent
+          onClick={() =>
+            void request(token, "/api/stop", { method: "POST" }).catch(
+              () => undefined,
+            )
+          }
+        >
+          Stop
+        </button>
+      )}
     </div>
   );
 }

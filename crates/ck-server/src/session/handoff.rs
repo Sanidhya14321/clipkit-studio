@@ -141,6 +141,7 @@ impl Session {
             status: AgentStatus::Idle,
             label,
             active_layers: Vec::new(),
+            stop_requested: false,
         });
         self.persist(&mut doc)?;
         let project = doc.project();
@@ -169,6 +170,22 @@ impl Session {
             events: user_events(&doc, since.unwrap_or(rev)),
             omitted: 0,
         })
+    }
+}
+
+impl Session {
+    /// Spec 5.2 Stop: the agent's next write is refused and it hands control back. The patch in
+    /// progress (already committed or not yet sent) is never cut in half. Studio only.
+    pub fn request_stop(&self) -> CkResult<AgentState> {
+        let mut doc = self.doc()?;
+        let mut agent = doc.project().agent.clone();
+        if !agent.stop_requested {
+            agent.stop_requested = true;
+            doc.set_agent(agent.clone());
+            self.persist(&mut doc)?;
+            self.publish_snapshot(&doc);
+        }
+        Ok(agent)
     }
 }
 

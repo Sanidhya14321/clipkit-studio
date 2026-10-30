@@ -212,7 +212,11 @@ export type AgentState = { status: AgentStatus,
 /**
  * Plain-words label of what the agent is doing (activity feed).
  */
-label: string, activeLayers: Array<string>, };
+label: string, activeLayers: Array<string>, 
+/**
+ * The user pressed Stop (spec 5.2): agent patches are refused until `handoff`.
+ */
+stopRequested?: boolean, };
 
 export type AgentStatus = "idle" | "waiting" | "working";
 

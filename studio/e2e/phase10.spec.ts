@@ -117,3 +117,39 @@ test("history: undo, redo, save a branch and switch back", async ({
     panel.locator("[data-ck-history-lines] li").first(),
   ).toContainText("human switch to branch first");
 });
+
+test("Stop: the agent's next write is refused until it hands back", async ({
+  page,
+  studio,
+}) => {
+  await page.goto(`${studio.url}#token=${studio.token}`);
+  await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
+  const file = join(studio.dir, "r.json");
+  await writeFile(
+    file,
+    JSON.stringify({ recipe: "hook-title", slots: { headline: "One" } }),
+  );
+  // The agent is working: it holds a lock (the banner shows it working).
+  await studio.ck("recipe", "apply", file);
+  await studio.ck("lock", "hook-title-headline");
+  const banner = page.locator("[data-ck-banner]");
+  await expect(banner).toHaveAttribute("data-ck-agent", "working");
+  await banner.locator("[data-ck-stop-agent]").click();
+  await expect(banner).toContainText("Stopping after the current step");
+
+  const again = join(studio.dir, "r2.json");
+  await writeFile(
+    again,
+    JSON.stringify({
+      recipe: "outro-cta",
+      at: 4,
+      slots: { action: "Go", handle: "x.dev" },
+    }),
+  );
+  const refused = await studio
+    .ck("recipe", "apply", again)
+    .catch((e: { stderr?: string }) => e.stderr ?? "");
+  expect(String(refused)).toContain("E_STAGE");
+  await studio.ck("handoff");
+  await expect(banner).toHaveAttribute("data-ck-agent", "idle");
+});

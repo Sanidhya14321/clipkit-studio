@@ -151,3 +151,44 @@ fn wait_blocks_until_the_user_acts() {
         "woken by the change, took {took:?}"
     );
 }
+
+#[test]
+fn stop_refuses_the_agents_next_write_until_handoff() {
+    use crate::session::handoff::HandoffRequest;
+    use ck_core::ErrorCode;
+    use ck_core::model::{Author, Holder};
+    use ck_core::patch::PatchRequest;
+
+    let f = super::fixture::Fixture::new();
+    let rename = |author: Author, name: &str| {
+        let rev = f.session.project().unwrap().rev;
+        f.session.patch(&PatchRequest {
+            base_rev: rev,
+            layer_revs: Default::default(),
+            ops: serde_json::from_value(serde_json::json!([
+                { "op": "replace", "path": "/tracks/0/items/0/name", "value": name }
+            ]))
+            .unwrap(),
+            author,
+            label: "rename".into(),
+        })
+    };
+    f.session
+        .lock(&crate::session::LockRequest {
+            holder: Holder::Agent,
+            layer_ids: vec!["title".into()],
+        })
+        .unwrap();
+    rename(Author::Agent, "A").unwrap();
+
+    let agent = f.session.request_stop().unwrap();
+    assert!(agent.stop_requested);
+    assert!(f.session.project().unwrap().agent.stop_requested);
+    let err = rename(Author::Agent, "B").unwrap_err();
+    assert_eq!(err.code, ErrorCode::Stage);
+
+    // Handing back clears it and releases the locks; the user edits, the agent may resume.
+    f.session.handoff(&HandoffRequest::default()).unwrap();
+    assert!(!f.session.project().unwrap().agent.stop_requested);
+    rename(Author::Human, "C").unwrap();
+}

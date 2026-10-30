@@ -56,11 +56,12 @@ async fn zero_never_stops() {
     );
 }
 
-#[tokio::test]
+// Paused time: wall-clock margins made this flaky under a loaded full run.
+#[tokio::test(start_paused = true)]
 async fn only_authorized_calls_count() {
     let f = Fixture::new();
     let idle = || f.session.activity().idle_for().unwrap();
-    sleep(Duration::from_millis(40)).await;
+    sleep(Duration::from_secs(1)).await;
 
     let no_token = Request::builder()
         .uri("/api/status")
@@ -76,11 +77,8 @@ async fn only_authorized_calls_count() {
             .unwrap(),
     )
     .await;
-    assert!(idle() >= Duration::from_millis(40), "refused calls count");
+    assert!(idle() >= Duration::from_secs(1), "refused calls count");
 
     f.call("GET", "/api/status", None).await;
-    assert!(
-        idle() < Duration::from_millis(40),
-        "authorized call ignored"
-    );
+    assert!(idle() < Duration::from_secs(1), "authorized call ignored");
 }

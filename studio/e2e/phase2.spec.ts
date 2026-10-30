@@ -147,11 +147,11 @@ test("a CLI patch appears in the timeline and the preview in under 300 ms", asyn
   await expect(layer).toHaveAttribute("data-ck-flash", "true");
   await expect(layer.locator("[data-ck-ghost]")).toBeVisible();
 
-  // The banner shows the agent's state. Patches cannot set it (`/agent` is read-only); the
-  // working state arrives with the pipeline commands (Phase 3).
+  // The banner shows the agent's state: holding locks and writing, it is working (patches
+  // cannot set `/agent`; the engine does).
   await expect(page.locator("[data-ck-banner]")).toHaveAttribute(
     "data-ck-agent",
-    "idle",
+    "working",
   );
   // The Player preview and the panels run under the server's CSP without violations.
   expect(await cspViolations(page)).toEqual([]);

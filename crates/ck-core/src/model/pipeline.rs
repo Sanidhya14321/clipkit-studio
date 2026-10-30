@@ -106,4 +106,7 @@ pub struct AgentState {
     pub label: String,
     #[serde(default)]
     pub active_layers: Vec<String>,
+    /// The user pressed Stop (spec 5.2): agent patches are refused until `handoff`.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub stop_requested: bool,
 }

@@ -636,3 +636,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - Patch engine: `touched_items` compares items (rev zeroed) and project-level fields by value; the project-fields comparison destructures `Project` exhaustively so a new field cannot be missed silently. The remaining per-patch cost is the JSON patch apply plus forward and inverse diffs, linear in project size and well under the 300 ms target at 2000 layers.
 - Release profile: thin LTO, codegen-units 1, stripped symbols (release builds take about 5 minutes).
 - Not changed after measuring: asset search builds its tantivy index per call (about 10 ms for 62 cards).
+
+## Audit fixes: agent state and Stop (2026-10-30)
+- `agent.status` is engine-owned: an agent revision or an agent lock makes it `working` (label = patch label, active layers = touched layers); `ck unlock` with no ids (all locks) or `handoff` makes it `idle`. ck's own auto-locks around one write (released by id) keep it working until the agent hands back.
+- Stop is `agent.stopRequested` (engine state, no revision): every agent patch is refused with E_STAGE until `handoff`. Locks are not force-released, so the user is never handed a half-applied change; the agent releases them through handoff.

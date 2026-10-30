@@ -107,6 +107,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/voice/captions", post(voice_captions))
         // Studio only: keyboard and push-to-talk commands.
         .route("/api/undo", post(undo))
+        .route("/api/stop", post(stop))
         .route("/api/ask", post(ask))
         .route("/api/asks", get(asks_open))
         .route("/api/ask/answer", post(ask_answer))
@@ -560,6 +561,11 @@ async fn export_timeline(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.export_timeline(&req)).await
+}
+
+/// Studio only: the Stop button.
+async fn stop(State(s): State<Arc<Session>>) -> ApiResult {
+    blocking(s, |s| s.request_stop()).await
 }
 
 async fn look_apply(

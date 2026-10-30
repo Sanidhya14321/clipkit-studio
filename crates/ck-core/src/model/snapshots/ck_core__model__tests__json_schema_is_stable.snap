@@ -1026,6 +1026,10 @@ expression: "schemars::schema_for!(Project)"
             "type": "string"
           },
           "default": []
+        },
+        "stopRequested": {
+          "description": "The user pressed Stop (spec 5.2): agent patches are refused until `handoff`.",
+          "type": "boolean"
         }
       },
       "required": [

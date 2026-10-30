@@ -296,6 +296,8 @@ impl Session {
         now_ms: u64,
     ) -> CkResult<LockResult> {
         self.persist(doc)?;
+        // Locks also move the agent between idle and working (spec 5.2): resend the project.
+        self.publish_snapshot(doc);
         let locks = doc.project().locks.clone();
         self.publish(Event::Locks {
             locks: locks.clone(),

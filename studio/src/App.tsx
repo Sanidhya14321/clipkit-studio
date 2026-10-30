@@ -109,7 +109,7 @@ export function App({ token }: { token: string }) {
         )}
         {!connected && <span role="status">Connecting to ck…</span>}
       </header>
-      {project && <Banner project={project} stopped={stopped} />}
+      {project && <Banner token={token} project={project} stopped={stopped} />}
       {project && (
         <div className="studio-body">
           <main className="studio-preview">
