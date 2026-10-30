@@ -1,5 +1,14 @@
 # Progress
 
+## Owner checklist: live-session steps headless runs cannot do
+- [ ] Install Rust 1.99.1 (rustup), Node 24, pnpm and ffmpeg 8.0.1 on this Mac; the Stop hook skips its check without cargo.
+- [ ] In a live Claude Code session: run `ck init`, restart, confirm `/mcp` lists `clipkit` (`plugin/.mcp.json` is now in the repo).
+- [ ] Confirm Claude Code picks up the plugin from `extraKnownMarketplaces` + `enabledPlugins`; if not, run `claude plugin install`.
+- [ ] Check the Codex config (`$CODEX_HOME/config.toml`, `[mcp_servers.clipkit]`) and AGENTS.md location against developers.openai.com/codex/mcp.
+- [ ] Check `~/.cursor/mcp.json` and `.cursor/rules/*.mdc` format against cursor.com/docs.
+- [ ] Run the demo scenario end to end in one real Claude Code and one real Codex session; flip the BLOCKED rows in VERIFICATION.md.
+
+
 STATUS: PAUSED (Update 5: owner must approve the render engine, DECISIONS.md U5-1)
 PHASE: U5-1
 

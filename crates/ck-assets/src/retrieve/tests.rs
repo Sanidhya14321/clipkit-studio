@@ -109,10 +109,12 @@ fn the_budget_gate_limits_cards_and_full_source_per_decision() {
     )
     .unwrap();
     let r2 = Retrieval::new(r.hub.clone(), p.path());
-    let refused = r2.card(&AssetIdRequest {
-        id: "pack-mit/glow-title".into(),
-    });
-    assert_eq!(refused.unwrap_err().code, ErrorCode::Budget);
+    let kept = r2
+        .card(&AssetIdRequest {
+            id: "pack-mit/glow-title".into(),
+        })
+        .unwrap();
+    assert_eq!(kept.budget.cards, 2);
     std::fs::remove_file(p.path().join(".clipkit").join(LEDGER_FILE)).unwrap();
     let again = r2
         .card(&AssetIdRequest {

@@ -118,7 +118,7 @@ async fn project_views() {
     assert_eq!(code, StatusCode::OK);
     assert_eq!(summary["tracks"][0]["items"][0]["id"], "title");
     assert_eq!(summary["tracks"][0]["items"][0]["type"], "clip");
-    assert_eq!(summary["tracks"][0]["items"][0]["end"], 2.0);
+    assert_eq!(summary["tracks"][0]["items"][0]["dur"], 2.0);
     assert_eq!(summary["durationSec"], 2.0);
 
     let (code, layer) = f.call("GET", "/api/project?layer=title", None).await;

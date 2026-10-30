@@ -191,3 +191,43 @@ fn voice_before_the_brief_is_refused() {
     let v = input(d, "v.json", &json!({ "lines": [{ "text": "Hello" }] }));
     assert_eq!(raw(d, &["voice", "script", &v])["code"], "E_STAGE");
 }
+
+#[test]
+fn json_inputs_share_one_convention_and_recipes_ripple_in_order() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _s = Studio::start(d);
+    let inline =
+        json!({ "recipe": "hook-title", "at": 0.0, "dur": 3.0, "slots": { "headline": "A" } });
+    assert!(raw(d, &["recipe", "apply", &inline.to_string()])["rev"].is_u64());
+    let f = scene(d, "b.json", 3.0, 3.0);
+    assert!(raw(d, &["recipe", "apply", &format!("@{f}")])["rev"].is_u64());
+
+    let insert = json!({ "recipe": "hook-title", "at": 3.0, "dur": 2.0, "place": "insert",
+                         "slots": { "headline": "C" } });
+    assert!(
+        raw(d, &["recipe", "apply", &insert.to_string()])["rev"].is_u64(),
+        "insert"
+    );
+    let p: Value =
+        serde_json::from_str(&std::fs::read_to_string(d.join(".clipkit/project.json")).unwrap())
+            .unwrap();
+    for track in p["tracks"].as_array().unwrap() {
+        let ats: Vec<f64> = track["items"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|i| i["at"].as_f64().unwrap())
+            .collect();
+        assert!(ats.windows(2).all(|w| w[0] <= w[1]), "{ats:?}");
+        assert!(
+            ats.iter().any(|a| *a >= 5.0),
+            "the later scene moved by 2: {ats:?}"
+        );
+    }
+    let summary = raw(d, &["project", "get"]).to_string();
+    assert!(
+        summary.contains("\"dur\"") && !summary.contains("\"end\""),
+        "{summary}"
+    );
+}

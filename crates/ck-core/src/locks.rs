@@ -90,6 +90,10 @@ pub fn check_patch(
             } else {
                 Err(
                     CkError::new(ErrorCode::LockNotHeld, "agent does not hold these layers")
+                        .with_hint(
+                            "Run ck lock with the listed ids first. @project is the lock for \
+                             project-level fields such as the brief and settings.",
+                        )
                         .with_layers(missing),
                 )
             }

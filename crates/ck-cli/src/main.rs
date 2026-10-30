@@ -556,20 +556,20 @@ fn mcp(root: std::path::PathBuf) -> CkResult<()> {
 
 /// The patch argument is the JSON itself, or `-` to read it from stdin.
 fn read_patch(arg: &str) -> CkResult<PatchRequest> {
-    let text = if arg == "-" {
-        read_limited(std::io::stdin(), "patch")?
-    } else {
-        arg.to_owned()
-    };
-    serde_json::from_str(&text).map_err(|e| request_err(format!("patch JSON: {e}")))
+    serde_json::from_str(&read_input(arg, "patch")?)
+        .map_err(|e| request_err(format!("patch JSON: {e}")))
 }
 
-/// A file argument (`ck brief propose FILE`), or `-` for stdin.
+/// The one JSON input convention: inline JSON, `@file` (or a bare path), or `-` for stdin.
 fn read_input(arg: &str, what: &str) -> CkResult<String> {
     if arg == "-" {
         return read_limited(std::io::stdin(), what);
     }
-    let file = std::fs::File::open(arg)
+    if arg.trim_start().starts_with(['{', '[']) {
+        return Ok(arg.to_owned());
+    }
+    let path = arg.strip_prefix('@').unwrap_or(arg);
+    let file = std::fs::File::open(path)
         .map_err(|e| request_err(format!("opening {what} file {arg:?}: {e}")))?;
     read_limited(file, what)
 }

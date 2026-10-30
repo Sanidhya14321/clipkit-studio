@@ -21,3 +21,6 @@ cause, and never send the same failing call more than twice (the third is refuse
 
 Hooks also block direct writes to .clipkit/, assets/ and media files, and shell commands such as
 ffmpeg on project media. Use the ck command the block reason names.
+
+E_LOCK_NOT_HELD lists the ids to lock. `@project` is the lock for project-level fields such as the brief and settings: ck lock @project.
+JSON inputs take inline JSON, @file or - for stdin. Times are at and dur in seconds.

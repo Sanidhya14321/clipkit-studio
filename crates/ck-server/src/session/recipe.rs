@@ -30,8 +30,16 @@ pub struct RecipeApplyRequest {
     #[serde(default)]
     pub at: f64,
     /// Scene duration in seconds; the recipe default when omitted.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "dur",
+        alias = "duration",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub duration: Option<f64>,
+    /// How the scene meets what is already at `at` (default overlay).
+    #[serde(default, skip_serializing_if = "PlaceMode::is_overlay")]
+    pub place: PlaceMode,
     /// Slot name to value (text, number, list of text, or a source id).
     #[serde(default)]
     pub slots: BTreeMap<String, Value>,
@@ -43,6 +51,25 @@ pub struct RecipeApplyRequest {
     /// the brief's look, then `clean-product`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub look: Option<String>,
+}
+
+/// Where a scene goes relative to existing layers.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub enum PlaceMode {
+    /// Layers on top; nothing moves.
+    #[default]
+    Overlay,
+    /// Every later layer moves by the scene's full length.
+    Insert,
+    /// Later layers move only as far as needed to clear the scene.
+    Ripple,
+}
+
+impl PlaceMode {
+    fn is_overlay(&self) -> bool {
+        *self == Self::Overlay
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -157,8 +184,43 @@ pub fn has_footage(project: &Project) -> bool {
 }
 
 /// RFC 6902 operations that add the layers (and any missing track) and record the recipe.
-fn build_ops(project: &Project, layers: Vec<ExpandedLayer>, asset: &str) -> CkResult<Vec<Value>> {
+/// How far `place` moves the layers starting at or after `at`.
+fn place_shift(project: &Project, place: PlaceMode, at: f64, dur: f64) -> f64 {
+    let next = || {
+        project
+            .tracks
+            .iter()
+            .flat_map(|t| &t.items)
+            .filter_map(|i| serde_json::to_value(i).ok()?["at"].as_f64())
+            .filter(|a| *a >= at)
+            .fold(f64::INFINITY, f64::min)
+    };
+    match place {
+        PlaceMode::Overlay => 0.0,
+        PlaceMode::Insert => dur,
+        PlaceMode::Ripple => (at + dur - next()).max(0.0),
+    }
+}
+
+fn build_ops(
+    project: &Project,
+    layers: Vec<ExpandedLayer>,
+    asset: &str,
+    (from, shift): (f64, f64),
+) -> CkResult<Vec<Value>> {
+    let shift_of = |a: f64| if a >= from { shift } else { 0.0 };
+    let mut placed: BTreeMap<usize, usize> = BTreeMap::new();
     let mut ops = Vec::new();
+    if shift > 0.0 {
+        for (t, track) in project.tracks.iter().enumerate() {
+            for (i, item) in track.items.iter().enumerate() {
+                let at = serde_json::to_value(item).map_err(server_err)?["at"].as_f64();
+                if let Some(a) = at.filter(|a| *a >= from) {
+                    ops.push(json!({ "op": "replace", "path": format!("/tracks/{t}/items/{i}/at"), "value": a + shift }));
+                }
+            }
+        }
+    }
     // New tracks are appended in first-use order; `new_tracks` holds each one's kind and index.
     let mut new_tracks: Vec<(TrackKind, usize)> = Vec::new();
     let mut track_ids: Vec<String> = project.tracks.iter().map(|t| t.id.clone()).collect();
@@ -180,9 +242,23 @@ fn build_ops(project: &Project, layers: Vec<ExpandedLayer>, asset: &str) -> CkRe
                     .map(|(_, i)| *i)
             });
         match index {
-            Some(i) => ops.push(
-                json!({ "op": "add", "path": format!("/tracks/{i}/items/-"), "value": item }),
-            ),
+            // Items stay sorted by time: after everything that starts at or before this one.
+            Some(i) => {
+                let at = item["at"].as_f64().unwrap_or(f64::MAX);
+                let before = project.tracks.get(i).map_or(0, |t| {
+                    t.items
+                        .iter()
+                        .filter(|o| {
+                            serde_json::to_value(o).is_ok_and(|v| {
+                                v["at"].as_f64().is_none_or(|a| a + shift_of(a) <= at)
+                            })
+                        })
+                        .count()
+                });
+                let added = placed.entry(i).or_insert(0);
+                ops.push(json!({ "op": "add", "path": format!("/tracks/{i}/items/{}", before + *added), "value": item }));
+                *added += 1;
+            }
             None => {
                 let name = kind_name(layer.track);
                 let id = (1..)
@@ -245,7 +321,14 @@ impl Session {
             &mut layers,
         );
         let layer_ids: Vec<String> = layers.iter().map(|l| l.item.id.clone()).collect();
-        let ops = build_ops(project, layers, &expansion.provenance.source_asset)?;
+        let dur = req.duration.unwrap_or(recipe.duration.default);
+        let shift = place_shift(project, req.place, req.at, dur);
+        let ops = build_ops(
+            project,
+            layers,
+            &expansion.provenance.source_asset,
+            (req.at, shift),
+        )?;
         let patch = PatchRequest {
             base_rev: project.rev,
             layer_revs: Default::default(),

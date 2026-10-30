@@ -346,7 +346,7 @@ export type ItemSummary = { id: string,
 /**
  * The item body's `type` tag (footage, clip, voice, audio, caption).
  */
-type: string, name: string, rev: number, start?: number | null, end?: number | null, };
+type: string, name: string, rev: number, at?: number | null, dur?: number | null, };
 
 export type CkError = { code: ErrorCode, message: string, hint: string, 
 /**

@@ -54,9 +54,9 @@ pub struct ItemSummary {
     pub name: String,
     pub rev: u64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub start: Option<f64>,
+    pub at: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub end: Option<f64>,
+    pub dur: Option<f64>,
 }
 
 impl Status {
@@ -85,8 +85,8 @@ impl ItemSummary {
             kind: item_kind(i),
             name: i.name.clone(),
             rev: i.rev,
-            start: span.map(|s| s.start),
-            end: span.map(|s| s.end),
+            at: span.map(|s| s.start),
+            dur: span.map(|s| s.end - s.start),
         }
     }
 }

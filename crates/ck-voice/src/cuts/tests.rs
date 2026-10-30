@@ -152,6 +152,9 @@ fn matches_fixture_ground_truth() {
 
 #[test]
 fn no_words_is_no_evidence_of_silence() {
-    let t = Transcript::default();
+    let t = Transcript {
+        language: String::new(),
+        words: Vec::new(),
+    };
     assert!(suggest_cuts(&t, 60.0).is_empty());
 }

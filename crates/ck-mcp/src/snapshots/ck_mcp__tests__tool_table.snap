@@ -1275,10 +1275,31 @@ expression: specs()
     "description": "Fill a recipe's slots: adds its named layers (tokens, provenance, briefDeps) as one revision. Returns the layer ids.",
     "cap": 1024,
     "inputSchema": {
+      "$defs": {
+        "PlaceMode": {
+          "description": "Where a scene goes relative to existing layers.",
+          "oneOf": [
+            {
+              "description": "Layers on top; nothing moves.",
+              "type": "string",
+              "const": "overlay"
+            },
+            {
+              "description": "Every later layer moves by the scene's full length.",
+              "type": "string",
+              "const": "insert"
+            },
+            {
+              "description": "Later layers move only as far as needed to clear the scene.",
+              "type": "string",
+              "const": "ripple"
+            }
+          ]
+        }
+      },
       "required": [
         "recipe"
       ],
-      "additionalProperties": false,
       "type": "object",
       "properties": {
         "recipe": {
@@ -1291,13 +1312,17 @@ expression: specs()
           "format": "double",
           "default": 0.0
         },
-        "duration": {
+        "dur": {
           "description": "Scene duration in seconds; the recipe default when omitted.",
           "type": [
             "number",
             "null"
           ],
           "format": "double"
+        },
+        "place": {
+          "description": "How the scene meets what is already at `at` (default overlay).",
+          "$ref": "#/$defs/PlaceMode"
         },
         "slots": {
           "description": "Slot name to value (text, number, list of text, or a source id).",
@@ -1319,7 +1344,8 @@ expression: specs()
             "null"
           ]
         }
-      }
+      },
+      "additionalProperties": false
     }
   },
   {
