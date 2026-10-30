@@ -138,3 +138,31 @@ Baseline at 2d0cc96: `cargo nextest` 376 passed, 1 skipped (with Node on PATH; w
 | Ducking in the mix; caption words drawn; export queue; `ck repro`; timeline drag, trim, split, loop | Confirmed not built | No code in `ck-media`, `studio/src`, `api.rs` |
 | Content map, plan.edl, speech and generated grids, per-segment selection | Confirmed not built | `Project.plan` is an untyped, unused value |
 | Professional editor UI | In progress elsewhere | `codex/ui-pro` worktree with uncommitted work; `docs/updates/UI_UPDATE.md` exists only there |
+
+## 7. Release-ready audit (2026-10-30, docs/RELEASE_READY.md section 2)
+
+Checked on main after the `codex/ui-pro` merge: 402 Rust tests, 41 hooks, studio typecheck, format and unit tests pass; CI fast suite passed on 0fb7c25. Playwright was not rerun here.
+
+| Id | Sev | Result | Evidence or gap |
+| --- | --- | --- | --- |
+| I1 | B | Fixed | `sprint_proof`, `edl_proof` 9:16 export probed at 1080x1920 |
+| I2 | B | Fixed | `pipeline_proof`, `voice_before_the_brief_is_refused` |
+| I3 | B | Fixed | `export_refuses_failing_gates_and_a_reframing_preset` |
+| I4 | B | Fixed | `forced_export_records_the_reason_and_silence_fails_loudness` |
+| I5 | B | Partly fixed | `docs_agree` passes, but README and spec expectations need `ck doctor`, which does not exist |
+| I6 | B | Partly fixed, owner | `plugin/.mcp.json` present; Codex and Cursor formats unconfirmed against their docs |
+| I7 | H | Mostly fixed | Plan core built; punch-ins, rendered transitions and mixed plans missing |
+| I8 | H | Partly fixed | Move, trim and split merged; loop range and draft review missing |
+| I9 | H | Fixed, weakly proven | Ducking checked in the graph only; captions drawn as clips for plans |
+| I10 | H | Partly fixed | Queue and progress built; cancel missing; no real-render progress test |
+| I11 | H | Fixed | `brief_rejects_unknown_fields_and_get_shows_the_schema` |
+| I12 | H | Partly fixed | Phases 5 to 10 reviewed (section 5); the merged UI and U6 work and the new plan code have not been reviewed |
+| I13 | H | Confirmed | No published installable release; macOS arm64 and Linux x64 only; no Windows, npm or Homebrew |
+| I14 | M | Fixed | `json_inputs_share_one_convention_and_recipes_ripple_in_order` |
+| I15 | M | Fixed | same test |
+| I16 | M | Confirmed | `ck repro` does not exist |
+| I17 | M | Partly fixed | Worker shares one browser in a job process; no warm worker between jobs; no layer cache |
+| I18 | M | Confirmed, owner | License decisions open |
+| I19 | M | Confirmed, owner | No benchmark, golden examples or demo recording |
+
+Also confirmed: no `ck doctor`; no security, nightly, cross-platform or agent-e2e workflows; no CONTRIBUTING, SECURITY, CODE_OF_CONDUCT or CHANGELOG; no generated CLI reference; no cargo-deny config.
