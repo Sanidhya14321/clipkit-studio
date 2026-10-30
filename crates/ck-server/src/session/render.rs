@@ -157,6 +157,49 @@ impl Session {
         }
     }
 
+    /// The critic's contact sheet: 6 stills at cuts and motion peaks, 320 px wide, tiled 3x2
+    /// into `.clipkit/critic/sheet-<rev>.png`.
+    pub(super) fn contact_sheet(&self, project: &Project) -> CkResult<String> {
+        let fps = f64::from(project.settings.fps);
+        let frames: Vec<u64> = critic_times(project)
+            .iter()
+            .map(|t| (t * fps).round() as u64)
+            .collect();
+        if frames.is_empty() {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                "nothing to show: no layers",
+            ));
+        }
+        let looks = serde_json::to_value(ck_assets::library::looks()?)
+            .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
+        let dir = self.store.root().join("critic");
+        std::fs::create_dir_all(&dir)
+            .map_err(|e| CkError::new(ErrorCode::Storage, e.to_string()))?;
+        let stills: Vec<PathBuf> = frames
+            .iter()
+            .enumerate()
+            .map(|(i, f)| dir.join(format!("frame-{i}-{f}.png")))
+            .collect();
+        let mut job = self.job(project, &looks)?;
+        job["out"] = json!(dir);
+        job["stills"] = json!(
+            frames
+                .iter()
+                .zip(&stills)
+                .map(|(f, p)| json!({ "frame": f, "out": p }))
+                .collect::<Vec<_>>()
+        );
+        self.run_worker(&job)?;
+        let name = format!("sheet-{}.png", project.rev);
+        let sheet = dir.join(&name);
+        ck_media::contact_sheet(&stills, 320, 3, &sheet)?;
+        for p in &stills {
+            let _ = std::fs::remove_file(p);
+        }
+        Ok(format!(".clipkit/critic/{name}"))
+    }
+
     /// `render check` (spec 7.6): renders `frames` in order, then again in reverse (each frame
     /// twice, out of order) and compares the PNGs. Any difference means the composition depends
     /// on more than the frame number.
@@ -212,6 +255,24 @@ impl Session {
     }
 }
 
+/// Six times for the critic (spec 4.3): every layer start (cuts and text landings) and middle
+/// (motion peaks), spread evenly over what the timeline offers.
+pub fn critic_times(project: &Project) -> Vec<f64> {
+    let mut times: Vec<f64> = project
+        .items()
+        .filter_map(|i| ck_core::timeline::span(project, i))
+        .flat_map(|s| [s.start + 0.1, (s.start + s.end) / 2.0])
+        .collect();
+    let end = ck_core::timeline::duration(project);
+    times.retain(|t| *t < end);
+    times.sort_by(f64::total_cmp);
+    times.dedup_by(|a, b| (*a - *b).abs() < 0.25);
+    if times.len() <= 6 {
+        return times;
+    }
+    (0..6).map(|k| times[k * (times.len() - 1) / 5]).collect()
+}
+
 /// Frames whose renders do not all hash the same.
 pub fn unstable_frames(hashes: &std::collections::BTreeMap<u64, Vec<String>>) -> Vec<u64> {
     hashes
@@ -224,6 +285,21 @@ pub fn unstable_frames(hashes: &std::collections::BTreeMap<u64, Vec<String>>) ->
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn critic_times_spread_six_frames_over_cuts_and_peaks() {
+        let mut p = Project::new("p", "P", ck_core::model::Mode::Generate);
+        p.tracks = serde_json::from_value(json!([{ "id": "t", "kind": "overlay", "items": [
+            { "id": "a", "type": "clip", "at": 0.0, "dur": 4.0 },
+            { "id": "b", "type": "clip", "at": 4.0, "dur": 5.0 },
+            { "id": "c", "type": "clip", "at": 9.0, "dur": 6.0 },
+            { "id": "d", "type": "clip", "at": 9.5, "dur": 2.0 } ] }]))
+        .unwrap();
+        let t = critic_times(&p);
+        assert_eq!(t.len(), 6);
+        assert!(t.windows(2).all(|w| w[0] < w[1]));
+        assert!(t[0] < 0.5 && *t.last().unwrap() > 11.0, "{t:?}");
+    }
 
     #[test]
     fn a_frame_whose_renders_differ_is_unstable() {

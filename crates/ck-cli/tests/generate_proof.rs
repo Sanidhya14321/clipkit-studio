@@ -110,6 +110,12 @@ fn prompt_to_brief_to_a_verified_15_second_generated_video() {
     let check = ok(d, &["render", "check"], caps::RENDER_CHECK);
     assert_eq!(check["deterministic"], true, "{check}");
 
+    // The critic's contact sheet: 6 frames tiled 3x2 at 320 px.
+    let critic = ok(d, &["verify", "--critic"], caps::VERIFY);
+    let sheet = d.join(critic["contactSheet"].as_str().unwrap());
+    let v = ck_media::probe(&sheet).unwrap().video.unwrap();
+    assert_eq!(v.width, 960, "{critic}");
+
     // Variants: one still per look at the middle frame.
     let v = ok(
         d,

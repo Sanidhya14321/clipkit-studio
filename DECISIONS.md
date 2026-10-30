@@ -599,3 +599,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Phase 9 step 8: history, branches, variants (2026-10-30)
 - A branch is a saved copy of the project content (engine state removed) in `.clipkit/branches/<name>.json`. Switching diffs the current content against it (json-patch diff) and commits that as one agent revision, so undo, history, replay and bisect treat it like any edit. Branches are not part of the project model (the unused `branches` field stays empty).
 - Variants (spec 8.8 "token-only treatments") render one still per look at a frame by swapping `tokens.look` in a copy of the project; nothing is written to the project until the agent or user runs `look apply`. Studio side-by-side display is not built.
+
+## Phase 10 step 1: critic pass (2026-10-30)
+- `verify --critic` (the skill already called it) adds the contact sheet; plain `verify` is unchanged. Frames: every layer's start + 0.1 s and midpoint, deduplicated within 0.25 s, then 6 spread evenly; the critic itself is the existing `clipkit-critic` subagent (read-only, at most ten lines), which covers Phase 10's "sub-agent roles" item for the critic role.
+- Session roots are now absolute: paths handed to the worker (which runs in `render-worker/`) were relative when the studio was started with a relative `--dir`.

@@ -251,6 +251,12 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | Step 7: studio transcript panel: click a word to seek, Delete/Backspace cuts it from the footage (human revision through `POST /api/cut/words` with the whole deleted set), same key restores at the clip edge; read-only while the agent holds the video track, and the server refuses (track lock now part of every footage rebuild) | PASS | `studio/e2e/phase5.spec.ts` (2 tests, `just e2e` 8 of 8 passed); `studio/src/transcript.test.ts` (deleted words from segment midpoints, toggle, source-to-timeline time); `ck-server` `tests::edit::studio_word_cuts_are_human_edits_refused_under_an_agent_track_lock` (E_LOCK_HELD) |
 | Step 7 run | PASS | 2026-10-29 `just check`: 254 of 254 nextest (1 skipped), hooks 41 of 41, studio format, typecheck and tests clean; `just e2e` 8 of 8 |
 
+## Phase 10: stretch (2026-10-30, in progress)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Step 1: critic pass (spec 4.3): `ck verify --critic` (MCP `verify` with `critic`) renders 6 frames chosen from layer starts and midpoints (cuts, landings, motion peaks) through the worker and tiles them 3x2 at 320 px into `.clipkit/critic/sheet-<rev>.png` for the existing read-only `clipkit-critic` subagent; fixed: session roots are made absolute (a studio started with `--dir .` handed relative paths to the worker) | PASS | `ck-server` `session::render::tests::critic_times_spread_six_frames_over_cuts_and_peaks`; `ck-media` `mix::tests::a_contact_sheet_tiles_frames_in_a_grid`; `generate_proof` (960 px sheet); manual 2026-10-30 on the demo: sheet shows the hook, stat and outro scenes |
+
 ## Phase 9: polish and proof (2026-10-30, done; sound design, critic pass, bench results and some studio views carried)
 
 | Check | Result | Evidence |

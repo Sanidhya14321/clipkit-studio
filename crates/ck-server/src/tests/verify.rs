@@ -225,7 +225,7 @@ fn verify_through_the_client_after_recipe_apply() {
     }))
     .unwrap();
     ops.recipe_apply(&req).unwrap();
-    let r = ops.verify().unwrap();
+    let r = ops.verify(&Default::default()).unwrap();
     assert!(r.ok, "{:?}", r.issues);
     assert_eq!(r.rev, 2);
 }

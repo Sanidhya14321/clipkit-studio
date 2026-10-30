@@ -37,7 +37,7 @@ use crate::session::look::{LookApplyRequest, LookApplyResult};
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::render::{RenderCheckRequest, RenderCheckResult};
 use crate::session::sound::{SoundCue, SoundPlan};
-use crate::session::verify::{VerifyIssue, VerifyResult};
+use crate::session::verify::{VerifyIssue, VerifyRequest, VerifyResult};
 use crate::session::voice::{
     CaptionsRequest, CaptionsResult, SlotCaption, SlotRequest, SlotSummary, TakeResult,
     VoiceCloneRequest, VoiceCloneResult, VoiceModeRequest, VoiceModeResult, VoiceScriptRequest,
@@ -196,8 +196,12 @@ impl Ops {
 
     /// `verify`: the quality gates of spec 4.3 that apply to a generated video. Issues past the
     /// cap are counted in `omitted`.
-    pub fn verify(&self) -> CkResult<VerifyResult> {
-        let reply = self.client.get("/api/verify", &[])?;
+    pub fn verify(&self, req: &VerifyRequest) -> CkResult<VerifyResult> {
+        let reply = if req.critic {
+            self.client.post_slow("/api/verify", req)?
+        } else {
+            self.client.get("/api/verify", &[])?
+        };
         trimmed("verify", caps::VERIFY, reply)
     }
 

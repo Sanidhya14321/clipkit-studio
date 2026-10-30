@@ -1308,12 +1308,18 @@ expression: specs()
   {
     "name": "verify",
     "command": "ck verify",
-    "description": "Run the quality gates (schema, gaps, overlaps, duration, layout, contrast, fonts, motion, reuse, provenance, placeholders). Returns passed and failed gates and the issues; fix failures before the next pass.",
+    "description": "Run the quality gates (schema, gaps, overlaps, duration, layout, contrast, fonts, motion, reuse, provenance, placeholders). Returns passed and failed gates and the issues; fix failures before the next pass. critic=true also renders the contact sheet for the clipkit-critic subagent (once per pass, when gates are uncertain).",
     "cap": 4096,
     "inputSchema": {
       "additionalProperties": false,
-      "type": "object",
-      "description": "`status` takes no input."
+      "properties": {
+        "critic": {
+          "description": "Also render the critic's contact sheet (6 low-resolution frames at cuts and motion\npeaks). Once per pass, when the gates are uncertain.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "type": "object"
     }
   },
   {

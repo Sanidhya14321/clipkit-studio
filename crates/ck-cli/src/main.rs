@@ -30,6 +30,7 @@ use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::render::RenderCheckRequest;
+use ck_server::session::verify::VerifyRequest;
 use ck_server::session::voice::{
     CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest,
 };
@@ -175,7 +176,7 @@ fn run(cli: Cli) -> CkResult<()> {
             print(&ops()?.recipe_apply(&req)?)
         }
         Command::Layout(LayoutCommand::Check) => print(&ops()?.layout_check()?),
-        Command::Verify => print(&ops()?.verify()?),
+        Command::Verify { critic } => print(&ops()?.verify(&VerifyRequest { critic })?),
         Command::Sound(SoundCommand::Plan) => print(&ops()?.sound_plan()?),
         Command::Import { path } => {
             let path = std::path::absolute(&path)

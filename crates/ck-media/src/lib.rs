@@ -17,6 +17,6 @@ pub use export::{
 pub use import::{
     AUDIO_SAMPLE_RATE, CachePaths, PROXY_MAX_HEIGHT, extract_audio, hash_file, make_proxy,
 };
-pub use mix::{AudioClip, mix_audio, mux};
+pub use mix::{AudioClip, contact_sheet, mix_audio, mux};
 pub use probe::{AudioStream, MediaInfo, VideoStream, parse_probe, probe};
 pub use take::{Fit, TakeInfo, prepare_take};

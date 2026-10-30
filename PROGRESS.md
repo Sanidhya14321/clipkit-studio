@@ -53,6 +53,19 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
+## Phase 10: stretch (2026-10-30, in progress)
+
+Spec: 12 (Phase 10), 04 (critic pass, storyboard checkpoint), 06 (clipkit-critic subagent, storyboard and reference commands), 08 (8.1 reference, 8.8 taste profile, 8.6 OTIO and SRT). Owner asked to continue (2026-10-30); the cut line drops this phase first, so each step is small and verified.
+
+Steps:
+- [x] 1. Critic pass: `ck critic sheet` (6 low-resolution frames at cuts and motion peaks, stitched into one contact sheet) and the plugin's read-only `clipkit-critic` subagent (sub-agent roles).
+- [ ] 2. Reference match: `ck reference analyze <video>` (statistics only: duration, aspect, shot lengths, cuts per 15 s, loudness) with suggested brief fields sourced `reference`.
+- [ ] 3. Taste profile: local editable `profile.json` learned from what the user picks; fills brief defaults (source `profile`), never overrides explicit choices; `ck profile show|clear|disable`.
+- [ ] 4. Storyboard checkpoint: `ck storyboard get` (a still per scene) and the human confirm.
+- [ ] 5. OpenTimelineIO and SRT export.
+- [ ] 6. More agents and the Demucs sidecar: verify formats and runtime; build only what can be verified.
+- [ ] 7. Proof, evidence.
+
 ## Phase 9: polish and proof (2026-10-30, done; sound design, critic pass, bench results carried)
 
 Spec: 02 (2.3), 08 (8.6), 10, 14 (14.5, 14.7). Owner approved Remotion rendering (2026-10-30). Proof: a generated project exports to MP4 through the render worker; the evaluator scores outputs; trace, replay and bisect work; the demo resets in under 10 s. Order follows the cut line (branches and variants last).

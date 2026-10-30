@@ -175,5 +175,64 @@ pub fn mux(
     ffmpeg(&args)
 }
 
+/// Tiles `stills` (scaled to `width` px wide) into one image, `cols` per row. A short last row
+/// repeats the last frame so the grid is full.
+pub fn contact_sheet(
+    stills: &[PathBuf],
+    width: u32,
+    cols: usize,
+    out: &Path,
+) -> Result<(), CkError> {
+    check_path(out)?;
+    let Some(last) = stills.last() else {
+        return Err(CkError::new(
+            ErrorCode::Request,
+            "no frames for the contact sheet",
+        ));
+    };
+    let cols = cols.max(1);
+    let cells = stills.len().div_ceil(cols) * cols;
+    let inputs: Vec<&PathBuf> = (0..cells).map(|i| stills.get(i).unwrap_or(last)).collect();
+    let mut args: Vec<&OsStr> = Vec::new();
+    for p in &inputs {
+        check_path(p)?;
+        args.push(OsStr::new("-i"));
+        args.push(p.as_os_str());
+    }
+    let mut g = String::new();
+    for i in 0..cells {
+        let _ = write!(g, "[{i}:v]scale={width}:-2[s{i}];");
+    }
+    for i in 0..cells {
+        let _ = write!(g, "[s{i}]");
+    }
+    let layout: Vec<String> = (0..cells)
+        .map(|i| {
+            let offset = |n: usize, unit: &str| {
+                if n == 0 {
+                    "0".to_owned()
+                } else {
+                    vec![unit; n].join("+")
+                }
+            };
+            format!("{}_{}", offset(i % cols, "w0"), offset(i / cols, "h0"))
+        })
+        .collect();
+    let _ = write!(g, "xstack=inputs={cells}:layout={}[out]", layout.join("|"));
+    args.extend(
+        [
+            "-filter_complex",
+            g.as_str(),
+            "-map",
+            "[out]",
+            "-frames:v",
+            "1",
+        ]
+        .map(OsStr::new),
+    );
+    args.push(out.as_os_str());
+    ffmpeg(&args)
+}
+
 #[cfg(test)]
 mod tests;

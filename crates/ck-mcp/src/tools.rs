@@ -41,6 +41,7 @@ use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
 use ck_server::session::recipe::RecipeApplyRequest;
 use ck_server::session::render::RenderCheckRequest;
+use ck_server::session::verify::VerifyRequest;
 use ck_server::session::voice::{
     CaptionsRequest, SlotRequest, VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
 };
@@ -333,12 +334,13 @@ pub fn specs() -> Vec<ToolSpec> {
              size, cut text, at most 3 blocks) for the brief's platform. Returns the issues.",
             caps::LAYOUT_CHECK,
         ),
-        spec::<StatusArgs>(
+        spec::<VerifyRequest>(
             "verify",
             "ck verify",
             "Run the quality gates (schema, gaps, overlaps, duration, layout, contrast, fonts, \
              motion, reuse, provenance, placeholders). Returns passed and failed gates and the \
-             issues; fix failures before the next pass.",
+             issues; fix failures before the next pass. critic=true also renders the contact \
+             sheet for the clipkit-critic subagent (once per pass, when gates are uncertain).",
             caps::VERIFY,
         ),
         spec::<StatusArgs>(
@@ -773,10 +775,7 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
             let StatusArgs {} = parse(args)?;
             json(&ops.layout_check()?)
         }
-        "verify" => {
-            let StatusArgs {} = parse(args)?;
-            json(&ops.verify()?)
-        }
+        "verify" => json(&ops.verify(&parse::<VerifyRequest>(args)?)?),
         "sound_plan" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.sound_plan()?)

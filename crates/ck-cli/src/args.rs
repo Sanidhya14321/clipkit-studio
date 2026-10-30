@@ -82,7 +82,11 @@ pub enum Command {
     #[command(subcommand)]
     Layout(LayoutCommand),
     /// Run the quality gates (schema, timing, layout, contrast, motion, provenance).
-    Verify,
+    Verify {
+        /// Also render the critic's contact sheet (6 frames at cuts and motion peaks).
+        #[arg(long)]
+        critic: bool,
+    },
     /// Plan sound cues: whooshes, hits, risers, room tone, ducking.
     #[command(subcommand)]
     Sound(SoundCommand),

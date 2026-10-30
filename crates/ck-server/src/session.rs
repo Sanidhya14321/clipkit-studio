@@ -110,7 +110,11 @@ pub struct Session {
 impl Session {
     /// Load the project stored under `root` (normally `<workdir>/.clipkit`).
     pub fn open(root: &Path, clock: Arc<dyn Clock>) -> CkResult<Self> {
-        let store = Store::new(root);
+        // Absolute, so paths handed to the render worker (which runs in its own folder) and
+        // to ffmpeg never depend on the current directory.
+        let root = std::path::absolute(root)
+            .map_err(|e| CkError::new(ErrorCode::Storage, format!("{}: {e}", root.display())))?;
+        let store = Store::new(&root);
         let doc = store.load()?;
         let (events, _) = broadcast::channel(BUS_CAPACITY);
         Ok(Self {

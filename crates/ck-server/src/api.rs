@@ -31,6 +31,7 @@ use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::render::RenderCheckRequest;
+use crate::session::verify::VerifyRequest;
 use crate::session::voice::{
     ActiveTakeRequest, CaptionsRequest, ConsentRequest, MAX_RECORDING, SlotRequest, TakeQuery,
     VoiceCloneRequest, VoiceModeRequest, VoiceScriptRequest,
@@ -109,7 +110,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
         .route("/api/recipe/apply", post(recipe_apply))
         .route("/api/layout/check", get(layout_check))
         .route("/api/sound/plan", get(sound_plan))
-        .route("/api/verify", get(verify))
+        .route("/api/verify", get(verify).post(verify_critic))
         .route("/api/handoff", post(handoff))
         .route("/api/wait", get(wait))
         .route("/ws", get(ws::upgrade))
@@ -205,7 +206,16 @@ async fn sound_plan(State(s): State<Arc<Session>>) -> ApiResult {
 }
 
 async fn verify(State(s): State<Arc<Session>>) -> ApiResult {
-    blocking(s, |s| s.verify()).await
+    blocking(s, |s| s.verify(&VerifyRequest::default())).await
+}
+
+/// `verify --critic`: the gates plus the critic's contact sheet (renders, so a POST).
+async fn verify_critic(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<VerifyRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.verify(&req)).await
 }
 
 async fn import(

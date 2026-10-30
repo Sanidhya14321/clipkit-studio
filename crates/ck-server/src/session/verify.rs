@@ -78,6 +78,19 @@ pub struct VerifyResult {
     /// Issues left out of `issues` to keep the reply under its size cap.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub omitted: usize,
+    /// With `critic`: the contact sheet for the clipkit-critic subagent (spec 4.3), relative to
+    /// the project folder.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub contact_sheet: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct VerifyRequest {
+    /// Also render the critic's contact sheet (6 low-resolution frames at cuts and motion
+    /// peaks). Once per pass, when the gates are uncertain.
+    #[serde(default)]
+    pub critic: bool,
 }
 
 struct Issues(Vec<VerifyIssue>);
@@ -528,17 +541,22 @@ pub fn verify(project: &Project, look: &Look) -> VerifyResult {
         failed: failed.into_iter().map(str::to_owned).collect(),
         issues,
         omitted: 0,
+        contact_sheet: None,
     }
 }
 
 impl Session {
-    /// `verify`: read-only.
-    pub fn verify(&self) -> CkResult<VerifyResult> {
+    /// `verify`: read-only; with `critic`, also the contact sheet.
+    pub fn verify(&self, req: &VerifyRequest) -> CkResult<VerifyResult> {
         let project = self.project()?;
         let look = library::look_get(&library::IdRequest {
             id: super::look::project_look_id(&project),
         })?;
-        Ok(verify(&project, &look))
+        let mut result = verify(&project, &look);
+        if req.critic {
+            result.contact_sheet = Some(self.contact_sheet(&project)?);
+        }
+        Ok(result)
     }
 }
 

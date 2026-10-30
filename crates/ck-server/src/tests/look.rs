@@ -75,7 +75,7 @@ fn apply_rethemes_with_one_write_and_previews_the_impact() {
     )
     .unwrap();
     assert_eq!(ops.recipe_apply(&hook()).unwrap().look, "cinematic");
-    assert_eq!(ops.verify().unwrap().look, "cinematic");
+    assert_eq!(ops.verify(&Default::default()).unwrap().look, "cinematic");
 }
 
 #[test]

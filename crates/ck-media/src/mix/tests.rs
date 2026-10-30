@@ -63,3 +63,28 @@ fn mix_and_mux_fixture_media() {
     let l = measure_loudness(&out).unwrap();
     assert!((l.integrated - TARGET.integrated).abs() < 2.0, "{l:?}");
 }
+
+#[test]
+fn a_contact_sheet_tiles_frames_in_a_grid() {
+    let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/generated/images");
+    if !dir.join("square.png").is_file() {
+        eprintln!("skipped: run `just fixtures` first");
+        return;
+    }
+    let tmp = tempfile::tempdir().unwrap();
+    let stills: Vec<PathBuf> = ["square", "square", "landscape", "square", "square"]
+        .iter()
+        .map(|n| dir.join(format!("{n}.png")))
+        .collect();
+    let out = tmp.path().join("sheet.png");
+    // Five frames in rows of three: the sixth cell repeats the last frame.
+    let square: Vec<PathBuf> = stills
+        .iter()
+        .filter(|p| p.ends_with("square.png"))
+        .cloned()
+        .collect();
+    contact_sheet(&square, 100, 3, &out).unwrap();
+    let v = probe(&out).unwrap().video.unwrap();
+    assert_eq!((v.width, v.height), (300, 200));
+    assert!(contact_sheet(&[], 100, 3, &out).is_err());
+}
