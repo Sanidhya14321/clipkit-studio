@@ -1389,6 +1389,17 @@ expression: specs()
     }
   },
   {
+    "name": "doctor",
+    "command": "ck doctor",
+    "description": "Check this machine: tools, render worker and keys set (values never shown), with a fix line for each problem.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "`status` takes no input."
+    }
+  },
+  {
     "name": "content_map",
     "command": "ck content map",
     "description": "Compact content map of a transcribed source: numbered phrases, hook, fillers, retakes and pauses. Read this, not the transcript; phrase i spans anchors i to i+1.",

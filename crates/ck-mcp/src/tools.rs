@@ -364,6 +364,13 @@ pub fn specs() -> Vec<ToolSpec> {
              voice. Read-only; returns timed cues.",
             caps::SOUND_PLAN,
         ),
+        spec::<StatusArgs>(
+            "doctor",
+            "ck doctor",
+            "Check this machine: tools, render worker and keys set (values never shown), with \
+             a fix line for each problem.",
+            ck_server::doctor::caps::DOCTOR,
+        ),
         spec::<SourceRequest>(
             "content_map",
             "ck content map",
@@ -909,6 +916,12 @@ pub fn call(ops: &Ops, name: &str, args: Value) -> CkResult<String> {
         "sound_plan" => {
             let StatusArgs {} = parse(args)?;
             json(&ops.sound_plan()?)
+        }
+        "doctor" => {
+            let StatusArgs {} = parse(args)?;
+            json(&ck_server::doctor::run(
+                &std::env::current_dir().unwrap_or_default(),
+            ))
         }
         "content_map" => json(&ops.content_map(&parse(args)?)?),
         "grid_build" => json(&ops.grid_build(&parse(args)?)?),

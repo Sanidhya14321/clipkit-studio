@@ -1,5 +1,9 @@
 # Progress
 
+## Owner-only (docs/RELEASE_READY.md)
+- [ ] Fish Audio key; demo footage and voice sample; demo recording
+- [ ] Live Claude Code and Codex sessions; license decisions for I18
+
 ## UI handoff (2026-10-30)
 1. Done: owner-approved workflow integration on `codex/ui-pro`, isolated at `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`; functional timeline/inspector, import/source/recipes, recording, review/export and asset-use fixes. Main is based at committed `2d0cc96`; no main-checkout edits or push.
 2. Proof: 26 real-server browser flows repeated five times (130/130), 8 frontend contracts repeated five times (40/40), build and 20 current workspace screenshots; Rust/hook/frontend check results are in `docs/updates/ui-workflow-evidence/`. See VERIFICATION.md for exact counts.
@@ -33,6 +37,8 @@ STATUS: IN PROGRESS (Update 5 and 6 queue; engine decision still open)
 PHASE: U5-3
 
 ## Handoff (latest)
+Release-ready: step 1 audit in docs/AUDIT.md section 7. Step 2 security workflow added (never run yet); nightly, cross-platform and agent-e2e not built. `ck doctor` built.
+Next: confirm CI green, tag v0.5.0, then steps 6 to 9 gaps: loop range, draft review, export cancel, `ck repro`, Windows and npm, community files.
 `codex/ui-pro` is merged into main (timeline drag, trim and split; workspace shell; Update 6 snapshot with audio packs). Its last commit is an unreviewed WIP snapshot. Export queue built (`ck export --queue`, `ck jobs`).
 E2E pipeline (docs/E2E_PIPELINE.md): steps 1 to 3 verified; step 4 core built (`ck content map`, `ck grid build`, `ck plan` get, set, candidates and expand; ducking). Not built: punch-ins and transitions are recorded only, per-change draft accept, timeline drag, trim, split and loop, export queue, generated plus kept speech in one plan. Step 7 needs the owner. Step 9 lives on `codex/ui-pro` with uncommitted work.
 Toolchain: `~/.cache/clipkit-ui-tools` (Rust, just, ffmpeg 6) and the Codex runtime Node; pnpm absent, so `just check` cannot finish its studio part here.

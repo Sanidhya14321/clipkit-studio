@@ -205,6 +205,8 @@ pub enum Command {
     /// Pipeline steps: detect the mode, finish the current step.
     #[command(subcommand)]
     Pipeline(PipelineCommand),
+    /// Check this machine; exits 1 with a fix for each problem.
+    Doctor,
     /// Export jobs.
     Jobs,
     /// Export to MP4.

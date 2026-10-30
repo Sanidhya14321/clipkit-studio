@@ -149,7 +149,7 @@ Checked on main after the `codex/ui-pro` merge: 402 Rust tests, 41 hooks, studio
 | I2 | B | Fixed | `pipeline_proof`, `voice_before_the_brief_is_refused` |
 | I3 | B | Fixed | `export_refuses_failing_gates_and_a_reframing_preset` |
 | I4 | B | Fixed | `forced_export_records_the_reason_and_silence_fails_loudness` |
-| I5 | B | Partly fixed | `docs_agree` passes, but README and spec expectations need `ck doctor`, which does not exist |
+| I5 | B | Fixed | `docs_agree`; `ck doctor` built, `doctor_names_a_fix_and_never_shows_a_key` |
 | I6 | B | Partly fixed, owner | `plugin/.mcp.json` present; Codex and Cursor formats unconfirmed against their docs |
 | I7 | H | Mostly fixed | Plan core built; punch-ins, rendered transitions and mixed plans missing |
 | I8 | H | Partly fixed | Move, trim and split merged; loop range and draft review missing |

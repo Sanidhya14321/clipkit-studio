@@ -534,6 +534,14 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             print(&ops()?.export_timeline(&TimelineExportRequest { format, out })?)
         }
+        Command::Doctor => {
+            let found = ck_server::doctor::run(&std::env::current_dir().unwrap_or_default());
+            print(&found)?;
+            if !found.ok {
+                std::process::exit(1);
+            }
+            Ok(())
+        }
         Command::Jobs => print(&ops()?.export_jobs()?),
         Command::Pipeline(PipelineCommand::Detect) => print(&ops()?.pipeline_detect()?),
         Command::Pipeline(PipelineCommand::Next) => print(&ops()?.pipeline_next()?),

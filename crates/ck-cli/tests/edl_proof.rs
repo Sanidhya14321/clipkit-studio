@@ -181,3 +181,20 @@ fn queued_export_returns_at_once_and_reports_its_end() {
     }
     panic!("job never finished");
 }
+
+#[test]
+fn doctor_names_a_fix_and_never_shows_a_key() {
+    let dir = tempfile::tempdir().unwrap();
+    let out = Command::new(env!("CARGO_BIN_EXE_ck"))
+        .arg("doctor")
+        .env("PATH", dir.path())
+        .env("FISH_AUDIO_API_KEY", "sentinel-value")
+        .output()
+        .unwrap();
+    assert_eq!(out.status.code(), Some(1));
+    let text = String::from_utf8(out.stdout).unwrap();
+    assert!(!text.contains("sentinel-value"), "{text}");
+    let v: Value = serde_json::from_str(&text).unwrap();
+    assert_eq!(v["checks"][0]["name"], "ffmpeg");
+    assert!(v["checks"][0]["fix"].as_str().unwrap().contains("Install"));
+}
