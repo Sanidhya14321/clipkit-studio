@@ -199,12 +199,13 @@ fn refuse(id: &str, why: &str) -> CkError {
 fn inside(rel: &str) -> CkResult<PathBuf> {
     let p = Path::new(rel);
     let ok = !rel.is_empty()
+        && p.starts_with("exports")
         && p.components().all(|c| matches!(c, Component::Normal(_)))
         && p.extension().is_some_and(|e| e == "mp4");
     if !ok {
         return Err(CkError::new(
             ErrorCode::Request,
-            format!("export path {rel:?} must be a relative .mp4 path inside the project"),
+            format!("export path {rel:?} must be a relative .mp4 path inside exports/"),
         ));
     }
     Ok(p.to_path_buf())
@@ -261,7 +262,7 @@ impl Session {
         }
         let fast = project
             .items()
-            .all(|i| matches!(i.body, ItemBody::Footage { .. }));
+            .all(|i| matches!(i.body, ItemBody::Footage { volume, .. } if volume == 1.0));
         let path = if fast {
             self.export_fast(&project, &out, (width, height))?;
             ExportPath::Fast
@@ -368,8 +369,18 @@ impl Session {
                     src_in,
                     src_out,
                     at,
-                    ..
+                    speed,
+                    volume,
                 } => {
+                    if (*speed - 1.0).abs() > 1e-6 {
+                        return Err(CkError::new(
+                            ErrorCode::Request,
+                            format!(
+                                "layer {:?} plays at speed {speed}; export needs speed 1",
+                                item.id
+                            ),
+                        ));
+                    }
                     let Some(s) = project.sources.iter().find(|s| &s.id == src) else {
                         continue;
                     };
@@ -379,7 +390,7 @@ impl Session {
                             src_in: *src_in,
                             src_out: *src_out,
                             at: *at,
-                            gain: 1.0,
+                            gain: *volume,
                         });
                     }
                 }

@@ -167,3 +167,27 @@ fn brief_rejects_unknown_fields_and_get_shows_the_schema() {
         .find(|f| f["name"] == "look");
     assert_eq!(look.unwrap()["default"], "clean-product", "{got}");
 }
+
+#[test]
+fn export_cannot_write_over_project_media() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _s = Studio::start(d);
+    raw(d, &["recipe", "apply", &scene(d, "a.json", 0.0, 3.0)]);
+    let out = raw(d, &["export", "--out", "footage.mp4"]);
+    assert_eq!(out["code"], "E_REQUEST", "{out}");
+    assert!(
+        out["message"].as_str().unwrap().contains("exports/"),
+        "{out}"
+    );
+}
+
+#[test]
+fn voice_before_the_brief_is_refused() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _s = Studio::start_with(d, &[]);
+    raw(d, &["pipeline", "detect"]);
+    let v = input(d, "v.json", &json!({ "lines": [{ "text": "Hello" }] }));
+    assert_eq!(raw(d, &["voice", "script", &v])["code"], "E_STAGE");
+}

@@ -172,6 +172,7 @@ impl Session {
             stop_requested: false,
         });
         self.persist(&mut doc)?;
+        let _ = std::fs::remove_file(self.store.root().join(ck_assets::retrieve::LEDGER_FILE));
         let project = doc.project();
         self.publish(Event::Locks {
             locks: project.locks.clone(),

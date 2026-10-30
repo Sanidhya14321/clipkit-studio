@@ -378,7 +378,7 @@ impl Session {
 
     pub fn patch(&self, req: &PatchRequest) -> CkResult<PatchResult> {
         if req.author == Author::Agent {
-            return self.with_retry("patch", req, || self.patch_inner(req));
+            return self.with_retry("patch", &req.ops, || self.patch_inner(req));
         }
         self.patch_inner(req)
     }
@@ -461,6 +461,17 @@ impl Session {
     /// agent briefly takes the locks the write touches unless it holds them, so a human
     /// mid-edit refuses the write.
     fn commit_agent(
+        &self,
+        doc: &mut MutexGuard<'_, Document>,
+        ops: serde_json::Value,
+        label: String,
+    ) -> CkResult<Revision> {
+        self.gate_agent_write(doc.project())?;
+        self.commit_as(doc, Holder::Agent, ops, label, &[])
+    }
+
+    /// An agent write that gathers evidence for the brief, so it is allowed before it settles.
+    fn commit_evidence(
         &self,
         doc: &mut MutexGuard<'_, Document>,
         ops: serde_json::Value,

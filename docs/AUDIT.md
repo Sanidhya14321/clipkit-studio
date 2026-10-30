@@ -88,3 +88,34 @@ Measured, then changed only what the numbers showed. Details and numbers in VERI
 | Patch, 2000 layers (release) | 87.9 ms | 66.1 ms |
 | Release binary | 26.9 MB | 16.8 MB |
 | Asset search, 62 cards | about 10 ms | unchanged (not worth an index on disk) |
+
+## 5. Reviewer findings, phases 5 to 10 (2026-10-30)
+
+rust-reviewer (R) and spec-checker (S), first run. Found by reading code; each fixed item has its test or a passing suite, and R10-class items were not reproduced.
+
+### Fixed in the sprint
+
+| Id | Severity | Finding |
+| --- | --- | --- |
+| R1 | guardrail, high | `export --out` could overwrite source media; output now stays in `exports/` |
+| R2 | wrong-result, high | Empty transcript cut the whole clip; no words now gives no cuts, and a cut set keeping nothing is refused |
+| R3, S4, S5 | wrong-result, high | Footage volume ignored in export, speed out of sync; volume now applies, speed other than 1 is refused on the render path |
+| R4 | guardrail | Clone stayed usable after consent withdrawal |
+| R5 | guardrail | Voice, derive and other agent writes skipped the stage gate; import, transcribe and reference stay open as evidence |
+| R6 | guardrail | Retry gate evaded by changing the label or base rev |
+| R7 | wrong-result | Recut reset volume and speed |
+| S1 | guardrail | Agent could swap a consented take's file |
+| S2, S3 | guardrail | Retrieval budget never refused, and reset on every revision; now refuses and lasts one turn (cleared by handoff) |
+
+### Open
+
+| Id | Severity | Finding |
+| --- | --- | --- |
+| R11 | wrong-result, low | Second split of a layer refused |
+| S6 | wrong-result, medium | Comment resolve lists touched layers, no before and after |
+| R8, R9, R10 | robustness, medium | Loudness pipe cap on long audio; worker has no timeout or stderr; `/media` buffers whole files |
+| R12 to R16 | robustness, low | Eval aborts on ffmpeg errors; mix accepts empty clips; fixed temp names; take id race; hub errors swallowed |
+| S7 to S9 | missing feature | Single-revision revert; branch merge and compare; time in history lines |
+| S10 to S12 | missing feature | Derived components not type-checked or rendered once; root-only instrumentation; profile learns brief picks only |
+| S13 to S16 | missing feature | Fast path footage only; no aspect variants (presets of another shape are now refused); first audio track only; wavesurfer, opentype, culori absent |
+| S17, S18 | minor | Retake detection adjacent only; send bundle includes Working comments |

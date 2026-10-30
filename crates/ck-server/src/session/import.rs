@@ -130,7 +130,7 @@ impl Session {
             }
         }
         let ops = serde_json::Value::Array(ops);
-        let rev = self.commit_agent(&mut doc, ops, format!("import: {}", source.id))?;
+        let rev = self.commit_evidence(&mut doc, ops, format!("import: {}", source.id))?;
         Ok(ImportResult {
             rev: rev.rev,
             added: true,

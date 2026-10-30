@@ -160,7 +160,7 @@ impl Session {
             "path": format!("/sources/{index}/transcriptPath"),
             "value": stored,
         }]);
-        let rev = self.commit_agent(&mut doc, ops, format!("transcribe: {}", src.id))?;
+        let rev = self.commit_evidence(&mut doc, ops, format!("transcribe: {}", src.id))?;
         Ok(TranscribeResult {
             rev: rev.rev,
             source: src.id,
@@ -282,6 +282,12 @@ impl Session {
         label: String,
     ) -> CkResult<CutApplyResult> {
         let kept = kept_ranges(cuts, duration);
+        if kept.is_empty() {
+            return Err(
+                CkError::new(ErrorCode::Request, "these cuts remove the whole source")
+                    .with_hint("Choose fewer cuts."),
+            );
+        }
         let mut doc = self.doc()?;
         if holder == Holder::Agent {
             self.gate_agent_write(doc.project())?;
@@ -332,6 +338,15 @@ pub fn footage_ops(
         .map(item_at)
         .fold(f64::INFINITY, f64::min);
     let mut at = if start_at.is_finite() { start_at } else { 0.0 };
+    // A recut keeps the mix the source already had.
+    let (speed, volume) = items
+        .iter()
+        .filter(|i| ours(i))
+        .find_map(|i| match i.body {
+            ItemBody::Footage { speed, volume, .. } => Some((speed, volume)),
+            _ => None,
+        })
+        .unwrap_or((1.0, 1.0));
     items.retain(|i| !ours(i));
     let mut segments = Vec::new();
     for (n, (s, e)) in kept.iter().enumerate() {
@@ -350,8 +365,8 @@ pub fn footage_ops(
                 src_in: round3(*s),
                 src_out: round3(*e),
                 at: round3(at),
-                speed: 1.0,
-                volume: 1.0,
+                speed,
+                volume,
             },
         });
         at += e - s;

@@ -360,6 +360,12 @@ impl Session {
         };
         let voice_ref = match slot.mode {
             VoiceMode::Ai => None,
+            VoiceMode::Cloned if !slot.takes.iter().any(|t| t.consented) => {
+                return Err(CkError::new(
+                    ErrorCode::Request,
+                    format!("slot {:?} has no consented take to clone from", slot.id),
+                ));
+            }
             VoiceMode::Cloned => Some(slot.voice_ref.clone().ok_or_else(|| {
                 CkError::new(
                     ErrorCode::Request,
@@ -558,9 +564,19 @@ impl Session {
             });
         }
         // `add` sets the field whether or not it is stored (false is left out of the JSON).
-        let ops = json!([{ "op": "add",
+        let mut ops = vec![json!({ "op": "add",
                            "path": format!("/voiceSlots/{i}/takes/{t}/consented"),
-                           "value": req.consent }]);
+                           "value": req.consent })];
+        // Withdrawal also ends the clone made from that consent.
+        if !req.consent && slot.mode == VoiceMode::Cloned {
+            ops.push(
+                json!({ "op": "replace", "path": format!("/voiceSlots/{i}/mode"), "value": "ai" }),
+            );
+            if slot.voice_ref.is_some() {
+                ops.push(json!({ "op": "remove", "path": format!("/voiceSlots/{i}/voiceRef") }));
+            }
+        }
+        let ops = serde_json::Value::Array(ops);
         let label = format!("consent: {} {} {}", req.slot, req.take, req.consent);
         let rev = self.commit_as(&mut doc, ck_core::model::Holder::Human, ops, label, &[])?;
         Ok(VoiceModeResult {

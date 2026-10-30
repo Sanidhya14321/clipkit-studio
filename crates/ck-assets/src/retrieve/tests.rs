@@ -102,13 +102,18 @@ fn the_budget_gate_limits_cards_and_full_source_per_decision() {
         ErrorCode::Budget
     );
 
-    // A new revision is a new decision: the gate resets.
+    // A revision does not reset the gate; only handoff, which clears the ledger, does.
     std::fs::write(
         p.path().join(".clipkit/project.json"),
         serde_json::json!({ "rev": 4, "brief": {} }).to_string(),
     )
     .unwrap();
     let r2 = Retrieval::new(r.hub.clone(), p.path());
+    let refused = r2.card(&AssetIdRequest {
+        id: "pack-mit/glow-title".into(),
+    });
+    assert_eq!(refused.unwrap_err().code, ErrorCode::Budget);
+    std::fs::remove_file(p.path().join(".clipkit").join(LEDGER_FILE)).unwrap();
     let again = r2
         .card(&AssetIdRequest {
             id: "pack-mit/glow-title".into(),

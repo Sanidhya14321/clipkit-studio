@@ -176,7 +176,7 @@ impl Session {
                 .collect();
             if !ops.is_empty() {
                 rev = self
-                    .commit_agent(
+                    .commit_evidence(
                         &mut doc,
                         Value::Array(ops),
                         "reference: brief fields".into(),

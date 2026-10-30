@@ -171,14 +171,8 @@ impl Retrieval {
             .and_then(|r| std::fs::read_to_string(r.join(LEDGER_FILE)).ok())
             .and_then(|t| serde_json::from_str(&t).ok())
             .unwrap_or_default();
-        Ok(if stored.rev == rev {
-            stored
-        } else {
-            Ledger {
-                rev,
-                ..Ledger::default()
-            }
-        })
+        // The ledger lives for one agent turn: handoff clears it (spec 7.3), revisions do not.
+        Ok(Ledger { rev, ..stored })
     }
 
     fn save(&self, ledger: &Ledger) -> CkResult<()> {
@@ -192,6 +186,13 @@ impl Retrieval {
 
     /// Records `bytes` of output and returns the budget after it.
     fn spend(&self, ledger: &mut Ledger, bytes: usize) -> CkResult<Budget> {
+        if ledger.tokens >= TOKEN_TARGET {
+            return Err(CkError::new(
+                ErrorCode::Budget,
+                format!("retrieval budget of {TOKEN_TARGET} tokens is spent for this turn"),
+            )
+            .with_hint("Work from what you have, or hand off to start a new turn."));
+        }
         ledger.tokens += (bytes as u64).div_ceil(BYTES_PER_TOKEN);
         self.save(ledger)?;
         Ok(Budget {

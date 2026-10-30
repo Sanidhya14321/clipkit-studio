@@ -149,3 +149,9 @@ fn matches_fixture_ground_truth() {
         [r[0].as_u64().unwrap(), r[1].as_u64().unwrap()]
     );
 }
+
+#[test]
+fn no_words_is_no_evidence_of_silence() {
+    let t = Transcript::default();
+    assert!(suggest_cuts(&t, 60.0).is_empty());
+}

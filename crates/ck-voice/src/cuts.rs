@@ -110,13 +110,16 @@ pub fn suggest_cuts(t: &Transcript, duration: f64) -> Vec<CutCandidate> {
     }
 
     // Silences: gaps between words (and before the first and after the last), keeping a pad.
+    // No words means no speech evidence (music, failed STT), not one long silence.
     let mut edges: Vec<(f64, f64)> = Vec::new();
     let mut prev = 0.0;
     for word in w {
         edges.push((prev, word.start));
         prev = word.end;
     }
-    edges.push((prev, duration.max(prev)));
+    if !w.is_empty() {
+        edges.push((prev, duration.max(prev)));
+    }
     for (n, (a, b)) in edges.into_iter().enumerate() {
         if b - a >= SILENCE_MIN.max(PHRASE_GAP) {
             let start = if n == 0 { a } else { a + SILENCE_PAD };

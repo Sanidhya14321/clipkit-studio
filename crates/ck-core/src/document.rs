@@ -219,17 +219,21 @@ impl Document {
 mod tests;
 
 /// Only a human gives or withdraws cloning consent (spec 8.3): an agent patch that changes any
-/// take's `consented` flag, or adds a take that carries it, is refused.
+/// take's `consented` flag, or adds a take that carries it, is refused. So is one that changes
+/// which file a recorded take names, or marks a take recorded, since cloning reads that file.
 fn consent_unchanged(before: &Project, after: &Project) -> CkResult<()> {
-    let consents = |p: &Project| -> Vec<(String, String)> {
-        let mut v: Vec<(String, String)> = p
+    let consents = |p: &Project| -> Vec<(String, String, String)> {
+        let mut v: Vec<(String, String, String)> = p
             .voice_slots
             .iter()
             .flat_map(|s| {
                 s.takes
                     .iter()
-                    .filter(|t| t.consented)
-                    .map(|t| (s.id.clone(), t.id.clone()))
+                    .filter(|t| t.consented || t.recorded)
+                    .map(|t| {
+                        let flags = format!("{}|{}|{}", t.consented, t.recorded, t.path);
+                        (s.id.clone(), t.id.clone(), flags)
+                    })
             })
             .collect();
         v.sort();
