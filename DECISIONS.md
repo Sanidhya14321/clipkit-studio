@@ -581,3 +581,8 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 ## Phase 9 step 4: evaluator (2026-10-30)
 - `ck eval` judges only the file plus stated expectations, so every benchmark arm is scored the same way. Thresholds (choices): duration ±0.5 s, aspect within 1%, loudness ±1 LU of -14 LUFS with peak at most -0.5 dBTP, clipping at 0 dBTP, black stretches under 1 s, frozen stretches under 4 s (title holds are shorter), cuts within 0.1 s.
 - Safe areas and text size need OCR (tesseract.js, license unverified per spec 14): reported as not measured, never estimated. Brief conformance beyond duration and aspect comes from expectations the bench writes from the brief.
+
+## Phase 9 step 5: replay, bisect, trace (2026-10-30)
+- All three read the `.clipkit` folder directly (no studio). Bisect checks the quality gates (`verify`) at revisions rebuilt by `content_at`, assuming once broken it stays broken, like git bisect; history older than the stored base is out of reach.
+- The trace bundle is one JSON file (shareable without archive tools): environment (ck, OS, ffmpeg and node versions), project, revision history with patches, failing gates and replay status. Redaction replaces values under keys containing token, secret, password, api key or authorization, `?token=` in URLs and the home folder path. Logs and screenshots are not in the bundle yet (spec 10.4 flight recorder).
+- `ck repro` (smallest failing project) is not built.

@@ -96,4 +96,16 @@ fn a_user_comment_becomes_a_scoped_agent_job() {
     ok(d, &["unlock"], caps::LOCK);
     let open = ok(d, &["comments", "list"], caps::COMMENTS);
     assert_eq!(open["comments"], json!([]));
+
+    // Debuggability (Phase 9): history replays to the same project; a trace bundle is written
+    // and keeps the session token out.
+    let replay = ok(d, &["replay"], ck_server::debug::caps::REPLAY);
+    assert_eq!(replay["reproduces"], true, "{replay}");
+    let trace = ok(d, &["trace", "bundle"], ck_server::debug::caps::TRACE);
+    let text = std::fs::read_to_string(d.join(trace["path"].as_str().unwrap())).unwrap();
+    let token: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(d.join(".clipkit/server.json")).unwrap())
+            .unwrap();
+    assert!(!text.contains(token["token"].as_str().unwrap()));
+    assert!(text.contains("Bolder now"));
 }

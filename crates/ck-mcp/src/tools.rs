@@ -18,6 +18,7 @@ use ck_assets::vet::{self, VetRequest};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_eval::EvalRequest;
+use ck_server::debug::{self, BisectRequest, ReplayRequest, TraceRequest};
 use ck_server::idle::DEFAULT_IDLE_SECS;
 use ck_server::launch::{self, EnsureRequest, Launcher};
 use ck_server::ops::{Ops, caps};
@@ -256,6 +257,27 @@ pub fn specs() -> Vec<ToolSpec> {
              OCR checks are listed as not measured.",
             ck_eval::caps::EVAL,
         ),
+        spec::<ReplayRequest>(
+            "replay",
+            "ck replay",
+            "Rebuild the project from its stored patches without an agent; reproduces=false \
+             means history and project disagree. `to` also rebuilds an earlier revision.",
+            debug::caps::REPLAY,
+        ),
+        spec::<BisectRequest>(
+            "bisect",
+            "ck bisect",
+            "Find the first revision where the quality gates (or one `gate`) fail, by binary \
+             search over history; returns its label and failing gates.",
+            debug::caps::BISECT,
+        ),
+        spec::<TraceRequest>(
+            "trace_bundle",
+            "ck trace bundle",
+            "Write one redacted, shareable JSON trace (environment, project, history, failing \
+             gates, replay status) under .clipkit/traces/.",
+            debug::caps::TRACE,
+        ),
         spec::<IngestRequest>(
             "sources_ingest",
             "ck sources ingest",
@@ -488,6 +510,9 @@ pub fn is_offline(name: &str) -> bool {
             | "assets_source"
             | "license_report"
             | "eval"
+            | "replay"
+            | "bisect"
+            | "trace_bundle"
     )
 }
 
@@ -575,6 +600,17 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
                 "eval",
                 ck_eval::caps::EVAL,
                 &ck_eval::evaluate(project, &r)?,
+            )
+        }),
+        "replay" => parse::<ReplayRequest>(args)
+            .and_then(|r| capped_json("replay", debug::caps::REPLAY, &debug::replay(root, &r)?)),
+        "bisect" => parse::<BisectRequest>(args)
+            .and_then(|r| capped_json("bisect", debug::caps::BISECT, &debug::bisect(root, &r)?)),
+        "trace_bundle" => parse::<TraceRequest>(args).and_then(|r| {
+            capped_json(
+                "trace bundle",
+                debug::caps::TRACE,
+                &debug::trace_bundle(root, &r)?,
             )
         }),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)

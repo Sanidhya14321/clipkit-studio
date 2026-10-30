@@ -37,7 +37,7 @@ use serde::Serialize;
 use args::{
     AssetsCommand, BriefCommand, Cli, Command, CommentsCommand, CutCommand, LayoutCommand,
     LicenseCommand, LookCommand, ModeArg, PresetArg, ProjectCommand, RecipeCommand, RenderCommand,
-    SoundCommand, SourcesCommand, TasteCommand, TranscriptCommand, VoiceCommand,
+    SoundCommand, SourcesCommand, TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -411,6 +411,18 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             let report = ck_eval::evaluate(&cli.dir, &ck_eval::EvalRequest { video, expect })?;
             capped_print("eval", ck_eval::caps::EVAL, report)
+        }
+        Command::Replay { to } => {
+            let out = ck_server::debug::replay(&root, &ck_server::debug::ReplayRequest { to })?;
+            capped_print("replay", ck_server::debug::caps::REPLAY, out)
+        }
+        Command::Bisect { gate } => {
+            let out = ck_server::debug::bisect(&root, &ck_server::debug::BisectRequest { gate })?;
+            capped_print("bisect", ck_server::debug::caps::BISECT, out)
+        }
+        Command::Trace(TraceCommand::Bundle) => {
+            let out = ck_server::debug::trace_bundle(&root, &ck_server::debug::TraceRequest {})?;
+            capped_print("trace bundle", ck_server::debug::caps::TRACE, out)
         }
         Command::Render(RenderCommand::Check { frames }) => {
             print(&ops()?.render_check(&RenderCheckRequest { frames })?)

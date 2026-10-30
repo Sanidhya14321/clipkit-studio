@@ -61,7 +61,7 @@ Steps:
 - [x] 2. Full export path: `ck export` uses the worker when component layers exist (muted video), ck mixes the audio (footage, voice takes) and muxes; render cache keyed by content hash; Phase 4 step 10b and Phase 5 carried export items close here.
 - [x] 3. (determinism check done; adapter and previews carried) Frame-clock adapter and determinism test (same frame twice, frames out of order) for wrappable cards; card previews.
 - [x] 4. `ck eval`: output-only evaluator (duration, aspect, loudness, clipping, black or frozen frames, cut accuracy, brief conformance) with fixture tests.
-- [ ] 5. Debuggability: `ck trace bundle` (redacted), `ck replay`, `ck bisect`.
+- [x] 5. Debuggability: `ck trace bundle` (redacted), `ck replay`, `ck bisect`.
 - [ ] 6. Demo reset (seeded project in under 10 s) and README (install, requirements, demo, voice privacy, Remotion licensing, asset licenses).
 - [ ] 7. Bench harness for A0/A1/B (scenarios, arms, report format); real runs need agents and tokens: results PLACEHOLDER until run.
 - [ ] 8. History and branches, variants (cut-line items).

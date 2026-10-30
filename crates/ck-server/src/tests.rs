@@ -5,7 +5,7 @@ mod ask;
 mod brief;
 mod comments;
 mod edit;
-mod fixture;
+pub(crate) mod fixture;
 mod handoff;
 mod history;
 mod idle;

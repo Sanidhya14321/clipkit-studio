@@ -1104,6 +1104,56 @@ expression: specs()
     }
   },
   {
+    "name": "replay",
+    "command": "ck replay",
+    "description": "Rebuild the project from its stored patches without an agent; reproduces=false means history and project disagree. `to` also rebuilds an earlier revision.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "to": {
+          "description": "Also rebuild the content at this earlier revision.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "bisect",
+    "command": "ck bisect",
+    "description": "Find the first revision where the quality gates (or one `gate`) fail, by binary search over history; returns its label and failing gates.",
+    "cap": 2048,
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "gate": {
+          "description": "Only this gate (for example `overlaps`); default any gate.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "trace_bundle",
+    "command": "ck trace bundle",
+    "description": "Write one redacted, shareable JSON trace (environment, project, history, failing gates, replay status) under .clipkit/traces/.",
+    "cap": 1024,
+    "inputSchema": {
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  {
     "name": "sources_ingest",
     "command": "ck sources ingest",
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",

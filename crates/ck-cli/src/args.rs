@@ -134,6 +134,20 @@ pub enum Command {
         #[arg(long)]
         expect: Option<String>,
     },
+    /// Rebuild the project from its patches (no agent).
+    Replay {
+        /// Also rebuild this earlier revision.
+        #[arg(long)]
+        to: Option<u64>,
+    },
+    /// First revision where the quality gates fail.
+    Bisect {
+        #[arg(long)]
+        gate: Option<String>,
+    },
+    /// Redacted trace bundle.
+    #[command(subcommand)]
+    Trace(TraceCommand),
     /// Render checks (determinism).
     #[command(subcommand)]
     Render(RenderCommand),
@@ -503,4 +517,10 @@ pub enum RenderCommand {
         #[arg(long = "frame")]
         frames: Vec<u64>,
     },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum TraceCommand {
+    /// Write one redacted, shareable JSON trace under .clipkit/traces/.
+    Bundle,
 }
