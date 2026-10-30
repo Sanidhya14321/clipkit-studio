@@ -670,3 +670,10 @@ Found: `ck-pipeline` had no callers, so the stage stayed `boot` and agents could
 Decided: the server derives the stage from evidence (`stage_after_write`) instead of the agent advancing it, because no advance commands exist and passes are not individually observable. So BOOT, DETECT, BASE and individual passes are not tracked, and the Op-per-stage table stays unused. Agent patch, recipe apply and cut apply need a settled brief. Import, transcribe, voice and reference stay open before the brief because they gather its evidence; voice writes are not gated. `ck handoff` runs the gates and needs `--override-reason` to pass failing ones; the reason shows as the agent label. Export is not gated, so the studio can always export. Humans are never gated. `ck studio --autopilot` is session-only, because a stored change without a revision breaks replay; it cannot combine with `--ensure`, so the plugin hook path has no autopilot yet.
 
 Deviation: spec 9.4's skill text names `ck pipeline detect`, `ck footage`, `ck see` and `ck doctor`; the spec cannot be edited, so the shipped skill uses the real commands and the test skips those lines.
+
+## Owner answers after U6-0 (2026-10-30)
+
+- Spec: `docs/spec/` stays frozen. New requirements live in `docs/updates/` (UPDATE_5.md, UPDATE_6.md); U5-2 writes no spec files.
+- Sources: Pixabay media, Kenney audio, the LUT packs and GSAP may be vetted, plus other freely available animation sources. Approval covers vetting only: each is ingested after its original license is read and allows commercial use.
+- Live proof: the owner runs the PROGRESS.md checklist; work continues without it.
+- Engine: NOT decided. The owner says ClipKit is built on top of Remotion as a feature. Remotion's free license disallows selling a derivative of Remotion, and a company license depends on company size, so this needs reading against Remotion's current terms by the owner or counsel. Until then Remotion stays the default behind the adapter (Update 6 rule 0.4) and HyperFrames stays the Apache 2.0 alternative.

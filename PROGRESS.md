@@ -1,5 +1,16 @@
 # Progress
 
+## Update 5 and 6 queue (owner order, 2026-10-30)
+- [x] U5-2: requirements stay in docs/updates/ (spec frozen)
+- [ ] U5-3 draft and apply; interrupt and redirect (needs separate studio and agent credentials first)
+- [ ] U5-4 energy gates, playback check, mood to look, caption presets, router skill
+- [ ] U5-5 beat grid, beat sheet, sound kit on cuts
+- [ ] U5-6 kinetic block library
+- [ ] U5-7 save as style; face-safe zones and reframing
+- [ ] U5-8 early benchmark (PAUSE: needs live agent runs)
+- [ ] U6-1 to U6-8 (PAUSE at the gates in UPDATE_6.md 7.1)
+- [ ] PAUSE: engine decision (DECISIONS.md, owner answers after U6-0)
+
 ## Owner checklist: live-session steps headless runs cannot do
 - [ ] Install Rust 1.99.1 (rustup), Node 24, pnpm and ffmpeg 8.0.1 on this Mac; the Stop hook skips its check without cargo.
 - [ ] In a live Claude Code session: run `ck init`, restart, confirm `/mcp` lists `clipkit` (`plugin/.mcp.json` is now in the repo).
@@ -9,8 +20,8 @@
 - [ ] Run the demo scenario end to end in one real Claude Code and one real Codex session; flip the BLOCKED rows in VERIFICATION.md.
 
 
-STATUS: PAUSED (Update 5: owner must approve the render engine, DECISIONS.md U5-1)
-PHASE: U5-1
+STATUS: IN PROGRESS (Update 5 and 6 queue; engine decision still open)
+PHASE: U5-3
 
 ## Handoff (latest)
 Pipeline audit: server now enforces brief, gates and retry; see DECISIONS.md, end-to-end pipeline audit. Changes uncommitted.
