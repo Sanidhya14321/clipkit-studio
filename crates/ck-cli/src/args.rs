@@ -31,6 +31,9 @@ pub enum Command {
         /// Stop after this many seconds with no API call and no open studio tab; 0 never stops.
         #[arg(long, default_value_t = ck_server::idle::DEFAULT_IDLE_SECS)]
         idle: u64,
+        /// The user asked for no questions: settle an untouched brief as auto (spec 4.1 BRIEF).
+        #[arg(long, conflicts_with = "ensure")]
+        autopilot: bool,
         /// Return at once: start the studio in the background unless it is already running.
         #[arg(long)]
         ensure: bool,
@@ -204,6 +207,9 @@ pub enum Command {
         /// What the studio shows for the agent while idle.
         #[arg(long)]
         label: Option<String>,
+        /// Hand off despite failing gates; the reason is shown to the user.
+        #[arg(long)]
+        override_reason: Option<String>,
     },
     /// Block until the user changes something after a rev; prints the events.
     Wait {

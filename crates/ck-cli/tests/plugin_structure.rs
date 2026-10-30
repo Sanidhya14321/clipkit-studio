@@ -203,7 +203,19 @@ fn runtime_skill_carries_the_spec_text_and_stays_short() {
     );
     let lines = spec_skill_lines();
     assert!(lines.len() > 10, "spec 9.4 block not found");
-    for line in &lines {
+    // Spec 9.4 names commands that were never built; the shipped lines use the real ones
+    // (DECISIONS.md, end-to-end pipeline audit).
+    const CORRECTED: &[&str] = &[
+        "ck pipeline detect",
+        "ck footage",
+        "ck see",
+        "ck status idle",
+        "ck doctor",
+    ];
+    for line in lines
+        .iter()
+        .filter(|l| !CORRECTED.iter().any(|c| l.contains(c)))
+    {
         assert!(body.contains(line.as_str()), "SKILL.md lacks: {line}");
     }
     assert!(!has_date(&text));
@@ -245,7 +257,6 @@ fn critic_agent_is_read_only_and_answers_in_ten_lines() {
 }
 
 #[test]
-#[ignore = "plugin/.mcp.json pending: writing it was refused as a sensitive file in the headless run"]
 fn mcp_json_registers_ck_mcp_on_the_project_folder() {
     let file = json(".mcp.json");
     let server = &file["mcpServers"]["clipkit"];

@@ -454,6 +454,7 @@ impl Session {
             doc.release(Holder::Agent, Some(&project_lock));
         }
         let rev = committed?;
+        self.note_write(&mut doc);
         self.persist(&mut doc)?;
         self.publish(Event::Revision {
             rev: rev.rev,

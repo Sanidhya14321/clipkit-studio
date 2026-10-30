@@ -136,6 +136,18 @@ pub fn advance(state: &mut PipelineState, to: Step, brief: BriefStatus) -> CkRes
     Ok(())
 }
 
+/// The stage a project is in after a write, derived from evidence so the agent never drives it:
+/// an unsettled brief is BRIEF, a settled one with no layers is PLAN, layers mean PASSES, and
+/// anything after the first handoff is ITERATE.
+pub fn stage_after_write(current: Stage, brief: BriefStatus, has_layers: bool) -> Stage {
+    match (current, brief, has_layers) {
+        (Stage::Handoff | Stage::Iterate, _, _) => Stage::Iterate,
+        (_, BriefStatus::Proposed, _) => Stage::Brief,
+        (_, _, false) => Stage::Plan,
+        (_, _, true) => Stage::Passes,
+    }
+}
+
 /// The stage gate: refuse an operation outside its stages, naming the next allowed step.
 pub fn check_op(state: &PipelineState, op: Op) -> CkResult<()> {
     match op.stages() {
@@ -173,6 +185,29 @@ mod tests {
         }
         advance(&mut s, Step::stage(Stage::Verify), brief)?;
         Ok(s)
+    }
+
+    #[test]
+    fn writes_derive_the_stage_from_evidence() {
+        use BriefStatus::{Auto, Confirmed, Proposed};
+        assert_eq!(
+            stage_after_write(Stage::Boot, Proposed, false),
+            Stage::Brief
+        );
+        assert_eq!(
+            stage_after_write(Stage::Brief, Confirmed, false),
+            Stage::Plan
+        );
+        assert_eq!(stage_after_write(Stage::Plan, Auto, true), Stage::Passes);
+        assert_eq!(stage_after_write(Stage::Verify, Auto, true), Stage::Passes);
+        assert_eq!(
+            stage_after_write(Stage::Handoff, Auto, true),
+            Stage::Iterate
+        );
+        assert_eq!(
+            stage_after_write(Stage::Iterate, Proposed, true),
+            Stage::Iterate
+        );
     }
 
     #[test]

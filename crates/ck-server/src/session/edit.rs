@@ -283,6 +283,9 @@ impl Session {
     ) -> CkResult<CutApplyResult> {
         let kept = kept_ranges(cuts, duration);
         let mut doc = self.doc()?;
+        if holder == Holder::Agent {
+            self.gate_agent_write(doc.project())?;
+        }
         let (ops, track, segments) = footage_ops(doc.project(), &src.id, &kept);
         let ops = serde_json::Value::Array(ops);
         let rev = self.commit_as(&mut doc, holder, ops, label, std::slice::from_ref(&track))?;

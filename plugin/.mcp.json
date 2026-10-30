@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "clipkit": {
+      "command": "ck",
+      "args": ["mcp", "--dir", "${CLAUDE_PROJECT_DIR}"]
+    }
+  }
+}

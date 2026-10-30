@@ -105,6 +105,7 @@ fn run(cli: Cli) -> CkResult<()> {
             ensure: true,
             open,
             quiet,
+            autopilot: _,
         } => {
             let launcher = Launcher {
                 port,
@@ -113,7 +114,12 @@ fn run(cli: Cli) -> CkResult<()> {
             let ensured = launch::ensure(&cli.dir, &EnsureRequest { open }, &launcher)?;
             if quiet { Ok(()) } else { print(&ensured) }
         }
-        Command::Studio { port, idle, .. } => studio::run(&cli.dir, port, idle),
+        Command::Studio {
+            port,
+            idle,
+            autopilot,
+            ..
+        } => studio::run(&cli.dir, port, idle, autopilot),
         Command::Mcp => mcp(root),
         Command::Status => print(&ops()?.status()?),
         Command::Project(ProjectCommand::Get {
@@ -504,7 +510,13 @@ fn run(cli: Cli) -> CkResult<()> {
                 ..Default::default()
             })?)
         }
-        Command::Handoff { label } => print(&ops()?.handoff(&HandoffRequest { label })?),
+        Command::Handoff {
+            label,
+            override_reason,
+        } => print(&ops()?.handoff(&HandoffRequest {
+            label,
+            override_reason,
+        })?),
         Command::Wait { since, timeout } => print(&ops()?.wait(&WaitRequest {
             since,
             timeout_secs: timeout,

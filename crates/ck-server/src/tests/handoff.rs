@@ -64,6 +64,7 @@ fn handoff_releases_agent_locks_and_sets_idle() {
     let labelled = ops
         .handoff(&HandoffRequest {
             label: Some("Done: 15 s promo".into()),
+            override_reason: None,
         })
         .unwrap();
     assert_eq!(labelled.released, 0);

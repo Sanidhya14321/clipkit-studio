@@ -18,6 +18,9 @@ pub struct HandoffRequest {
     /// What the studio shows for the agent while idle (default "Waiting for you").
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
+    /// Why the agent hands off with failing gates; shown to the user in the studio.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub override_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
@@ -128,6 +131,25 @@ pub fn user_events(doc: &Document, since: u64) -> Vec<WaitEvent> {
 impl Session {
     /// `handoff`: release every agent lock and set the agent idle (no revision is made).
     pub fn handoff(&self, req: &HandoffRequest) -> CkResult<HandoffResult> {
+        let failed = if self.pipeline_gates {
+            self.verify(&Default::default())?.failed
+        } else {
+            Vec::new()
+        };
+        let reason = req
+            .override_reason
+            .as_deref()
+            .map(str::trim)
+            .filter(|r| !r.is_empty());
+        if !failed.is_empty() && reason.is_none() {
+            return Err(ck_core::CkError::new(
+                ck_core::ErrorCode::Stage,
+                format!("quality gates failing: {failed:?}").replace('"', ""),
+            )
+            .with_hint(
+                "Fix them and run ck verify, or pass --override-reason to tell the user why.",
+            ));
+        }
         let mut doc = self.doc()?;
         let released = doc
             .project()
@@ -136,7 +158,11 @@ impl Session {
             .filter(|l| l.holder == Holder::Agent)
             .count();
         doc.release(Holder::Agent, None);
-        let label = handoff_label(req.label.as_deref());
+        let label = match reason.filter(|_| !failed.is_empty()) {
+            Some(r) => handoff_label(Some(&format!("Gates failing ({r})"))),
+            None => handoff_label(req.label.as_deref()),
+        };
+        doc.set_stage(ck_core::model::Stage::Handoff);
         doc.set_agent(AgentState {
             status: AgentStatus::Idle,
             label,

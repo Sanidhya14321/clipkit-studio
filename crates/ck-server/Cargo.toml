@@ -9,6 +9,7 @@ publish = false
 
 [dependencies]
 ck-core.workspace = true
+ck-pipeline = { path = "../ck-pipeline" }
 ck-assets.workspace = true
 ck-media.workspace = true
 ck-voice.workspace = true

@@ -210,9 +210,14 @@ impl Session {
     /// briefly takes the locks the write touches unless it holds them, so a human mid-edit
     /// refuses the write (E_LOCK_HELD) instead of being overwritten.
     pub fn recipe_apply(&self, req: &RecipeApplyRequest) -> CkResult<RecipeApplyResult> {
+        self.with_retry("recipe apply", req, || self.recipe_apply_inner(req))
+    }
+
+    fn recipe_apply_inner(&self, req: &RecipeApplyRequest) -> CkResult<RecipeApplyResult> {
         let (recipe, text) = library::recipe_with_text(&req.recipe)?;
         let now = self.now_ms();
         let mut doc = self.doc()?;
+        self.gate_agent_write(doc.project())?;
         let project = doc.project();
         let look_id = look_id(req, project);
         let look = library::look_get(&library::IdRequest {
@@ -267,6 +272,7 @@ impl Session {
             doc.release(Holder::Agent, Some(&missing));
         }
         let rev = committed?;
+        self.note_write(&mut doc);
         self.persist(&mut doc)?;
         self.publish(Event::Revision {
             rev: rev.rev,

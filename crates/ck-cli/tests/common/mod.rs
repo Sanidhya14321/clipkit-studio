@@ -16,7 +16,7 @@ pub struct Studio {
 
 impl Studio {
     pub fn start(dir: &Path) -> Self {
-        Self::start_with(dir, &[])
+        Self::start_with(dir, &["--autopilot"])
     }
 
     /// `ck studio` with extra arguments (for example `--idle 1`).

@@ -470,6 +470,7 @@ dependencies = [
  "ck-assets",
  "ck-core",
  "ck-media",
+ "ck-pipeline",
  "ck-voice",
  "futures-util",
  "getrandom 0.4.3",

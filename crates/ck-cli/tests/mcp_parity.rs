@@ -233,8 +233,13 @@ fn recipe_apply_answers_like_its_cli_twin() {
     let planned: Value = serde_json::from_str(&planned).unwrap();
     assert!(planned["cues"].is_array());
 
-    let handed = ok_line(d, &["handoff"], caps::HANDOFF);
-    assert_eq!(mcp.ok("handoff", Value::Null, caps::HANDOFF), handed);
+    let handed = ok_line(
+        d,
+        &["handoff", "--override-reason", "parity fixture"],
+        caps::HANDOFF,
+    );
+    let args = json!({ "overrideReason": "parity fixture" });
+    assert_eq!(mcp.ok("handoff", args, caps::HANDOFF), handed);
     let handed: Value = serde_json::from_str(&handed).unwrap();
     assert_eq!(handed["rev"], 2);
     let waited = ok_line(d, &["wait", "--since", "0", "--timeout", "0"], caps::WAIT);

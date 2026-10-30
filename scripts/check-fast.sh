@@ -12,12 +12,19 @@ changed="$( (git diff --name-only HEAD 2>/dev/null; git ls-files --others --excl
 
 # Workspace-wide files invalidate every crate; otherwise only crates/<name>/ paths count.
 if grep -qE '^(Cargo\.toml|Cargo\.lock|rust-toolchain\.toml|clippy\.toml|\.config/nextest\.toml)$' <<<"$changed"; then
-  mapfile -t crates < <(find crates -mindepth 2 -maxdepth 2 -name Cargo.toml -printf '%h\n' | xargs -n1 basename | sort)
+  names="$(find crates -mindepth 2 -maxdepth 2 -name Cargo.toml | cut -d/ -f2 | sort)"
 else
-  mapfile -t crates < <(grep -oE '^crates/[^/]+/' <<<"$changed" | cut -d/ -f2 | sort -u)
+  names="$(grep -oE '^crates/[^/]+/' <<<"$changed" | cut -d/ -f2 | sort -u)"
 fi
+# Plain word splitting: macOS ships bash 3.2, which has no mapfile. Crate names have no spaces.
+crates=($names)
 
 fail() { echo "check-fast FAILED at $1 (full log: $log)"; grep -E '^(error|warning)|FAIL|panicked' "$log" | head -8; exit 1; }
+
+if ! command -v cargo >/dev/null 2>&1; then
+  echo "check-fast skipped: cargo not installed"
+  exit 0
+fi
 
 cargo fmt --all --check >>"$log" 2>&1 || fail "cargo fmt --check (run: cargo fmt --all)"
 if ((${#crates[@]} == 0)); then

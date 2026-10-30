@@ -1375,6 +1375,13 @@ expression: specs()
             "string",
             "null"
           ]
+        },
+        "overrideReason": {
+          "description": "Why the agent hands off with failing gates; shown to the user in the studio.",
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "type": "object"

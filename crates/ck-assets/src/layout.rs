@@ -40,8 +40,8 @@ impl Platform {
     /// Parses a brief platform value; the default (vertical-short) when unknown or silent.
     pub fn from_brief(value: Option<&str>) -> Self {
         match value {
-            Some("square-feed") => Self::SquareFeed,
-            Some("landscape") => Self::Landscape,
+            Some("square-feed" | "instagram-feed" | "linkedin") => Self::SquareFeed,
+            Some("landscape" | "youtube" | "web") => Self::Landscape,
             Some("presentation") => Self::Presentation,
             _ => Self::VerticalShort,
         }

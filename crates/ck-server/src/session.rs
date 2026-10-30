@@ -110,6 +110,10 @@ pub struct Session {
     asks: Mutex<ask::Asks>,
     /// Taste profile file; None when there is no home folder.
     profile: Option<std::path::PathBuf>,
+    /// Refuse agent calls out of pipeline order. Unit tests of one operation opt out.
+    pipeline_gates: bool,
+    autopilot: bool,
+    retry: Mutex<ck_pipeline::retry::RetryGate>,
 }
 
 impl Session {
@@ -139,7 +143,92 @@ impl Session {
             } else {
                 crate::profile::default_path()
             },
+            pipeline_gates: !cfg!(test),
+            autopilot: false,
+            retry: Mutex::default(),
         })
+    }
+
+    /// Turn the pipeline gates on or off (unit tests default to off).
+    pub fn with_pipeline_gates(mut self, on: bool) -> Self {
+        self.pipeline_gates = on;
+        self
+    }
+
+    /// Autopilot: the user asked for no questions, so this session treats the brief as settled.
+    /// The project is not changed, which keeps replay exact.
+    pub fn with_autopilot(mut self, on: bool) -> Self {
+        self.autopilot = on;
+        self
+    }
+
+    fn brief_status(&self, project: &ck_core::model::Project) -> ck_core::model::BriefStatus {
+        match project.brief.status {
+            ck_core::model::BriefStatus::Proposed if self.autopilot => {
+                ck_core::model::BriefStatus::Auto
+            }
+            status => status,
+        }
+    }
+
+    /// Stage gate for agent writes (spec 4.2): nothing is built before the brief settles.
+    fn gate_agent_write(&self, project: &ck_core::model::Project) -> CkResult<()> {
+        if self.pipeline_gates
+            && self.brief_status(project) == ck_core::model::BriefStatus::Proposed
+        {
+            return Err(
+                CkError::new(ErrorCode::Stage, "the brief is not confirmed yet").with_hint(
+                    "Run ck brief propose, then ck brief wait until the user confirms it.",
+                ),
+            );
+        }
+        Ok(())
+    }
+
+    /// Move the stage after a write, from what the project now holds.
+    fn note_write(&self, doc: &mut MutexGuard<'_, Document>) {
+        let p = doc.project();
+        let stage = ck_pipeline::stage::stage_after_write(
+            p.pipeline.stage,
+            self.brief_status(p),
+            p.items().next().is_some(),
+        );
+        doc.set_stage(stage);
+    }
+
+    /// Retry gate (spec 4.2): refuse the third identical failing call. Refusals the agent can
+    /// clear by waiting (stage, locks, stale revs) do not count.
+    fn with_retry<T>(
+        &self,
+        op: &str,
+        args: &impl serde::Serialize,
+        call: impl FnOnce() -> CkResult<T>,
+    ) -> CkResult<T> {
+        if !self.pipeline_gates {
+            return call();
+        }
+        let args = serde_json::to_value(args)
+            .map_err(|e| CkError::new(ErrorCode::Server, e.to_string()))?;
+        let locked = || {
+            self.retry
+                .lock()
+                .map_err(|_| CkError::new(ErrorCode::Server, "retry gate poisoned"))
+        };
+        locked()?.check(op, &args)?;
+        let result = call();
+        let counts = !matches!(
+            result.as_ref().err().map(|e| e.code),
+            Some(
+                ErrorCode::Stage
+                    | ErrorCode::LockHeld
+                    | ErrorCode::LockNotHeld
+                    | ErrorCode::PatchStale
+            )
+        );
+        if counts {
+            locked()?.record(op, &args, result.is_ok());
+        }
+        result
     }
 
     /// Use another speaker (tests, or a local voice once one is installed).
@@ -246,13 +335,24 @@ impl Session {
     }
 
     pub fn patch(&self, req: &PatchRequest) -> CkResult<PatchResult> {
+        if req.author == Author::Agent {
+            return self.with_retry("patch", req, || self.patch_inner(req));
+        }
+        self.patch_inner(req)
+    }
+
+    fn patch_inner(&self, req: &PatchRequest) -> CkResult<PatchResult> {
         let now = self.now_ms();
         let mut doc = self.doc()?;
+        if req.author == Author::Agent {
+            self.gate_agent_write(doc.project())?;
+        }
         let before = doc.project().brief.clone();
         let rev = doc.patch(req, now)?.clone();
         if req.author != Author::Agent {
             self.learn_profile(&before, &doc.project().brief);
         }
+        self.note_write(&mut doc);
         self.persist(&mut doc)?;
         self.publish(Event::Revision {
             rev: rev.rev,
@@ -387,6 +487,7 @@ impl Session {
             doc.release(holder, Some(&missing));
         }
         let rev = committed?;
+        self.note_write(doc);
         self.persist(doc)?;
         self.publish(Event::Revision {
             rev: rev.rev,

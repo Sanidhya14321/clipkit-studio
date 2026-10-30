@@ -32,15 +32,17 @@ pub struct LayoutCheckResult {
     pub omitted: usize,
 }
 
-/// The brief's platform, or the default.
+/// The brief's platform; with none named, the one that fits the project's frame.
 pub fn platform(project: &Project) -> Platform {
-    Platform::from_brief(
-        project
-            .brief
-            .fields
-            .get("platform")
-            .and_then(|f| f.value.as_str()),
-    )
+    let named = project
+        .brief
+        .fields
+        .get("platform")
+        .and_then(|f| f.value.as_str());
+    if named.is_none() && project.settings.width > project.settings.height {
+        return Platform::Landscape;
+    }
+    Platform::from_brief(named)
 }
 
 /// Checks the project's text layers.

@@ -556,6 +556,12 @@ impl Session {
         if req.critic {
             result.contact_sheet = Some(self.contact_sheet(&project)?);
         }
+        if result.ok && project.pipeline.stage == ck_core::model::Stage::Passes {
+            let mut doc = self.doc()?;
+            doc.set_stage(ck_core::model::Stage::Verify);
+            self.persist(&mut doc)?;
+            self.publish_snapshot(&doc);
+        }
         Ok(result)
     }
 }

@@ -26,7 +26,7 @@ BRIEF EDITS
   ck ask before re-running passes.
 
 COST
-- No images unless a check is uncertain; then ck see on the short range only.
+- No images unless a check is uncertain; then ck verify --critic once.
 - Patches, never rewrites. Recipes when one fits.
 - Reply in chat in at most three lines per batch: what changed and what is still open.
 

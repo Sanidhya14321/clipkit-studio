@@ -385,3 +385,4 @@ Tests in `crates/ck-assets/src/tests.rs` unless named otherwise.
 | L3 to L25 | NOT STARTED | After engine approval |
 | Toolchain note | INFO | This Mac had no Rust, ffmpeg, pnpm or Homebrew; runs used a session-only install. Spike ffmpeg is 6.0, not the 8.0.1 recorded in Phase 0, so loudness numbers are not comparable |
 | Baseline at U5-1 | PARTIAL | fmt, clippy, hooks 41 of 41, studio format, typecheck and unit tests pass. nextest 353 of 361: all 8 failures are audio (`Cannot select channel layout`) under ffmpeg 6.0; rerun on 8.0.1. `just e2e` not run |
+| Pipeline end to end | PASS | `crates/ck-cli/tests/pipeline_proof.rs` through the real binary: E_STAGE before brief, stage follows brief, plan, passes, handoff, iterate; failing gates refuse handoff; E_RETRY on the third identical failure |

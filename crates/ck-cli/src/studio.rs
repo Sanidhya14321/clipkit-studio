@@ -18,7 +18,7 @@ struct Started {
     port: u16,
 }
 
-pub fn run(dir: &Path, port: u16, idle_secs: u64) -> CkResult<()> {
+pub fn run(dir: &Path, port: u16, idle_secs: u64, autopilot: bool) -> CkResult<()> {
     let root = dir.join(".clipkit");
     if launch::running(&root).is_some() {
         return Err(CkError::new(
@@ -31,7 +31,7 @@ pub fn run(dir: &Path, port: u16, idle_secs: u64) -> CkResult<()> {
     if !store.project_path().exists() {
         store.init(&new_project(dir))?;
     }
-    let session = Arc::new(Session::open(&root, Arc::new(SystemClock))?);
+    let session = Arc::new(Session::open(&root, Arc::new(SystemClock))?.with_autopilot(autopilot));
     let idle = session
         .activity()
         .clone()
