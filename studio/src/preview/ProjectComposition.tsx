@@ -11,7 +11,7 @@ import {
 } from "remotion";
 import type { Item, Look, Project, TrackKind } from "../generated/types";
 import { span } from "../timeline";
-import { CLIPS } from "../clips/clips";
+import { CLIPS, AssetMediaContext } from "../clips/clips";
 import { type Props, isCoreClip, lookId, resolveTokens } from "../clips/motion";
 
 export interface CompositionProps extends Record<string, unknown> {
@@ -47,9 +47,17 @@ export function ProjectComposition({
   const t = frame / fps;
   const id = lookId(project);
   const look = looks.find((l) => l.id === id);
+  const sourceMedia = Object.fromEntries(
+    project.sources
+      .filter((s) => (s.kind === "image" || s.kind === "video") && media[s.id])
+      .map((s) => [s.id, { url: media[s.id]!, kind: s.kind }]),
+  );
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#111" }}>
+    <AbsoluteFill
+      data-ck-composition
+      style={{ backgroundColor: look?.colors.background ?? "#111" }}
+    >
       {project.tracks.map((track) =>
         track.items.map((item) =>
           item.type === "footage" && media[item.src] ? (
@@ -106,13 +114,17 @@ export function ProjectComposition({
                   outlineOffset: -4,
                 }}
               >
-                {CLIPS[item.clipId]({
-                  props: resolveTokens(propsOf(item.props), look),
-                  t: t - item.at,
-                  dur: item.dur,
-                  width: project.settings.width,
-                  height: project.settings.height,
-                })}
+                <AssetMediaContext.Provider
+                  value={{ sources: sourceMedia, at: item.at }}
+                >
+                  {CLIPS[item.clipId]({
+                    props: resolveTokens(propsOf(item.props), look),
+                    t: t - item.at,
+                    dur: item.dur,
+                    width: project.settings.width,
+                    height: project.settings.height,
+                  })}
+                </AssetMediaContext.Provider>
               </div>
             ) : (
               <div

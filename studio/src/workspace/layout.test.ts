@@ -24,8 +24,8 @@ test("every workspace places each existing panel exactly once", () => {
 test("closing, reopening and docking cannot duplicate or strand an active panel", () => {
   const original = defaultLayout("Edit");
   const closed = movePanel(original, "program", null);
-  assert.equal(closed.active.center, null);
-  assert.deepEqual(original.groups.center, ["program"]);
+  assert.equal(closed.active.center, "source");
+  assert.deepEqual(original.groups.center, ["program", "source"]);
   const docked = movePanel(
     movePanel(closed, "program", "right"),
     "program",

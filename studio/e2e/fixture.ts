@@ -1,8 +1,8 @@
 // Per-test fixture: a fresh project folder, a real `ck studio` serving it, and helpers to drive
-// the real `ck` CLI against it. The token is read from server.json and never printed.
+// the real `ck` CLI against it. Human actions use a fixed test-only studio credential.
 import { test as base } from "@playwright/test";
 import { execFile, spawn, type ChildProcess } from "node:child_process";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
@@ -37,13 +37,40 @@ export const test = base.extend<{ studio: Studio }>({
     });
     try {
       const { url } = (await firstLine(child)) as { url: string };
-      const info = JSON.parse(
-        await readFile(join(dir, ".clipkit", "server.json"), "utf8"),
-      ) as { token: string };
       const ck = async (...args: string[]) => {
+        // Some proofs explicitly simulate a human patch. Use the studio credential
+        // in this harness rather than asking an agent-token CLI to impersonate it.
+        if (args[0] === "project" && args[1] === "patch" && args[2]) {
+          const patch = JSON.parse(args[2]);
+          if (patch.author === "human") {
+            const response = await fetch(`${url}api/patch`, {
+              method: "POST",
+              headers: {
+                "x-ck-token": "e2e-studio-token",
+                "content-type": "application/json",
+              },
+              body: args[2],
+            });
+            const body = await response.json();
+            if (!response.ok) throw new Error(JSON.stringify(body));
+            return body;
+          }
+        }
         const { stdout } = await run(CK_BIN, [...args, "--dir", dir]);
         return JSON.parse(stdout) as unknown;
       };
+      // Editing fixtures start with a confirmed empty brief. Tests which exercise
+      // proposal/confirmation replace that status through the real propose route.
+      await ck(
+        "project",
+        "patch",
+        JSON.stringify({
+          baseRev: 0,
+          author: "human",
+          label: "Confirm test fixture brief",
+          ops: [{ op: "replace", path: "/brief/status", value: "confirmed" }],
+        }),
+      );
       await use({ dir, url, token: "e2e-studio-token", ck });
     } finally {
       child.kill("SIGTERM");
@@ -106,4 +133,27 @@ export function addTitleOps(id: string, name: string) {
       },
     },
   ];
+}
+
+/** Finish fixture passes through the server's stage API, without bypassing gates. */
+export async function advanceToVerify(page: Page) {
+  await page.evaluate(async () => {
+    const headers = {
+      "x-ck-token": sessionStorage.getItem("ck-token") ?? "",
+      "content-type": "application/json",
+    };
+    for (let n = 0; n < 12; n++) {
+      const project = await (
+        await fetch("/api/project?view=full", { headers })
+      ).json();
+      if (["verify", "handoff", "iterate"].includes(project.pipeline.stage))
+        return;
+      const response = await fetch("/api/pipeline/next", {
+        method: "POST",
+        headers,
+      });
+      if (!response.ok) throw new Error(JSON.stringify(await response.json()));
+    }
+    throw new Error("Fixture pipeline did not reach verify");
+  });
 }

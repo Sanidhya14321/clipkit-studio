@@ -1,14 +1,20 @@
-import { Player, type PlayerRef } from "@remotion/player";
+import { type PlayerRef } from "@remotion/player";
 import {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
+  useSyncExternalStore,
 } from "react";
 import { request } from "./api";
-import type { Look } from "./generated/types";
+import type {
+  JsonValue,
+  Look,
+  Project,
+  SplitRequest,
+  StudioContext,
+} from "./generated/types";
 import { ActivityFeed } from "./panels/ActivityFeed";
 import { Banner } from "./panels/Banner";
 import { BriefPanel } from "./panels/BriefPanel";
@@ -17,102 +23,225 @@ import { Timeline } from "./panels/Timeline";
 import { TranscriptPanel } from "./panels/TranscriptPanel";
 import { CommentsPanel } from "./panels/CommentsPanel";
 import { VoicePanel } from "./panels/VoicePanel";
+import { VoiceSetup } from "./panels/VoiceSetup";
 import { PushToTalk } from "./panels/PushToTalk";
 import { AskCards } from "./panels/AskCards";
 import { StoryboardPanel } from "./panels/StoryboardPanel";
 import { HistoryPanel } from "./panels/HistoryPanel";
-import { HoverSelect, type Target } from "./preview/HoverSelect";
-import type { Pointer } from "./comments";
-import type { StudioContext } from "./generated/types";
-import { ProjectComposition } from "./preview/ProjectComposition";
-import { PROJECT_LAYER, agentLocked, agentStopped, canEdit } from "./state";
+import { ProgramMonitor } from "./panels/ProgramMonitor";
+import { SourcePanel } from "./panels/SourcePanel";
+import { LibraryPanel } from "./panels/LibraryPanel";
+import { DeliveryPanel } from "./panels/DeliveryPanel";
+import type { Target } from "./preview/HoverSelect";
+import {
+  PROJECT_LAYER,
+  agentLocked,
+  agentStopped,
+  canEdit,
+  locate,
+} from "./state";
 import { durationInFrames, mediaUrls } from "./timeline";
 import { useNow, useStudio } from "./useStudio";
 import { Workbench } from "./workspace/Workbench";
 import { ProjectPanel } from "./workspace/ProjectPanel";
 import type { Command } from "./workspace/commands";
+import type { PanelId } from "./workspace/layout";
+import { createPlaybackClock, type PlaybackClock } from "./editor/clock";
+import { useEditor } from "./editor/useEditor";
+import {
+  removeRequest,
+  titleRequest,
+  duplicateRequest,
+  uniqueId,
+} from "./editor/edits";
+import { TitleDialog } from "./editor/TitleDialog";
 
+function LiveComments({
+  token,
+  project,
+  clock,
+  selection,
+  element,
+}: {
+  token: string;
+  project: Project;
+  clock: PlaybackClock;
+  selection: string | null;
+  element: Target | null;
+}) {
+  const playhead = useSyncExternalStore(
+    clock.subscribe,
+    () => Math.floor(clock.get() * 4) / 4,
+  );
+  return (
+    <CommentsPanel
+      token={token}
+      project={project}
+      pointer={{
+        playhead,
+        loopRange: null,
+        selection,
+        element: element
+          ? { layerId: element.layerId, path: element.path }
+          : null,
+      }}
+      getPlayhead={clock.get}
+    />
+  );
+}
+function AgentCommands({
+  token,
+  clock,
+  selected,
+  onPlay,
+  onPause,
+  onSeek,
+}: {
+  token: string;
+  clock: PlaybackClock;
+  selected: string | null;
+  onPlay: () => void;
+  onPause: () => void;
+  onSeek: (s: number) => void;
+}) {
+  const playhead = useSyncExternalStore(
+    clock.subscribe,
+    () => Math.floor(clock.get() * 4) / 4,
+  );
+  return (
+    <PushToTalk
+      token={token}
+      selection={selected}
+      playhead={playhead}
+      getPlayhead={clock.get}
+      onPlay={onPlay}
+      onPause={onPause}
+      onSeek={onSeek}
+    />
+  );
+}
 export function App({ token }: { token: string }) {
-  const { connected, project, locks, lastRevision, feed, asks } =
-    useStudio(token);
+  const state = useStudio(token);
+  const { connected, locks, lastRevision, feed, asks, refresh } = state;
+  const editor = useEditor(state.project, token, refresh);
+  const project = editor.project;
   const now = useNow();
-  const [selected, setSelected] = useState<string | null>(null);
-  const [looks, setLooks] = useState<Look[]>([]);
-  const [looksFailed, setLooksFailed] = useState(false);
-  const player = useRef<PlayerRef>(null);
-  const [playerInstance, setPlayerInstance] = useState<PlayerRef | null>(null);
+  const [selected, setSelected] = useState<string | null>(null),
+    [sourceId, setSourceId] = useState<string | null>(null);
+  const [looks, setLooks] = useState<Look[]>([]),
+    [looksFailed, setLooksFailed] = useState(false);
+  const [hovered, setHovered] = useState<Target | null>(null),
+    [element, setElement] = useState<Target | null>(null);
+  const [openRequest, setOpenRequest] = useState<{
+      panel: PanelId;
+      nonce: number;
+    } | null>(null),
+    [titleDialog, setTitleDialog] = useState(false),
+    [showImport, setShowImport] = useState(false),
+    [actionError, setActionError] = useState("");
+  const clock = useMemo(createPlaybackClock, []);
+  const player = useRef<PlayerRef | null>(null),
+    [playerInstance, setPlayerInstance] = useState<PlayerRef | null>(null);
   const attachPlayer = useCallback((instance: PlayerRef | null) => {
     player.current = instance;
     setPlayerInstance(instance);
   }, []);
-  const contextQueue = useRef<Promise<unknown>>(Promise.resolve());
-  const [playhead, setPlayhead] = useState(0);
-  const [hovered, setHovered] = useState<Target | null>(null);
-  const [element, setElement] = useState<Target | null>(null);
+  const getPlayer = useCallback(() => player.current, []);
   const fps = project?.settings.fps ?? 30;
-
-  useEffect(() => {
-    const p = playerInstance;
-    if (!p) return;
-    const onFrame = (e: { detail: { frame: number } }) =>
-      setPlayhead(e.detail.frame / fps);
-    p.addEventListener("frameupdate", onFrame);
-    p.addEventListener("seeked", onFrame);
-    return () => {
-      p.removeEventListener("frameupdate", onFrame);
-      p.removeEventListener("seeked", onFrame);
-    };
-  }, [fps, playerInstance]);
-
-  // Report what the user points at, for `ck context` (debounced; UI state only).
-  useEffect(() => {
-    const ctx: StudioContext = {
-      ...(selected ? { selection: selected } : {}),
-      ...(hovered
-        ? {
-            hovered: {
-              layerId: hovered.layerId,
-              ...(hovered.path ? { path: hovered.path } : {}),
-            },
-          }
-        : {}),
-      playhead: Math.round(playhead * 1000) / 1000,
-    };
-    const timer = setTimeout(() => {
-      // One post at a time, in order, so an older state never lands last.
-      contextQueue.current = contextQueue.current.then(() =>
-        request(token, "/api/context", {
-          method: "POST",
-          body: JSON.stringify(ctx),
-        }).catch(() => undefined),
+  const projectRef = useRef(project);
+  projectRef.current = project;
+  const seek = useCallback(
+    (seconds: number) => {
+      const p = projectRef.current;
+      if (!p || !Number.isFinite(seconds)) return;
+      const frame = Math.max(
+        0,
+        Math.min(durationInFrames(p) - 1, Math.round(seconds * p.settings.fps)),
       );
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [token, selected, hovered?.layerId, hovered?.path, playhead]);
-
-  const pointer: Pointer = {
-    playhead,
-    loopRange: null,
-    selection: selected,
-    element: element ? { layerId: element.layerId, path: element.path } : null,
-  };
-
+      player.current?.seekTo(frame);
+      clock.set(frame / p.settings.fps);
+    },
+    [clock],
+  );
+  const openPanel = useCallback(
+    (panel: PanelId) =>
+      setOpenRequest({ panel, nonce: Date.now() + Math.random() }),
+    [],
+  );
+  const select = useCallback(
+    (id: string) => {
+      setSelected(id);
+      openPanel("inspector");
+    },
+    [openPanel],
+  );
+  useEffect(() => {
+    if (!playerInstance) return;
+    const onFrame = (e: { detail: { frame: number } }) =>
+      clock.set(e.detail.frame / fps);
+    playerInstance.addEventListener("frameupdate", onFrame);
+    playerInstance.addEventListener("seeked", onFrame);
+    return () => {
+      playerInstance.removeEventListener("frameupdate", onFrame);
+      playerInstance.removeEventListener("seeked", onFrame);
+    };
+  }, [playerInstance, fps, clock]);
   useEffect(() => {
     request<Look[]>(token, "/api/looks").then(setLooks, () =>
       setLooksFailed(true),
     );
   }, [token]);
-
-  const media = useMemo(() => mediaUrls(project, token), [project, token]);
+  useEffect(() => {
+    let last = "",
+      busy = false,
+      cancelled = false;
+    const update = () => {
+      if (busy || !connected) return;
+      const context: StudioContext = {
+        ...(selected ? { selection: selected } : {}),
+        ...(hovered
+          ? {
+              hovered: {
+                layerId: hovered.layerId,
+                ...(hovered.path ? { path: hovered.path } : {}),
+              },
+            }
+          : {}),
+        playhead: Math.round(clock.get() * 1000) / 1000,
+      };
+      const body = JSON.stringify(context);
+      if (body === last) return;
+      busy = true;
+      void request(token, "/api/context", { method: "POST", body })
+        .then(() => {
+          if (!cancelled) last = body;
+        })
+        .catch(() => undefined)
+        .finally(() => {
+          busy = false;
+        });
+    };
+    const timer = setInterval(update, 250);
+    update();
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [token, connected, selected, hovered?.layerId, hovered?.path, clock]);
+  useEffect(() => {
+    if (project && selected && !locate(project, selected)) setSelected(null);
+  }, [project, selected]);
   const stopped = agentStopped(locks, now);
-  const agentLayers = useMemo(() => {
-    const ids = agentLocked(locks, now);
-    if (project && project.agent.status !== "idle" && !stopped) {
-      for (const id of project.agent.activeLayers) ids.add(id);
-    }
-    return ids;
-  }, [locks, now, project, stopped]);
-
+  const key = [
+    ...agentLocked(locks, now),
+    ...(project && project.agent.status !== "idle" && !stopped
+      ? project.agent.activeLayers
+      : []),
+  ]
+    .sort()
+    .join("\0");
+  const agentLayers = useMemo(() => new Set(key ? key.split("\0") : []), [key]);
+  const media = useMemo(() => mediaUrls(project, token), [project, token]);
   if (!project)
     return (
       <div
@@ -121,19 +250,47 @@ export function App({ token }: { token: string }) {
         role="status"
       >
         <strong>ClipKit Studio</strong>
-        <p>Connecting to your local ck project…</p>
+        <p>Connecting to your local project…</p>
         <small>
-          If this continues, start ck studio and open its session link.
+          Start ck studio and open its session link if this continues.
         </small>
       </div>
     );
-
-  const globalReadOnly = !connected || !canEdit(locks, PROJECT_LAYER, now);
-  const post = (path: string) =>
-    request(token, path, {
-      method: "POST",
-      body: JSON.stringify({ author: "human" }),
-    }).then(() => undefined);
+  const globalReadOnly =
+    !connected || !canEdit(locks, PROJECT_LAYER, now) || editor.pending;
+  const selectedReadOnly =
+    globalReadOnly || Boolean(selected && !canEdit(locks, selected, now));
+  const run = async (path: string, body?: JsonValue) => {
+    setActionError("");
+    try {
+      await request(token, path, {
+        method: "POST",
+        ...(body ? { body: JSON.stringify(body) } : {}),
+      });
+      await refresh();
+    } catch (e) {
+      setActionError(
+        e instanceof Error ? e.message : "The action did not reach ck.",
+      );
+    }
+  };
+  const split = () => {
+    if (!selected || selectedReadOnly) return;
+    const req: SplitRequest = {
+      layerId: selected,
+      at: clock.get(),
+      author: "human",
+    };
+    void run("/api/split", req as unknown as JsonValue);
+  };
+  const remove = (ripple: boolean) => {
+    if (selected && !selectedReadOnly)
+      void editor.commit(removeRequest(project, selected, ripple));
+  };
+  const duplicate = () => {
+    if (selected && !selectedReadOnly)
+      void editor.commit(duplicateRequest(project, selected));
+  };
   const commands: Command[] = [
     {
       id: "undo",
@@ -141,9 +298,9 @@ export function App({ token }: { token: string }) {
       group: "Edit",
       shortcut: "⌘ Z",
       reason: globalReadOnly
-        ? "Reconnect or wait for the project lock to release"
+        ? "Reconnect or wait for the current edit/lock"
         : undefined,
-      run: () => post("/api/undo"),
+      run: () => run("/api/undo", { author: "human" }),
     },
     {
       id: "redo",
@@ -151,9 +308,9 @@ export function App({ token }: { token: string }) {
       group: "Edit",
       shortcut: "⇧ ⌘ Z",
       reason: globalReadOnly
-        ? "Reconnect or wait for the project lock to release"
+        ? "Reconnect or wait for the current edit/lock"
         : undefined,
-      run: () => post("/api/redo"),
+      run: () => run("/api/redo", { author: "human" }),
     },
     {
       id: "play",
@@ -166,6 +323,43 @@ export function App({ token }: { token: string }) {
       },
     },
     {
+      id: "add-title",
+      label: "Add title at playhead",
+      group: "Sequence",
+      reason: globalReadOnly ? "Editing is temporarily unavailable" : undefined,
+      run: () => setTitleDialog(true),
+    },
+    {
+      id: "split",
+      label: "Split selected layer",
+      group: "Sequence",
+      shortcut: "⌘ B",
+      reason:
+        !selected || selectedReadOnly
+          ? "Select an editable clip or footage layer"
+          : undefined,
+      run: split,
+    },
+    {
+      id: "delete",
+      label: "Delete selected layer",
+      group: "Edit",
+      shortcut: "Delete",
+      reason:
+        !selected || selectedReadOnly ? "Select an editable layer" : undefined,
+      run: () => remove(false),
+    },
+    {
+      id: "duplicate",
+      label: "Duplicate selected layer",
+      group: "Edit",
+      reason:
+        !selected || selectedReadOnly
+          ? "Select an editable timed layer"
+          : undefined,
+      run: duplicate,
+    },
+    {
       id: "stop",
       label: "Stop after current step",
       group: "Agent",
@@ -174,87 +368,71 @@ export function App({ token }: { token: string }) {
         : project.agent.status === "idle" || project.agent.stopRequested
           ? "No running agent step"
           : undefined,
-      run: () =>
-        request(token, "/api/stop", { method: "POST" }).then(() => undefined),
+      run: () => run("/api/stop"),
+    },
+    {
+      id: "ask",
+      label: "Ask agent about selection",
+      group: "Agent",
+      run: () => openPanel("agent"),
     },
     {
       id: "import",
       label: "Import media",
       group: "File",
-      reason: "Media import panel arrives in UI-5; use ck import",
-      run: () => undefined,
+      run: () => {
+        setShowImport(true);
+        openPanel("project");
+      },
     },
     {
       id: "export",
-      label: "Export video",
+      label: "Review and export",
       group: "File",
-      reason: "Export panel arrives in UI-6; use ck export",
-      run: () => undefined,
+      run: () => openPanel("delivery"),
+    },
+    {
+      id: "save-version",
+      label: "Save a named version",
+      group: "File",
+      run: () => openPanel("history"),
     },
   ];
-  const seek = (seconds: number) =>
-    player.current?.seekTo(Math.round(seconds * fps));
   const panels = {
     project: (
       <ProjectPanel
         project={project}
+        token={token}
+        readOnly={globalReadOnly}
+        onApplied={refresh}
         selected={selected}
-        onSelect={setSelected}
+        onSelect={select}
+        showImport={showImport}
+        onStartBrief={() => openPanel("brief")}
+        onSource={(id) => {
+          setSourceId(id);
+          openPanel("source");
+        }}
       />
     ),
     program: (
-      <main className="studio-preview">
-        <div className="monitor-meta">
-          <span>SEQUENCE / {project.name}</span>
-          <span>
-            {project.settings.width} × {project.settings.height}
-          </span>
-        </div>
-        <div className="monitor-stage">
-          <div
-            className="monitor-frame"
-            style={
-              {
-                "--monitor-ratio":
-                  project.settings.width / project.settings.height,
-              } as CSSProperties
-            }
-          >
-            <HoverSelect
-              token={token}
-              project={project}
-              onHover={setHovered}
-              onPick={(t) => {
-                setElement(t);
-                setSelected(t.layerId);
-              }}
-            >
-              <Player
-                ref={attachPlayer}
-                component={ProjectComposition}
-                inputProps={{
-                  project,
-                  looks,
-                  agentLayers: [...agentLayers],
-                  flash: lastRevision?.touched ?? [],
-                  flashRev: lastRevision?.rev ?? 0,
-                  media,
-                }}
-                durationInFrames={durationInFrames(project)}
-                fps={fps}
-                compositionWidth={project.settings.width}
-                compositionHeight={project.settings.height}
-                style={{ width: "100%", maxHeight: "100%" }}
-                controls
-              />
-            </HoverSelect>
-          </div>
-        </div>
-        <div className="monitor-footer">
-          <span>PROGRAM</span>
-          <span>Preview · {fps} fps</span>
-        </div>
-      </main>
+      <ProgramMonitor
+        token={token}
+        project={project}
+        looks={looks}
+        agentLayers={agentLayers}
+        lastRevision={lastRevision}
+        media={media}
+        attachPlayer={attachPlayer}
+        getPlayer={getPlayer}
+        clock={clock}
+        onHover={setHovered}
+        onPick={(t) => {
+          setElement(t);
+          select(t.layerId);
+        }}
+        onSeek={seek}
+      />
     ),
     timeline: (
       <Timeline
@@ -262,7 +440,14 @@ export function App({ token }: { token: string }) {
         agentLayers={agentLayers}
         lastRevision={lastRevision}
         selected={selected}
-        onSelect={setSelected}
+        onSelect={select}
+        clock={clock}
+        onSeek={seek}
+        onCommit={editor.commit}
+        onSplit={split}
+        onDelete={remove}
+        readOnly={globalReadOnly}
+        pending={editor.pending}
       />
     ),
     inspector: (
@@ -271,10 +456,12 @@ export function App({ token }: { token: string }) {
         token={token}
         project={project}
         layerId={selected}
-        readOnly={
-          globalReadOnly ||
-          (selected !== null && !canEdit(locks, selected, now))
-        }
+        readOnly={selectedReadOnly}
+        onCommit={editor.commit}
+        onDuplicate={duplicate}
+        onDelete={() => remove(false)}
+        onSeek={seek}
+        looks={looks}
       />
     ),
     brief: (
@@ -284,6 +471,35 @@ export function App({ token }: { token: string }) {
         readOnly={globalReadOnly}
         looks={looks}
         looksFailed={looksFailed}
+      />
+    ),
+    library: (
+      <LibraryPanel
+        token={token}
+        project={project}
+        readOnly={globalReadOnly}
+        getPlayhead={clock.get}
+        onApplied={refresh}
+      />
+    ),
+    source: (
+      <SourcePanel
+        key={sourceId ?? ""}
+        token={token}
+        project={project}
+        sourceId={sourceId}
+        getPlayhead={clock.get}
+        onCommit={editor.commit}
+        readOnly={globalReadOnly}
+      />
+    ),
+    delivery: (
+      <DeliveryPanel
+        token={token}
+        project={project}
+        connected={connected}
+        onSelect={select}
+        onSeek={seek}
       />
     ),
     transcript: (
@@ -303,13 +519,12 @@ export function App({ token }: { token: string }) {
           onSeek={seek}
         />
         {!project.sources.some((s) => s.transcriptPath) && (
-          <div className="empty-state">
-            <strong>No transcript yet</strong>
-            <p>
-              Import and transcribe footage through your agent. Words will
-              appear here for seeking and editing.
-            </p>
-          </div>
+          <TranscriptSetup
+            token={token}
+            project={project}
+            readOnly={globalReadOnly}
+            onApplied={refresh}
+          />
         )}
       </>
     ),
@@ -318,31 +533,35 @@ export function App({ token }: { token: string }) {
         <StoryboardPanel token={token} project={project} />
         {!project.brief.checkpoints?.includes("storyboard") && (
           <div className="empty-state">
-            <strong>No storyboard checkpoint</strong>
+            <strong>Plan before you polish</strong>
             <p>
-              Ask your agent for a storyboard checkpoint to review the scene
-              plan here.
+              Request a storyboard checkpoint through your agent. The rendered
+              scene sheet and confirmation appear here when ready.
             </p>
+            <button onClick={() => openPanel("agent")}>Ask your agent</button>
           </div>
         )}
       </>
     ),
     voice: (
       <>
+        <VoiceSetup
+          token={token}
+          project={project}
+          readOnly={globalReadOnly}
+          onApplied={refresh}
+        />
         <VoicePanel token={token} project={project} readOnly={globalReadOnly} />
-        {!project.voiceSlots.length && (
-          <div className="empty-state">
-            <strong>Give your video a voice</strong>
-            <p>
-              Ask your agent to create a voice script. Record and manage takes
-              here once slots are ready.
-            </p>
-          </div>
-        )}
       </>
     ),
     comments: (
-      <CommentsPanel token={token} project={project} pointer={pointer} />
+      <LiveComments
+        token={token}
+        project={project}
+        clock={clock}
+        selection={selected}
+        element={element}
+      />
     ),
     history: (
       <HistoryPanel token={token} project={project} readOnly={globalReadOnly} />
@@ -350,22 +569,23 @@ export function App({ token }: { token: string }) {
     agent: (
       <>
         <section className="panel agent-summary">
-          <h2>Agent connection</h2>
-          <p>{connected ? "ck event bridge connected" : "Waiting for ck"}</p>
-          <p className="muted">
+          <span className="eyebrow">YOUR COLLABORATOR</span>
+          <h2>Direct the next edit</h2>
+          <p>
             {project.agent.label ||
-              "Ask a question or give your agent a direction."}
+              "Ask for a change to the selection, or describe what should happen next."}
           </p>
           <small>
-            Stage: {project.pipeline.stage} ·{" "}
+            {connected ? "Event bridge connected" : "Waiting for ck"} · Stage:{" "}
+            {project.pipeline.stage} ·{" "}
             {project.pipeline.pass ?? "no active pass"}
           </small>
         </section>
         <AskCards token={token} asks={asks} />
-        <PushToTalk
+        <AgentCommands
           token={token}
-          selection={selected}
-          playhead={playhead}
+          clock={clock}
+          selected={selected}
           onPlay={() => player.current?.play()}
           onPause={() => player.current?.pause()}
           onSeek={seek}
@@ -375,26 +595,113 @@ export function App({ token }: { token: string }) {
     ),
   };
   return (
-    <Workbench
-      project={project}
-      connected={connected}
-      agentStatus={stopped ? "stopped" : project.agent.status}
-      panels={panels}
-      banner={<Banner token={token} project={project} stopped={stopped} />}
-      commands={commands}
-      selection={selected}
-      playhead={playhead}
-    />
+    <>
+      <Workbench
+        project={project}
+        connected={connected}
+        agentStatus={stopped ? "stopped" : project.agent.status}
+        panels={panels}
+        banner={<Banner token={token} project={project} stopped={stopped} />}
+        commands={commands}
+        selection={selected}
+        playhead={0}
+        clock={clock}
+        openRequest={openRequest}
+        pending={editor.pending}
+        editError={editor.error || actionError}
+        onDismissError={() => {
+          editor.dismiss();
+          setActionError("");
+        }}
+      />
+      {titleDialog && (
+        <TitleDialog
+          onClose={() => setTitleDialog(false)}
+          onAdd={async (value) => {
+            const patch = titleRequest(project, clock.get(), value);
+            const id = uniqueId(project, "title");
+            const ok = await editor.commit(patch);
+            if (ok) {
+              setSelected(id || null);
+              openPanel("inspector");
+            }
+            return ok;
+          }}
+        />
+      )}
+    </>
   );
 }
-
+function TranscriptSetup({
+  token,
+  project,
+  readOnly,
+  onApplied,
+}: {
+  token: string;
+  project: Project;
+  readOnly: boolean;
+  onApplied: () => Promise<void>;
+}) {
+  const [source, setSource] = useState(""),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  return (
+    <section className="panel empty-state">
+      <strong>Turn speech into an editable transcript</strong>
+      <p>
+        Choose an imported source. Transcription requires a configured
+        transcription provider.
+      </p>
+      <select
+        aria-label="Transcribe source"
+        value={source}
+        onChange={(e) => setSource(e.currentTarget.value)}
+      >
+        <option value="">Choose source</option>
+        {project.sources.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.id}
+          </option>
+        ))}
+      </select>
+      <button
+        disabled={readOnly || busy || !source}
+        onClick={() => {
+          setBusy(true);
+          setError("");
+          void request(token, "/api/transcribe", {
+            method: "POST",
+            body: JSON.stringify({ source }),
+          })
+            .then(onApplied)
+            .catch((e) =>
+              setError(
+                e instanceof Error ? e.message : "Transcription unavailable.",
+              ),
+            )
+            .finally(() => setBusy(false));
+        }}
+      >
+        {busy ? "Transcribing…" : "Transcribe source"}
+      </button>
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+    </section>
+  );
+}
 export function MissingToken() {
   return (
-    <div className="studio" role="alert">
-      <p>
-        No session token. Open the studio from the link that{" "}
-        <code>ck studio</code> gives you.
-      </p>
+    <div className="studio connecting-screen" role="alert">
+      <strong>Open your project session</strong>
+      <p>This window needs the session link created by ck studio.</p>
+      <small>
+        Project data stays on your computer. Open the full session URL to
+        connect.
+      </small>
     </div>
   );
 }

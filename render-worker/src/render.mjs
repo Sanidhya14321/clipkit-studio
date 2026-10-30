@@ -5,7 +5,7 @@
 // and reads JSON lines on stdout: {"progress": 0..1} while rendering, then
 // {"done": "<out>"} or {"error": "..."}. Video only (muted); ck mixes and muxes the audio.
 // The job is data from ck; nothing in a project is executed beyond the composition itself.
-import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
+import { openBrowser, renderMedia, renderStill, selectComposition } from "@remotion/renderer";
 
 const line = (v) => process.stdout.write(JSON.stringify(v) + "\n");
 
@@ -15,6 +15,7 @@ async function readJob() {
   return JSON.parse(text);
 }
 
+let browser;
 try {
   const job = await readJob();
   const inputProps = {
@@ -25,7 +26,9 @@ try {
     flashRev: 0,
     media: job.media ?? {},
   };
+  browser = await openBrowser("chrome", {browserExecutable: process.env.CK_RENDER_BROWSER ?? null});
   const composition = await selectComposition({
+    puppeteerInstance: browser,
     serveUrl: job.bundle,
     id: "project",
     inputProps,
@@ -33,6 +36,7 @@ try {
   if (Array.isArray(job.stills)) {
     for (const [i, s] of job.stills.entries()) {
       await renderStill({
+        puppeteerInstance: browser,
         composition,
         serveUrl: job.bundle,
         output: s.out,
@@ -44,6 +48,7 @@ try {
     }
   } else if (job.still !== undefined) {
     await renderStill({
+      puppeteerInstance: browser,
       composition,
       serveUrl: job.bundle,
       output: job.out,
@@ -53,6 +58,8 @@ try {
     });
   } else {
     await renderMedia({
+      puppeteerInstance: browser,
+      concurrency: 2,
       composition,
       serveUrl: job.bundle,
       codec: job.codec ?? "h264",
@@ -67,4 +74,6 @@ try {
 } catch (e) {
   line({ error: e instanceof Error ? e.message : String(e) });
   process.exitCode = 1;
+} finally {
+  if (browser) await browser.close({silent: true});
 }

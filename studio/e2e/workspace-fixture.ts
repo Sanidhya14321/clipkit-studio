@@ -106,6 +106,7 @@ export async function mockWorkspace(page: Page, project = workspaceProject()) {
   let socket: WebSocketRoute | undefined;
   const calls: { path: string; body: unknown }[] = [];
   let refuse = false;
+  let refreshFails = false;
   const snapshot = () =>
     socket?.send(JSON.stringify({ type: "snapshot", project }));
   await page.routeWebSocket(/\/ws\?/, (ws) => {
@@ -141,13 +142,29 @@ export async function mockWorkspace(page: Page, project = workspaceProject()) {
       await route.fulfill({ json: { rev: project.rev } });
       return;
     }
+    if (path === "/api/project" && refreshFails) {
+      await route.fulfill({
+        status: 503,
+        json: {
+          code: "E_SERVER",
+          message: "Refresh unavailable",
+          hint: "Reconnect.",
+        },
+      });
+      return;
+    }
     await route.fulfill({
       json:
-        path === "/api/looks" || path === "/api/asks"
-          ? []
-          : path === "/api/branch/list"
-            ? { branches: [] }
-            : { rev: project.rev, lines: ["1 human: Created preview fixture"] },
+        path === "/api/project"
+          ? project
+          : path === "/api/looks" || path === "/api/asks"
+            ? []
+            : path === "/api/branch/list"
+              ? { branches: [] }
+              : {
+                  rev: project.rev,
+                  lines: ["1 human: Created preview fixture"],
+                },
     });
   });
   return {
@@ -156,6 +173,9 @@ export async function mockWorkspace(page: Page, project = workspaceProject()) {
     snapshot,
     refuse: () => {
       refuse = true;
+    },
+    failRefresh: () => {
+      refreshFails = true;
     },
     disconnect: () => socket?.close(),
   };

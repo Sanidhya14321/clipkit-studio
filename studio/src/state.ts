@@ -48,6 +48,7 @@ export const initial: StudioState = {
 export function reduce(state: StudioState, event: Event): StudioState {
   switch (event.type) {
     case "snapshot":
+      if (state.project && state.project.rev > event.project.rev) return state;
       // The snapshot carries the engine's lock list too; it is as fresh as any `locks` event.
       return { ...state, project: event.project, locks: event.project.locks };
     case "locks":
@@ -100,7 +101,8 @@ export function canEdit(
   layerId: string,
   nowMs: number,
 ): boolean {
-  return !agentLocked(locks, nowMs).has(layerId);
+  const held = agentLocked(locks, nowMs);
+  return !held.has("@structure") && !held.has(layerId);
 }
 
 /** Lock id for project-level content such as the brief (`ck_core::patch::PROJECT_LAYER`). */

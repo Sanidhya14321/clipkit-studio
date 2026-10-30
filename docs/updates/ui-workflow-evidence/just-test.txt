@@ -1,0 +1,8 @@
+cargo nextest run --workspace --no-tests=pass --cargo-quiet
+────────────
+ Nextest run ID 58317fcd-ea4b-4153-a1a2-53134344d25d with nextest profile: default
+    Starting 377 tests across 26 binaries (1 test skipped)
+────────────
+     Summary [  54.383s] 377 tests run: 377 passed, 1 skipped
+tests/hooks/run.sh
+hooks: 41 passed, 0 failed

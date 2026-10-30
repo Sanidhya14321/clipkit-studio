@@ -1,0 +1,20 @@
+cargo fmt --all --check
+cargo clippy --workspace --all-targets --message-format short --quiet -- -D warnings
+cargo nextest run --workspace --no-tests=pass --cargo-quiet
+────────────
+ Nextest run ID 30854f5f-cd6b-418c-b8c0-8c0a18a63bb9 with nextest profile: default
+    Starting 377 tests across 26 binaries (1 test skipped)
+────────────
+     Summary [  54.162s] 377 tests run: 377 passed, 1 skipped
+tests/hooks/run.sh
+hooks: 41 passed, 0 failed
+just studio-check
+[ -d studio/node_modules ] || pnpm --dir studio install --frozen-lockfile --silent
+pnpm --dir studio --silent format:check
+Checking formatting...
+All matched files use Prettier code style!
+pnpm --dir studio --silent typecheck
+pnpm --dir studio --silent test
+....................
+....................
+.......

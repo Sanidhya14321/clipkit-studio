@@ -1,5 +1,7 @@
 # ClipKit Studio UI audit — UI-0
 
+Historical baseline/UI-1 report. The later owner-approved workflow implementation, real-server verification and asset findings are recorded in `UI_WORKFLOW.md`, `ASSET_USAGE_AUDIT.md` and the latest VERIFICATION.md section.
+
 Date: 2026-10-30. Baseline: `af6c2d5` on main. UI work is isolated in branch `codex/ui-pro` at `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`.
 
 The supplied UI prompt is retained in `UI_UPDATE.md` as requirements and reference material. Its kickoff text is not separate authorization to change protected specs, merge into another agent's branch, or select Update 5's preview engine. The owner approved the UI-1 plan in this chat after the audit/plan work began. This task follows the repository's one-phase rule.

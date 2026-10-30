@@ -26,8 +26,15 @@ export function span(project: Project, item: Item): TimeRange | null {
       start = item.at;
       len = item.ranges.reduce((sum, r) => sum + (r.end - r.start), 0);
       break;
-    case "caption":
+    case "caption": {
+      if (item.from === "voice") {
+        const voice = project.tracks
+          .flatMap((t) => t.items)
+          .find((i) => i.type === "voice" && i.slotId === item.ref);
+        if (voice) return span(project, voice);
+      }
       return null;
+    }
   }
   if (!Number.isFinite(start) || !Number.isFinite(len) || len < 0) return null;
   return { start, end: start + len };
@@ -59,6 +66,8 @@ export function mediaUrls(
   for (const s of project?.sources ?? []) {
     if (s.kind === "video" && s.proxyPath) {
       out[s.id] = `/media/${s.hash}.mp4?token=${encodeURIComponent(token)}`;
+    } else if (s.kind === "image") {
+      out[s.id] = `/media/source/${s.hash}?token=${encodeURIComponent(token)}`;
     }
   }
   return out;

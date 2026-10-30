@@ -172,6 +172,26 @@ test("a video prompt opens the studio and the agent's MCP patch appears while th
     const agent = mcp(m.dir, m.env);
     try {
       await agent.start();
+      await page.evaluate(async () => {
+        const headers = {
+          "x-ck-token": sessionStorage.getItem("ck-token") ?? "",
+          "content-type": "application/json",
+        };
+        const project = await (
+          await fetch("/api/project?view=full", { headers })
+        ).json();
+        const response = await fetch("/api/patch", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            baseRev: project.rev,
+            author: "human",
+            label: "Confirm proof brief",
+            ops: [{ op: "replace", path: "/brief/status", value: "confirmed" }],
+          }),
+        });
+        if (!response.ok) throw new Error("Studio brief confirmation failed");
+      });
       await agent.call("lock", { holder: "agent", layerIds: ["t1", "title"] });
       const { rev } = (await agent.call("status", {})) as { rev: number };
       await agent.call("project_patch", {

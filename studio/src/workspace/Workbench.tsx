@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Project } from "../generated/types";
+import { ClockTime, type PlaybackClock } from "../editor/clock";
 import { Boundary } from "./Boundary";
 import { Palette } from "./Palette";
 import { executeCommand, type Command } from "./commands";
@@ -24,10 +25,8 @@ import {
 } from "./layout";
 
 const DESCRIPTIONS: Partial<Record<WorkspaceId, string>> = {
-  Motion: "Layer properties · keyframe graph arrives in UI-4",
   Audio: "Voice & takes · track mixer arrives in UI-5",
   Captions: "Transcript & voice captions",
-  Color: "Brief look presets · scopes are not available yet",
 };
 
 export function Workbench({
@@ -39,6 +38,11 @@ export function Workbench({
   commands: actions,
   selection,
   playhead,
+  clock,
+  openRequest,
+  editError,
+  onDismissError,
+  pending = false,
 }: {
   project: Project;
   connected: boolean;
@@ -48,6 +52,11 @@ export function Workbench({
   commands: Command[];
   selection: string | null;
   playhead: number;
+  clock?: PlaybackClock;
+  openRequest?: { panel: PanelId; nonce: number } | null;
+  editError?: string;
+  onDismissError?: () => void;
+  pending?: boolean;
 }) {
   const [workspace, setWorkspace] = useState<WorkspaceId>("Edit");
   const [layout, setLayout] = useState<Layout>(() => defaultLayout("Edit"));
@@ -82,7 +91,7 @@ export function Workbench({
       compactQuery.removeEventListener("change", update);
     };
   }, []);
-  const key = `ck-layout-v1:${project.id}:${workspace}`;
+  const key = `ck-layout-v2:${project.id}:${workspace}`;
   useEffect(() => {
     if (menu)
       root.current
@@ -134,6 +143,9 @@ export function Workbench({
     setMaximized(null);
     setFocused(id);
   };
+  useEffect(() => {
+    if (openRequest) open(openRequest.panel);
+  }, [openRequest]);
   const commands: Command[] = [
     ...actions,
     ...Object.entries(PANELS).map(([id, label]): Command => ({
@@ -209,6 +221,17 @@ export function Workbench({
     void executeCommand(command, setMessage);
   };
   useEffect(() => {
+    const outside = (event: PointerEvent) => {
+      if (
+        event.target instanceof Element &&
+        !event.target.closest(".menu-root")
+      )
+        setMenu(null);
+    };
+    document.addEventListener("pointerdown", outside);
+    return () => document.removeEventListener("pointerdown", outside);
+  }, []);
+  useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setMenu(null);
@@ -232,11 +255,13 @@ export function Workbench({
             : "undo"
           : mod && e.key.toLowerCase() === "k"
             ? "palette"
-            : !mod && e.key === "`"
-              ? "maximize"
-              : !mod && e.key === " "
-                ? "play"
-                : null;
+            : mod && e.key.toLowerCase() === "b"
+              ? "split"
+              : !mod && e.key === "`"
+                ? "maximize"
+                : !mod && e.key === " "
+                  ? "play"
+                  : null;
       if (!id) return;
       e.preventDefault();
       if (id === "palette") setPalette((v) => !v);
@@ -530,12 +555,59 @@ export function Workbench({
         </div>
         <button
           className="export-trigger"
-          disabled
-          title="Export panel is scheduled for UI-6; use ck export for now"
+          disabled={!connected}
+          onClick={() => open("delivery")}
+          title="Review project checks and export"
         >
           Export ↗
         </button>
       </div>
+      <div className="workflow-actions" aria-label="Editing actions">
+        <button
+          onClick={() => {
+            open("project");
+            const c = commands.find((c) => c.id === "import");
+            if (c) run(c);
+          }}
+        >
+          ＋ Import media
+        </button>
+        <button
+          onClick={() => {
+            const c = commands.find((c) => c.id === "add-title");
+            if (c) run(c);
+          }}
+          disabled={!connected || pending}
+        >
+          T Add title
+        </button>
+        <button onClick={() => open("library")}>▧ Add scene</button>
+        <span className="toolbar-spacer" />
+        {(
+          [
+            ["brief", "Brief"],
+            ["voice", "Narration"],
+            ["transcript", "Transcript"],
+            ["comments", "Comments"],
+            ["history", "History"],
+          ] as [PanelId, string][]
+        ).map(([id, label]) => (
+          <button key={id} onClick={() => open(id)}>
+            {label}
+          </button>
+        ))}
+        <span className="save-state" role="status">
+          {pending ? "Saving edit…" : connected ? "Project synced" : "Offline"}
+        </span>
+      </div>
+      {editError && (
+        <div className="edit-error-bar" role="alert">
+          {editError}
+          <button onClick={onDismissError} aria-label="Dismiss edit error">
+            ×
+          </button>
+        </div>
+      )}
       <div
         className="workbench-agent"
         data-working={connected && agentStatus === "working"}
@@ -599,9 +671,13 @@ export function Workbench({
               ? `Selected: ${selection}`
               : "Select a layer to inspect · ⌘/Ctrl K for commands")}
         </span>
-        <span className="timecode" data-ck-playhead>
-          {playhead.toFixed(3)} s
-        </span>
+        {clock ? (
+          <ClockTime clock={clock} instrument />
+        ) : (
+          <span className="timecode" data-ck-playhead>
+            {playhead.toFixed(3)} s
+          </span>
+        )}
         <span>
           rev <b data-ck-rev>{project.rev}</b>
         </span>

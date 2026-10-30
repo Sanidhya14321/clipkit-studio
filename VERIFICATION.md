@@ -414,3 +414,31 @@ All browser projects below are explicitly synthetic contract fixtures; no real p
 | BLOCKED | End-to-end acceptance of UI-2..UI-8, all section-8 fallbacks, performance budgets, real media/provider and memory runs | Not implemented/measured by this phase; no benchmark PASS claimed |
 
 Node executable used: `/Users/sanidhyavats/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node`. Other dependencies reuse the pre-existing studio installation without modifying it. No push, main-checkout edit or engine migration performed.
+
+## Approved workflow integration and asset audit (2026-10-30)
+
+This supersedes UI-1's local-runtime BLOCKED rows for the paths below. It is not full acceptance of every UI-2..UI-8 feature. Evidence root: `docs/updates/ui-workflow-evidence/`.
+
+| Status | Check | Evidence |
+| --- | --- | --- |
+| PASS | Production studio build; strict TypeScript; worker bundle; ck debug build | `build.txt`, `worker-setup.txt`, `build-ck.txt` |
+| PASS | Final `just check`: fmt, clippy with warnings denied, 377 Rust tests passed/1 pre-existing skipped, 41 hooks, frontend format/types and 47 unit tests | `just-check.txt` |
+| PASS | Full `just test`: 377 Rust tests passed, 1 pre-existing skipped; hooks 41 passed | `just-test.txt` |
+| PASS | 26 real-server Playwright workflows, five runs each: 130 passed, no retries | `real-final-five.txt`; `studio/e2e/phase*.spec.ts`, `ui-workflows.spec.ts` |
+| PASS | Title text and preview, move/trim/split/delete/undo, recipe content refresh; real revisions | real workflow tests; `real-editing-1440.png` |
+| PASS | Real local video import/proxy/source range placement, verification, MP4 file/probe and OTIO route | real workflow tests; `real-export-1440.png` |
+| PASS | Bypassed locked-layer request returns 423 `E_LOCK_HELD`, DOM unlocks afterward | real workflow lock test; inherited real-server lock tests |
+| PASS | Browser microphone simulation records/uploads a take; normalized mono regression passes | real phase7 recording test; `recording-regression.txt`; `crates/ck-media/src/take/tests.rs` |
+| PASS | Real imported image fills native recipe slot, 1920px natural width, original recipe provenance; Rust job/Node worker renders storyboard | native recipe workflow test; `real-recipe-asset.png` |
+| PASS | Shared worker-browser storyboard and confirmation reach the agent wait event | real phase10 storyboard test, five successful runs |
+| PASS | 300-clip canvas viewport case keeps fewer than 30 DOM targets; scroll/paint timings recorded, not general FPS guarantees | real 300-clip test prints measurement per run in `real-final-five.txt` |
+| PASS | 8 frontend-only workspace contracts, five runs each: 40 passed | `shell-final-five.txt`; these simulate API replies and are not backend proof |
+| PASS | Escape cancels draft; accepted POST + failed GET does not retry; refused edits roll back; storage fallback, native keyboard, panel boundaries and draft preservation | frontend contract tests |
+| PASS | Current visual matrix: five workspaces × 1440/1920 × dark/high contrast; narrow layout/no document overflow | 20 PNGs in `layouts/`; visual matrix frontend contract |
+| PASS | Standalone-title contrast regression reproduced before fix; final preview uses look background instead of hardcoded dark | `title-contrast-regression.txt` records expected failure before fix; final real title workflow passes five times |
+| PASS | Asset catalog/search/vetting/derive metadata audit without third-party execution | `assets-*.json`, `external-derive-audit.json`; `docs/updates/ASSET_USAGE_AUDIT.md` |
+| BLOCKED | Fresh visible in-app browser launch | Tool returned “Local browser use is disabled in Work settings.” Automated local Chrome tests passed. Review server left running at `http://127.0.0.1:43175/session` |
+| BLOCKED | Full external-derived-component rendering, previews and all asset kinds; universal attribution when hub is unavailable | Audit identifies missing registry/adapter, 0 preview files, 11 absent kinds, conditional license report and broad original-ID convention. UI MP4 guard prevents unsupported components from being presented as rendered |
+| BLOCKED | Live Fish Audio/owner media/real coding-agent sessions; all remaining UI scope and comprehensive memory/FPS budgets | Not implemented or not exercised by this integration; no fabricated provider or benchmark results |
+
+Runtime used: Rust 1.99.1, Node 24.22.1, just 1.59.0, nextest 0.9.150, ffmpeg/ffprobe 6.1.1, system Chrome, existing Remotion 4.0.535. Session-local environment: `/tmp/ck-ui-test-env.sh`. Browser traces from this task are retained under ignored `studio/test-results/ui-workflow-final/`; no session credentials or trace archives are committed. No main-checkout edits or push.

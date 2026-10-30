@@ -1,11 +1,21 @@
 // Live studio state: events from the server's WebSocket folded by the pure reducer in state.ts.
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { request, subscribe } from "./api";
-import type { Ask } from "./generated/types";
+import type { Ask, Project } from "./generated/types";
 import { initial, reduce, type StudioState } from "./state";
 
-export function useStudio(token: string): StudioState {
+export function useStudio(
+  token: string,
+): StudioState & { refresh: () => Promise<void> } {
   const [state, setState] = useState<StudioState>(initial);
+  const refresh = useCallback(async () => {
+    const project = await request<Project>(token, "/api/project?view=full");
+    setState((s) =>
+      s.project && s.project.rev > project.rev
+        ? s
+        : { ...s, project, locks: project.locks },
+    );
+  }, [token]);
   useEffect(
     () =>
       subscribe(
@@ -24,7 +34,7 @@ export function useStudio(token: string): StudioState {
       ),
     [token],
   );
-  return state;
+  return { ...state, refresh };
 }
 
 /** Wall clock in ms, refreshed every `everyMs` so lock expiry shows without a new event. */

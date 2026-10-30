@@ -101,6 +101,11 @@ export function HoverSelect({
         onHover(null);
       }}
       onClickCapture={(e) => {
+        if (
+          e.target instanceof Element &&
+          e.target.closest("[data-ck-hover-ui]")
+        )
+          return;
         const t = at(e);
         if (!t) return;
         // Picking an element must not also toggle playback.

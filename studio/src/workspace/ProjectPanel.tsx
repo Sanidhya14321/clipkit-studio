@@ -1,18 +1,34 @@
-import { useState } from "react";
+import { memo, useState } from "react";
+import { request } from "../api";
 import type { Project } from "../generated/types";
 import { duration, span } from "../timeline";
 
-export function ProjectPanel({
+export const ProjectPanel = memo(function ProjectPanel({
   project,
   selected,
   onSelect,
+  token,
+  readOnly = false,
+  onApplied,
+  onSource,
+  onStartBrief,
+  showImport = false,
 }: {
   project: Project;
   selected: string | null;
   onSelect: (id: string) => void;
+  token?: string;
+  readOnly?: boolean;
+  onApplied?: () => Promise<void>;
+  onSource?: (id: string) => void;
+  onStartBrief?: () => void;
+  showImport?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"layers" | "media">("layers");
+  const [importing, setImporting] = useState(false),
+    [path, setPath] = useState(""),
+    [error, setError] = useState("");
   const items = project.tracks.flatMap((track) =>
     track.items.map((item) => ({ item, track })),
   );
@@ -39,6 +55,58 @@ export function ProjectPanel({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
+      {token && (
+        <details
+          className="import-form"
+          open={showImport || project.sources.length === 0}
+        >
+          <summary>Import media</summary>
+          <p className="muted">
+            Paste the absolute path of a file on this computer. The server
+            probes it, creates a proxy and adds video to the sequence.
+          </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setImporting(true);
+              setError("");
+              void request(token, "/api/import", {
+                method: "POST",
+                body: JSON.stringify({ path: path.trim() }),
+              })
+                .then(() => onApplied?.())
+                .then(() => {
+                  setPath("");
+                  setView("media");
+                })
+                .catch((e) =>
+                  setError(e instanceof Error ? e.message : "Import failed."),
+                )
+                .finally(() => setImporting(false));
+            }}
+          >
+            <input
+              aria-label="Local media path"
+              placeholder="/Users/you/Movies/clip.mp4"
+              value={path}
+              onChange={(e) => setPath(e.currentTarget.value)}
+              required
+            />
+            <button
+              className="primary-action"
+              disabled={readOnly || importing || !path.trim().startsWith("/")}
+            >
+              {importing ? "Probing & building proxy…" : "Import into project"}
+            </button>
+            {importing && <progress aria-label="Import in progress" />}
+            {error && (
+              <p className="error" role="alert">
+                {error}
+              </p>
+            )}
+          </form>
+        </details>
+      )}
       <div className="bin-views" aria-label="Project view">
         <button
           aria-pressed={view === "layers"}
@@ -95,9 +163,10 @@ export function ProjectPanel({
             <div className="empty-state">
               <strong>Your sequence starts here</strong>
               <p>
-                Open Brief & styles to describe your video, or ask your agent to
-                import footage.
+                Import footage above, or start with a brief and choose a scene
+                recipe.
               </p>
+              <button onClick={onStartBrief}>Start from a brief</button>
             </div>
           )}
         </>
@@ -123,6 +192,12 @@ export function ProjectPanel({
                         : "No transcript"}
                     </small>
                   </div>
+                  <button
+                    aria-label={`Preview ${source.id}`}
+                    onClick={() => onSource?.(source.id)}
+                  >
+                    Preview ↗
+                  </button>
                 </li>
               ))}
           </ul>
@@ -133,9 +208,6 @@ export function ProjectPanel({
                 Ask your agent to import footage with ck import. File import
                 controls arrive with the media bin update.
               </p>
-              <button disabled title="File import is scheduled for UI-5">
-                Import media
-              </button>
             </div>
           )}
         </>
@@ -143,4 +215,4 @@ export function ProjectPanel({
       <div className="bin-footnote">PROJECT · {project.mode.toUpperCase()}</div>
     </section>
   );
-}
+});

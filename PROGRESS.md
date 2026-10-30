@@ -1,11 +1,11 @@
 # Progress
 
 ## UI handoff (2026-10-30)
-1. Done: UI-0 audit and approved UI-1 workspace shell on `codex/ui-pro` in `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`; source-of-truth Rust APIs/preview engine preserved.
-2. Proof: production build, formatting, TypeScript, 41 unit tests, 21/21 frontend browser contracts (7 flows repeated three times), 28 workspace screenshots; `docs/updates/ui-evidence/checks.txt`.
-3. Open: real ck integration/export and `just check`/`just test` BLOCKED locally (cargo/just/ffmpeg absent); UI-2 through UI-8, floating, server layout persistence and full command/store migration remain open.
-4. Next: run real-server suites with the updated tab helpers once prerequisites exist; coordinate merge with the other agent, then plan UI-2. Do not claim full editor acceptance from simulated backend tests.
-5. Start: add bundled Node to PATH; `pnpm --dir studio build`; `pnpm --dir studio exec playwright test --config playwright.ui.config.ts --repeat-each=3`. For real e2e, build ck/use CK_BIN and run the original Playwright config.
+1. Done: owner-approved workflow integration on `codex/ui-pro`, isolated at `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`; functional timeline/inspector, import/source/recipes, recording, review/export and asset-use fixes. Main is based at committed `2d0cc96`; no main-checkout edits or push.
+2. Proof: 26 real-server browser flows repeated five times (130/130), 8 frontend contracts repeated five times (40/40), build and 20 current workspace screenshots; Rust/hook/frontend check results are in `docs/updates/ui-workflow-evidence/`. See VERIFICATION.md for exact counts.
+3. Open: external derived registry/adapter, attribution without a located hub, missing asset kinds/previews/fonts, live providers/agents, burned-in captions, live narration/music mix and remaining UI-2..UI-8 scope. Visible review-tab launch blocked by Work settings; automated real Chrome checks passed.
+4. Next: coordinate branch integration with the other agent, then plan the backend asset adapter/license enforcement and remaining editor capabilities. Do not represent 62 searchable cards as 62 executable components; `docs/updates/ASSET_USAGE_AUDIT.md` documents the distinction.
+5. Start: normal Rust/Node/pnpm/just/ffmpeg prerequisites or this session's `/tmp/ck-ui-test-env.sh`; `just check`; `just test`; build studio/ck and worker, then Playwright. Local review project: `http://127.0.0.1:43175/session` while its process is running.
 
 
 ## Update 5 and 6 queue (owner order, 2026-10-30)
@@ -485,3 +485,35 @@ Scope: `studio/src` shell/layout/theme, `studio/e2e` coverage and UI-specific au
 - [ ] Floating, server layout persistence, normalized store/optimistic patch-command migration and richer registry capabilities: explicitly deferred in DECISIONS.md, not represented as working UI.
 
 UI integration: rebased onto committed main `5ec6550` (engine adapter seam and pipeline gates). Only shared handoff/decision/evidence documentation required conflict resolution; both agents' records were retained. Main checkout and its active work were not changed.
+
+## UI workflow integration plan (2026-10-30, owner approved in chat)
+
+User correction: the UI must support the project's actual workflows and be usable; the prior UI-1 shell is insufficient. Continue in the isolated UI worktree. Main currently has active uncommitted Rust work in import/export/edit/voice/session/core/assets; do not edit those files or bring uncommitted work across.
+
+Proposed single integration phase, grounded in spec 5.3–5.4 and 8.1–8.6 and the supplied UI update:
+1. Runtime and capability audit: establish a real local ck server if the available official toolchain can be provisioned; use server contracts to distinguish supported functions, provider-dependent functions and capabilities requiring backend work. Retain the current engine decision.
+2. Simplify navigation around the workflow: Edit, Generate, Audio/Captions and Review/Export; contextual panel activation, clear empty states, prominent import, add title/recipe, ask agent, verify and export actions. Avoid advertising unavailable specialized tools as complete workspaces.
+3. Functional editing: timeline ruler/playhead/seek/zoom, selection, drag/move, trims, split/delete, snapping, keyboard and shared undo/redo. One revisioned patch per gesture; locked layers refuse; optimistic drafts roll back on rejection. Inspector edits real supported text/style/timing/audio properties.
+4. Connect existing backend operations into clear panels: local-path media import (no fake browser file paths), source preview/placement, recipe application with slot inputs, verification/export with progress/error/output location, comment review and history, existing voice/transcript controls with their actual capability limits.
+5. Improve performance: stable panel state, memoized derived data and rendering, avoid invalidation of the entire workspace per preview frame, bounded/visible timeline rendering and responsive panel access. Measure supported performance cases, do not invent budget results.
+6. Verify complete representative workflows against real ck wherever possible, with refusal/disconnect tests and visible browser inspection; frontend contract tests stay separately labeled. Update audit/decisions/evidence, commit isolated changes and rebase only committed compatible main changes.
+
+Files owned here: studio source, studio tests, UI-specific docs, and environment setup outside the repo. New server behavior/endpoints are not included while another agent owns those Rust modules. Existing missing backend capabilities will be called out plainly rather than simulated as working product features.
+
+Approval is required before application code changes by AGENTS.md and .agents/skills/phase-runner/SKILL.md. Independent read-only audit and runtime preparation may proceed meanwhile.
+
+### Workflow integration delivery
+
+- [x] Official runtime provisioned in an isolated cache; real ck, ffmpeg, synthetic fixtures and Node render-worker workflows run locally.
+- [x] Functional timeline editing, supported inspector values, optimistic rejection handling, title dialog and contextual workflow navigation.
+- [x] Source/media placement, recipe slots/provenance, recording setup/capture, verification and MP4/OTIO/SRT paths connected to existing APIs.
+- [x] Memoized monitor, separate playback clock and viewport-limited timeline targets; explicit limits retained instead of simulated features.
+- [x] Real server authentication/locks/pipeline preserved after integrating committed main. Narrow mono recording, image serving/render map and shared worker-browser fixes recorded in DECISIONS.md.
+- [x] Browser screenshot review caught and fixed the title/background mismatch; regression failed before fix and passed in all five final real runs.
+- [x] Asset-use audit completed at the owner's request. Native imported images render in recipes and worker; external derive does not register/execute components. Remaining backend gaps are explicit in docs/updates/ASSET_USAGE_AUDIT.md.
+- [x] Final real-server browser suite 130/130 and frontend contracts 40/40; current screenshot matrix is five workspaces × two widths × two themes. No live paid providers or owner media were used.
+- [x] Final `just check` and `just test` green: 377 Rust tests passed/1 pre-existing skipped, 41 hooks, frontend format/types and 47 unit tests. Production studio/ck build and worker bundle passed.
+- [x] Prior runtime BLOCKED rows in UI-1 are superseded by the workflow evidence. Historical phase limits and the main owner's Update 5/6 queue remain preserved.
+- [ ] Merge/integrate with the other agent's branch only after coordinating ownership. No push requested.
+
+Review note: reviewer/test subagents supplied earlier findings, which were addressed; their later turns hit the session quota. Remaining review and final checks were completed by the primary agent. No new independent reviewer pass is claimed. `ck doctor` is absent from this CLI; actual build/media/browser checks replaced that diagnostic step.

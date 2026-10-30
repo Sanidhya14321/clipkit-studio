@@ -111,6 +111,7 @@ test("push-to-talk: seek, split here, undo locally; other phrases become comment
   const timeline = page.locator("[data-ck-timeline]");
   await timeline.locator('[data-ck-layer="hook-title-backdrop"]').click();
   const say = async (phrase: string) => {
+    await openPanel(page, "agent");
     const box = page.locator("[data-ck-ptt-text]");
     await box.fill(phrase);
     await box.press("Enter");

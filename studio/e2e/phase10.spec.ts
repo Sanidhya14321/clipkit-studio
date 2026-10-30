@@ -4,7 +4,7 @@
 import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { expect, test, openPanel } from "./fixture";
+import { expect, test, openPanel, advanceToVerify } from "./fixture";
 
 const BUNDLE = resolve(
   import.meta.dirname,
@@ -152,6 +152,11 @@ test("Stop: the agent's next write is refused until it hands back", async ({
     .ck("recipe", "apply", again)
     .catch((e: { stderr?: string }) => e.stderr ?? "");
   expect(String(refused)).toContain("E_STAGE");
-  await studio.ck("handoff");
+  await advanceToVerify(page);
+  await studio.ck(
+    "handoff",
+    "--override-reason",
+    "The user stopped this unfinished proof sequence; return control without claiming completion.",
+  );
   await expect(banner).toHaveAttribute("data-ck-agent", "idle");
 });

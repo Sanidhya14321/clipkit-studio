@@ -1,0 +1,45 @@
+
+Running 1 test using 1 worker
+
+(node:97144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › e2e/ui-workflows.spec.ts:36:1 › real title workflow: content, move, trim, split, undo and delete are server revisions (5.6s)
+
+
+  1) [chromium] › e2e/ui-workflows.spec.ts:36:1 › real title workflow: content, move, trim, split, undo and delete are server revisions
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('.studio-preview [data-ck-composition]')
+    Expected: "rgb(247, 247, 245)"
+    Received: "rgb(17, 17, 17)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('.studio-preview [data-ck-composition]') with timeout 5000ms
+      - waiting for locator('.studio-preview [data-ck-composition]')
+        14 × locator resolved to <div data-ck-composition="true">…</div>
+           - unexpected value "rgb(17, 17, 17)"
+
+
+      72 |   // A standalone title must use the look's background as well as its text
+      73 |   // color; the clean-product look's dark type was unreadable on hardcoded black.
+    > 74 |   await expect(page.locator(".studio-preview [data-ck-composition]")).toHaveCSS(
+         |                                                                       ^
+      75 |     "background-color",
+      76 |     "rgb(247, 247, 245)",
+      77 |   );
+        at /Users/sanidhyavats/Desktop/clipkit-studio-ui-pro/studio/e2e/ui-workflows.spec.ts:74:71
+
+    Error Context: test-results-contrast/ui-workflows-real-title-wo-9ad6a-delete-are-server-revisions-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-contrast/ui-workflows-real-title-wo-9ad6a-delete-are-server-revisions-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-contrast/ui-workflows-real-title-wo-9ad6a-delete-are-server-revisions-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e/ui-workflows.spec.ts:36:1 › real title workflow: content, move, trim, split, undo and delete are server revisions

@@ -107,22 +107,27 @@ impl Session {
         let media: serde_json::Map<String, Value> = project
             .sources
             .iter()
-            .filter(|s| s.kind == SourceKind::Video && s.proxy_path.is_some())
+            .filter(|s| {
+                s.kind == SourceKind::Image
+                    || (s.kind == SourceKind::Video && s.proxy_path.is_some())
+            })
             .map(|s| {
                 (
                     s.id.clone(),
                     // Originals Chrome decodes; anything else plays from the 720p proxy.
-                    Value::String(if browser_playable(&s.path) {
-                        format!(
-                            "http://127.0.0.1:{}/media/source/{}?token={}",
-                            info.port, s.hash, info.token
-                        )
-                    } else {
-                        format!(
-                            "http://127.0.0.1:{}/media/{}.mp4?token={}",
-                            info.port, s.hash, info.token
-                        )
-                    }),
+                    Value::String(
+                        if s.kind == SourceKind::Image || browser_playable(&s.path) {
+                            format!(
+                                "http://127.0.0.1:{}/media/source/{}?token={}",
+                                info.port, s.hash, info.token
+                            )
+                        } else {
+                            format!(
+                                "http://127.0.0.1:{}/media/{}.mp4?token={}",
+                                info.port, s.hash, info.token
+                            )
+                        },
+                    ),
                 )
             })
             .collect();

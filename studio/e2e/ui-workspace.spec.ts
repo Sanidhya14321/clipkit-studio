@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
+import { WORKSPACES } from "../src/workspace/layout";
 import { mockWorkspace, serveWorkspaceBuild } from "./workspace-fixture";
 
 let server: Awaited<ReturnType<typeof serveWorkspaceBuild>>;
@@ -120,7 +121,7 @@ test("selection edits retain revisioned API requests, lock refusal and command e
   await page.getByRole("textbox", { name: "Search commands" }).fill("Undo");
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("status").filter({ hasText: "E_PATCH_STALE" }),
+    page.getByRole("alert").filter({ hasText: "E_PATCH_STALE" }),
   ).toBeVisible();
   await page.getByLabel("Search project").focus();
   await page.keyboard.press("Control+z");
@@ -252,7 +253,7 @@ test("narrow panels and visual workspace matrix", async ({ page }) => {
   await page.getByRole("tab", { name: "Inspector", exact: true }).click();
   const evidence = resolve(
     import.meta.dirname,
-    "../../docs/updates/ui-evidence",
+    "../../docs/updates/ui-workflow-evidence/layouts",
   );
   await mkdir(evidence, { recursive: true });
   for (const width of [1440, 1920]) {
@@ -267,15 +268,7 @@ test("narrow panels and visual workspace matrix", async ({ page }) => {
           .fill("Use high contrast");
         await page.keyboard.press("Enter");
       }
-      for (const workspace of [
-        "Edit",
-        "Generate",
-        "Motion",
-        "Audio",
-        "Captions",
-        "Review",
-        "Color",
-      ]) {
+      for (const workspace of WORKSPACES) {
         await page
           .getByRole("navigation", { name: "Workspaces" })
           .getByRole("button", { name: workspace, exact: true })
@@ -317,4 +310,27 @@ test("narrow panels and visual workspace matrix", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByLabel("Search project")).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+test("Escape cancels inspector edits and accepted edits survive failed refresh without retry", async ({
+  page,
+}) => {
+  const fixture = await mockWorkspace(page);
+  await page.goto(`${server.url}/#token=synthetic-ui-test`);
+  await page.locator('[data-ck-timeline] [data-ck-layer="opening"]').click();
+  const field = page.locator(
+    '[data-ck-inspector="opening"] [data-ck-prop="name"]',
+  );
+  await field.fill("This must be cancelled");
+  await field.press("Escape");
+  expect(fixture.calls.filter((c) => c.path === "/api/patch")).toHaveLength(0);
+  await expect(field).toHaveValue("Opening title");
+  fixture.failRefresh();
+  await field.fill("Saved once");
+  await field.press("Enter");
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Your edit was saved by ck" }),
+  ).toBeVisible();
+  expect(fixture.calls.filter((c) => c.path === "/api/patch")).toHaveLength(1);
+  await expect(field).toHaveValue("Saved once");
 });

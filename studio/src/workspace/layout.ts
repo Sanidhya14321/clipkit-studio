@@ -11,16 +11,17 @@ export const PANELS = {
   transcript: "Transcript",
   voice: "Voice",
   storyboard: "Storyboard",
+  source: "Source monitor",
+  library: "Scene library",
+  delivery: "Review & export",
 } as const;
 export type PanelId = keyof typeof PANELS;
 export const WORKSPACES = [
   "Edit",
   "Generate",
-  "Motion",
   "Audio",
   "Captions",
   "Review",
-  "Color",
 ] as const;
 export type WorkspaceId = (typeof WORKSPACES)[number];
 export const ZONES = ["left", "center", "right", "bottom"] as const;
@@ -35,8 +36,8 @@ export type Layout = {
 
 export function defaultLayout(workspace: WorkspaceId): Layout {
   const groups: Layout["groups"] = {
-    left: ["project", "transcript"],
-    center: ["program"],
+    left: ["project", "library", "transcript"],
+    center: ["program", "source"],
     right: [
       "inspector",
       "brief",
@@ -45,6 +46,7 @@ export function defaultLayout(workspace: WorkspaceId): Layout {
       "history",
       "voice",
       "storyboard",
+      "delivery",
     ],
     bottom: ["timeline"],
   };
@@ -88,16 +90,10 @@ export function defaultLayout(workspace: WorkspaceId): Layout {
       "voice",
       "storyboard",
     ];
-  } else if (workspace === "Color") {
-    groups.right = [
-      "brief",
-      "inspector",
-      "agent",
-      "comments",
-      "history",
-      "voice",
-      "storyboard",
-    ];
+  }
+  for (const id of Object.keys(PANELS) as PanelId[]) {
+    if (!ZONES.some((zone) => groups[zone].includes(id)))
+      groups[id === "source" || id === "library" ? "left" : "right"].push(id);
   }
   return {
     groups,

@@ -63,6 +63,10 @@ pub async fn original(
     {
         Some("webm") => "video/webm",
         Some("mov") => "video/quicktime",
+        Some("png") => "image/png",
+        Some("jpg" | "jpeg") => "image/jpeg",
+        Some("webp") => "image/webp",
+        Some("gif") => "image/gif",
         _ => "video/mp4",
     };
     serve_file(found, kind, &headers).await

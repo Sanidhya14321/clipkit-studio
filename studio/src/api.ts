@@ -32,7 +32,7 @@ export function takeToken(): string | null {
 
 export class ApiError extends Error {
   constructor(readonly body: CkError) {
-    super(`${body.code}: ${body.message}`);
+    super(`${body.code}: ${body.message}${body.hint ? ` ${body.hint}` : ""}`);
   }
 }
 

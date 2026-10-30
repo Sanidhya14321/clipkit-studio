@@ -50,3 +50,12 @@
   --ck-font: 13px;
   --ck-space: 5px;
 }
+:root {
+  --ck-toolbar: 38px;
+  --ck-editor-row: 48px;
+  --ck-track-header: 124px;
+  --ck-timeline-ruler: 30px;
+  --ck-quiet-bg: #1b2023;
+  --ck-accent-wash: #8bdacb18;
+  --ck-error-wash: #f49e9e18;
+}
