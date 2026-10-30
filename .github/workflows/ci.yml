@@ -67,6 +67,15 @@ jobs:
       - run: just worker
       - run: just e2e
 
+  scripts:
+    name: install and package scripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - run: sh -n install.sh && bash -n scripts/package.sh
+      - run: shellcheck install.sh scripts/package.sh
+
   fixtures:
     name: fixtures generator
     runs-on: ubuntu-latest

@@ -1,0 +1,51 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - run: rustup show active-toolchain
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: studio/package.json
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: just studio-build
+      - run: just worker
+      - run: scripts/package.sh
+      - name: Install from the package
+        run: |
+          CK_RELEASE_BASE="file://$PWD/dist" CK_HOME="$RUNNER_TEMP/ck" CK_NO_INIT=1 sh install.sh
+          "$RUNNER_TEMP/ck/bin/ck" --version
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ matrix.os }}
+          path: dist/*.tar.gz*
+
+  publish:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --generate-notes clipkit-*
+        env:
+          GH_TOKEN: ${{ github.token }}

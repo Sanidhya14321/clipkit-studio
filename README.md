@@ -10,23 +10,38 @@ patch on a non-destructive project you can undo, comment on and edit yourself in
 `PROGRESS.md` for where the build stands, `VERIFICATION.md` for evidence and `docs/spec/INDEX.md`
 for the specification.
 
-## Requirements
-- `ffmpeg` and `ffprobe` on `PATH` (import, proxies, cuts, loudness, fast export).
-- Node 24 and pnpm (the studio build and the render worker). Rendering component layers uses
-  Remotion, which downloads Chrome Headless Shell on first render.
-- `git` (fetching sources for the asset hub).
-- Building from source: Rust (the version in `rust-toolchain.toml` installs through rustup),
-  `just`, `cargo-nextest`, `jq`.
+## Install
+```
+curl -fsSL https://raw.githubusercontent.com/Sanidhya14321/clipkit-studio/main/install.sh | sh
+```
+This downloads the release for your machine (macOS on Apple silicon, or Linux x86-64), checks its
+checksum, installs `ck` and the render worker to `~/.clipkit`, and offers `ck init`, which shows
+what it will write to Claude Code, Codex, Cursor or any MCP client and asks first. `ck uninstall`
+removes what `ck init` added; delete `~/.clipkit` to remove the rest.
 
-## Install (from source)
+You also need `ffmpeg`, `ffprobe`, Node 24 and `git` on `PATH`; the installer names any that are
+missing. Remotion downloads Chrome Headless Shell on the first render.
+
+## How a video gets made
+EDIT: `ck import`, `ck transcribe`, `ck content map`, `ck grid build --source <id>`. GENERATE:
+`ck grid build --dur <seconds>`, fast by default. Then both paths use `ck plan set`,
+`ck plan candidates` and `ck plan expand`, followed by `ck verify` and `ck export`. The agent
+decides per segment; code does the frame math. Changing one part with
+`ck plan expand --segment <id>` touches only that segment.
+
+## Install from source
+Needs Rust (the version in `rust-toolchain.toml`), `just`, Node 24 and pnpm; tests also need
+`cargo-nextest` and `jq`.
 ```
 just studio-build                      # the studio is embedded in the binary
 cargo install --path crates/ck-cli     # the single `ck` binary
-just worker                            # render worker: install and bundle (needs Node and pnpm)
-ck init                                # set up Claude Code, Codex, Cursor or any MCP client
-ck uninstall                           # remove everything `ck init` added
+just worker                            # render worker: install and bundle
+ck init
 ```
-`ck init` shows what it will write and asks first. Packaged installers are not built yet.
+
+## Releasing
+Push a `v*` tag. `.github/workflows/release.yml` builds both platforms, installs each package as a
+test and publishes a GitHub release.
 
 ## Demo
 ```
