@@ -302,7 +302,9 @@ fn backdrop(project: &Project, look: &Look, at: f64) -> String {
         .flat_map(|t| &t.items)
         .filter_map(clip)
         .filter(|(_, start, end, _)| *start <= at + EPS && at < *end)
-        .filter_map(|(_, _, _, props)| resolve_str(look, props.get("color")))
+        .filter_map(|(_, _, _, props)| {
+            resolve_str(look, props.get("ground").or(props.get("color")))
+        })
         .next_back()
         .unwrap_or_else(|| look.colors.background.clone())
 }

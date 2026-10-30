@@ -1520,7 +1520,35 @@ expression: specs()
               ]
             },
             "transition": {
-              "description": "Transition into the next segment (recorded; at most two types per plan).",
+              "description": "Transition asset played across this segment's start (at most two types per plan).",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "text": {
+              "description": "Words on screen, drawn with `textAsset`.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "textAsset": {
+              "description": "Text animation asset.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "overlay": {
+              "description": "Full-frame overlay asset for the segment.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sfx": {
+              "description": "Sound effect asset; its onset lands on the segment start.",
               "type": [
                 "string",
                 "null"
@@ -1561,6 +1589,13 @@ expression: specs()
           "items": {
             "$ref": "#/$defs/Segment"
           }
+        },
+        "music": {
+          "description": "Music asset laid under the whole plan and ducked under speech.",
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "additionalProperties": false

@@ -14,6 +14,8 @@ rm -rf "$stage"
 mkdir -p "$stage/bin" "$stage/render-worker"
 cp target/release/ck "$stage/bin/ck"
 cp -R render-worker/src render-worker/bundle render-worker/node_modules render-worker/package.json "$stage/render-worker/"
+mkdir -p "$stage/assets"
+cp -R assets/sfx-elements-audio assets/duru-original-music "$stage/assets/"
 tar -czf "dist/$name.tar.gz" -C dist "$name"
 (cd dist && shasum -a 256 "$name.tar.gz" >"$name.tar.gz.sha256")
 echo "dist/$name.tar.gz"

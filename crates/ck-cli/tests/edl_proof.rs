@@ -198,3 +198,32 @@ fn doctor_names_a_fix_and_never_shows_a_key() {
     assert_eq!(v["checks"][0]["name"], "ffmpeg");
     assert!(v["checks"][0]["fix"].as_str().unwrap().contains("Install"));
 }
+
+#[test]
+fn plan_layers_catalog_assets_sound_and_music() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _s = Studio::start(d);
+    let brief = json!({ "fields": { "aspect": "9:16" }, "questions": [] }).to_string();
+    raw(d, &["brief", "propose", &brief]);
+    raw(d, &["grid", "build", "--dur", "4"]);
+    let plan = json!({ "music": "duru-original-music/hyak-ep1-rhythm", "segments": [
+        { "id": "a", "from": 0, "to": 4, "role": "hook", "text": "Hi",
+          "textAsset": "rendercomp-free/typewriter", "overlay": "rendercomp-free/starfield" },
+        { "id": "b", "from": 4, "to": 8, "role": "cta", "text": "Go",
+          "textAsset": "rendercomp-free/scramble-text", "sfx": "sfx-elements-audio/whoosh",
+          "transition": "rendercomp-free/slide-wipe" }] });
+    assert_eq!(raw(d, &["plan", "set", &plan.to_string()])["segments"], 2);
+    raw(d, &["plan", "expand"]);
+    let p = project(d);
+    assert_eq!(layer(&p, "edl-a-text")["clipId"], "typewriter");
+    assert_eq!(layer(&p, "edl-b-transition")["at"].as_f64(), Some(1.8));
+    assert_eq!(layer(&p, "edl-music")["duck"], true);
+    assert!(layer(&p, "edl-b-sfx")["at"].as_f64().unwrap() <= 2.0);
+    let bad = json!({ "segments": [{ "id": "a", "from": 0, "to": 4, "role": "hook",
+        "overlay": "rendercomp-free/typewriter" }] });
+    assert_eq!(
+        raw(d, &["plan", "set", &bad.to_string()])["code"],
+        "E_REQUEST"
+    );
+}

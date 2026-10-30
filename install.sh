@@ -28,8 +28,8 @@ else
 fi
 tar -xzf "$tmp/$name.tar.gz" -C "$tmp"
 mkdir -p "$home_dir"
-rm -rf "$home_dir/bin" "$home_dir/render-worker"
-mv "$tmp/$name/bin" "$tmp/$name/render-worker" "$home_dir/"
+rm -rf "$home_dir/bin" "$home_dir/render-worker" "$home_dir/assets"
+mv "$tmp/$name/bin" "$tmp/$name/render-worker" "$tmp/$name/assets" "$home_dir/"
 echo "Installed to $home_dir/bin/ck"
 
 for tool in ffmpeg ffprobe node git; do

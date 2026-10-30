@@ -20,14 +20,25 @@ use crate::{asset_error, list_files, read_file, stem};
 /// Core clip ids a recipe layer may use. Phase 4 step 7 builds these natively in Remotion.
 pub const CORE_CLIPS: &[&str] = &[
     "backdrop",
+    "bounce-in-headline",
     "bullet-list",
+    "crt-scanlines",
     "device-frame",
     "glitch-text",
+    "gradient-text-sweep",
+    "kinetic-slam",
     "kinetic-text",
     "lower-third",
+    "particle-snow",
     "quote-card",
+    "scramble-text",
+    "slide-wipe",
     "split-compare",
+    "starfield",
     "stat-counter",
+    "transition-circle-wipe",
+    "typewriter",
+    "wave-text",
 ];
 
 /// Brief fields a layer may depend on (the essentials of spec 8.1).

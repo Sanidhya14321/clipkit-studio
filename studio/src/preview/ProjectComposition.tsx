@@ -94,6 +94,8 @@ export function ProjectComposition({
           .filter(
             (item) =>
               !(item.type === "footage" && media[item.src]) &&
+              item.type !== "audio" &&
+              item.type !== "voice" &&
               isVisibleAt(project, item, t),
           )
           .map((item) =>

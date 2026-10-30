@@ -37,6 +37,8 @@ STATUS: IN PROGRESS (Update 5 and 6 queue; engine decision still open)
 PHASE: U5-3
 
 ## Handoff (latest)
+Assets now reach the video: 12 native clips (`kinetic-slam` for the Scenario Kinetic Film style, 5 catalog text, 3 overlays, 2 transitions), sfx by onset, ducked music, through plan fields. 51 catalog clips still cannot render; React Bits and Remotion sources are not ingested.
+Open: export loudness misses -14 LUFS on short clips; kinetic needs 3D type and slot reels; no real footage edit demo yet.
 Release-ready: step 1 audit in docs/AUDIT.md section 7. Step 2 security workflow added (never run yet); nightly, cross-platform and agent-e2e not built. `ck doctor` built.
 Next: confirm CI green, tag v0.5.0, then steps 6 to 9 gaps: loop range, draft review, export cancel, `ck repro`, Windows and npm, community files.
 `codex/ui-pro` is merged into main (timeline drag, trim and split; workspace shell; Update 6 snapshot with audio packs). Its last commit is an unreviewed WIP snapshot. Export queue built (`ck export --queue`, `ck jobs`).

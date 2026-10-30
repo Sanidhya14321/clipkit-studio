@@ -538,11 +538,256 @@ function GlitchText({ props, t, dur, height }: ClipArgs) {
   );
 }
 
+/** Native technique adaptations of catalog cards: no source imported, pure in `t`. */
+function textBox(props: Props, height: number, t: number, dur: number) {
+  return {
+    position: "absolute",
+    ...boxStyle(props, { x: 0.08, y: 0.35, w: 0.84, h: 0.3 }),
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: family(props),
+    fontSize: fontPx(props, height, 0.085),
+    fontWeight: 900,
+    lineHeight: 1.05,
+    textAlign: "center",
+    color: str(props, "color", "#fff"),
+    textShadow: "0 4px 24px rgba(0,0,0,.55)",
+    opacity: presence(t, dur, props),
+  } satisfies CSSProperties;
+}
+
+/** Stable pseudo-random in [0, 1). */
+function rand(n: number) {
+  const x = Math.sin(n * 127.1) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function Typewriter({ props, t, dur, height }: ClipArgs) {
+  const text = str(props, "text");
+  const shown = Math.min(text.length, Math.floor(t * 28));
+  return (
+    <div style={textBox(props, height, t, dur)}>{text.slice(0, shown)}</div>
+  );
+}
+
+function ScrambleText({ props, t, dur, height }: ClipArgs) {
+  const text = str(props, "text");
+  const settled = Math.floor((t / 0.5) * text.length);
+  const step = Math.floor(t * 30);
+  const glyphs = "#%&*+=/<>";
+  const out = [...text]
+    .map((c, i) =>
+      i < settled || c === " "
+        ? c
+        : glyphs[Math.floor(rand(i + step) * glyphs.length)],
+    )
+    .join("");
+  return <div style={textBox(props, height, t, dur)}>{out}</div>;
+}
+
+function WaveText({ props, t, dur, height }: ClipArgs) {
+  return (
+    <div style={textBox(props, height, t, dur)}>
+      {[...str(props, "text")].map((c, i) => (
+        <span
+          key={i}
+          style={{
+            display: "inline-block",
+            whiteSpace: "pre",
+            transform: `translateY(${Math.sin(t * 8 - i * 0.5) * height * 0.012}px)`,
+          }}
+        >
+          {c}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function GradientSweep({ props, t, dur, height }: ClipArgs) {
+  const at = ((t * 0.9) % 1) * 200 - 50;
+  return (
+    <div
+      style={{
+        ...textBox(props, height, t, dur),
+        textShadow: "none",
+        color: "transparent",
+        backgroundClip: "text",
+        WebkitBackgroundClip: "text",
+        backgroundImage: `linear-gradient(100deg, #fff 0%, #fff ${at - 25}%, ${str(props, "accent", "#22d3ee")} ${at}%, #fff ${at + 25}%, #fff 100%)`,
+      }}
+    >
+      {str(props, "text")}
+    </div>
+  );
+}
+
+function BounceHeadline({ props, t, dur, height }: ClipArgs) {
+  const p = Math.min(1, t / 0.45);
+  const scale =
+    1 + Math.sin(p * Math.PI * 2.5) * (1 - p) * 0.35 - (1 - p) * 0.5;
+  return (
+    <div
+      style={{
+        ...textBox(props, height, t, dur),
+        transform: `scale(${scale})`,
+      }}
+    >
+      {str(props, "text")}
+    </div>
+  );
+}
+
+function dots(n: number, draw: (i: number) => CSSProperties) {
+  return Array.from({ length: n }, (_, i) => (
+    <div
+      key={i}
+      style={{ position: "absolute", borderRadius: "50%", ...draw(i) }}
+    />
+  ));
+}
+
+function ParticleSnow({ t, width, height }: ClipArgs) {
+  return (
+    <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+      {dots(50, (i) => {
+        const size = 3 + rand(i) * 6;
+        const fall = (rand(i + 50) + t * (0.08 + rand(i + 9) * 0.15)) % 1;
+        return {
+          width: size,
+          height: size,
+          background: "rgba(255,255,255,.75)",
+          left: rand(i + 99) * width + Math.sin(t + i) * 20,
+          top: fall * height,
+        };
+      })}
+    </div>
+  );
+}
+
+function Starfield({ t, width, height }: ClipArgs) {
+  return (
+    <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+      {dots(70, (i) => {
+        const a = rand(i) * Math.PI * 2;
+        const z = (rand(i + 7) + t * 0.35) % 1;
+        const r = z * z * Math.max(width, height) * 0.7;
+        const size = 1 + z * 5;
+        return {
+          width: size,
+          height: size,
+          background: "#fff",
+          opacity: z,
+          left: width / 2 + Math.cos(a) * r,
+          top: height / 2 + Math.sin(a) * r,
+        };
+      })}
+    </div>
+  );
+}
+
+function CrtScanlines({ t }: ClipArgs) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        opacity: 0.22,
+        backgroundImage:
+          "repeating-linear-gradient(0deg, #000 0 2px, transparent 2px 6px)",
+        backgroundPositionY: t * 40,
+      }}
+    />
+  );
+}
+
+function SlideWipe({ props, t, dur, width }: ClipArgs) {
+  const p = t / dur;
+  // In from the left, out to the right; full cover at the middle (the cut).
+  const x = (p * 2 - 1) * width * 1.05;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: str(props, "color", "#111827"),
+        transform: `translateX(${x}px)`,
+      }}
+    />
+  );
+}
+
+function CircleWipe({ props, t, dur, width, height }: ClipArgs) {
+  const p = 1 - Math.abs(t / dur - 0.5) * 2;
+  const r = p * Math.hypot(width, height) * 0.6;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: str(props, "color", "#111827"),
+        clipPath: `circle(${r}px at 50% 50%)`,
+      }}
+    />
+  );
+}
+
+/** One huge word per beat on a flat ground: slam in with a whip blur, hard cut out. */
+function KineticSlam({ props, t, width, height }: ClipArgs) {
+  const p = Math.min(1, t / 0.12);
+  const settle = 1 + (1 - p) * 1.4 + Math.max(0, 0.3 - t) * 0.12;
+  const text = str(props, "text");
+  const longest = Math.max(...text.split(" ").map((w) => w.length), 1);
+  const size = Math.min(height * 0.3, (width * 0.9) / (longest * 0.78));
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: str(props, "ground", "#ff5a00"),
+        color: str(props, "ink", "#0a0a0a"),
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        fontFamily: "Arial Black, Impact, sans-serif",
+        fontWeight: 900,
+        fontSize: size,
+        lineHeight: 0.92,
+        letterSpacing: "-0.03em",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          transform: `scale(${settle}) scaleX(${1 + (1 - p) * 0.5})`,
+          filter: `blur(${(1 - p) * 18}px)`,
+        }}
+      >
+        {text}
+      </div>
+    </div>
+  );
+}
+
 export const CLIPS: Record<CoreClip, (args: ClipArgs) => ReactNode> = {
   backdrop: Backdrop,
   "bullet-list": BulletList,
   "device-frame": DeviceFrame,
   "glitch-text": GlitchText,
+  "kinetic-slam": KineticSlam,
+  "bounce-in-headline": BounceHeadline,
+  "crt-scanlines": CrtScanlines,
+  "gradient-text-sweep": GradientSweep,
+  "particle-snow": ParticleSnow,
+  "scramble-text": ScrambleText,
+  "slide-wipe": SlideWipe,
+  starfield: Starfield,
+  "transition-circle-wipe": CircleWipe,
+  typewriter: Typewriter,
+  "wave-text": WaveText,
   "kinetic-text": KineticText,
   "lower-third": LowerThird,
   "quote-card": QuoteCard,

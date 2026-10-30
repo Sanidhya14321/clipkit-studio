@@ -2,8 +2,11 @@
 //! expansion into layers. Each segment owns the layers whose ids start `edl-<id>-`, so changing
 //! one segment re-expands only that segment.
 
+use std::path::{Path, PathBuf};
+
 use ck_assets::layout::{self, TextBlock};
 use ck_assets::library;
+use ck_assets::native_adapter::{self, NATIVE, NativeKind};
 use ck_core::model::{Holder, Project, Source, TrackKind};
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_media::CachePaths;
@@ -14,6 +17,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
 use super::edit::SourceRequest;
+use super::import::ImportRequest;
 use super::recipe::{PlaceMode, RecipeApplyRequest};
 use super::{Session, is_zero};
 
@@ -21,6 +25,10 @@ const CAPTION_TRACK: &str = "captions-1";
 /// Most words on screen in one caption.
 const CAPTION_WORDS: usize = 3;
 const CANDIDATES: usize = 3;
+const SLAM: &str = "clipkit/kinetic-slam";
+const BACKDROP: &str = "clipkit/backdrop";
+/// Length of a transition, centred on the cut.
+const TRANSITION_DUR: f64 = 0.4;
 
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -57,6 +65,9 @@ pub struct GridResult {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PlanSetRequest {
     pub segments: Vec<Segment>,
+    /// Music asset laid under the whole plan and ducked under speech.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub music: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema)]
@@ -100,6 +111,8 @@ struct Stored {
     grid: Grid,
     #[serde(default)]
     segments: Vec<Segment>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    music: Option<String>,
 }
 
 fn stored(project: &Project) -> CkResult<Stored> {
@@ -161,7 +174,285 @@ fn caption_blocks(words: &[Word], range: (f64, f64), at: f64, prefix: &str) -> V
         .collect()
 }
 
+fn unknown(asset: &str, what: &str) -> CkError {
+    request(format!("{asset:?} is not a renderable {what} asset"))
+        .with_hint("Run ck plan candidates for the assets that render.")
+}
+
+fn check_assets(s: &Segment) -> CkResult<()> {
+    let pairs = [
+        (&s.text_asset, NativeKind::Text, "text"),
+        (&s.overlay, NativeKind::Overlay, "overlay"),
+        (&s.transition, NativeKind::Transition, "transition"),
+    ];
+    for (asset, kind, what) in pairs {
+        if let Some(a) = asset
+            && native_adapter::clip_of(a, kind).is_none()
+        {
+            return Err(unknown(a, what));
+        }
+    }
+    if let Some(a) = &s.sfx {
+        media_file(a)?;
+    }
+    Ok(())
+}
+
+/// The folder that holds audio packs: `CK_ASSETS`, else `assets/` above the binary or here.
+fn assets_root() -> Option<PathBuf> {
+    if let Some(p) = std::env::var_os("CK_ASSETS").filter(|v| !v.is_empty()) {
+        return Some(PathBuf::from(p));
+    }
+    let exe = std::env::current_exe().ok()?;
+    let here = std::env::current_dir().ok();
+    exe.ancestors()
+        .map(Path::to_path_buf)
+        .chain(
+            here.iter()
+                .flat_map(|h| h.ancestors().map(Path::to_path_buf)),
+        )
+        .map(|r| r.join("assets"))
+        .find(|a| a.join("sfx-elements-audio").is_dir())
+}
+
+/// An audio asset `pack/name`: its media file and measured onset.
+fn media_file(asset: &str) -> CkResult<(PathBuf, f64)> {
+    let missing = || unknown(asset, "audio");
+    let (pack, name) = asset.split_once('/').ok_or_else(missing)?;
+    let safe = |p: &str| !p.is_empty() && p.chars().all(|c| c.is_ascii_alphanumeric() || c == '-');
+    if !safe(pack) || !safe(name) {
+        return Err(missing());
+    }
+    let dir = assets_root().ok_or_else(missing)?.join(pack);
+    let found = std::fs::read_dir(&dir)
+        .map_err(|_| missing())?
+        .flatten()
+        .map(|e| e.path())
+        .find(|p| {
+            p.file_name()
+                .and_then(|n| n.to_str())
+                .is_some_and(|n| n == name || n.starts_with(&format!("{name}-")))
+        })
+        .ok_or_else(missing)?;
+    let file = std::fs::read_dir(found.join("media"))
+        .map_err(|_| missing())?
+        .flatten()
+        .map(|e| e.path())
+        .next()
+        .ok_or_else(missing)?;
+    let onset = std::fs::read_to_string(found.join("analysis.json"))
+        .ok()
+        .and_then(|t| serde_json::from_str::<Value>(&t).ok())
+        .and_then(|v| v["onsetSec"].as_f64())
+        .unwrap_or(0.0);
+    Ok((file, onset))
+}
+
+/// Short name of every pack entry, for candidates.
+fn pack_names(pack: &str, words: &[&str]) -> Vec<String> {
+    let Some(root) = assets_root() else {
+        return Vec::new();
+    };
+    let mut names: Vec<String> = std::fs::read_dir(root.join(pack))
+        .map(|d| {
+            d.flatten()
+                .filter(|e| e.path().join("media").is_dir())
+                .filter_map(|e| e.file_name().to_str().map(str::to_owned))
+                .filter_map(|n| n.rsplit_once('-').map(|(a, _)| a.to_owned()))
+                .filter(|n| words.is_empty() || words.iter().any(|w| n.contains(w)))
+                .map(|n| format!("{pack}/{n}"))
+                .collect()
+        })
+        .unwrap_or_default();
+    names.sort();
+    names.truncate(CANDIDATES);
+    names
+}
+
+fn natives(kind: NativeKind) -> String {
+    let all: Vec<&str> = NATIVE.iter().filter(|n| n.3 == kind).map(|n| n.0).collect();
+    all.join(" ")
+}
+
+fn provenance(asset: &str) -> Value {
+    json!({ "sourceAsset": asset, "hash": format!("native:{asset}"), "mode": "native-adapter",
+            "adaptations": ["text", "timing"], "license": "see license report" })
+}
+
+fn native_item(id: String, clip: &str, asset: &str, at: f64, dur: f64, props: Value) -> Value {
+    json!({ "id": id, "name": clip, "purpose": "planned asset", "type": "clip",
+            "clipId": clip, "at": at, "dur": dur, "props": props,
+            "assetRef": asset, "provenance": provenance(asset) })
+}
+
 impl Session {
+    /// Adds items to the first track of `kind`, creating it, and records `assets`.
+    fn add_items(
+        &self,
+        (kind, track): (TrackKind, &str),
+        items: Vec<Value>,
+        assets: Vec<String>,
+        label: &str,
+    ) -> CkResult<()> {
+        if items.is_empty() {
+            return Ok(());
+        }
+        let mut doc = self.doc()?;
+        let project = doc.project();
+        let mut ops: Vec<Value> = match project.tracks.iter().position(|t| t.id == track) {
+            Some(t) => items
+                .into_iter()
+                .map(|i| json!({ "op": "add", "path": format!("/tracks/{t}/items/-"), "value": i }))
+                .collect(),
+            None => {
+                let name = serde_json::to_value(kind).map_err(server)?;
+                let name = name.as_str().unwrap_or("overlay").to_owned();
+                vec![json!({ "op": "add", "path": "/tracks/-", "value": {
+                    "id": track, "kind": name, "items": items } })]
+            }
+        };
+        let mut used = project.assets_used.clone();
+        for a in assets {
+            if !used.contains(&a) {
+                ops.push(json!({ "op": "add", "path": "/assetsUsed/-", "value": a }));
+                used.push(a);
+            }
+        }
+        self.commit_agent(&mut doc, Value::Array(ops), label.to_owned())?;
+        Ok(())
+    }
+
+    /// Imports an audio asset once and returns its source id, onset and length.
+    fn audio_source(&self, asset: &str) -> CkResult<(String, f64, f64)> {
+        let (file, onset) = media_file(asset)?;
+        let done = self.import(&ImportRequest {
+            path: file.to_string_lossy().into_owned(),
+        })?;
+        Ok((
+            done.source.id,
+            onset,
+            done.source.duration_sec.unwrap_or(0.0),
+        ))
+    }
+
+    /// Overlay, then text, then transition: the draw order inside the track.
+    fn add_native(&self, s: &Segment, p: &Placed, prefix: &str) -> CkResult<usize> {
+        let project = self.project()?;
+        let mut items = Vec::new();
+        let mut assets = Vec::new();
+        let mut base = Vec::new();
+        let slam = s.text_asset.as_deref() == Some(SLAM);
+        if s.source.is_none() && s.recipe.is_none() && !slam {
+            let props = json!({ "color": "#0b1020", "accent": "#22d3ee", "motif": true });
+            let id = format!("{prefix}-backdrop");
+            base.push(native_item(id, "backdrop", BACKDROP, p.at, p.dur, props));
+            assets.push(BACKDROP.to_owned());
+        }
+        if let Some(a) = &s.overlay
+            && let Some(clip) = native_adapter::clip_of(a, NativeKind::Overlay)
+        {
+            items.push(native_item(
+                format!("{prefix}-overlay"),
+                clip,
+                a,
+                p.at,
+                p.dur,
+                json!({}),
+            ));
+            assets.push(a.clone());
+        }
+        if let (Some(a), Some(text)) = (&s.text_asset, &s.text)
+            && let Some(clip) = native_adapter::clip_of(a, NativeKind::Text)
+        {
+            let id = format!("{prefix}-text");
+            let block = TextBlock {
+                id: id.clone(),
+                text: text.clone(),
+                role: layout::TextRole::Title,
+                align: layout::Align::Center,
+                at: p.at,
+                dur: p.dur,
+            };
+            let mut props = serde_json::Map::new();
+            props.insert("text".into(), json!(text));
+            props.insert("color".into(), json!("#ffffff"));
+            if slam {
+                // Colour flips every other bar; one motif, so it may repeat.
+                let (ground, ink) = if s.from % 8 >= 4 {
+                    ("#0a0a0a", "#ff5a00")
+                } else {
+                    ("#ff5a00", "#0a0a0a")
+                };
+                props.insert("ground".into(), json!(ground));
+                props.insert("color".into(), json!(ink));
+                props.insert("ink".into(), json!(ink));
+                props.insert("motif".into(), json!(true));
+            }
+            let platform = super::layout::platform(&project);
+            if let Some(placed) = layout::solve(platform, 1.0, &[block]).first() {
+                layout::write_props(placed, &mut props);
+            }
+            let layer = native_item(id, clip, a, p.at, p.dur, Value::Object(props));
+            if slam && s.source.is_none() {
+                base.push(layer);
+            } else {
+                items.push(layer);
+            }
+            assets.push(a.clone());
+        }
+        if let Some(a) = &s.transition
+            && let Some(clip) = native_adapter::clip_of(a, NativeKind::Transition)
+            && p.at > 0.0
+        {
+            let at = (p.at - TRANSITION_DUR / 2.0).max(0.0);
+            let id = format!("{prefix}-transition");
+            items.push(native_item(id, clip, a, at, TRANSITION_DUR, json!({})));
+            assets.push(a.clone());
+        }
+        let n = items.len() + base.len();
+        self.add_items(
+            (TrackKind::Video, "video-edl"),
+            base,
+            assets.clone(),
+            "plan: base",
+        )?;
+        self.add_items(
+            (TrackKind::Overlay, "overlay-edl"),
+            items,
+            assets,
+            "plan: assets",
+        )?;
+        if let Some(a) = &s.sfx {
+            let (src, onset, len) = self.audio_source(a)?;
+            let item = json!({ "id": format!("{prefix}-sfx"), "name": "Sound", "purpose": "sound on the cut",
+                "type": "audio", "src": src, "at": (p.at - onset).max(0.0),
+                "ranges": [{ "start": 0.0, "end": len }], "volume": 0.4, "assetRef": a });
+            self.add_items(
+                (TrackKind::Audio, "audio-sfx"),
+                vec![item],
+                vec![a.clone()],
+                "plan: sound",
+            )?;
+            return Ok(n + 1);
+        }
+        Ok(n)
+    }
+
+    /// The music bed under the whole plan, ducked under speech and voice.
+    fn add_music(&self, asset: &str, total: f64) -> CkResult<()> {
+        let (src, _, len) = self.audio_source(asset)?;
+        let item = json!({ "id": "edl-music", "name": "Music", "purpose": "music bed",
+            "type": "audio", "src": src, "at": 0.0,
+            "ranges": [{ "start": 0.0, "end": len.min(total) }],
+            "volume": 0.35, "duck": true, "assetRef": asset });
+        self.add_items(
+            (TrackKind::Audio, "audio-music"),
+            vec![item],
+            vec![asset.to_owned()],
+            "plan: music",
+        )
+    }
+
     fn plan_source(&self, id: &str) -> CkResult<Source> {
         self.project()?
             .sources
@@ -241,6 +532,7 @@ impl Session {
         let plan = Stored {
             grid: grid.clone(),
             segments,
+            music: None,
         };
         let mut doc = self.doc()?;
         let ops = plan_op(doc.project(), &plan)?;
@@ -274,7 +566,14 @@ impl Session {
                 library::recipe_with_text(r)?;
             }
         }
+        for s in &req.segments {
+            check_assets(s)?;
+        }
+        if let Some(m) = &req.music {
+            media_file(m)?;
+        }
         plan.segments = req.segments.clone();
+        plan.music = req.music.clone();
         let ops = plan_op(doc.project(), &plan)?;
         let rev = self.commit_agent(&mut doc, ops, "plan: segments".into())?;
         Ok(PlanWriteResult {
@@ -308,6 +607,17 @@ impl Session {
                 .collect();
             lines.push(format!("{} {:?}: {}", s.id, s.role, names.join(" | ")));
         }
+        lines.push(format!("text: {}", natives(NativeKind::Text)));
+        lines.push(format!("overlay: {}", natives(NativeKind::Overlay)));
+        lines.push(format!("transition: {}", natives(NativeKind::Transition)));
+        lines.push(format!(
+            "sfx: {}",
+            pack_names("sfx-elements-audio", &["whoosh", "pop", "boom"]).join(" ")
+        ));
+        lines.push(format!(
+            "music: {}",
+            pack_names("duru-original-music", &[]).join(" ")
+        ));
         Ok(PlanCandidates { lines, omitted: 0 })
     }
 
@@ -383,6 +693,7 @@ impl Session {
             })?;
             count += done.layers.len() + done.omitted;
         }
+        count += self.add_native(s, p, &prefix)?;
         if let (true, Some(id), Some(range)) = (s.captions, &s.source, p.range) {
             let words = self.words(&self.plan_source(id)?)?;
             let blocks = caption_blocks(&words, range, p.at, &format!("{prefix}-"));
@@ -423,6 +734,10 @@ impl Session {
             }
             for (s, p) in &pairs {
                 layers += self.expand_one(s, p)?;
+            }
+            if let (Some(m), Some(last)) = (&plan.music, placed.last()) {
+                self.add_music(m, last.at + last.dur)?;
+                layers += 1;
             }
         }
         Ok(PlanWriteResult {

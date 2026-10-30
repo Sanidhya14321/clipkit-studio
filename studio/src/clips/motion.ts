@@ -7,14 +7,25 @@ export type Props = Record<string, unknown>;
 /** Core clip ids (mirrors `CORE_CLIPS` in crates/ck-assets/src/recipe.rs). */
 export const CORE_CLIPS = [
   "backdrop",
+  "bounce-in-headline",
   "bullet-list",
+  "crt-scanlines",
   "device-frame",
   "glitch-text",
+  "gradient-text-sweep",
+  "kinetic-slam",
   "kinetic-text",
   "lower-third",
+  "particle-snow",
   "quote-card",
+  "scramble-text",
+  "slide-wipe",
   "split-compare",
+  "starfield",
   "stat-counter",
+  "transition-circle-wipe",
+  "typewriter",
+  "wave-text",
 ] as const;
 export type CoreClip = (typeof CORE_CLIPS)[number];
 

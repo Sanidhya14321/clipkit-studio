@@ -153,9 +153,21 @@ pub struct Segment {
     /// Source id whose speech this keeps; anchors are then that source's times.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<String>,
-    /// Transition into the next segment (recorded; at most two types per plan).
+    /// Transition asset played across this segment's start (at most two types per plan).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition: Option<String>,
+    /// Words on screen, drawn with `textAsset`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub text: Option<String>,
+    /// Text animation asset.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub text_asset: Option<String>,
+    /// Full-frame overlay asset for the segment.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub overlay: Option<String>,
+    /// Sound effect asset; its onset lands on the segment start.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sfx: Option<String>,
     /// Draw captions from the kept words.
     #[serde(default)]
     pub captions: bool,
@@ -285,6 +297,10 @@ mod tests {
             slots: BTreeMap::new(),
             source: None,
             transition: None,
+            text: None,
+            text_asset: None,
+            overlay: None,
+            sfx: None,
             captions: false,
         }
     }

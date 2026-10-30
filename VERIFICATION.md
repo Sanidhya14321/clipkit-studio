@@ -455,3 +455,5 @@ This supersedes UI-1's local-runtime BLOCKED rows for the paths below. It is not
 
 Runtime used: Rust 1.99.1, Node 24.22.1, just 1.59.0, nextest 0.9.150, ffmpeg/ffprobe 6.1.1, system Chrome, existing Remotion 4.0.535. Session-local environment: `/tmp/ck-ui-test-env.sh`. Browser traces from this task are retained under ignored `studio/test-results/ui-workflow-final/`; no session credentials or trace archives are committed. No main-checkout edits or push.
 | `ck doctor` fix lines, key never shown | PASS | `edl_proof::doctor_names_a_fix_and_never_shows_a_key` |
+| Plan layers catalog assets, sound and ducked music | PASS | `edl_proof::plan_layers_catalog_assets_sound_and_music` |
+| 6 s kinetic demo through the real pipeline, all 12 gates, no force | PASS | Frames inspected; loudness FAIL at -11.4 LUFS (target -14); audio not listened to |
