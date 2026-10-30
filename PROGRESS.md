@@ -1,14 +1,14 @@
 # Progress
 
-STATUS: RUNNING
+STATUS: PHASES DONE
 PHASE: 10
 
 ## Handoff (latest)
-1. Done: Phase 9: render worker (Remotion) and full export path with audio mix and render cache (closes Phase 4 step 10b); `ck render check` determinism; `ck eval`; `ck replay`, `ck bisect`, `ck trace bundle`; `ck demo reset` (39 ms); README; bench harness and `ck bench report`; history, branches, variants.
-2. Proof: `just check` and `just test` 347 of 347 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 16 of 16. Evidence in VERIFICATION.md, Phase 9.
-3. Open: sound design placement (no vetted CC0 sound set), critic pass, bench results (PLACEHOLDER: real agent runs and owner media), studio views for history/branches/variants, frame-clock adapter and card previews, Fish Audio provider calls, reviewer agents not run, packaged installers.
-4. Next: Phase 10 stretch (storyboard checkpoint, reference match, taste profile, OTIO export, sub-agent roles, more agents, Demucs opt-in). The cut line drops Phase 10 first; confirm with the owner which items are worth building.
-5. Start: `just check`; spec 12 Phase 10, 14 (Demucs).
+1. Done: Phase 10 (stretch): critic contact sheet (`verify --critic`), `ck reference analyze`, local taste profile (`ck profile`), storyboard checkpoint with studio confirm, OpenTimelineIO and SRT export. All phases 0 to 10 have run; open items below.
+2. Proof: `just check` 356 of 356 nextest (1 skipped), hooks 41 of 41, studio clean; `just e2e` 17 of 17. Evidence in VERIFICATION.md, Phase 10.
+3. Open: Fish Audio provider calls (key and API check), bench results (real agent runs and owner media), sound design placement (vetted CC0 sound set), studio views for history/branches/variants, frame-clock adapter and card previews, packaged installers, more agents, Demucs, reviewer agents never run; see Open questions.
+4. Next: owner priorities among the open items; first candidates: add FISH_AUDIO_API_KEY and verify the API, run the reviewer and spec-checker agents over phases 5 to 10, run the benchmark.
+5. Start: `just check`; `just worker`; README.md.
 
 ## Open questions
 - Phase 9 close: not built: sound design placement (needs a vetted CC0 sound set), the critic pass, studio views for history, branches and variants, `ck repro`, per-layer render cache (whole-video cache built), original-resolution media for the render path (proxies used), audio items (music beds) in the mix, C-arm ablation switches for the bench. Bench results are PLACEHOLDER until real agent runs.
@@ -53,7 +53,7 @@ Spec 14. Implementation stays in the phases below; no finished phase is reopened
 - Phase 9 (polish and proof): remotion-qa, audio-bed-check and tesseract.js in the evaluator and CI after license checks; ffmpeg loudness in the evaluator; wavesurfer.js, culori, opentype.js in the studio; revisit librosa replacement.
 - Phase 10 (stretch): Demucs opt-in sidecar.
 
-## Phase 10: stretch (2026-10-30, in progress)
+## Phase 10: stretch (2026-10-30, done; more agents and Demucs not built)
 
 Spec: 12 (Phase 10), 04 (critic pass, storyboard checkpoint), 06 (clipkit-critic subagent, storyboard and reference commands), 08 (8.1 reference, 8.8 taste profile, 8.6 OTIO and SRT). Owner asked to continue (2026-10-30); the cut line drops this phase first, so each step is small and verified.
 
@@ -63,8 +63,8 @@ Steps:
 - [x] 3. Taste profile: local editable `profile.json` learned from what the user picks; fills brief defaults (source `profile`), never overrides explicit choices; `ck profile show|clear|disable`.
 - [x] 4. Storyboard checkpoint: `ck storyboard get` (a still per scene) and the human confirm.
 - [x] 5. OpenTimelineIO and SRT export.
-- [ ] 6. More agents and the Demucs sidecar: verify formats and runtime; build only what can be verified.
-- [ ] 7. Proof, evidence.
+- [ ] 6. (not built: needs format verification and a Python runtime) More agents and the Demucs sidecar: verify formats and runtime; build only what can be verified.
+- [x] 7. Proof, evidence.
 
 ## Phase 9: polish and proof (2026-10-30, done; sound design, critic pass, bench results carried)
 

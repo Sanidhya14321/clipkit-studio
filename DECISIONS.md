@@ -621,3 +621,6 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - OTIO is written by hand as JSON (Timeline.1, Stack.1, Track.1, Clip.2, Gap.1, ExternalReference.1, GeneratorReference.1, TimeRange.1, RationalTime.1 at the project fps); no OTIO library is added. Checked once by loading with the official Python library in a scratch venv. Overlay and caption tracks: overlays become extra video tracks (lanes); caption items and audio items are not written yet.
 - SRT uses only real word timing; with none it refuses (E_REQUEST) rather than spacing words evenly.
 - MCP has one `export` tool with a `format` field (tool names follow CLI commands, and the CLI is `ck export --format`); otio and srt answer with the timeline export result.
+
+## Phase 10 close (2026-10-30)
+- Not built: more agents (formats unverified) and the Demucs sidecar (needs Python). Taste-profile search reranking and learning from reverts are not built either.
