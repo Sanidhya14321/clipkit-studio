@@ -200,8 +200,9 @@ fn brief_replies_stay_under_their_caps() {
     // The largest proposal the server accepts reads back under the get cap.
     let live = Live::start();
     let ops = live.ops();
-    let fields: serde_json::Map<String, Value> = (0..40)
-        .map(|i| (format!("f{i:02}"), json!("v".repeat(60))))
+    let fields: serde_json::Map<String, Value> = ck_assets::recipe::BRIEF_FIELDS
+        .iter()
+        .map(|f| ((*f).to_owned(), json!("v".repeat(60))))
         .collect();
     ops.brief_propose(&propose(json!({ "fields": fields })))
         .unwrap();

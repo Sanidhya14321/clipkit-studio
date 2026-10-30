@@ -145,3 +145,25 @@ fn forced_export_records_the_reason_and_silence_fails_loudness() {
     assert_eq!(out["silent"], true, "{out}");
     assert_eq!(out["loudnessPass"], false, "silence must fail: {out}");
 }
+
+#[test]
+fn brief_rejects_unknown_fields_and_get_shows_the_schema() {
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _s = Studio::start(d);
+    let b = input(
+        d,
+        "b.json",
+        &json!({ "fields": { "ratio": "9:16" }, "questions": [] }),
+    );
+    let out = raw(d, &["brief", "propose", &b]);
+    assert_eq!(out["code"], "E_REQUEST", "{out}");
+    assert!(out["message"].as_str().unwrap().contains("aspect"), "{out}");
+    let got = raw(d, &["brief", "get"]);
+    let look = got["schema"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|f| f["name"] == "look");
+    assert_eq!(look.unwrap()["default"], "clean-product", "{got}");
+}

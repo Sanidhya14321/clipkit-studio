@@ -88,6 +88,28 @@ pub struct BriefView {
     pub effort: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub license_mode: Option<String>,
+    /// Every field `brief propose` accepts, with what applies when it is unset.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub schema: Vec<BriefFieldSchema>,
+}
+
+/// One accepted brief field.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct BriefFieldSchema {
+    pub name: String,
+    /// What applies when the field is unset; none when nothing does.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default: Option<String>,
+}
+
+fn field_default(name: &str) -> Option<&'static str> {
+    match name {
+        "platform" => Some("follows the project frame"),
+        "aspect" => Some("follows platform"),
+        "look" => Some("clean-product"),
+        _ => None,
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema, TS)]
@@ -194,6 +216,12 @@ impl BriefProposeRequest {
                     "field name {name:?} must be 1 to {MAX_NAME} letters, digits, _ - or ."
                 )));
             }
+            if !ck_assets::recipe::BRIEF_FIELDS.contains(&name.as_str()) {
+                return Err(request_err(format!(
+                    "unknown brief field {name:?}; valid fields: {}",
+                    ck_assets::recipe::BRIEF_FIELDS.join(", ")
+                )));
+            }
         }
         for (name, c) in &self.confidence {
             if !self.fields.contains_key(name) {
@@ -277,6 +305,7 @@ impl BriefProposeRequest {
 impl BriefView {
     pub fn of(rev: u64, b: &Brief) -> Self {
         Self {
+            schema: Vec::new(),
             rev,
             status: b.status,
             fields: b
@@ -476,7 +505,15 @@ impl Session {
     /// `brief get`.
     pub fn brief_get(&self) -> CkResult<BriefView> {
         let doc = self.doc()?;
-        Ok(BriefView::of(doc.project().rev, &doc.project().brief))
+        let mut view = BriefView::of(doc.project().rev, &doc.project().brief);
+        view.schema = ck_assets::recipe::BRIEF_FIELDS
+            .iter()
+            .map(|name| BriefFieldSchema {
+                name: (*name).to_owned(),
+                default: field_default(name).map(str::to_owned),
+            })
+            .collect();
+        Ok(view)
     }
 
     /// One `brief wait` check: ready once the brief is confirmed or auto.
