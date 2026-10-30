@@ -630,6 +630,23 @@ fn derive_answers_like_its_cli_twin_and_feeds_the_license_report() {
         (&json!(1), &cli["adaptations"])
     );
 
+    let before = std::fs::read(d.join(".clipkit/derived/glow/GlowTitle.tsx")).unwrap();
+    let refused = err_line(
+        d,
+        &["assets", "derive", "pack-a/glow-title", "--as", "glow"],
+    );
+    assert_eq!(
+        refused,
+        mcp.err(
+            "assets_derive",
+            json!({"id":"pack-a/glow-title","name":"glow"})
+        )
+    );
+    assert_eq!(
+        before,
+        std::fs::read(d.join(".clipkit/derived/glow/GlowTitle.tsx")).unwrap()
+    );
+
     let line = ok_line(d, &["license", "report"], ck_assets::report::caps::REPORT);
     let report: Value = serde_json::from_str(&line).unwrap();
     assert_eq!(report["ok"], true, "{report}");
@@ -926,4 +943,33 @@ fn library_tools_answer_like_their_cli_twins_without_a_studio() {
     assert_eq!(missing, err_line(d, &["recipe", "card", "nope"]));
     // None of these started a studio.
     assert!(!d.join(".clipkit/server.json").exists());
+}
+
+#[test]
+fn music_analysis_answers_like_cli_and_rejects_missing_audio() {
+    let audio = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/generated/tones.wav");
+    if !audio.exists() {
+        eprintln!("skipped: run just fixtures");
+        return;
+    }
+    let dir = tempfile::tempdir().unwrap();
+    let d = dir.path();
+    let _studio = Studio::start(d);
+    let mut mcp = Mcp::start(d);
+    let path = audio.canonicalize().unwrap();
+    let cli = ok_line(
+        d,
+        &["music", "analyze", path.to_str().unwrap()],
+        caps::MUSIC,
+    );
+    assert_eq!(
+        cli,
+        mcp.ok("music_analyze", json!({"path":path}), caps::MUSIC)
+    );
+    assert!(cli.contains("\"confirmed\":false"));
+    let missing = d.join("missing.wav");
+    assert_eq!(
+        err_line(d, &["music", "analyze", missing.to_str().unwrap()]),
+        mcp.err("music_analyze", json!({"path":missing}))
+    );
 }

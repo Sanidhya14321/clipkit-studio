@@ -1,5 +1,13 @@
 # Progress
 
+## UI handoff (2026-10-30)
+1. Done: owner-approved workflow integration on `codex/ui-pro`, isolated at `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`; functional timeline/inspector, import/source/recipes, recording, review/export and asset-use fixes. Main is based at committed `2d0cc96`; no main-checkout edits or push.
+2. Proof: 26 real-server browser flows repeated five times (130/130), 8 frontend contracts repeated five times (40/40), build and 20 current workspace screenshots; Rust/hook/frontend check results are in `docs/updates/ui-workflow-evidence/`. See VERIFICATION.md for exact counts.
+3. Open: external derived registry/adapter, attribution without a located hub, missing asset kinds/previews/fonts, live providers/agents, burned-in captions, live narration/music mix and remaining UI-2..UI-8 scope. Visible review-tab launch blocked by Work settings; automated real Chrome checks passed.
+4. Next: coordinate branch integration with the other agent, then plan the backend asset adapter/license enforcement and remaining editor capabilities. Do not represent 62 searchable cards as 62 executable components; `docs/updates/ASSET_USAGE_AUDIT.md` documents the distinction.
+5. Start: normal Rust/Node/pnpm/just/ffmpeg prerequisites or this session's `/tmp/ck-ui-test-env.sh`; `just check`; `just test`; build studio/ck and worker, then Playwright. Local review project: `http://127.0.0.1:43175/session` while its process is running.
+
+
 ## Update 5 and 6 queue (owner order, 2026-10-30)
 - [x] U5-2: requirements stay in docs/updates/ (spec frozen)
 - [x] U5-3a separate studio token (patch, consent, stop)
@@ -25,6 +33,7 @@ STATUS: IN PROGRESS (Update 5 and 6 queue; engine decision still open)
 PHASE: U5-3
 
 ## Handoff (latest)
+`codex/ui-pro` is merged into main (timeline drag, trim and split; workspace shell; Update 6 snapshot with audio packs). Its last commit is an unreviewed WIP snapshot. Export queue built (`ck export --queue`, `ck jobs`).
 E2E pipeline (docs/E2E_PIPELINE.md): steps 1 to 3 verified; step 4 core built (`ck content map`, `ck grid build`, `ck plan` get, set, candidates and expand; ducking). Not built: punch-ins and transitions are recorded only, per-change draft accept, timeline drag, trim, split and loop, export queue, generated plus kept speech in one plan. Step 7 needs the owner. Step 9 lives on `codex/ui-pro` with uncommitted work.
 Toolchain: `~/.cache/clipkit-ui-tools` (Rust, just, ffmpeg 6) and the Codex runtime Node; pnpm absent, so `just check` cannot finish its studio part here.
 Pipeline audit: server now enforces brief, gates and retry; see DECISIONS.md, end-to-end pipeline audit. Changes uncommitted.
@@ -451,3 +460,96 @@ Plan (approved by the owner before building):
 - [x] CI: .github/workflows/ci.yml (fast suite + fixtures job).
 - [x] Fixtures generator: fixtures/generate.sh -> fixtures/generated/ with ground-truth.json.
 - [x] Run the fixtures generator locally (ffmpeg 8.0.1, 2026-10-28).
+
+## UI-0 / UI-1 plan (2026-10-30, owner approved UI-1 in chat)
+
+Isolation: branch `codex/ui-pro`, worktree `/Users/sanidhyavats/Desktop/clipkit-studio-ui-pro`, base `af6c2d5`. Do not touch the main checkout's uncommitted Update 5 engine work.
+
+UI-0 (authorized audit): inspect existing studio and API, run current browser flows against a fresh demo, save screenshots and findings in `docs/updates/UI_AUDIT.md`. No application code changes. Generated bindings remain untouched under AGENTS.md.
+
+Proposed UI-1 (approval required by AGENTS.md):
+1. Introduce shared theme tokens, compact full-window shell, accessible panel registry, resizable split/tab layout and workspace presets. Retain all existing functional panels and the current preview engine.
+2. Add menus, searchable command palette, live project/connection/agent/revision status and per-panel/top-level error boundaries. Wire supported commands to existing HTTP APIs, patches and WebSocket state; disable unsupported actions with reasons.
+3. Persist layout safely in browser storage; server persistence requires separately reviewed server capability work if absent. No engine migration, Rust behavior changes or new dependency without verification.
+4. Verify existing edits, context selection, locks, comments, brief, history and reconnect against the real server. Run studio checks, full `just check`/`just test` and relevant browser tests; save 1440/1920 screenshots and evidence.
+5. Commit only isolated UI phase files. Hand off later UI-2 to UI-8 work explicitly; do not claim unsupported editor features.
+
+Scope: `studio/src` shell/layout/theme, `studio/e2e` coverage and UI-specific audit/progress/evidence docs. Do not edit `docs/spec`, engine code, generated types, render-worker or shared dependencies during UI-1.
+
+### UI-1 delivery checklist
+- [x] Original theme tokens, dark/high contrast, compact/comfortable density; no new dependencies.
+- [x] Split/tab shell and seven workspace presets; independent scrolling, close/reopen, maximize, desktop splitters, merged narrow tabs.
+- [x] Stable mounted panels retain draft forms when docked, across workspaces and responsive changes; recording streams cleaned up on actual unmount.
+- [x] Safe per-project/workspace browser storage plus per-key memory fallback; malformed preferences reset.
+- [x] Shared shell commands, menus/palette, typing-safe keyboard handling, server undo/redo/stop, live connection/agent/revision status and panel/top-level boundaries.
+- [x] Preserve generated types, revisioned existing edit requests, preview/context/lock behavior; adapt real-server tests to explicitly open panels.
+- [x] Browser audit, visual matrix, frontend checks and read-only localhost preview opened in the visible browser.
+- [ ] Real Rust server, media export, real agent-in-the-loop and performance/fallback acceptance: BLOCKED/unverified; see VERIFICATION.md.
+- [ ] Floating, server layout persistence, normalized store/optimistic patch-command migration and richer registry capabilities: explicitly deferred in DECISIONS.md, not represented as working UI.
+
+UI integration: rebased onto committed main `5ec6550` (engine adapter seam and pipeline gates). Only shared handoff/decision/evidence documentation required conflict resolution; both agents' records were retained. Main checkout and its active work were not changed.
+
+## UI workflow integration plan (2026-10-30, owner approved in chat)
+
+User correction: the UI must support the project's actual workflows and be usable; the prior UI-1 shell is insufficient. Continue in the isolated UI worktree. Main currently has active uncommitted Rust work in import/export/edit/voice/session/core/assets; do not edit those files or bring uncommitted work across.
+
+Proposed single integration phase, grounded in spec 5.3–5.4 and 8.1–8.6 and the supplied UI update:
+1. Runtime and capability audit: establish a real local ck server if the available official toolchain can be provisioned; use server contracts to distinguish supported functions, provider-dependent functions and capabilities requiring backend work. Retain the current engine decision.
+2. Simplify navigation around the workflow: Edit, Generate, Audio/Captions and Review/Export; contextual panel activation, clear empty states, prominent import, add title/recipe, ask agent, verify and export actions. Avoid advertising unavailable specialized tools as complete workspaces.
+3. Functional editing: timeline ruler/playhead/seek/zoom, selection, drag/move, trims, split/delete, snapping, keyboard and shared undo/redo. One revisioned patch per gesture; locked layers refuse; optimistic drafts roll back on rejection. Inspector edits real supported text/style/timing/audio properties.
+4. Connect existing backend operations into clear panels: local-path media import (no fake browser file paths), source preview/placement, recipe application with slot inputs, verification/export with progress/error/output location, comment review and history, existing voice/transcript controls with their actual capability limits.
+5. Improve performance: stable panel state, memoized derived data and rendering, avoid invalidation of the entire workspace per preview frame, bounded/visible timeline rendering and responsive panel access. Measure supported performance cases, do not invent budget results.
+6. Verify complete representative workflows against real ck wherever possible, with refusal/disconnect tests and visible browser inspection; frontend contract tests stay separately labeled. Update audit/decisions/evidence, commit isolated changes and rebase only committed compatible main changes.
+
+Files owned here: studio source, studio tests, UI-specific docs, and environment setup outside the repo. New server behavior/endpoints are not included while another agent owns those Rust modules. Existing missing backend capabilities will be called out plainly rather than simulated as working product features.
+
+Approval is required before application code changes by AGENTS.md and .agents/skills/phase-runner/SKILL.md. Independent read-only audit and runtime preparation may proceed meanwhile.
+
+### Workflow integration delivery
+
+- [x] Official runtime provisioned in an isolated cache; real ck, ffmpeg, synthetic fixtures and Node render-worker workflows run locally.
+- [x] Functional timeline editing, supported inspector values, optimistic rejection handling, title dialog and contextual workflow navigation.
+- [x] Source/media placement, recipe slots/provenance, recording setup/capture, verification and MP4/OTIO/SRT paths connected to existing APIs.
+- [x] Memoized monitor, separate playback clock and viewport-limited timeline targets; explicit limits retained instead of simulated features.
+- [x] Real server authentication/locks/pipeline preserved after integrating committed main. Narrow mono recording, image serving/render map and shared worker-browser fixes recorded in DECISIONS.md.
+- [x] Browser screenshot review caught and fixed the title/background mismatch; regression failed before fix and passed in all five final real runs.
+- [x] Asset-use audit completed at the owner's request. Native imported images render in recipes and worker; external derive does not register/execute components. Remaining backend gaps are explicit in docs/updates/ASSET_USAGE_AUDIT.md.
+- [x] Final real-server browser suite 130/130 and frontend contracts 40/40; current screenshot matrix is five workspaces × two widths × two themes. No live paid providers or owner media were used.
+- [x] Final `just check` and `just test` green: 377 Rust tests passed/1 pre-existing skipped, 41 hooks, frontend format/types and 47 unit tests. Production studio/ck build and worker bundle passed.
+- [x] Prior runtime BLOCKED rows in UI-1 are superseded by the workflow evidence. Historical phase limits and the main owner's Update 5/6 queue remain preserved.
+- [ ] Merge/integrate with the other agent's branch only after coordinating ownership. No push requested.
+
+Review note: reviewer/test subagents supplied earlier findings, which were addressed; their later turns hit the session quota. Remaining review and final checks were completed by the primary agent. No new independent reviewer pass is claimed. `ck doctor` is absent from this CLI; actual build/media/browser checks replaced that diagnostic step.
+
+## Demo quality follow-up audit
+
+Owner asks which assets are used and why the video is not fast-paced beat-wise. Current URL port 50696 is the original 15-second smoke-test demo: three original recipes, base holds of 4/5/6 seconds, no imported music, external derived asset, beat grid or beat sheet. The existing sound planner has cue timings without sound assets, and energy/beat gates remain absent. Functional test PASS must not be presented as creative-quality acceptance. Compared the supplied Update 5 section 3 and Update 6 core directive/section 4.2; recorded evidence in `docs/updates/ui-workflow-evidence/demo-pacing-audit.json` and `ASSET_USAGE_AUDIT.md`. No application code or main-checkout file changed; Update 5/6 backend implementation remains separately coordinated.
+
+## Update 6 implementation plan — awaiting owner approval
+
+Owner explicitly requested implementation of the attached Update 6 prompt. It is retained verbatim in docs/updates/UPDATE_6.md as requirements; the document's kickoff text is not separate authority to change protected specs or bypass review gates. Continue in the isolated `codex/ui-pro` worktree. Main is clean at 2d0cc96; other Update 5 chats are not currently loaded. Do not modify their checkout or push.
+
+Preconditions: existing U6-0 source/license audit is committed; stabilization evidence exists for canvas, stage enforcement, export gate refusal, loudness and command agreement. The UI branch also passed 377 Rust tests, 41 hooks, 47 frontend unit tests and 130 real-server browser runs. These results do not prove Update 6 quality checks. Preserve the current Remotion engine through its adapter while the engine decision remains open, per Update 6 rule 0.4.
+
+### U6-1: executable asset supply and media analysis
+
+1. Verify direct-use component, SFX and music sources against original license texts; record origin/version/hash and rejection reasons. Start with verified permissive supply. Keep unknown/restricted/paid sources disabled. Do not execute quarantine. Resolve checks that can be verified independently; ask only about terms requiring an owner's decision.
+2. Extend ingestion to bounded local audio/media inputs, with trusted ffmpeg/ffprobe argument arrays. Record duration, peak/loudness, onset, tempo/beat confidence and music energy/drop candidates. Rust owns analysis; no paid API or new dependency without verified need.
+3. Close the derive-to-render gap for an explicitly supported, reviewed native/direct-use subset. Require adaptation, provenance, type-check/first-render and deterministic-frame evidence. Unknown components must be refused by the backend rather than rendered as labels. Do not import arbitrary derived/quarantine code into studio.
+4. Preserve CLI/MCP operation parity and response size caps. Introduce model/schema changes only through generated bindings and backward-compatible defaults. Current project edits remain revisioned and authenticated.
+5. Tests: synthetic known-onset/tempo audio; silence/low-confidence/invalid/oversize inputs; license/reference-only refusal; ingestion/provenance; deterministic supported rendering and unsupported export refusal; CLI/MCP schema/parity/size caps. Run just check, just test and real-server browser import/preview/export coverage. Record F2 and relevant foundations for F4/F5/F9/F10 without claiming all Update 6 checks pass.
+6. Commit this phase and update audit/decisions/evidence. No application code until this concrete plan is approved, as required by AGENTS.md and phase-runner.
+
+Ownership: ck-assets ingestion/card/vetting/report/derive; ck-media analysis; narrow core model/generated bindings as required; ck-server/CLI/MCP adapters and render-worker registration; studio capability display and integration tests. Check main for newly committed overlapping work before each shared-module edit; coordinate rather than overwrite.
+
+### Remaining approved-requirement sequence (separate phase plans)
+
+- U6-2: remaining media kinds, transitions/backgrounds/fonts/icons/LUTs and server-enforced adaptation/usage rules; collision foundations from section 3A.
+- U6-3: candidate starter collection, real previews/license/grade and collection review page. Stop for owner review before promoting the collection.
+- U6-4: fold in missing Update 5 dependencies: beat grid/sheet, onset-aligned sound kits, energy/beat gates, fast default and five format planners. Implement audio ducking and audible preview needed to judge rhythm. Preserve explicit slow requests. Licensed music or clearly labeled generated placeholder fallback only.
+- U6-5: transcript-driven punch-ins, face/caption-safe zones, licensed b-roll draft/swap and collision refusal/fix UI.
+- U6-6: numeric taste files and five golden projects/exports with measured energy, beat alignment, loudness, collisions and playback. Owner footage stays PLACEHOLDER until supplied. Stop for owner ratings.
+- U6-7: one web-library frame-clock adapter at a time with deterministic out-of-order frame tests and license proof.
+- U6-8: real A0/A1/B agent benchmark, three runs per golden brief, measured report and limitations; stop for report review. No invented ratings, benchmark numbers, licenses or assets.
+
+Approval requested for U6-1 only; later collection/example/report human gates remain required by the adopted prompt. Full Update 6 remains unimplemented until its F1–F15 checks have actual evidence.

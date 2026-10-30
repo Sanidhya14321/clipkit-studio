@@ -39,6 +39,7 @@ pub mod import;
 pub mod jobs;
 pub mod layout;
 pub mod look;
+pub mod music;
 pub mod pipeline;
 pub mod recipe;
 pub mod reference;

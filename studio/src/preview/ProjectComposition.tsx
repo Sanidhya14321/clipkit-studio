@@ -11,8 +11,9 @@ import {
 } from "remotion";
 import type { Item, Look, Project, TrackKind } from "../generated/types";
 import { span } from "../timeline";
-import { CLIPS } from "../clips/clips";
-import { type Props, isCoreClip, lookId, resolveTokens } from "../clips/motion";
+import { CLIPS, AssetMediaContext } from "../clips/clips";
+import { type Props, lookId, resolveTokens } from "../clips/motion";
+import { registeredClip } from "../editor/assets";
 
 export interface CompositionProps extends Record<string, unknown> {
   project: Project;
@@ -47,9 +48,17 @@ export function ProjectComposition({
   const t = frame / fps;
   const id = lookId(project);
   const look = looks.find((l) => l.id === id);
+  const sourceMedia = Object.fromEntries(
+    project.sources
+      .filter((s) => (s.kind === "image" || s.kind === "video") && media[s.id])
+      .map((s) => [s.id, { url: media[s.id]!, kind: s.kind }]),
+  );
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#111" }}>
+    <AbsoluteFill
+      data-ck-composition
+      style={{ backgroundColor: look?.colors.background ?? "#111" }}
+    >
       {project.tracks.map((track) =>
         track.items.map((item) =>
           item.type === "footage" && media[item.src] ? (
@@ -88,13 +97,13 @@ export function ProjectComposition({
               isVisibleAt(project, item, t),
           )
           .map((item) =>
-            item.type === "clip" && isCoreClip(item.clipId) ? (
+            item.type === "clip" && registeredClip(project, item) ? (
               <div
                 key={
                   flash.includes(item.id) ? `${item.id}@${flashRev}` : item.id
                 }
                 data-ck-layer={item.id}
-                data-ck-clip={item.clipId}
+                data-ck-clip={registeredClip(project, item)}
                 data-ck-agent={agentLayers.includes(item.id)}
                 className={flash.includes(item.id) ? "flash" : undefined}
                 style={{
@@ -106,13 +115,17 @@ export function ProjectComposition({
                   outlineOffset: -4,
                 }}
               >
-                {CLIPS[item.clipId]({
-                  props: resolveTokens(propsOf(item.props), look),
-                  t: t - item.at,
-                  dur: item.dur,
-                  width: project.settings.width,
-                  height: project.settings.height,
-                })}
+                <AssetMediaContext.Provider
+                  value={{ sources: sourceMedia, at: item.at }}
+                >
+                  {CLIPS[registeredClip(project, item)!]({
+                    props: resolveTokens(propsOf(item.props), look),
+                    t: t - item.at,
+                    dur: item.dur,
+                    width: project.settings.width,
+                    height: project.settings.height,
+                  })}
+                </AssetMediaContext.Provider>
               </div>
             ) : (
               <div

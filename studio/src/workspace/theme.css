@@ -1,0 +1,61 @@
+/* Original ClipKit workspace palette. All shell metrics and colors live here. */
+:root {
+  --ck-bg: #151719;
+  --ck-panel: #202326;
+  --ck-raised: #282c30;
+  --ck-hover: #343a3e;
+  --ck-border: #393f44;
+  --ck-text: #e0e5e7;
+  --ck-muted: #a1adb4;
+  --ck-accent: #8bdacb;
+  --ck-accent-ink: #102c27;
+  --ck-agent: #c2abeb;
+  --ck-success: #8bd6ae;
+  --ck-warning: #e5c083;
+  --ck-error: #f49e9e;
+  --ck-video: #3a6674;
+  --ck-overlay: #615078;
+  --ck-audio: #3c6956;
+  --ck-caption: #806a3e;
+  --ck-shadow: #0008;
+  --ck-space: 4px;
+  --ck-radius: 4px;
+  --ck-row: 28px;
+  --ck-font: 12px;
+  --ck-small: 10px;
+  --ck-icon: 16px;
+  --ck-header: 44px;
+  --ck-workspaces: 38px;
+  --ck-status: 28px;
+  --ck-hairline: 1px;
+  --ck-splitter: 6px;
+  --ck-focus: 2px;
+  --ck-menu: 300px;
+  --ck-palette: 560px;
+  --ck-transition: 120ms;
+  --ck-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+[data-theme="high-contrast"] {
+  --ck-bg: #080b0c;
+  --ck-panel: #111719;
+  --ck-raised: #1d272b;
+  --ck-hover: #30424a;
+  --ck-border: #9aaeb8;
+  --ck-text: #fff;
+  --ck-muted: #cedbe2;
+  --ck-accent: #a0ffe9;
+}
+[data-density="comfortable"] {
+  --ck-row: 36px;
+  --ck-font: 13px;
+  --ck-space: 5px;
+}
+:root {
+  --ck-toolbar: 38px;
+  --ck-editor-row: 48px;
+  --ck-track-header: 124px;
+  --ck-timeline-ruler: 30px;
+  --ck-quiet-bg: #1b2023;
+  --ck-accent-wash: #8bdacb18;
+  --ck-error-wash: #f49e9e18;
+}

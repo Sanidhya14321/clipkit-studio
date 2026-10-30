@@ -1,0 +1,185 @@
+{
+  "source": "sfx-elements-audio",
+  "commit": "cb4d5283443a3b565893821257c886a0b6b6553b",
+  "mediaLicense": "CC0 per original provider and individual SoundAsset declarations",
+  "noticeSource": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/src/content/providers/sfx.mdx",
+  "noticeCopy": "LICENSE.notice.md is the exact License section from the original provider notice; installation examples excluded from media-only pack. Original provider SHA256 retained in files list.",
+  "files": [
+    {
+      "path": "src/content/providers/sfx.mdx",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/src/content/providers/sfx.mdx",
+      "sha256": "e8df77154ea8fcac490703fe2e74a0c765c570c937ce15d657d81072fe0bbe1a"
+    },
+    {
+      "path": "public/sfx/boom.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/boom.mp3",
+      "sha256": "e9a82609461e13bbdb8a873be964811b829911b51e24d3f6c01100b29bb78fc8"
+    },
+    {
+      "path": "public/sfx/click.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/click.mp3",
+      "sha256": "90b3a3642f47fa069c774b24e0a586208c38ff6ddeefa97a61042453b10fb5f0"
+    },
+    {
+      "path": "public/sfx/drone.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/drone.mp3",
+      "sha256": "721425c1605aac91bc9a41c7e30a985d8b9dd9b4e864bcecda4846657e316a60"
+    },
+    {
+      "path": "public/sfx/error.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/error.mp3",
+      "sha256": "b6993191c51f0446b47dce2395ae9a01e18f08283da699d51987c48e6a2fb551"
+    },
+    {
+      "path": "public/sfx/glitch.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/glitch.mp3",
+      "sha256": "760b72bdaad71f83350e2ef3a9d037daf58f44855a05a6cce25d990f1ffb888a"
+    },
+    {
+      "path": "public/sfx/keyboard.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/keyboard.mp3",
+      "sha256": "50499e20c5cde940ecba6371eb05ce075b7534a4160a0e37f063b443cc7d920d"
+    },
+    {
+      "path": "public/sfx/magic-reveal.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/magic-reveal.mp3",
+      "sha256": "7ef89d2e8bbc02e558b0bdbad3e0ae67b171ff8759e59a24bcd69ba0124f71e8"
+    },
+    {
+      "path": "public/sfx/notification.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/notification.mp3",
+      "sha256": "a816dbc5863565a027ba79c09f9b2af5c67edc1fe29af25cbf7eea9ff29463b3"
+    },
+    {
+      "path": "public/sfx/pop.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/pop.mp3",
+      "sha256": "b89f463a8ebc94babe30ec854cbf7493eafdee8c04ea9eb12b444e44166b0b7b"
+    },
+    {
+      "path": "public/sfx/reverse-whoosh.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/reverse-whoosh.mp3",
+      "sha256": "2ee1ccba764989f688dcd9668ea5db58e9ff90cf29b598c1f184513ba50ac50e"
+    },
+    {
+      "path": "public/sfx/riser.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/riser.mp3",
+      "sha256": "2782addbe36dd8d85dc7a3077a939d002a17724f6cccc0081cab345fc6851dfc"
+    },
+    {
+      "path": "public/sfx/shutter.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/shutter.mp3",
+      "sha256": "3df2eec8e826a7bf11c14a2dd338a985f34737f8a28fdf3498921f1a3888a3fb"
+    },
+    {
+      "path": "public/sfx/success.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/success.mp3",
+      "sha256": "451bf706e5aabfd718c918ae1423d387da89df7847b0647dfd55a64341d1e1a2"
+    },
+    {
+      "path": "public/sfx/swoosh.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/swoosh.mp3",
+      "sha256": "c8ac5f7964007c7b5661fa2d329a75e46936f3e619495a103bdb87ef0c7c70b9"
+    },
+    {
+      "path": "public/sfx/whoosh-alt1.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/whoosh-alt1.mp3",
+      "sha256": "ac901b8379be71eef102b7c83fdaddbb91accf75d09098188b6e2fc6717b4966"
+    },
+    {
+      "path": "public/sfx/whoosh-alt2.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/whoosh-alt2.mp3",
+      "sha256": "2de86b6715399806a7a9a5a0d5ad1833af068777a917b7043204b2a532708742"
+    },
+    {
+      "path": "public/sfx/whoosh.mp3",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/sfx/whoosh.mp3",
+      "sha256": "c2efd9d902a59bf9ec5019035d7deadd17762136896b6e3cb6dd99ea50997a30"
+    },
+    {
+      "path": "public/r/sfx-boom.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-boom.json",
+      "sha256": "549cf87ccf9aa3b7d6145573c5f639d1198c989477bb11c586122459c53ffb5d"
+    },
+    {
+      "path": "public/r/sfx-click.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-click.json",
+      "sha256": "bcc621a9a2a46f02fc8925e212af5991a149ad0c06434577f06f35aacc18178b"
+    },
+    {
+      "path": "public/r/sfx-drone.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-drone.json",
+      "sha256": "77c46e69f0230693de3b6a84b1101ddf6762b4e34d6bfaf8d8239eb7e92bf101"
+    },
+    {
+      "path": "public/r/sfx-error.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-error.json",
+      "sha256": "8b08557d7c910cb96f8e8ef8384649c1098df52f2176b0263014677b55bbc866"
+    },
+    {
+      "path": "public/r/sfx-glitch.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-glitch.json",
+      "sha256": "7fab1481e55b691e8de4cc0275678325b1f8a03f307a4026c55b819fa870b600"
+    },
+    {
+      "path": "public/r/sfx-keyboard.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-keyboard.json",
+      "sha256": "8dcb2846560be3d8cedbe1bbc4521afae507c68df216d00d016e05e63ffc007a"
+    },
+    {
+      "path": "public/r/sfx-magic-reveal.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-magic-reveal.json",
+      "sha256": "663feadf5f2ddd97b091d1d9d6e24eeeb81cd8dd9a16c4a26e13a1108d8be7f9"
+    },
+    {
+      "path": "public/r/sfx-notification.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-notification.json",
+      "sha256": "87600f9f824c676b7050bf3237782dfc3576748d05ac04f5ec17a82191db50e3"
+    },
+    {
+      "path": "public/r/sfx-pop.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-pop.json",
+      "sha256": "4536e42fad59d85952b64713876116703f424632e8be15d6fe8cdcd37099338c"
+    },
+    {
+      "path": "public/r/sfx-reverse-whoosh.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-reverse-whoosh.json",
+      "sha256": "b373c53288e9078c73850d330c5984e2821dd04a5cace359f025cf033e914496"
+    },
+    {
+      "path": "public/r/sfx-riser.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-riser.json",
+      "sha256": "f66fd96fa8a16fbda3ae8c769ff7af1569ceb8461b55818a7f359071c43fd656"
+    },
+    {
+      "path": "public/r/sfx-shutter.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-shutter.json",
+      "sha256": "16f96b1250c1294188e361a741da72f8af33c60e79e9757075207c04ec94e959"
+    },
+    {
+      "path": "public/r/sfx-success.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-success.json",
+      "sha256": "6fd0387e9262e009369ca9706193252d07db2e4819c6daa093be35404965b912"
+    },
+    {
+      "path": "public/r/sfx-swoosh.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-swoosh.json",
+      "sha256": "ce17dd2e6d34c2401a385a0cf1f037a5ebc1affdc04258cca3b21c2a6266bf46"
+    },
+    {
+      "path": "public/r/sfx-whoosh-alt1.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-whoosh-alt1.json",
+      "sha256": "367ec7d259a768ffd81a3b0235ae129be1d34338bf84048e356dd61264441562"
+    },
+    {
+      "path": "public/r/sfx-whoosh-alt2.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-whoosh-alt2.json",
+      "sha256": "35711a2f99e37299d2fe3d1b4c08fd75b399dcd070125ecee8b85a956d050909"
+    },
+    {
+      "path": "public/r/sfx-whoosh.json",
+      "url": "https://raw.githubusercontent.com/crafter-station/elements/cb4d5283443a3b565893821257c886a0b6b6553b/public/r/sfx-whoosh.json",
+      "sha256": "df226fea85a42be3fadc8bf3790338296a5053b436ec52a64220f206e4b636fd"
+    }
+  ],
+  "approvedCollection": false
+}

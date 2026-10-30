@@ -35,6 +35,7 @@ use crate::session::handoff::{HandoffRequest, HandoffResult, WaitEvent, WaitRequ
 use crate::session::import::{ImportRequest, ImportResult};
 use crate::session::layout::LayoutCheckResult;
 use crate::session::look::{LookApplyRequest, LookApplyResult};
+use crate::session::music::MusicAnalyzeRequest;
 use crate::session::recipe::{RecipeApplyRequest, RecipeApplyResult};
 use crate::session::reference::{ReferenceRequest, ReferenceResult};
 use crate::session::render::{RenderCheckRequest, RenderCheckResult};
@@ -97,6 +98,7 @@ pub mod caps {
     pub const VOICE_WRITE: usize = 1024;
     pub const ASK: usize = 1024;
     pub const REFERENCE: usize = 1024;
+    pub const MUSIC: usize = 4096;
     pub const STORYBOARD: usize = 1024;
     pub const EXPORT_TIMELINE: usize = 1024;
     pub const DERIVE: usize = 2 * 1024;
@@ -466,6 +468,14 @@ impl Ops {
     }
 
     /// `reference analyze`: a reference video's statistics and suggested brief fields.
+    pub fn music_analyze(
+        &self,
+        req: &MusicAnalyzeRequest,
+    ) -> CkResult<crate::session::music::MusicAnalyzeResult> {
+        let reply = self.client.post_slow("/api/music/analyze", req)?;
+        capped("music analyze", caps::MUSIC, reply)
+    }
+
     pub fn reference_analyze(&self, req: &ReferenceRequest) -> CkResult<ReferenceResult> {
         let reply = self.client.post_slow("/api/reference/analyze", req)?;
         capped("reference analyze", caps::REFERENCE, reply)

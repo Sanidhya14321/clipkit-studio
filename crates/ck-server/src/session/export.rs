@@ -223,6 +223,15 @@ impl Session {
             ));
         }
         let project = self.project()?;
+        for item in project.items() {
+            if matches!(item.body, ItemBody::Clip { .. })
+                && ck_assets::native_adapter::resolve(&project, item)
+                    .is_none_or(|clip| !ck_assets::recipe::CORE_CLIPS.contains(&clip))
+            {
+                return Err(CkError::new(ErrorCode::Render,format!("layer {} has no registered renderer",item.id))
+                    .with_hint("Use a registered native clip or supported native adapter. A gate override cannot add a renderer."));
+            }
+        }
         let workdir = self.workdir();
         let (width, height) = req.preset.size(&project);
         let (pw, ph) = (project.settings.width, project.settings.height);

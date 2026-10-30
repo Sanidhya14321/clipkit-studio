@@ -71,6 +71,38 @@ fn clean_project_passes_every_gate() {
 }
 
 #[test]
+fn derived_files_without_a_renderer_fail_schema_gate() {
+    let mut p = clean();
+    let mut item = serde_json::to_value(&p.tracks[1].items[0]).unwrap();
+    item["derivedId"] = json!("external-copy");
+    p.tracks[1].items[0] = serde_json::from_value(item).unwrap();
+    let r = verify(&p, &look());
+    assert!(r.failed.iter().any(|g| g == "schema"));
+    assert!(
+        r.issues
+            .iter()
+            .any(|i| i.message.contains("no registered renderer"))
+    );
+}
+
+#[test]
+fn only_explicit_registered_native_adapter_resolves_derived_layers() {
+    let mut p = clean();
+    p.derived.push(json!({"id":"adapted","sourceAsset":"rendercomp-free/glitch-text","nativeAdapter":"glitch-text-v1"}));
+    let mut item = serde_json::to_value(&p.tracks[1].items[0]).unwrap();
+    item["derivedId"] = json!("adapted");
+    item["clipId"] = json!("glitch-text");
+    p.tracks[1].items[0] = serde_json::from_value(item).unwrap();
+    assert_eq!(
+        ck_assets::native_adapter::resolve(&p, &p.tracks[1].items[0]),
+        Some("glitch-text")
+    );
+    assert!(!verify(&p, &look()).failed.iter().any(|g| g == "schema"));
+    p.derived[0]["nativeAdapter"] = json!("unreviewed-script.js");
+    assert!(verify(&p, &look()).failed.iter().any(|g| g == "schema"));
+}
+
+#[test]
 fn timeline_gates_catch_gaps_overlaps_and_duration() {
     let mut p = clean();
     p.tracks[0].items[0] = serde_json::from_value(backdrop("bg", 0.5, 3.5, "#ffffff")).unwrap();

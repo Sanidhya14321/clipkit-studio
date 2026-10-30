@@ -30,6 +30,7 @@ use ck_server::session::export::{ExportRequest, Preset};
 use ck_server::session::handoff::{HandoffRequest, WaitRequest};
 use ck_server::session::import::ImportRequest;
 use ck_server::session::look::LookApplyRequest;
+use ck_server::session::music::MusicAnalyzeRequest;
 use ck_server::session::reference::ReferenceRequest;
 use ck_server::session::render::RenderCheckRequest;
 use ck_server::session::storyboard::StoryboardRequest;
@@ -44,8 +45,8 @@ use serde::Serialize;
 use args::{
     AssetsCommand, BenchCommand, BranchCommand, BriefCommand, Cli, Command, CommentsCommand,
     ContentCommand, CutCommand, DemoCommand, FormatArg, GridCommand, LayoutCommand, LicenseCommand,
-    LookCommand, ModeArg, PipelineCommand, PlanCommand, PresetArg, ProfileArg, ProjectCommand,
-    RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand, SourcesCommand,
+    LookCommand, ModeArg, MusicCommand, PipelineCommand, PlanCommand, PresetArg, ProfileArg,
+    ProjectCommand, RecipeCommand, ReferenceCommand, RenderCommand, SoundCommand, SourcesCommand,
     StoryboardCommand, TasteCommand, TraceCommand, TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
@@ -431,7 +432,11 @@ fn run(cli: Cli) -> CkResult<()> {
                     )?)
                 }
                 SourcesCommand::Ingest { id } => {
-                    let out = ingest::ingest(&hub, &IngestRequest { id })?;
+                    let out = ingest::ingest_with_media(
+                        &hub,
+                        &IngestRequest { id },
+                        Some(&ck_server::session::music::asset_analysis),
+                    )?;
                     print(&ck_server::ops::trimmed(
                         "sources ingest",
                         ingest::caps::INGEST,
@@ -451,6 +456,13 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             let report = ck_eval::evaluate(&cli.dir, &ck_eval::EvalRequest { video, expect })?;
             capped_print("eval", ck_eval::caps::EVAL, report)
+        }
+        Command::Music(MusicCommand::Analyze { path }) => {
+            let path = std::path::absolute(&path)
+                .map_err(|e| request_err(e.to_string()))?
+                .to_string_lossy()
+                .into_owned();
+            print(&ops()?.music_analyze(&MusicAnalyzeRequest { path })?)
         }
         Command::Reference(ReferenceCommand::Analyze { path, apply }) => {
             let path = std::path::absolute(&path)

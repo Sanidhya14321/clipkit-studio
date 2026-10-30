@@ -16,6 +16,7 @@ use crate::card::{
 };
 use crate::hub::{Hub, LockEntry, SourceStatus};
 
+const AUDIO_EXT: &[&str] = &["wav", "mp3", "ogg", "opus", "flac", "m4a"];
 const CODE_EXT: &[&str] = &["tsx", "jsx", "ts", "js"];
 /// Longest doc text carried into a card (it is data, and cards stay small).
 const DOC_CHARS: usize = 240;
@@ -82,7 +83,7 @@ fn files(dir: &Path) -> CkResult<Vec<PathBuf>> {
                     || name.contains(".test.")
                     || name.contains(".spec.")
                     || name.contains(".stories.");
-                if CODE_EXT.contains(&ext) && !skip {
+                if (CODE_EXT.contains(&ext) || AUDIO_EXT.contains(&ext)) && !skip {
                     out.push(p);
                 }
             }
@@ -125,6 +126,124 @@ struct Ctx<'a> {
     source: &'a str,
     lock: &'a LockEntry,
     license: &'a str,
+}
+
+fn media_card(
+    ctx: &Ctx<'_>,
+    path: &Path,
+    rel: &str,
+    source_kind: &str,
+    analysis: &serde_json::Value,
+    out: &Path,
+) -> CkResult<String> {
+    use sha2::{Digest, Sha256};
+    let meta = std::fs::metadata(path).map_err(|e| io(path, e))?;
+    if !meta.is_file() || meta.len() > crate::vet::MAX_AUDIO_FILE {
+        return Err(CkError::new(
+            ErrorCode::Request,
+            "audio exceeds vetted file limit",
+        ));
+    }
+    let bytes = std::fs::read(path).map_err(|e| io(path, e))?;
+    let hash: String = Sha256::digest(&bytes)
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect();
+    let name = path.file_stem().and_then(|s| s.to_str()).unwrap_or("audio");
+    let slug = format!("{}-{}", kebab(name), &hash[..12]);
+    let id = format!("{}/{slug}", ctx.source);
+    let duration = analysis
+        .get("durationSec")
+        .and_then(|v| v.as_f64())
+        .filter(|d| d.is_finite() && *d > 0.0)
+        .ok_or_else(|| CkError::new(ErrorCode::Media, "audio analysis has no valid duration"))?;
+    let encoded =
+        serde_json::to_vec(analysis).map_err(|e| CkError::new(ErrorCode::Media, e.to_string()))?;
+    if encoded.len() > 512 * 1024 {
+        return Err(CkError::new(
+            ErrorCode::Request,
+            "audio analysis exceeds metadata cap",
+        ));
+    }
+    let music = source_kind.contains("music");
+    let card = Card {
+        id: id.clone(),
+        name: name.into(),
+        source: ctx.source.into(),
+        source_commit: ctx.lock.commit.clone(),
+        kind: if music {
+            AssetKind::Music
+        } else {
+            AssetKind::Sfx
+        },
+        runtime: Runtime::Direct,
+        determinism: Determinism::Native,
+        license: ctx.license.into(),
+        spdx: ctx.lock.spdx.clone(),
+        license_class: ctx.lock.license_class,
+        grade: Grade::B,
+        deps: vec![],
+        cost: 1,
+        duration: Some(duration),
+        aspects: vec![],
+        tags: {
+            let mut tags=vec![if music {"music"} else {"sound-effect"}.into()];
+            if music { let band=match analysis["bpm"].as_f64() {
+                Some(b) if b<90.0 => "tempo-below-90",
+                Some(b) if b<110.0 => "tempo-90-110",
+                Some(b) if b<130.0 => "tempo-110-130",
+                Some(b) if b<150.0 => "tempo-130-150",
+                Some(_) => "tempo-150-plus", None => "tempo-unconfirmed"
+            }; tags.push(band.into()); } tags
+        },
+        collections: vec![ctx.source.into()],
+        reviewed: false,
+        attribution: (ctx.lock.license_class == LicenseClass::Attribution)
+            .then(|| format!("{name} by {}, {}", ctx.source, ctx.license)),
+        sections: SECTIONS
+            .iter()
+            .map(|section| {
+                (
+                    (*section).into(),
+                    match *section {
+                        "What it is" => format!("Audio from {rel}; content SHA-256 {hash}."),
+                        "Use when" => {
+                            "The measured timing fits the cut; audition before approving.".into()
+                        }
+                        "Avoid when" => {
+                            "The license mode forbids use, or tempo confidence is low.".into()
+                        }
+                        "Safe to adapt" => {
+                            "Trim, gain and beat/onset placement. Keep provenance.".into()
+                        }
+                        "Cannot do" => {
+                            "Not owner-reviewed. No confirmed beat grid, meter or drop prediction."
+                                .into()
+                        }
+                        "Taste notes" => format!("Analysis: onset {} s; tempo {} BPM; unconfirmed. Full measured metadata: analysis.json.",analysis["onsetSec"],analysis["bpm"]),
+                        "Owner notes" => String::new(),
+                        _ => "None declared.".into(),
+                    },
+                )
+            })
+            .collect(),
+    };
+    let dir = out.join(slug);
+    let card_path = dir.join("asset.md");
+    let owner = std::fs::read_to_string(&card_path)
+        .ok()
+        .and_then(|s| Card::parse(&card_path, &s).ok())
+        .map(|c| c.section("Owner notes").to_owned());
+    let rendered = card.render(owner.as_deref());
+    Card::parse(&card_path, &rendered)?;
+    write_ro(&card_path, rendered.as_bytes(), false)?;
+    write_ro(&dir.join("analysis.json"), &encoded, false)?;
+    write_ro(
+        &dir.join("media").join(path.file_name().unwrap_or_default()),
+        &bytes,
+        true,
+    )?;
+    Ok(id)
 }
 
 fn card_for(ctx: &Ctx<'_>, rel: &str, map: &AstMap, sym: &Symbol) -> Card {
@@ -373,6 +492,18 @@ pub fn rebuild_catalog(hub: &Hub) -> CkResult<usize> {
 }
 
 pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
+    ingest_with_media(hub, req, None)
+}
+
+/// The orchestration layer supplies trusted Rust analysis, keeping asset parsing
+/// independent of the media engine. No source-provided callback is ever executed.
+pub type MediaAnalyzer<'a> = &'a dyn Fn(&Path) -> CkResult<serde_json::Value>;
+
+pub fn ingest_with_media(
+    hub: &Hub,
+    req: &IngestRequest,
+    analyze: Option<MediaAnalyzer<'_>>,
+) -> CkResult<IngestResult> {
     let source = hub.source(&req.id)?;
     if source.status != SourceStatus::Vetted {
         return Err(CkError::new(
@@ -380,6 +511,17 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
             format!("source {:?} is not vetted", source.id),
         )
         .with_hint("Run ck sources vet first; only vetted sources are ingested."));
+    }
+    if !source.enabled
+        || matches!(
+            source.license_class,
+            LicenseClass::Unknown | LicenseClass::ReferenceOnly
+        )
+    {
+        return Err(CkError::new(
+            ErrorCode::Request,
+            "source is disabled or reference-only",
+        ));
     }
     let lock = hub.lock()?;
     let entry = lock.get(&source.id).ok_or_else(|| {
@@ -404,6 +546,26 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
             .map_err(|e| io(&path, e))?
             .to_string_lossy()
             .replace('\\', "/");
+        if AUDIO_EXT.contains(&path.extension().and_then(|s| s.to_str()).unwrap_or("")) {
+            let analyzer = analyze.ok_or_else(|| {
+                CkError::new(
+                    ErrorCode::Request,
+                    "audio ingestion needs the media analyzer",
+                )
+            })?;
+            let canonical = path.canonicalize().map_err(|e| io(&path, e))?;
+            if !canonical.starts_with(quarantine.canonicalize().map_err(|e| io(&quarantine, e))?) {
+                return Err(CkError::new(
+                    ErrorCode::Request,
+                    "media escapes vetted source",
+                ));
+            }
+            let analysis = analyzer(&canonical)?;
+            let id = media_card(&ctx, &path, &rel, &source.kind, &analysis, &out_dir)?;
+            index.push(format!("- {id}: analyzed audio; owner review pending"));
+            assets.push(id);
+            continue;
+        }
         let text = std::fs::read_to_string(&path).map_err(|e| io(&path, e))?;
         let map = extract(&rel, &text);
         let comps = components(&map);
@@ -484,6 +646,18 @@ pub fn ingest(hub: &Hub, req: &IngestRequest) -> CkResult<IngestResult> {
         entry.vetted_at
     );
     write_ro(&out_dir.join("SOURCE.md"), source_md.as_bytes(), false)?;
+    let origin = quarantine.join("ORIGIN.json");
+    if origin.is_file() {
+        let meta = std::fs::metadata(&origin).map_err(|e| io(&origin, e))?;
+        if meta.len() > 128 * 1024 {
+            return Err(CkError::new(
+                ErrorCode::Request,
+                "source origin metadata exceeds cap",
+            ));
+        }
+        let bytes = std::fs::read(&origin).map_err(|e| io(&origin, e))?;
+        write_ro(&out_dir.join("SOURCE_ORIGIN.json"), &bytes, false)?;
+    }
     // The license travels with the copied files (MIT and similar require the notice).
     for e in std::fs::read_dir(&quarantine).map_err(|e| io(&quarantine, e))? {
         let p = e.map_err(|e| io(&quarantine, e))?.path();

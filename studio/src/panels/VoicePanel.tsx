@@ -18,7 +18,7 @@ export const COUNTDOWN = 3;
 
 type Recording = {
   slot: string;
-  phase: "countdown" | "recording";
+  phase: "permission" | "countdown" | "recording";
   left: number;
 };
 
@@ -35,18 +35,37 @@ export function VoicePanel({
   const [fit, setFit] = useState<Record<string, string>>({});
   const [rec, setRec] = useState<Recording | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
+  const captureAttempt = useRef(0);
+  useEffect(
+    () => () => {
+      captureAttempt.current++;
+      const active = recorder.current;
+      if (!active) return;
+      active.onstop = null;
+      if (active.state !== "inactive") active.stop();
+      active.stream.getTracks().forEach((track) => track.stop());
+    },
+    [],
+  );
 
   useEffect(() => {
     if (rec?.phase !== "countdown") return;
     if (rec.left === 0) {
-      void start(rec.slot);
+      try {
+        recorder.current?.start();
+        setRec({ ...rec, phase: "recording" });
+      } catch (error) {
+        setRec(null);
+        setError(
+          error instanceof Error ? error.message : "Could not start recording.",
+        );
+        recorder.current?.stream.getTracks().forEach((track) => track.stop());
+      }
       return;
     }
     const t = setTimeout(() => setRec({ ...rec, left: rec.left - 1 }), 1000);
     return () => clearTimeout(t);
   }, [rec]);
-
-  if (project.voiceSlots.length === 0) return null;
 
   const fail = (e: unknown) =>
     setError(e instanceof ApiError ? e.message : String(e));
@@ -63,23 +82,59 @@ export function VoicePanel({
     }
   };
 
-  async function start(slot: string) {
+  function cancelCapture() {
+    captureAttempt.current++;
+    const active = recorder.current;
+    if (active) {
+      active.onstop = null;
+      if (active.state !== "inactive") active.stop();
+      active.stream.getTracks().forEach((track) => track.stop());
+      recorder.current = null;
+    }
+    setRec(null);
+  }
+  async function prepare(slot: string) {
+    const attempt = ++captureAttempt.current;
+    setError(null);
+    setRec({ slot, phase: "permission", left: COUNTDOWN });
+    let stream: MediaStream | null = null;
+    const timer = setTimeout(() => {
+      if (captureAttempt.current === attempt) {
+        captureAttempt.current++;
+        setRec(null);
+        setError(
+          "Microphone access is still waiting. Allow it in your browser, then press Record again, or continue with typed commands.",
+        );
+      }
+    }, 15000);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Ask while the click's user activation is live, before the countdown.
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (captureAttempt.current !== attempt) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
       const r = new MediaRecorder(stream);
+      const captureStream = stream;
       const chunks: Blob[] = [];
-      r.ondataavailable = (e) => chunks.push(e.data);
-      r.onstop = async () => {
-        stream.getTracks().forEach((t) => t.stop());
-        const blob = new Blob(chunks, { type: r.mimeType || "audio/webm" });
-        await upload(slot, blob);
+      r.ondataavailable = (event) => chunks.push(event.data);
+      r.onstop = () => {
+        captureStream.getTracks().forEach((track) => track.stop());
+        void upload(
+          slot,
+          new Blob(chunks, { type: r.mimeType || "audio/webm" }),
+        ).catch(fail);
       };
       recorder.current = r;
-      r.start();
-      setRec({ slot, phase: "recording", left: 0 });
-    } catch (e) {
-      setRec(null);
-      fail(e);
+      setRec({ slot, phase: "countdown", left: COUNTDOWN });
+    } catch (error) {
+      stream?.getTracks().forEach((track) => track.stop());
+      if (captureAttempt.current === attempt) {
+        setRec(null);
+        fail(error);
+      }
+    } finally {
+      clearTimeout(timer);
     }
   }
 
@@ -113,6 +168,7 @@ export function VoicePanel({
     window.speechSynthesis.speak(u);
   };
 
+  if (project.voiceSlots.length === 0) return null;
   return (
     <section className="panel voice" aria-label="Voice" data-ck-voice>
       <h2>Voice</h2>
@@ -130,7 +186,9 @@ export function VoicePanel({
           <p className="teleprompter-line">
             {project.voiceSlots.find((s) => s.id === rec.slot)?.text}
           </p>
-          {rec.phase === "countdown" ? (
+          {rec.phase === "permission" ? (
+            <p role="status">Allow microphone access to begin the countdown.</p>
+          ) : rec.phase === "countdown" ? (
             <span className="countdown" data-ck-countdown>
               {rec.left}
             </span>
@@ -141,6 +199,11 @@ export function VoicePanel({
               onClick={() => recorder.current?.stop()}
             >
               Stop
+            </button>
+          )}
+          {rec.phase !== "recording" && (
+            <button type="button" onClick={cancelCapture}>
+              Cancel recording
             </button>
           )}
         </div>
@@ -231,9 +294,7 @@ export function VoicePanel({
               type="button"
               data-ck-record={slot.id}
               disabled={readOnly || rec !== null}
-              onClick={() =>
-                setRec({ slot: slot.id, phase: "countdown", left: COUNTDOWN })
-              }
+              onClick={() => void prepare(slot.id)}
             >
               Record
             </button>

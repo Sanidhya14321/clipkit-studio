@@ -4,11 +4,12 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Page } from "@playwright/test";
-import { expect, test, type Studio } from "./fixture";
+import { expect, test, openPanel, type Studio } from "./fixture";
 
 async function open(page: Page, studio: Studio) {
   await page.goto(`${studio.url}#token=${studio.token}`);
   await expect(page.locator("[data-ck-connected=true]")).toBeVisible();
+  await openPanel(page, "agent");
 }
 
 /** Runs a ck command that must fail; returns its error code from stderr. */
@@ -38,6 +39,7 @@ test("record-along: countdown, teleprompter, take", async ({
   await open(page, studio);
   await script(studio, "recorded", ["Welcome to the studio.", "Second line."]);
 
+  await openPanel(page, "voice");
   const slot = page.locator('[data-ck-slot="v1"]');
   await expect(slot.locator("[data-ck-mode]")).toHaveValue("recorded");
   await slot.locator('[data-ck-record="v1"]').click();
@@ -79,6 +81,7 @@ test("a slot without speech offers the labeled placeholder", async ({
     placeholder: boolean;
   };
   expect(spoken.placeholder).toBe(true);
+  await openPanel(page, "voice");
   const slot = page.locator('[data-ck-slot="v1"]');
   await expect(slot).toHaveAttribute("data-ck-slot-status", "failed");
   await expect(slot.locator('[data-ck-placeholder="v1"]')).toContainText(
@@ -108,6 +111,7 @@ test("push-to-talk: seek, split here, undo locally; other phrases become comment
   const timeline = page.locator("[data-ck-timeline]");
   await timeline.locator('[data-ck-layer="hook-title-backdrop"]').click();
   const say = async (phrase: string) => {
+    await openPanel(page, "agent");
     const box = page.locator("[data-ck-ptt-text]");
     await box.fill(phrase);
     await box.press("Enter");

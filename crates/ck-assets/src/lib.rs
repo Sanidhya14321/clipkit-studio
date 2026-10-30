@@ -13,6 +13,7 @@ pub mod layout;
 pub mod library;
 pub mod license;
 pub mod look;
+pub mod native_adapter;
 pub mod recipe;
 pub mod report;
 pub mod retrieve;

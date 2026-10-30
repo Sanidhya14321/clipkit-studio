@@ -10,7 +10,12 @@ export function takeToken(): string | null {
   const hash = new URLSearchParams(window.location.hash.slice(1));
   const fromHash = hash.get("token");
   if (fromHash) {
-    sessionStorage.setItem(TOKEN_KEY, fromHash);
+    // Private browsing and storage quotas must not prevent a live session.
+    try {
+      sessionStorage.setItem(TOKEN_KEY, fromHash);
+    } catch {
+      /* token stays in memory */
+    }
     history.replaceState(
       null,
       "",
@@ -18,12 +23,16 @@ export function takeToken(): string | null {
     );
     return fromHash;
   }
-  return sessionStorage.getItem(TOKEN_KEY);
+  try {
+    return sessionStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
 }
 
 export class ApiError extends Error {
   constructor(readonly body: CkError) {
-    super(`${body.code}: ${body.message}`);
+    super(`${body.code}: ${body.message}${body.hint ? ` ${body.hint}` : ""}`);
   }
 }
 

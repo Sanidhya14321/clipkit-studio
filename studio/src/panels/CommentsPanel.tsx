@@ -24,10 +24,12 @@ export function CommentsPanel({
   token,
   project,
   pointer,
+  getPlayhead,
 }: {
   token: string;
   project: Project;
   pointer: Pointer;
+  getPlayhead?: () => number;
 }) {
   const [text, setText] = useState("");
   const [kind, setKind] = useState<AnchorKind>("moment");
@@ -39,7 +41,10 @@ export function CommentsPanel({
     if (!text.trim()) return;
     const req: CommentAddRequest = {
       text: text.trim(),
-      anchor: anchorFor(chosen, pointer),
+      anchor: anchorFor(
+        chosen,
+        getPlayhead ? { ...pointer, playhead: getPlayhead() } : pointer,
+      ),
       author: "human",
     };
     try {

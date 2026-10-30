@@ -3,6 +3,48 @@ use std::path::PathBuf;
 use super::*;
 
 #[test]
+fn browser_mono_recording_normalizes_with_an_explicit_output_layout() {
+    if std::process::Command::new("ffmpeg")
+        .arg("-version")
+        .output()
+        .is_err()
+    {
+        return;
+    }
+    let tmp = tempfile::tempdir().unwrap();
+    let src = tmp.path().join("browser.webm");
+    let status = std::process::Command::new("ffmpeg")
+        .args([
+            "-hide_banner",
+            "-nostdin",
+            "-loglevel",
+            "error",
+            "-y",
+            "-f",
+            "lavfi",
+            "-i",
+            "sine=frequency=440:sample_rate=48000:duration=1",
+            "-ac",
+            "1",
+            "-c:a",
+            "libopus",
+        ])
+        .arg(&src)
+        .status()
+        .unwrap();
+    assert!(status.success());
+    let out = tmp.path().join("take.wav");
+    let info = prepare_take(&src, &out, None).unwrap();
+    assert!(
+        info.duration_sec > 0.9 && info.duration_sec < 1.1,
+        "{info:?}"
+    );
+    let probe = crate::probe(&out).unwrap();
+    assert_eq!(probe.audio[0].sample_rate, 48000);
+    assert_eq!(probe.audio[0].channels, 1);
+}
+
+#[test]
 fn fit_stretches_within_tolerance_only() {
     assert_eq!(fit(2.1, Some(2.0)), (Fit::Fits, 1.05));
     assert_eq!(fit(2.0, Some(2.0)), (Fit::Fits, 1.0));

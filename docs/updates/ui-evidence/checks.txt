@@ -1,0 +1,66 @@
+Final UI-1 frontend checks. Browser tests use a simulated backend; these results do not verify the real Rust server or full end-to-end project flow.
+
+$ pnpm --dir studio exec playwright test --config playwright.ui.config.ts --grep draft fields
+
+Running 1 test using 1 worker
+
+(node:47367) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/ui-workspace.spec.ts:206:1 › draft fields survive docking and responsive layout changes; closed panels cannot blank maximize (677ms)
+
+  1 passed (1.2s)
+
+Exit: 0
+
+$ pnpm --dir studio --silent format:check
+Checking formatting...
+All matched files use Prettier code style!
+
+Exit: 0
+
+$ pnpm --dir studio --silent typecheck
+
+Exit: 0
+
+$ pnpm --dir studio --silent test
+....................
+....................
+.
+
+Exit: 0
+
+$ pnpm --dir studio exec playwright test --config playwright.ui.config.ts --repeat-each=3
+
+Running 21 tests using 1 worker
+
+(node:47495) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/ui-workspace.spec.ts:14:1 › workspace commands, docking, resizing and layout restoration (826ms)
+  ✓   2 e2e/ui-workspace.spec.ts:71:1 › selection edits retain revisioned API requests, lock refusal and command errors (390ms)
+  ✓   3 e2e/ui-workspace.spec.ts:130:1 › storage fallback retains session authentication and opens a project (342ms)
+  ✓   4 e2e/ui-workspace.spec.ts:162:1 › palette buttons keep native Enter and Space behavior (245ms)
+  ✓   5 e2e/ui-workspace.spec.ts:188:1 › a panel render failure is contained and reloadable (341ms)
+  ✓   6 e2e/ui-workspace.spec.ts:206:1 › draft fields survive docking and responsive layout changes; closed panels cannot blank maximize (602ms)
+  ✓   7 e2e/ui-workspace.spec.ts:241:1 › narrow panels and visual workspace matrix (2.8s)
+(node:47783) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 e2e/ui-workspace.spec.ts:14:1 › workspace commands, docking, resizing and layout restoration (789ms)
+  ✓   9 e2e/ui-workspace.spec.ts:71:1 › selection edits retain revisioned API requests, lock refusal and command errors (341ms)
+  ✓  10 e2e/ui-workspace.spec.ts:130:1 › storage fallback retains session authentication and opens a project (290ms)
+  ✓  11 e2e/ui-workspace.spec.ts:162:1 › palette buttons keep native Enter and Space behavior (283ms)
+  ✓  12 e2e/ui-workspace.spec.ts:188:1 › a panel render failure is contained and reloadable (363ms)
+  ✓  13 e2e/ui-workspace.spec.ts:206:1 › draft fields survive docking and responsive layout changes; closed panels cannot blank maximize (489ms)
+  ✓  14 e2e/ui-workspace.spec.ts:241:1 › narrow panels and visual workspace matrix (2.8s)
+(node:47825) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 e2e/ui-workspace.spec.ts:14:1 › workspace commands, docking, resizing and layout restoration (746ms)
+  ✓  16 e2e/ui-workspace.spec.ts:71:1 › selection edits retain revisioned API requests, lock refusal and command errors (372ms)
+  ✓  17 e2e/ui-workspace.spec.ts:130:1 › storage fallback retains session authentication and opens a project (292ms)
+  ✓  18 e2e/ui-workspace.spec.ts:162:1 › palette buttons keep native Enter and Space behavior (228ms)
+  ✓  19 e2e/ui-workspace.spec.ts:188:1 › a panel render failure is contained and reloadable (387ms)
+  ✓  20 e2e/ui-workspace.spec.ts:206:1 › draft fields survive docking and responsive layout changes; closed panels cannot blank maximize (490ms)
+  ✓  21 e2e/ui-workspace.spec.ts:241:1 › narrow panels and visual workspace matrix (3.3s)
+
+  21 passed (18.6s)
+
+Exit: 0

@@ -35,6 +35,7 @@ export function PushToTalk({
   token,
   selection,
   playhead,
+  getPlayhead,
   onPlay,
   onPause,
   onSeek,
@@ -42,6 +43,7 @@ export function PushToTalk({
   token: string;
   selection: string | null;
   playhead: number;
+  getPlayhead?: () => number;
   onPlay: () => void;
   onPause: () => void;
   onSeek: (seconds: number) => void;
@@ -80,7 +82,7 @@ export function PushToTalk({
           if (!selection) throw new Error("Select a layer to split first.");
           const req: SplitRequest = {
             layerId: selection,
-            at: Math.round(playhead * 1000) / 1000,
+            at: Math.round((getPlayhead?.() ?? playhead) * 1000) / 1000,
             author: "voice",
           };
           await post("/api/split", req);
@@ -91,7 +93,10 @@ export function PushToTalk({
             text: cmd.text,
             anchor: selection
               ? { layerId: selection }
-              : { tStart: Math.round(playhead * 1000) / 1000 },
+              : {
+                  tStart:
+                    Math.round((getPlayhead?.() ?? playhead) * 1000) / 1000,
+                },
             author: "voice",
           };
           await post("/api/comments/add", req);

@@ -1,0 +1,44 @@
+{
+  "fixture": "Temporary real ck project; external source copied/inspected only, never executed",
+  "derive": {
+    "rev": 2,
+    "name": "asset-audit-glitch",
+    "files": [
+      ".clipkit/derived/asset-audit-glitch/GlitchText.tsx",
+      ".clipkit/derived/asset-audit-glitch/props.schema.json",
+      ".clipkit/derived/asset-audit-glitch/provenance.json"
+    ],
+    "adaptations": [
+      "colours->tokens (4)",
+      "instrumented (1 roots)",
+      "props schema"
+    ]
+  },
+  "files": [
+    "GlitchText.tsx",
+    "props.schema.json",
+    "provenance.json"
+  ],
+  "recordedAssetsUsed": [
+    "rendercomp-free/glitch-text"
+  ],
+  "registeredDerivedComponents": [],
+  "placedLayers": 0,
+  "licenseReport": {
+    "mode": "commercial-safe",
+    "ok": true,
+    "assets": [
+      {
+        "id": "rendercomp-free/glitch-text",
+        "license": "MIT",
+        "spdx": "MIT",
+        "licenseClass": "permissive",
+        "allowed": true,
+        "note": "Templates MIT; Remotion runtime license is separate (report both)."
+      }
+    ],
+    "original": [],
+    "unresolved": [],
+    "runtime": "Remotion (the rendering runtime) is under the Remotion License; read remotion.dev/license to see whether your use needs a company license."
+  }
+}

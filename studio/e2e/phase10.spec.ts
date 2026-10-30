@@ -4,7 +4,7 @@
 import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { expect, test } from "./fixture";
+import { expect, test, openPanel, advanceToVerify } from "./fixture";
 
 const BUNDLE = resolve(
   import.meta.dirname,
@@ -58,6 +58,7 @@ test("the user confirms the storyboard; the agent's wait sees it", async ({
   });
   const since = ((await studio.ck("status")) as { rev: number }).rev;
 
+  await openPanel(page, "storyboard");
   const panel = page.locator("[data-ck-storyboard]");
   await expect(panel.locator("[data-ck-storyboard-sheet]")).toBeVisible();
   await expect
@@ -95,6 +96,7 @@ test("history: undo, redo, save a branch and switch back", async ({
   );
   await studio.ck("recipe", "apply", file);
 
+  await openPanel(page, "history");
   const panel = page.locator("[data-ck-history]");
   await expect(
     panel.locator("[data-ck-history-lines] li").first(),
@@ -150,6 +152,11 @@ test("Stop: the agent's next write is refused until it hands back", async ({
     .ck("recipe", "apply", again)
     .catch((e: { stderr?: string }) => e.stderr ?? "");
   expect(String(refused)).toContain("E_STAGE");
-  await studio.ck("handoff");
+  await advanceToVerify(page);
+  await studio.ck(
+    "handoff",
+    "--override-reason",
+    "The user stopped this unfinished proof sequence; return control without claiming completion.",
+  );
   await expect(banner).toHaveAttribute("data-ck-agent", "idle");
 });

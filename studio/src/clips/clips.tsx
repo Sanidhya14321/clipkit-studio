@@ -1,8 +1,14 @@
-// The 8 native core clips (spec 7: written in Remotion, fully instrumented). Each is a pure
+// Native core clips and reviewed technique adapters (spec 7: written in Remotion, fully instrumented). Each is a pure
 // function of its props and the time into the clip. Every part a user may point at carries
 // `data-ck-part`; the root carries `data-ck-layer` and `data-ck-clip` (set by ClipLayer).
-// Media sources render as a framed panel naming the source until proxies reach the preview.
-import type { CSSProperties, ReactNode } from "react";
+// Known imported images/videos render in media panels; missing sources retain their label.
+import {
+  createContext,
+  useContext,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { Html5Video, Img, Sequence, useVideoConfig } from "remotion";
 import {
   type Box,
   type CoreClip,
@@ -32,6 +38,10 @@ const family = (props: Props, key = "font") =>
   `${JSON.stringify(str(props, key, "Inter"))}, system-ui, sans-serif`;
 
 const full: CSSProperties = { position: "absolute", inset: 0 };
+export const AssetMediaContext = createContext<{
+  sources: Record<string, { url: string; kind: string }>;
+  at: number;
+}>({ sources: {}, at: 0 });
 
 /** Fade and rise by `p` (0 hidden, 1 in place). */
 const rise = (p: number, height: number): CSSProperties => ({
@@ -40,6 +50,33 @@ const rise = (p: number, height: number): CSSProperties => ({
 });
 
 function Media({ source, radius }: { source: string; radius: number }) {
+  const { sources, at } = useContext(AssetMediaContext);
+  const { fps } = useVideoConfig();
+  const media = sources[source];
+  if (media) {
+    const style: CSSProperties = {
+      ...full,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      borderRadius: radius,
+    };
+    return (
+      <div
+        data-ck-part="media"
+        data-ck-source={source}
+        style={{ ...full, overflow: "hidden", borderRadius: radius }}
+      >
+        {media.kind === "image" ? (
+          <Img src={media.url} style={style} />
+        ) : (
+          <Sequence from={Math.round(at * fps)} layout="none">
+            <Html5Video src={media.url} style={style} muted loop />
+          </Sequence>
+        )}
+      </div>
+    );
+  }
   return (
     <div
       data-ck-part="media"
@@ -131,7 +168,12 @@ function KineticText({ props, t, dur, height }: ClipArgs) {
         fontFamily: family(props),
         fontSize: size,
         lineHeight: 1.15,
-        textAlign: "center",
+        textAlign:
+          str(props, "align", "center") === "left"
+            ? "left"
+            : str(props, "align", "center") === "right"
+              ? "right"
+              : "center",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -449,10 +491,58 @@ function DeviceFrame({ props, t, dur, width, height }: ClipArgs) {
   );
 }
 
+/** Native technique adaptation from the GlitchText card; no source code imported
+ * or executed. Brief content/colors/timing are supplied as normal clip props. */
+function GlitchText({ props, t, dur, height }: ClipArgs) {
+  const intensity = Math.max(0, Math.min(8, num(props, "intensity", 3)));
+  const step = Math.floor(t * 30);
+  const hit = t < 0.18 || step % 15 < 2;
+  const offset = hit ? Math.sin(step * 17.13) * intensity : 0;
+  const visibility = presence(t, dur, props);
+  const base: CSSProperties = {
+    position: "absolute",
+    ...boxStyle(props, { x: 0.08, y: 0.35, w: 0.84, h: 0.3 }),
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: family(props),
+    fontSize: fontPx(props, height, 0.085),
+    fontWeight: 900,
+    lineHeight: 1.05,
+    textAlign: "center",
+    opacity: visibility,
+    overflow: "hidden",
+  };
+  return (
+    <div data-ck-part="glitch-text" style={base}>
+      {[
+        [-offset, "#00e5ff"],
+        [offset, str(props, "glitchColor", "#ff326b")],
+        [0, str(props, "color", "#fff")],
+      ].map(([x, color], i) => (
+        <span
+          key={i}
+          aria-hidden={i < 2}
+          data-ck-part={i === 2 ? "line" : "color-channel"}
+          style={{
+            position: i === 2 ? "relative" : "absolute",
+            color: String(color),
+            transform: `translateX(${Number(x)}px)`,
+            opacity: i < 2 ? (hit ? 0.8 : 0) : 1,
+          }}
+        >
+          {textLines(props).join(" ")}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export const CLIPS: Record<CoreClip, (args: ClipArgs) => ReactNode> = {
   backdrop: Backdrop,
   "bullet-list": BulletList,
   "device-frame": DeviceFrame,
+  "glitch-text": GlitchText,
   "kinetic-text": KineticText,
   "lower-third": LowerThird,
   "quote-card": QuoteCard,

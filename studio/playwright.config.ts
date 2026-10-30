@@ -8,7 +8,7 @@ export default defineConfig({
   retries: 0,
   reporter: process.env.CI ? "github" : "list",
   timeout: 30_000,
-  use: { trace: "retain-on-failure" },
+  use: { trace: "retain-on-failure", channel: process.env.CK_BROWSER_CHANNEL },
   projects: [
     {
       name: "chromium",

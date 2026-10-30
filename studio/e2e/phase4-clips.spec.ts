@@ -57,7 +57,7 @@ test("an applied recipe renders through its core clips in the Player", async ({
 
   // The headline enters 0.1 s into the scene; the Player sits at frame 0, so play it. (A click
   // on the canvas picks an element for hover-select since Phase 6, so use the play control.)
-  await preview.getByRole("button", { name: "Play video" }).click();
+  await preview.getByRole("button", { name: "Toggle playback" }).click();
   const headline = preview.locator('[data-ck-layer="hook-title-headline"]');
   await expect(headline).toHaveAttribute("data-ck-clip", "kinetic-text");
   await expect(headline.locator('[data-ck-part="kicker"]')).toContainText(

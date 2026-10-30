@@ -31,6 +31,7 @@ use crate::session::handoff::{HandoffRequest, WaitRequest};
 use crate::session::history::{HistoryRequest, SplitRequest};
 use crate::session::import::ImportRequest;
 use crate::session::look::LookApplyRequest;
+use crate::session::music::MusicAnalyzeRequest;
 use crate::session::recipe::RecipeApplyRequest;
 use crate::session::reference::ReferenceRequest;
 use crate::session::render::RenderCheckRequest;
@@ -90,6 +91,7 @@ pub fn router_with_assets(session: Arc<Session>, guard: Guard, assets: Assets) -
             get(crate::media::storyboard_sheet),
         )
         .route("/api/reference/analyze", post(reference_analyze))
+        .route("/api/music/analyze", post(music_analyze))
         .route("/api/branch/save", post(branch_save))
         .route("/api/branch/list", get(branch_list))
         .route("/api/branch/switch", post(branch_switch))
@@ -612,6 +614,14 @@ async fn variants(
 ) -> ApiResult {
     let req = parse(body)?;
     blocking(s, move |s| s.variants(&req)).await
+}
+
+async fn music_analyze(
+    State(s): State<Arc<Session>>,
+    body: Result<Json<MusicAnalyzeRequest>, JsonRejection>,
+) -> ApiResult {
+    let req = parse(body)?;
+    blocking(s, move |s| s.music_analyze(&req)).await
 }
 
 async fn reference_analyze(
