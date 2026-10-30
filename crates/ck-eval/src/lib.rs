@@ -3,6 +3,8 @@
 //! a run with or without the plugin is judged the same way. Checks that need OCR (safe areas,
 //! text size) are listed as not measured rather than guessed.
 
+pub mod bench;
+
 use std::path::{Path, PathBuf};
 
 use ck_core::{CkError, CkResult, ErrorCode};

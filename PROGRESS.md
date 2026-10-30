@@ -63,7 +63,7 @@ Steps:
 - [x] 4. `ck eval`: output-only evaluator (duration, aspect, loudness, clipping, black or frozen frames, cut accuracy, brief conformance) with fixture tests.
 - [x] 5. Debuggability: `ck trace bundle` (redacted), `ck replay`, `ck bisect`.
 - [x] 6. Demo reset (seeded project in under 10 s) and README (install, requirements, demo, voice privacy, Remotion licensing, asset licenses).
-- [ ] 7. Bench harness for A0/A1/B (scenarios, arms, report format); real runs need agents and tokens: results PLACEHOLDER until run.
+- [x] 7. Bench harness (results PLACEHOLDER until real runs) for A0/A1/B (scenarios, arms, report format); real runs need agents and tokens: results PLACEHOLDER until run.
 - [ ] 8. History and branches, variants (cut-line items).
 - [ ] 9. Proof run, self review, evidence.
 

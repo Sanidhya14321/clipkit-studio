@@ -1,0 +1,30 @@
+{
+  "arms": [
+    { "id": "A0", "about": "The agent with nothing installed." },
+    { "id": "A1", "about": "The agent with only official Remotion guidance." },
+    { "id": "B", "about": "The full ClipKit plugin." },
+    { "id": "C-no-brief", "about": "B without the Brief page." },
+    { "id": "C-no-recipes", "about": "B without recipes and tokens." },
+    { "id": "C-no-ladder", "about": "B without the retrieval ladder." },
+    { "id": "C-no-context", "about": "B without the context bridge." },
+    { "id": "C-no-gates", "about": "B without the quality gates." }
+  ],
+  "scenarios": [
+    { "id": "generated-teaser", "prompt": "Make a 15 second launch teaser for a note-taking app called Jot.", "expect": { "durationSec": 15, "aspect": "16:9" } },
+    { "id": "talking-head-cleanup", "prompt": "Clean up talking-head.mp4: cut silences, fillers and retakes, add captions.", "media": "PLACEHOLDER: owner-supplied talking-head clip", "expect": { "aspect": "16:9" } },
+    { "id": "hybrid", "prompt": "Add a title card and a stat callout over talking-head.mp4.", "media": "PLACEHOLDER: owner-supplied talking-head clip", "expect": { "aspect": "16:9" } },
+    { "id": "one-frame-fix", "prompt": "After the teaser is built: the headline is cut off at 2 seconds, fix only that.", "expect": { "durationSec": 15 } },
+    { "id": "pacing-change", "prompt": "After the teaser is built: make it punchier.", "expect": { "durationSec": 15 } },
+    { "id": "voice-swap", "prompt": "Swap the narration to my recorded take for line 2.", "media": "PLACEHOLDER: owner-supplied voice sample" },
+    { "id": "aspect-reflow", "prompt": "Make a 9:16 version of the teaser.", "expect": { "aspect": "9:16" } },
+    { "id": "hover-select-edit", "prompt": "Studio script: hover the stat number, Ask agent: make it 50%." },
+    { "id": "voice-commands", "prompt": "Studio script: push-to-talk 'go to 4 seconds', 'split here', 'undo'." },
+    { "id": "lock-concurrency", "prompt": "Studio script: edit the outro while the agent works on the hook." },
+    { "id": "export", "prompt": "Export the teaser for YouTube.", "expect": { "durationSec": 15, "aspect": "16:9" } },
+    { "id": "license-mode", "prompt": "Commercial-safe teaser; a restricted asset must not be used." },
+    { "id": "source-hub-vetting", "prompt": "Vet and ingest the fixture source packs; reject the hostile one." },
+    { "id": "interrupted-run", "prompt": "Kill the agent mid-build, restart, resume from the last pass." },
+    { "id": "faulty-environment", "prompt": "Run with ffmpeg missing; the agent reports the fix instead of failing silently." }
+  ],
+  "runsPerArm": 3
+}

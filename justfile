@@ -56,9 +56,10 @@ e2e: studio-build
 fixtures out="fixtures/generated":
     fixtures/generate.sh {{out}}
 
-# With/without-plugin benchmark (Phase 9; costs tokens, run on demand).
+# With/without-plugin benchmark report (spec 10.3). Runs cost tokens and need a real agent:
+# AGENT_CMD='claude -p --output-format json' bench/run.sh <arm> <scenario> <run> (bench/README.md).
 bench:
-    @echo "PLACEHOLDER: bench harness (A0, A1, B, ablations) arrives in Phase 9 (spec 10.3)"; exit 1
+    cargo run -q -p ck-cli -- bench report bench/results.jsonl
 
 # Re-split docs/MASTER_PROMPT.md into docs/spec/ (only when the master prompt changes).
 split-spec:

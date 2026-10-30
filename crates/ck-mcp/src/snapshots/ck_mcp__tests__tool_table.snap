@@ -1171,6 +1171,25 @@ expression: specs()
     }
   },
   {
+    "name": "bench_report",
+    "command": "ck bench report",
+    "description": "Medians, ranges and pass rates per arm and scenario from bench run lines; tokens only from the agents' own usage (otherwise not measured).",
+    "cap": 16384,
+    "inputSchema": {
+      "required": [
+        "results"
+      ],
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "results": {
+          "description": "The results file (one JSON run per line).",
+          "type": "string"
+        }
+      }
+    }
+  },
+  {
     "name": "sources_ingest",
     "command": "ck sources ingest",
     "description": "Turn a vetted source into cards: each exported component gets asset.md, ast.json and a read-only copy of its file (parsing only, nothing runs); rebuilds the catalog. Owner notes are kept.",

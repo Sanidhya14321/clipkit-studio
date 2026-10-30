@@ -35,10 +35,10 @@ use clap::Parser;
 use serde::Serialize;
 
 use args::{
-    AssetsCommand, BriefCommand, Cli, Command, CommentsCommand, CutCommand, DemoCommand,
-    LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg, ProjectCommand, RecipeCommand,
-    RenderCommand, SoundCommand, SourcesCommand, TasteCommand, TraceCommand, TranscriptCommand,
-    VoiceCommand,
+    AssetsCommand, BenchCommand, BriefCommand, Cli, Command, CommentsCommand, CutCommand,
+    DemoCommand, LayoutCommand, LicenseCommand, LookCommand, ModeArg, PresetArg, ProjectCommand,
+    RecipeCommand, RenderCommand, SoundCommand, SourcesCommand, TasteCommand, TraceCommand,
+    TranscriptCommand, VoiceCommand,
 };
 use ck_assets::card::{AssetKind, Grade, LicenseMode};
 use ck_assets::hub::Hub;
@@ -412,6 +412,11 @@ fn run(cli: Cli) -> CkResult<()> {
             };
             let report = ck_eval::evaluate(&cli.dir, &ck_eval::EvalRequest { video, expect })?;
             capped_print("eval", ck_eval::caps::EVAL, report)
+        }
+        Command::Bench(BenchCommand::Report { results }) => {
+            let out =
+                ck_eval::bench::report(&cli.dir, &ck_eval::bench::BenchReportRequest { results })?;
+            capped_print("bench report", ck_eval::bench::caps::REPORT, out)
         }
         Command::Demo(DemoCommand::Reset { force }) => {
             let out = ck_server::demo::reset(&cli.dir, &ck_server::demo::DemoRequest { force })?;

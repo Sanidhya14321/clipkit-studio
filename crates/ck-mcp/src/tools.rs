@@ -18,6 +18,7 @@ use ck_assets::vet::{self, VetRequest};
 use ck_core::patch::PatchRequest;
 use ck_core::{CkError, CkResult, ErrorCode};
 use ck_eval::EvalRequest;
+use ck_eval::bench::{self, BenchReportRequest};
 use ck_server::debug::{self, BisectRequest, ReplayRequest, TraceRequest};
 use ck_server::demo::{self, DemoRequest};
 use ck_server::idle::DEFAULT_IDLE_SECS;
@@ -286,6 +287,13 @@ pub fn specs() -> Vec<ToolSpec> {
              this folder; refuses a non-demo project without force and while a studio runs.",
             demo::caps::DEMO,
         ),
+        spec::<BenchReportRequest>(
+            "bench_report",
+            "ck bench report",
+            "Medians, ranges and pass rates per arm and scenario from bench run lines; tokens \
+             only from the agents' own usage (otherwise not measured).",
+            bench::caps::REPORT,
+        ),
         spec::<IngestRequest>(
             "sources_ingest",
             "ck sources ingest",
@@ -522,6 +530,7 @@ pub fn is_offline(name: &str) -> bool {
             | "bisect"
             | "trace_bundle"
             | "demo_reset"
+            | "bench_report"
     )
 }
 
@@ -624,6 +633,13 @@ pub fn offline(root: &std::path::Path, name: &str, args: Value) -> Option<CkResu
         }),
         "demo_reset" => parse::<DemoRequest>(args)
             .and_then(|r| capped_json("demo reset", demo::caps::DEMO, &demo::reset(project, &r)?)),
+        "bench_report" => parse::<BenchReportRequest>(args).and_then(|r| {
+            capped_json(
+                "bench report",
+                bench::caps::REPORT,
+                &bench::report(project, &r)?,
+            )
+        }),
         "sources_gaps" => parse::<SourcesGapsRequest>(args)
             .and_then(|r| json(&sources::sources_gaps(&hub()?, &r)?)),
         _ => return None,

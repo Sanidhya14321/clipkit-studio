@@ -145,6 +145,9 @@ pub enum Command {
         #[arg(long)]
         gate: Option<String>,
     },
+    /// Benchmark report from bench run lines.
+    #[command(subcommand)]
+    Bench(BenchCommand),
     /// The seeded demo project.
     #[command(subcommand)]
     Demo(DemoCommand),
@@ -535,5 +538,14 @@ pub enum DemoCommand {
         /// Replace a project that is not the demo.
         #[arg(long)]
         force: bool,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum BenchCommand {
+    /// Medians, ranges and pass rates per arm and scenario.
+    Report {
+        #[arg(default_value = "bench/results.jsonl")]
+        results: String,
     },
 }

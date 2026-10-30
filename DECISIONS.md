@@ -591,3 +591,7 @@ Sources: code.claude.com/docs/en/memory, /skills, /sub-agents, /hooks, /hooks-gu
 - `ck demo reset` builds the demo in-process through the same session operations an agent uses (brief propose and confirm, three recipes, voice script, a comment): no network, render or agent, about 40 ms. A project whose id is not `demo` is replaced only with `--force`; a folder a studio is serving is refused (the studio holds the project in memory).
 - README rewritten for spec 12.1: install from source (packaged installers are not built), requirements, demo, voice privacy (local recordings, Fish Audio stubs, consent-only cloning, Chrome's speech recognition sends audio to Google), Remotion licensing and asset licenses.
 - The render worker denies esbuild's install script (`allowBuilds: esbuild: false`, pnpm 12): it only verifies a prebuilt binary and the bundle builds without it, keeping "no dependency install scripts".
+
+## Phase 9 step 7: bench harness (2026-10-30)
+- The harness is three parts: `bench/scenarios.json` (data), `bench/run.sh` (one run; bash and jq, no Python), `ck bench report` (aggregation in Rust, tested). A pass is an eval score of 80 or more (choice). Arms B and C run `ck init --yes` in the fresh workspace; A0 and A1 do not. The ablation switches themselves (turning one feature off) are not built yet: C arms need them before they mean anything.
+- Results are PLACEHOLDER: no agent run has been made (tokens and owner media needed). Nothing in the report is estimated.
